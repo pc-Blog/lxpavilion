@@ -21,6 +21,7 @@ import { handleRss } from "./rss/handler";
 import { handlePurge } from "./purge/handler";
 import { handleChat } from "./chat/handler";
 import { handleAuth } from "./auth/handler";
+import { handleView } from "./view/handler";
 
 export default {
   async fetch(
@@ -87,6 +88,11 @@ export default {
     // /api/auth/* — 用户认证
     if (url.pathname.startsWith("/api/auth")) {
       return handleAuth(request, env, origin);
+    }
+
+    // /api/view/* — 浏览数
+    if (url.pathname.startsWith("/api/view")) {
+      return handleView(request, env, origin);
     }
 
     // 404 兜底

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import type { ArticleVO, ArticleQueryDTO } from "@/lib/types";
-import { getPublicList } from "@/lib/api/article";
+import { getPublicList, getViewCounts } from "@/lib/api/article";
 import ArticleCard from "./ArticleCard";
 import Pagination from "../common/Pagination";
 import Loading from "../common/Loading";
@@ -15,6 +15,7 @@ interface Props {
 
 export default function ArticleList({ categoryId, tagId, keyword }: Props) {
   const [articles, setArticles] = useState<ArticleVO[]>([]);
+  const [viewMap, setViewMap] = useState<Record<number, number>>({});
   const [total, setTotal] = useState(0);
   const [pageNum, setPageNum] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,11 @@ export default function ArticleList({ categoryId, tagId, keyword }: Props) {
         if (!cancelled) {
           setArticles(data.rows);
           setTotal(data.total);
+          getViewCounts().then((rows) => {
+            const m: Record<number, number> = {};
+            rows.forEach((r) => { m[r.article_id] = r.views; });
+            setViewMap(m);
+          }).catch(() => {});
         }
       } catch {
         if (!cancelled) {
@@ -70,7 +76,7 @@ export default function ArticleList({ categoryId, tagId, keyword }: Props) {
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((a) => (
-          <ArticleCard key={a.id} article={a} />
+          <ArticleCard key={a.id} article={a} viewCount={viewMap[a.id]} />
         ))}
       </div>
       <Pagination pageNum={pageNum} pageSize={pageSize} total={total} onChange={setPageNum} />

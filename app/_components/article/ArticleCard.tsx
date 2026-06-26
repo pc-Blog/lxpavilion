@@ -3,7 +3,7 @@ import type { ArticleVO } from "@/lib/types";
 import ViewCount from "./ViewCount";
 import { assetUrl } from "@/lib/asset-url";
 
-export default function ArticleCard({ article }: { article: ArticleVO }) {
+export default function ArticleCard({ article, viewCount = 0 }: { article: ArticleVO; viewCount?: number }) {
   const date = article.createdAt
     ? new Date(article.createdAt).toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })
     : "";
@@ -33,7 +33,7 @@ export default function ArticleCard({ article }: { article: ArticleVO }) {
             <span>·</span>
             <span>{date}</span>
             <span>·</span>
-            <ViewCount count={article.viewCount} />
+            <ViewCount count={viewCount} />
           </div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-snug group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
             {article.title}

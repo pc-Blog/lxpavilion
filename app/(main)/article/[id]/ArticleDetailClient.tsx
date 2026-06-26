@@ -20,6 +20,7 @@ import { useContentStore } from "@/stores/contentStore";
 export default function ArticleDetailClient(props: { params: Promise<{ id: string }> }) {
   const { id } = use(props.params);
   const [article, setArticle] = useState<ArticleDetailVO | null>(null);
+  const [viewCount, setViewCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [giscusCount, setGiscusCount] = useState<number | null>(null);
   const [downloading, setDownloading] = useState(false);
@@ -42,7 +43,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
       try {
         const data = await getPublicDetail(Number(id));
         setArticle(data);
-        addView(Number(id)).catch(() => { });
+        addView(Number(id)).then(setViewCount).catch(() => {});
       } catch {
         setArticle(null);
       } finally {
@@ -109,7 +110,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
                   {article.categoryName && (
                     <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 font-bold text-[10px]">{article.categoryName}</span>
                   )}
-                  <ViewCount count={article.viewCount} />
+                  <ViewCount count={viewCount} />
                   <span>{giscusCount ?? article.commentCount} comments</span>
                   <button
                     onClick={async () => {
