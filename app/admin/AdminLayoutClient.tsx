@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const NAV_ITEMS = [
@@ -22,22 +22,11 @@ const NAV_ITEMS = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const [hasToken, setHasToken] = useState(false);
   const [isStatic, setIsStatic] = useState(false);
 
   useEffect(() => {
     setIsStatic(process.env.NEXT_PUBLIC_IS_STATIC === "true");
   }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.replace("/auth/login");
-    } else {
-      setHasToken(true);
-    }
-  }, [router]);
 
   if (isStatic) {
     return (
@@ -46,14 +35,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md">
           管理端仅在本地开发环境中可用。请通过 Docker 或 dev 模式启动应用后访问。
         </p>
-      </div>
-    );
-  }
-
-  if (!hasToken) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

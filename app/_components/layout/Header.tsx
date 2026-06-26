@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+// import { LogIn, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/lib/siteConfig";
 import { useAuthStore } from "@/stores/authStore";
@@ -94,27 +95,27 @@ export default function Navbar() {
           })}
 
           {/* Auth */}
+          {!isStatic && (
+            <Link
+              href="/admin"
+              className="text-xs text-indigo-500 hover:text-indigo-400 transition-colors ml-2 mr-2"
+            >
+              Admin
+            </Link>
+          )}
           {isLoggedIn ? (
             <div className="flex items-center gap-2 ml-2">
-              {!isStatic && (
-                <Link
-                  href="/admin"
-                  className="text-xs text-indigo-500 hover:text-indigo-400 transition-colors border-r border-slate-300 dark:border-slate-600 pr-2 mr-1"
-                >
-                  Admin
-                </Link>
-              )}
               <span className="text-xs text-slate-500">
                 {user?.nickname || user?.username || "User"}
               </span>
               <button
                 onClick={logout}
-                className="text-xs text-slate-400 hover:text-red-500 transition-colors border-l border-slate-300 dark:border-slate-600 pl-2"
+                className="text-xs text-slate-400 hover:text-red-500 transition-colors"
               >
                 Sign Out
               </button>
             </div>
-          ) : !isStatic && (
+          ) : (
             <button
               onClick={() => router.push("/auth/login")}
               className="glass-btn !text-xs !py-1 !px-3 ml-2"

@@ -2,6 +2,12 @@
 
 export interface Env {
   AI: Ai;
+  DB: D1Database;
+  JWT_SECRET: string;
+  GITHUB_CLIENT_ID?: string;
+  GITHUB_CLIENT_SECRET?: string;
+  GITHUB_REDIRECT_URI?: string;
+  FRONTEND_URL?: string;
   CF_API_TOKEN: string;
   CF_ZONE_ID: string;
   CSDN_USER?: string;

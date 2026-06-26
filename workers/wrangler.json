@@ -4,6 +4,9 @@
   "compatibility_date": "2026-06-10",
   "placement": { "mode": "smart" },
   "ai": { "binding": "AI" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "blog-database", "database_id": "c7e2f4b1-9937-4c7f-acd6-46aea0cb0504" }
+  ],
   "routes": [
     { "pattern": "api.lxpavilion.top", "zone_name": "lxpavilion.top", "custom_domain": true }
   ],
@@ -11,6 +14,10 @@
     "CF_ZONE_ID": "5bf4f5d460e2073282b6ff62d01f2ca4",
     "CSDN_USER": "2604_96186443",
     "JUEJIN_USER_ID": "3154917256866522",
-    "CNBLOGS_BLOGAPP": "pc2005"
+    "CNBLOGS_BLOGAPP": "pc2005",
+    "JWT_SECRET": "【必填】JWT 签名密钥（从 git 历史清理，请轮换后回填）",
+    "GITHUB_CLIENT_ID": "Iv23liAI2h53TjkCBu67",
+    "GITHUB_REDIRECT_URI": "https://api.lxpavilion.top/api/auth/github/callback",
+    "FRONTEND_URL": "http://localhost:3000"
   }
 }

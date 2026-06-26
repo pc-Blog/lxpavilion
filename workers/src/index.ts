@@ -20,6 +20,7 @@ import { handlePlatform } from "./platform/handler";
 import { handleRss } from "./rss/handler";
 import { handlePurge } from "./purge/handler";
 import { handleChat } from "./chat/handler";
+import { handleAuth } from "./auth/handler";
 
 export default {
   async fetch(
@@ -81,6 +82,11 @@ export default {
     // POST /ai/chat — AI 看板娘对话（测试用）
     if (request.method === "POST" && url.pathname === "/ai/chat") {
       return handleChat(request, env, origin);
+    }
+
+    // /api/auth/* — 用户认证
+    if (url.pathname.startsWith("/api/auth")) {
+      return handleAuth(request, env, origin);
     }
 
     // 404 兜底

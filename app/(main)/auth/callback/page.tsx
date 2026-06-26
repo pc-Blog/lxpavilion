@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
+import { getMe } from "@/lib/api/auth";
 
 export default function GitHubCallbackPage() {
   const router = useRouter();
@@ -14,19 +15,15 @@ export default function GitHubCallbackPage() {
     ran.current = true;
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-    const nickname = params.get("nickname") || "GitHub User";
-    const username = params.get("username") || nickname;
-    const avatar = params.get("avatar") || "";
-    const userId = Number(params.get("id") || "0");
 
     if (token) {
-      setAuth(token, {
-        id: userId,
-        username,
-        nickname: nickname !== username ? nickname : undefined,
-        avatar: avatar || undefined,
+      localStorage.setItem("token", token);
+      getMe().then((user) => {
+        setAuth(token, user);
+        router.replace("/");
+      }).catch(() => {
+        router.replace("/auth/login");
       });
-      router.replace("/");
     } else {
       router.replace("/auth/login");
     }

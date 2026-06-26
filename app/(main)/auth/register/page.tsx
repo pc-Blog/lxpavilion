@@ -9,7 +9,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState(""); // 暂不开放邮箱注册
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function RegisterPage() {
     setError("");
     setLoading(true);
     try {
-      await register({ username: username.trim(), password, nickname: nickname.trim() || undefined, email: email.trim() || undefined });
+      await register({ username: username.trim(), password, nickname: nickname.trim() || undefined });
       router.push("/auth/login");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
@@ -38,7 +38,6 @@ export default function RegisterPage() {
           <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username *" className="glass-card !rounded-xl px-4 py-2.5 text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password *" className="glass-card !rounded-xl px-4 py-2.5 text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
           <input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="Nickname (optional)" className="glass-card !rounded-xl px-4 py-2.5 text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email (optional)" className="glass-card !rounded-xl px-4 py-2.5 text-sm outline-none bg-white/50 dark:bg-slate-800/50" />
           {error && <p className="text-xs text-red-500">{error}</p>}
           <button type="submit" disabled={loading} className="py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50">
             {loading ? "Creating..." : "Create Account"}

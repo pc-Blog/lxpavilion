@@ -22,7 +22,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const data = await login(username.trim(), password);
-      setAuth(data.token, { id: 0, username: username.trim() });
+      setAuth(data.token, data.user);
       router.push("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
