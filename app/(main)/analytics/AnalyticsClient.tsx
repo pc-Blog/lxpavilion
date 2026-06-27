@@ -292,7 +292,7 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">Analytics</h1>
+          <div className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">Analytics</div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Site traffic and visitor insights.
           </p>

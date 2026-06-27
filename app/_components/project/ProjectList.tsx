@@ -36,26 +36,27 @@ export default function ProjectList() {
     return () => { cancelled = true; };
   }, [pageNum]);
 
-  if (loading) return <Loading />;
-
-  if (projects.length === 0) {
-    return (
-      <div className="text-center py-20 text-slate-400 dark:text-slate-500">
-        <p className="text-lg">No projects yet</p>
-      </div>
-    );
-  }
-
   return (
     <div>
-      <h1 className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white mb-2">Projects</h1>
+      <div className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white mb-2">Projects</div>
       <p className="text-slate-500 dark:text-slate-400 mb-8">Code, experiments, and builds.</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((p) => (
-          <ProjectCard key={p.id} project={p} />
-        ))}
-      </div>
-      <Pagination pageNum={pageNum} pageSize={pageSize} total={total} onChange={setPageNum} />
+
+      {loading ? (
+        <Loading />
+      ) : projects.length === 0 ? (
+        <div className="text-center py-20 text-slate-400 dark:text-slate-500">
+          <p className="text-lg">No projects yet</p>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((p) => (
+              <ProjectCard key={p.id} project={p} />
+            ))}
+          </div>
+          <Pagination pageNum={pageNum} pageSize={pageSize} total={total} onChange={setPageNum} />
+        </>
+      )}
     </div>
   );
 }

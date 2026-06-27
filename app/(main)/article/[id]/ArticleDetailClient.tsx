@@ -3,7 +3,6 @@
 import { useState, useEffect, use } from "react";
 import type { ArticleDetailVO } from "@/lib/types";
 import { getPublicDetail, addView } from "@/lib/api/article";
-import { get as getAbout } from "@/lib/api/about";
 import ArticleProse from "@/app/_components/article/ArticleProse";
 import ArticleSidebar from "@/app/_components/article/ArticleSidebar";
 import ArticleNav from "@/app/_components/article/ArticleNav";
@@ -116,12 +115,11 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
                     onClick={async () => {
                       setDownloading(true);
                       try {
-                        const about = await getAbout().catch(() => ({}));
                         const res = await downloadContentAsZip({
                           title: article.title,
                           content: article.content,
                           coverImage: article.coverImage ? assetUrl(article.coverImage) : undefined,
-                          about,
+                          url: `article/${id}`,
                         });
                         const img = res.imageSuccess > 0 ? ` (${res.imageSuccess} images)` : "";
                         showSuccessToast(`"${res.title}" downloaded${img}`);
@@ -143,8 +141,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
                     onClick={async () => {
                       setDownloadingMd(true);
                       try {
-                        const about = await getAbout().catch(() => ({}));
-                        downloadMarkdown({ title: article.title, content: article.content, about, origin: window.location.origin });
+                        downloadMarkdown({ title: article.title, content: article.content, url: `article/${id}`, origin: window.location.origin });
                         showSuccessToast("Markdown downloaded");
                       } catch {
                         showErrorToast("Download failed");

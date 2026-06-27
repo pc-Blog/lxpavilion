@@ -5,6 +5,7 @@
  */
 
 import { assetUrl } from "@/lib/asset-url";
+import { siteConfig } from "@/lib/siteConfig";
 
 async function fetchImageAsBase64(url: string): Promise<string> {
   const res = await fetch(url);
@@ -34,17 +35,16 @@ export interface DownloadResult {
   imageFailed: number;
 }
 
-function buildFooter(about?: Record<string, string>): string {
-  if (!about) return "";
-
+function buildFooter(url?: string): string {
   const lines: string[] = ["\n\n---\n"];
 
-  const blog = about["blog"];
+  const blog = siteConfig.blog;
   if (blog) {
-    lines.push(`📝 本文发布于 [栏轩阁](${blog})\n`);
+    const href = url ? `https://${blog}/${url}` : `https://${blog}`;
+    lines.push(`📝 本文发布于 [栏轩阁](${href})\n`);
   }
 
-  const links: { key: string; label: string }[] = [
+  const links: { key: keyof typeof siteConfig; label: string }[] = [
     { key: "cnblogs", label: "博客园" },
     { key: "juejin", label: "掘金" },
     { key: "csdn", label: "CSDN" },
@@ -52,15 +52,15 @@ function buildFooter(about?: Record<string, string>): string {
     { key: "gitee", label: "Gitee" },
   ];
 
-  const existing = links.filter((l) => about[l.key]);
+  const existing = links.filter((l) => siteConfig[l.key]);
   if (existing.length > 0) {
     lines.push("\n🌐 欢迎关注我的其他平台：\n");
     for (const l of existing) {
-      lines.push(`- [${l.label}](${about[l.key]})`);
+      lines.push(`- [${l.label}](${siteConfig[l.key]})`);
     }
   }
 
-  const email = about["email"];
+  const email = siteConfig.email;
   if (email) {
     lines.push(`\n📧 联系我：${email}`);
   }
@@ -72,36 +72,36 @@ function buildFooter(about?: Record<string, string>): string {
 export function downloadMarkdown(params: {
   title: string;
   content: string;
-  about?: Record<string, string>;
+  url?: string;
   origin?: string;
 }) {
-  const { title, about } = params;
+  const { title, url: articleUrl } = params;
   let { content } = params;
   const safeName = title.replace(/[<>:"/\\|?*]/g, "_");
 
   // Convert relative image URLs to absolute so they work offline
   if (params.origin) {
-    content = content.replace(/!\[([^\]]*)\]\((\/[^)]+)\)/g, (_, alt, url) => {
-      return `![${alt}](${params.origin!}${assetUrl(url)})`;
+    content = content.replace(/!\[([^\]]*)\]\((\/[^)]+)\)/g, (_, alt, imgUrl) => {
+      return `![${alt}](${params.origin!}${assetUrl(imgUrl)})`;
     });
   }
 
-  const blob = new Blob([content + buildFooter(about)], { type: "text/markdown;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
+  const blob = new Blob([content + buildFooter(articleUrl)], { type: "text/markdown;charset=utf-8" });
+  const blobUrl = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  link.href = url;
+  link.href = blobUrl;
   link.download = `${safeName}.md`;
   link.click();
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(blobUrl);
 }
 
 export async function downloadContentAsZip(params: {
   title: string;
   content: string;
+  url?: string;
   coverImage?: string;
-  about?: Record<string, string>;
 }): Promise<DownloadResult> {
-  const { title, content, coverImage, about } = params;
+  const { title, content, coverImage, url: articleUrl } = params;
 
   // Collect all image URLs (deduplicated)
   const imageUrls = new Set(extractImageUrls(content));
@@ -139,7 +139,7 @@ export async function downloadContentAsZip(params: {
 
   // Add markdown file with updated local paths (content + footer)
   const safeName = title.replace(/[<>:"/\\|?*]/g, "_");
-  zip.file(`${safeName}.md`, finalContent + buildFooter(about));
+  zip.file(`${safeName}.md`, finalContent + buildFooter(articleUrl));
 
   // Add images
   for (const [url, filename] of urlToFilename) {
@@ -151,12 +151,12 @@ export async function downloadContentAsZip(params: {
 
   // Trigger download
   const blob = await zip.generateAsync({ type: "blob" });
-  const url = URL.createObjectURL(blob);
+  const blobUrl = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  link.href = url;
+  link.href = blobUrl;
   link.download = `${safeName}.zip`;
   link.click();
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(blobUrl);
 
   const succeeded = results.filter((r) => r.status === "fulfilled").length;
   return {

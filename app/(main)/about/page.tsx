@@ -19,7 +19,7 @@ export default function AboutPage() {
           ])),
         }}
       />
-      <span className="sr-only">{metadata.description}</span>
+      <h1 className="sr-only">{metadata.description}</h1>
       <AboutClient />
     </>
   );

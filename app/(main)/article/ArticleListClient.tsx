@@ -25,7 +25,7 @@ export default function ArticlePage() {
 
   return (
     <>
-      <h1 className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white mb-2">Articles</h1>
+      <div className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white mb-2">Articles</div>
       <p className="text-slate-500 dark:text-slate-400 mb-6">Tech, research, and thoughts.</p>
 
       <div className="flex flex-col gap-4 mb-8">

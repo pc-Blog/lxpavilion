@@ -248,8 +248,6 @@ export default function GalleryClient() {
     setLightboxOpen(true);
   }, []);
 
-  if (loading) return <div className="py-24"><Loading /></div>;
-
   return (
     <div className="py-6 md:py-12">
       <motion.div
@@ -260,12 +258,14 @@ export default function GalleryClient() {
       >
         <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
           <svg className="w-5 h-5 md:w-7 md:h-7 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-          <h1 className="text-xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">Gallery</h1>
+          <div className="text-xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">Gallery</div>
         </div>
         <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 ml-7 md:ml-10">Moments captured through the lens.</p>
       </motion.div>
 
-      {albums.length === 0 ? (
+      {loading ? (
+        <div className="py-24"><Loading /></div>
+      ) : albums.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 md:py-32 text-slate-400">
           <svg className="w-8 h-8 md:w-12 md:h-12 mb-3 md:mb-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
           <p className="text-sm md:text-base">暂无相册</p>

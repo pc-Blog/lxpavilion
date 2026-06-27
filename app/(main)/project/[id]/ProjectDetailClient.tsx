@@ -3,7 +3,6 @@
 import { useState, useEffect, use } from "react";
 import type { ProjectDetailVO } from "@/lib/types";
 import { getPublicDetail } from "@/lib/api/project";
-import { get as getAbout } from "@/lib/api/about";
 import ArticleProse from "@/app/_components/article/ArticleProse";
 import ArticleSidebar from "@/app/_components/article/ArticleSidebar";
 import ArticleNav from "@/app/_components/article/ArticleNav";
@@ -126,12 +125,11 @@ export default function ProjectDetailClient(props: { params: Promise<{ id: strin
                     onClick={async () => {
                       setDownloading(true);
                       try {
-                        const about = await getAbout().catch(() => ({}));
                         const res = await downloadContentAsZip({
                           title: project.name,
                           content: project.content || "",
                           coverImage: project.coverImage ? assetUrl(project.coverImage) : undefined,
-                          about,
+                          url: `project/${id}`,
                         });
                         const img = res.imageSuccess > 0 ? ` (${res.imageSuccess} images)` : "";
                         showSuccessToast(`"${res.title}" downloaded${img}`);
@@ -153,8 +151,7 @@ export default function ProjectDetailClient(props: { params: Promise<{ id: strin
                     onClick={async () => {
                       setDownloadingMd(true);
                       try {
-                        const about = await getAbout().catch(() => ({}));
-                        downloadMarkdown({ title: project.name, content: project.content || "", about, origin: window.location.origin });
+                        downloadMarkdown({ title: project.name, content: project.content || "", url: `project/${id}`, origin: window.location.origin });
                         showSuccessToast("Markdown downloaded");
                       } catch {
                         showErrorToast("Download failed");

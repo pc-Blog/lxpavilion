@@ -54,9 +54,9 @@ export default function FriendsBoard() {
   return (
     <div className="min-h-screen relative pb-20">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white mb-2">
+        <div className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white mb-2">
           Friends
-        </h1>
+        </div>
         <p className="text-slate-500 dark:text-slate-400 mb-10">Interesting souls in the digital space.</p>
 
         {/* Friend Cards Grid */}

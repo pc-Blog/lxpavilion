@@ -222,7 +222,7 @@ export default function GrowthClient() {
     return (
       <div className="pb-16">
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">Growth</h1>
+          <div className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">Growth</div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             The evolution journey of this blog.
           </p>
@@ -236,7 +236,7 @@ export default function GrowthClient() {
     <div className="pb-16">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">Growth</h1>
+        <div className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">Growth</div>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Every commit tells a story — trace how this blog evolved, one change at a time.
         </p>

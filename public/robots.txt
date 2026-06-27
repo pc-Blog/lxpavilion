@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /data/
 
 Sitemap: https://www.lxpavilion.top/sitemap.xml

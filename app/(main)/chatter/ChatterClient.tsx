@@ -184,9 +184,9 @@ function ChatterContent() {
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mb-6 md:mb-12">
         <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
           <MessageSquare className="w-5 h-5 md:w-7 md:h-7 text-sky-500" />
-          <h1 className="text-xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">
+          <div className="text-xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">
             Chatter
-          </h1>
+          </div>
         </div>
         <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 ml-7 md:ml-10">
           Fragments of code, academia, and life.
