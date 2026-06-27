@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import type { FriendLink } from "@/lib/types";
 import { getPublishedList } from "@/lib/api/friend-link";
 import { siteConfig } from "@/lib/siteConfig";
-import Giscus from "@/app/_components/comment/Giscus";
+import CommentSection from "@/app/_components/comment/CommentSection";
 import RssPopover from "@/app/_components/common/RssPopover";
 import Link from "next/link";
 
@@ -192,7 +192,7 @@ export default function FriendsBoard() {
         {/* Comment section */}
         <div ref={commentRef} className="mt-10">
           <div className="rounded-3xl bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-5 md:p-8">
-            <Giscus />
+            <CommentSection path="/friends" />
           </div>
         </div>
       </div>

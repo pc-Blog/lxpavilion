@@ -7,7 +7,7 @@ import type { OpArticle, OpTag } from "@/lib/types";
 import { getArticleList } from "@/lib/api/op";
 import BackButton from "@/app/_components/article/BackButton";
 import Loading from "@/app/_components/common/Loading";
-import Giscus from "@/app/_components/comment/Giscus";
+import CommentSection from "@/app/_components/comment/CommentSection";
 import { jsonLdSchema } from "@/lib/seo";
 import { tagIconMap } from "@/app/_components/literature/tag-icons";
 import { useContentStore } from "@/stores/contentStore";
@@ -200,7 +200,7 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
         )}
 
         <div className="mt-12">
-          <Giscus />
+          <CommentSection path={`/literature/${id}`} />
         </div>
       </div>
     </motion.div>

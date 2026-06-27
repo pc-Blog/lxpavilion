@@ -7,7 +7,7 @@ import ArticleProse from "@/app/_components/article/ArticleProse";
 import ArticleSidebar from "@/app/_components/article/ArticleSidebar";
 import ArticleNav from "@/app/_components/article/ArticleNav";
 import BackButton from "@/app/_components/article/BackButton";
-import Giscus from "@/app/_components/comment/Giscus";
+import CommentSection from "@/app/_components/comment/CommentSection";
 import Loading from "@/app/_components/common/Loading";
 import { downloadContentAsZip, downloadMarkdown } from "@/lib/download-content";
 import { showSuccessToast, showErrorToast } from "@/lib/toast";
@@ -174,7 +174,7 @@ export default function ProjectDetailClient(props: { params: Promise<{ id: strin
               <ArticleNav prev={project.prev} next={project.next} basePath="/project" />
 
               <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
-                <Giscus />
+                <CommentSection path={`/project/${id}`} />
               </div>
             </div>
           </article>

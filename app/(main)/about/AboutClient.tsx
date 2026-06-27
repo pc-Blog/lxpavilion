@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { get } from "@/lib/api/about";
 import { siteConfig, loadConfig } from "@/lib/config";
 import ArticleProse from "@/app/_components/article/ArticleProse";
-import Giscus from "@/app/_components/comment/Giscus";
+import CommentSection from "@/app/_components/comment/CommentSection";
 import Loading from "@/app/_components/common/Loading";
 import { assetUrl } from "@/lib/asset-url";
 import { useContentStore } from "@/stores/contentStore";
@@ -104,7 +104,7 @@ export default function AboutPage() {
             )}
 
             <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
-              <Giscus />
+              <CommentSection path="/about" />
             </div>
           </div>
         </article>

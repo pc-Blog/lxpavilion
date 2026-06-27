@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, ChevronLeft, ChevronRight } from "lucide-react";
 import Lightbox, { type LightboxPhoto } from "@/app/_components/common/Lightbox";
-import Giscus from "@/app/_components/comment/Giscus";
+import CommentSection from "@/app/_components/comment/CommentSection";
 import { getPublishedList } from "@/lib/api/chatter";
 import { get as getAbout } from "@/lib/api/about";
 import { siteConfig, loadConfig } from "@/lib/config";
@@ -320,7 +320,7 @@ function ChatterContent() {
 
                           {(isExpanded/* onlyView 下评论区由父容器切换控制 */) && (
                             <div className="mt-4 pt-4 border-t border-slate-200/40 dark:border-white/5">
-                              <Giscus term={`chatter-${moment.id}`} />
+                              <CommentSection path={`chatter-${moment.id}`} />
                             </div>
                           )}
                         </div>

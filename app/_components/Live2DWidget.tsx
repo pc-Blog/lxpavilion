@@ -703,10 +703,9 @@ export default function Live2DWidget() {
               ref={aiInputRef}
               value={aiInput}
               onChange={(e) => setAiInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") sendAiChat(); }}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); sendAiChat(); } }}
               placeholder="和看板娘聊天～"
-              disabled={aiLoading}
-              className="w-40 sm:w-48 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl px-3 py-2 pr-8 text-sm outline-none text-slate-700 dark:text-slate-200 placeholder-slate-400 border border-white/40 dark:border-white/10 shadow-lg"
+                            className="w-40 sm:w-48 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl px-3 py-2 pr-8 text-sm outline-none text-slate-700 dark:text-slate-200 placeholder-slate-400 border border-white/40 dark:border-white/10 shadow-lg"
             />
             <button
               onClick={sendAiChat}

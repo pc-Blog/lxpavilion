@@ -28,42 +28,30 @@ export default function Home() {
   const [repoStats, setRepoStats] = useState<{ stars: number; forks: number; watchers: number } | null>(null);
 
   useEffect(() => {
-    get().then(setDash).catch(() => { });
+    get().then(dashData => {
+      setDash(dashData);
+      fetch(`https://${siteConfig.analytics}/api/comment/stats`)
+        .then(r => r.json())
+        .then(json => {
+          if (json.code === 1) setDash(prev => prev ? { ...prev, commentCount: json.data.totalComments } : prev);
+        }).catch(() => {});
+      fetch(`https://${siteConfig.analytics}/api/view/total`)
+        .then(r => r.json())
+        .then(json => {
+          if (json.code === 1) setDash(prev => prev ? { ...prev, totalViews: json.data.total } : prev);
+        }).catch(() => {});
+    }).catch(() => { });
     getAbout().then(about => { loadConfig(about); setConfigReady(true); }).catch(() => { });
     getArticleList().then(d => {
       const total = d.rows.reduce((sum, t) => sum + t.articles.length, 0);
       setLiteratureCount(total);
     }).catch(() => { });
-
-    // 获取友链数量
     getFriendLinks().then(list => {
       setFriendCount(Array.isArray(list) ? list.length : (list as { rows?: unknown[] })?.rows?.length ?? null);
     }).catch(() => { });
-
-    // 获取说说数量
     getChatters().then(list => {
       setChatterCount(Array.isArray(list) ? list.length : (list as { rows?: unknown[] })?.rows?.length ?? null);
     }).catch(() => { });
-
-    // 获取 Giscus 实时评论总数
-    const ghToken = localStorage.getItem("github_token");
-    if (ghToken) {
-      fetch("https://api.github.com/graphql", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${ghToken}` },
-        body: JSON.stringify({
-          query: `query{repository(owner:"${GH_OWNER}",name:"${GH_REPO}"){discussions(first:50,categoryId:"${siteConfig.giscusCategoryId}"){nodes{comments{totalCount}}}}}`,
-        }),
-      }).then(r => r.json()).then(json => {
-        const nodes = json?.data?.repository?.discussions?.nodes;
-        if (nodes) {
-          const total = nodes.reduce((s: number, n: any) => s + n.comments.totalCount, 0);
-          setDash(prev => prev ? { ...prev, commentCount: total } : prev);
-        }
-      }).catch(() => { });
-    }
-
-    // 获取 GitHub 仓库统计
     fetch(`https://api.github.com/repos/${siteConfig.repo}`)
       .then(r => r.json())
       .then(d => {
@@ -256,6 +244,7 @@ export default function Home() {
               <div className="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 flex items-center gap-8 flex-wrap">
                 {[
                   { v: dash.commentCount, l: "Comments" },
+                  { v: dash.totalViews ?? "—", l: "Views" },
                   { v: literatureCount ?? "—", l: "Literature" },
                   { v: dash.timelineCount, l: "Milestones" },
                   { v: friendCount ?? "—", l: "Friends" },

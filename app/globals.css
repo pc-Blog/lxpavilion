@@ -93,10 +93,13 @@ svg:focus-visible, svg *:focus-visible, path:focus-visible, rect:focus-visible {
 /* 毛玻璃卡片工具类 */
 @layer components {
   .glass-card {
-    @apply rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl transition-[transform,background-color,border-color] duration-700;
+    @apply rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl;
+    will-change: transform;
+    transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1), background-color 1.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 1.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .glass-card:hover {
-    @apply bg-white/50 dark:bg-slate-700/50 scale-[1.01];
+    @apply bg-white/50 dark:bg-slate-700/50;
+    transform: scale(1.02);
   }
   .glass-btn {
     @apply rounded-xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-sm transition-all duration-300;

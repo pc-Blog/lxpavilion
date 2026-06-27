@@ -2,13 +2,26 @@
   "name": "blog-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-06-10",
-  "placement": { "mode": "smart" },
-  "ai": { "binding": "AI" },
+  "placement": {
+    "mode": "smart"
+  },
+  "ai": {
+    "binding": "AI"
+  },
   "d1_databases": [
-    { "binding": "DB", "database_name": "blog-database", "database_id": "c7e2f4b1-9937-4c7f-acd6-46aea0cb0504" }
+    {
+      "binding": "DB",
+      "database_name": "blog-database",
+      "database_id": "c7e2f4b1-9937-4c7f-acd6-46aea0cb0504",
+      "migrations_dir": "migrations"
+    }
   ],
   "routes": [
-    { "pattern": "api.lxpavilion.top", "zone_name": "lxpavilion.top", "custom_domain": true }
+    {
+      "pattern": "api.lxpavilion.top",
+      "zone_name": "lxpavilion.top",
+      "custom_domain": true
+    }
   ],
   "vars": {
     "CF_ZONE_ID": "5bf4f5d460e2073282b6ff62d01f2ca4",
@@ -18,6 +31,14 @@
     "JWT_SECRET": "【必填】JWT 签名密钥（从 git 历史清理，请轮换后回填）",
     "GITHUB_CLIENT_ID": "Iv23liAI2h53TjkCBu67",
     "GITHUB_REDIRECT_URI": "https://api.lxpavilion.top/api/auth/github/callback",
-    "FRONTEND_URL": "https://www.lxpavilion.top"
+    "FRONTEND_URL": "https://www.lxpavilion.top",
+    "GITHUB_APP_ID": "3753438",
+    "GITHUB_INSTALLATION_ID": "142872893",
+    "GITHUB_REPO_OWNER": "pc-Blog",
+    "GITHUB_REPO_NAME": "next",
+    "GITHUB_DISCUSSION_CATEGORY_ID": "DIC_kwDOSk99g84C9uoJ",
+    "GITHUB_APP_PRIVATE_KEY": "-----BEGIN PRIVATE KEY-----
+【必填】GitHub App 私钥（从 git 历史清理，请轮换后回填）
+-----END PRIVATE KEY-----"
   }
 }

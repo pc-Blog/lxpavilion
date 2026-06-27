@@ -8,33 +8,23 @@ import ArticleSidebar from "@/app/_components/article/ArticleSidebar";
 import ArticleNav from "@/app/_components/article/ArticleNav";
 import BackButton from "@/app/_components/article/BackButton";
 import ViewCount from "@/app/_components/article/ViewCount";
-import Giscus from "@/app/_components/comment/Giscus";
+import CommentSection from "@/app/_components/comment/CommentSection";
 import Loading from "@/app/_components/common/Loading";
 import { downloadContentAsZip, downloadMarkdown } from "@/lib/download-content";
 import { showSuccessToast, showErrorToast } from "@/lib/toast";
 import { jsonLdSchema } from "@/lib/seo";
 import { assetUrl } from "@/lib/asset-url";
 import { useContentStore } from "@/stores/contentStore";
+import { siteConfig } from "@/lib/siteConfig";
 
 export default function ArticleDetailClient(props: { params: Promise<{ id: string }> }) {
   const { id } = use(props.params);
   const [article, setArticle] = useState<ArticleDetailVO | null>(null);
   const [viewCount, setViewCount] = useState<number>(0);
+  const [liveCommentCount, setLiveCommentCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [giscusCount, setGiscusCount] = useState<number | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadingMd, setDownloadingMd] = useState(false);
-
-  // listen for Giscus discussion metadata to get live comment count
-  useEffect(() => {
-    function handler(e: MessageEvent) {
-      if (e.data?.giscus?.discussion?.totalCommentCount != null) {
-        setGiscusCount(e.data.giscus.discussion.totalCommentCount);
-      }
-    }
-    window.addEventListener("message", handler);
-    return () => window.removeEventListener("message", handler);
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -43,6 +33,10 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
         const data = await getPublicDetail(Number(id));
         setArticle(data);
         addView(Number(id)).then(setViewCount).catch(() => {});
+        fetch(`https://${siteConfig.analytics}/api/comment/count?path=/article/${id}`)
+          .then(r => r.json())
+          .then(j => { if (j.code === 1) setLiveCommentCount(j.data.count); })
+          .catch(() => {});
       } catch {
         setArticle(null);
       } finally {
@@ -110,7 +104,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
                     <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 font-bold text-[10px]">{article.categoryName}</span>
                   )}
                   <ViewCount count={viewCount} />
-                  <span>{giscusCount ?? article.commentCount} comments</span>
+                  <span>{liveCommentCount ?? article.commentCount} comments</span>
                   <button
                     onClick={async () => {
                       setDownloading(true);
@@ -182,7 +176,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
               <ArticleNav prev={article.prev} next={article.next} />
 
               <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
-                <Giscus />
+                <CommentSection path={`/article/${id}`} />
               </div>
             </div>
           </article>

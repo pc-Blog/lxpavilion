@@ -31,7 +31,7 @@ interface JwtPayload {
   exp: number;
 }
 
-async function signJwt(payload: Omit<JwtPayload, "iat" | "exp">, secret: string, expiresInSec = 86400): Promise<string> {
+async function signJwt(payload: Omit<JwtPayload, "iat" | "exp">, secret: string, expiresInSec = 604800): Promise<string> {
   const header = base64UrlEncode(new TextEncoder().encode(JSON.stringify({ alg: "HS256", typ: "JWT" })));
   const now = Math.floor(Date.now() / 1000);
   const body = base64UrlEncode(new TextEncoder().encode(JSON.stringify({
@@ -134,16 +134,24 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
         headers: { "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded", "User-Agent": "blog-api/1.0" },
         body: new URLSearchParams({ client_id: env.GITHUB_CLIENT_ID, client_secret: env.GITHUB_CLIENT_SECRET ?? "", code, redirect_uri: env.GITHUB_REDIRECT_URI ?? "" }),
       });
-      const tokenJson = await tokenResp.json() as { access_token?: string; error_description?: string };
+      const tokenJson = await tokenResp.json() as { access_token?: string; refresh_token?: string; expires_in?: number; error_description?: string };
       if (!tokenJson.access_token) return respond(null, tokenJson.error_description || "GitHub 授权失败", 0, origin);
 
-      // 2. 获取 GitHub 用户信息
+      // 2. 计算 token 过期时间（存时间戳方便判断）
+      const tokenExpiresAt = tokenJson.expires_in ? String(Date.now() + tokenJson.expires_in * 1000) : null;
+
+      // 获取 GitHub 用户信息
       const userResp = await fetch("https://api.github.com/user", {
         headers: { "Authorization": `Bearer ${tokenJson.access_token}`, "Accept": "application/json", "User-Agent": "blog-api/1.0" },
       });
       const ghUser = await userResp.json() as { id: number; login: string; avatar_url?: string; email?: string };
 
-      // 3. 查找或创建用户
+      // 3. 确保 token 列存在
+      for (const col of ["github_token", "github_refresh_token", "github_token_expires_at"]) {
+        await env.DB.prepare(`ALTER TABLE user ADD COLUMN ${col} TEXT`).run().catch(() => {});
+      }
+
+      // 4. 查找或创建用户
       const ghAvatar = ghUser.avatar_url ?? null;
       let row = await env.DB.prepare(
         "SELECT id, username, nickname, avatar FROM user WHERE github_id = ? AND deleted = 0"
@@ -152,12 +160,13 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       if (!row) {
         const username = `gh_${ghUser.login}`;
         const result = await env.DB.prepare(
-          "INSERT INTO user (username, password, nickname, github_id, avatar) VALUES (?, '', ?, ?, ?)"
-        ).bind(username, ghUser.login, String(ghUser.id), ghAvatar).run();
+          "INSERT INTO user (username, password, nickname, github_id, avatar, github_token, github_refresh_token, github_token_expires_at) VALUES (?, '', ?, ?, ?, ?, ?, ?)"
+        ).bind(username, ghUser.login, String(ghUser.id), ghAvatar, tokenJson.access_token, tokenJson.refresh_token || null, tokenExpiresAt).run();
         row = { id: Number(result.meta.last_row_id), username, nickname: ghUser.login, avatar: ghAvatar };
       } else {
-        await env.DB.prepare("UPDATE user SET nickname = ?, avatar = ?, update_time = datetime('now') WHERE id = ?")
-          .bind(ghUser.login, ghAvatar, row.id).run();
+        await env.DB.prepare(
+          "UPDATE user SET nickname = ?, avatar = ?, github_token = ?, github_refresh_token = ?, github_token_expires_at = ?, update_time = datetime('now') WHERE id = ?"
+        ).bind(ghUser.login, ghAvatar, tokenJson.access_token, tokenJson.refresh_token || null, tokenExpiresAt, row.id).run();
         row.nickname = ghUser.login;
         row.avatar = ghAvatar;
       }

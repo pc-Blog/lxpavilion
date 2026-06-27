@@ -1,7 +1,7 @@
 "use client";
 
 import BackButton from "@/app/_components/article/BackButton";
-import Giscus from "@/app/_components/comment/Giscus";
+import CommentSection from "@/app/_components/comment/CommentSection";
 
 const exampleWishes = [
   { id: 1, title: "🔐 高级密码生成与管理工具", desc: "支持自定义规则、强度检测、批量生成，可导出为文本或 JSON", votes: 24 },
@@ -60,7 +60,7 @@ export default function WishesPage() {
 
       {/* 评论区 */}
       <div className="rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-5">
-        <Giscus term="wishes" />
+        <CommentSection path="wishes" />
       </div>
     </div>
   );

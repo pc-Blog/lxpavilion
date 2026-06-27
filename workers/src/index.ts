@@ -22,6 +22,7 @@ import { handlePurge } from "./purge/handler";
 import { handleChat } from "./chat/handler";
 import { handleAuth } from "./auth/handler";
 import { handleView } from "./view/handler";
+import { handleComment } from "./comment/handler";
 
 export default {
   async fetch(
@@ -93,6 +94,11 @@ export default {
     // /api/view/* — 浏览数
     if (url.pathname.startsWith("/api/view")) {
       return handleView(request, env, origin);
+    }
+
+    // /api/comment/* — 评论
+    if (url.pathname.startsWith("/api/comment")) {
+      return handleComment(request, env, origin);
     }
 
     // 404 兜底

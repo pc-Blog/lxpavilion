@@ -6,6 +6,14 @@ export async function handleView(request: Request, env: Env, origin: string | nu
   const method = request.method;
 
   try {
+    // GET /api/view/total — 返回总浏览数
+    if (method === "GET" && url.pathname === "/api/view/total") {
+      const { results } = await env.DB.prepare(
+        "SELECT SUM(views) as total FROM article_view"
+      ).all();
+      return respond({ total: (results as any[])[0]?.total || 0 }, "ok", 1, origin);
+    }
+
     // GET /api/view/articles — 返回全部文章浏览数
     if (method === "GET" && url.pathname === "/api/view/articles") {
       const { results } = await env.DB.prepare(
