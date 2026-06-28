@@ -23,8 +23,24 @@ import { handleChat } from "./chat/handler";
 import { handleAuth } from "./auth/handler";
 import { handleView } from "./view/handler";
 import { handleComment } from "./comment/handler";
+import { handleEmail } from "./email/handler";
+import {
+  handleList as handleEmailList,
+  handleDetail as handleEmailDetail,
+  handleDelete as handleEmailDelete,
+  handleGetForward,
+  handleSetForward,
+} from "./email/api";
 
 export default {
+  // ── Email 入口（由 Cloudflare Email Routing 触发） ──
+  async email(
+    message: ForwardableEmailMessage,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<void> {
+    await handleEmail(message, env, ctx);
+  },
   async fetch(
     request: Request,
     env: Env,
@@ -99,6 +115,24 @@ export default {
     // /api/comment/* — 评论
     if (url.pathname.startsWith("/api/comment")) {
       return handleComment(request, env, origin);
+    }
+
+    // /api/email/* — 邮件管理
+    if (url.pathname.startsWith("/api/email")) {
+      switch (true) {
+        case request.method === "GET" && url.pathname === "/api/email/list":
+          return handleEmailList(request, env, origin);
+        case request.method === "GET" && url.pathname === "/api/email/detail":
+          return handleEmailDetail(request, env, origin);
+        case request.method === "DELETE" && url.pathname === "/api/email/delete":
+          return handleEmailDelete(request, env, origin);
+        case request.method === "GET" && url.pathname === "/api/email/forward":
+          return handleGetForward(request, env, origin);
+        case request.method === "PUT" && url.pathname === "/api/email/forward":
+          return handleSetForward(request, env, origin);
+        default:
+          return respond(null, "Not Found", 0, origin);
+      }
     }
 
     // 404 兜底

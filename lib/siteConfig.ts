@@ -21,7 +21,7 @@ export const siteConfig = {
 
   /** 社交链接 */
   github: "github.com/PC2005-cloud",
-  email: "2194844980@qq.com",
+  email: "mail@lxpavilion.top",
   gitee: "gitee.com/peng-chao2005",
   qq: "2194844980",
   juejin: "juejin.cn/user/3154917256866522",
