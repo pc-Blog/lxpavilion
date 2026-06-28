@@ -46,7 +46,7 @@ export default function EditProjectPage(props: { params: Promise<{ id: string }>
     }).catch(() => {}).finally(() => setLoading(false));
   }, [id]);
 
-  const handleSave = async () => {
+  const handleSave = async (close = false) => {
     if (!name.trim()) { setError("Name is required."); return; }
     if (!categoryId) { setError("Please select a category."); return; }
     setError("");
@@ -54,7 +54,7 @@ export default function EditProjectPage(props: { params: Promise<{ id: string }>
     try {
       await api.put("/project", { id: Number(id), name: name.trim(), summary, content, coverImage, techIds, githubUrl, demoUrl, categoryId });
       showSuccessToast("Saved");
-      router.push("/admin/project");
+      if (close) router.push("/admin/project");
     } catch { showErrorToast("Save failed"); }
     finally { setSaving(false); }
   };
@@ -77,7 +77,10 @@ export default function EditProjectPage(props: { params: Promise<{ id: string }>
         <label className="block text-xs font-bold text-slate-500">Content (Markdown)</label>
         <AdminMarkdownEditor value={content} onChange={setContent} />
         {error && <p className="text-sm text-red-500 font-bold">{error}</p>}
-        <button onClick={handleSave} disabled={saving} className="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl disabled:opacity-50">Save</button>
+        <div className="flex gap-3">
+          <button onClick={() => handleSave()} disabled={saving} className="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl disabled:opacity-50">Save</button>
+          <button onClick={() => handleSave(true)} disabled={saving} className="px-6 py-2 bg-slate-400 hover:bg-slate-500 text-white text-sm font-bold rounded-xl disabled:opacity-50">Save &amp; Close</button>
+        </div>
       </div>
     </div>
   );

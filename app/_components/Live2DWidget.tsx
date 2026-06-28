@@ -101,7 +101,6 @@ export default function Live2DWidget() {
     if (!p) return FALLBACK_MESSAGES;
     if (p === "/") return PAGE_MESSAGES.home;
     if (p.startsWith("/analytics")) return PAGE_MESSAGES.analytics;
-    if (p.startsWith("/admin")) return PAGE_MESSAGES.admin;
     if (p.startsWith("/article")) return PAGE_MESSAGES.article;
     if (p.startsWith("/project")) return PAGE_MESSAGES.project;
     if (p.startsWith("/about")) return PAGE_MESSAGES.about;
@@ -398,6 +397,7 @@ export default function Live2DWidget() {
   useEffect(() => {
     if (isAdmin) {
       wasAdmin.current = true;
+      stopIdleTimer();
       document.querySelector(".pio-container")?.remove();
       (document.getElementById("pio-container") as HTMLElement)?.remove();
       return;

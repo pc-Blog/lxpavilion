@@ -5,6 +5,7 @@ import Link from "next/link";
 import Loading from "@/app/_components/common/Loading";
 import {
   fetchCommits,
+  fetchTotalCommits,
   fetchCommitStats,
   parseCommitMessage,
   getTypeInfo,
@@ -160,7 +161,7 @@ function MonthGroup({ monthKey, commits }: { monthKey: string; commits: CommitDa
             {getMonthLabel(monthKey)}
           </span>
           <span className="text-xs text-slate-400 font-mono">
-            {commits.length} 次提交
+            已加载 {commits.length} 次提交
           </span>
         </div>
       </div>
@@ -168,7 +169,7 @@ function MonthGroup({ monthKey, commits }: { monthKey: string; commits: CommitDa
       {/* 时间轴 */}
       <div className="relative pl-8 md:pl-10">
         {/* 竖线 */}
-        <div className="absolute left-[11px] md:left-[13px] top-0 bottom-0 w-px bg-gradient-to-b from-indigo-400/40 via-indigo-300/20 to-transparent" />
+        <div className="absolute left-[13px] md:left-[21px] top-3 bottom-0 w-px bg-gradient-to-b from-indigo-400/40 via-indigo-300/20 to-transparent" />
 
         <div className="flex flex-col gap-4">
           {commits.map((commit) => (
@@ -186,6 +187,11 @@ export default function GrowthClient() {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [totalCommits, setTotalCommits] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetchTotalCommits().then(setTotalCommits);
+  }, []);
 
   const load = useCallback(async (p: number) => {
     if (p === 1) setLoading(true);
@@ -241,7 +247,7 @@ export default function GrowthClient() {
           Every commit tells a story — trace how this blog evolved, one change at a time.
         </p>
         <div className="flex gap-4 mt-3 text-xs text-slate-400">
-          <span>总计 {commits.length} 次提交</span>
+          <span>总计 {totalCommits ?? commits.length} 次提交</span>
           <span>·</span>
           <span>{Object.keys(groups).length} 个月</span>
         </div>

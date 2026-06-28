@@ -41,13 +41,13 @@ export default function EditArticlePage(props: { params: Promise<{ id: string }>
     }).catch(() => {}).finally(() => setLoading(false));
   }, [id]);
 
-  const handleSave = async () => {
+  const handleSave = async (close = false) => {
     if (!title.trim()) return;
     setSaving(true);
     try {
       await api.put("/article", { id: Number(id), title: title.trim(), summary, content, coverImage, categoryId, tagIds });
       showSuccessToast("Saved");
-      router.push("/admin/article");
+      if (close) router.push("/admin/article");
     } catch { showErrorToast("Save failed"); }
     finally { setSaving(false); }
   };
@@ -81,7 +81,10 @@ export default function EditArticlePage(props: { params: Promise<{ id: string }>
         </div>
         <label className="block text-xs font-bold text-slate-500">Content (Markdown)</label>
         <AdminMarkdownEditor value={content} onChange={setContent} />
-        <button onClick={handleSave} disabled={saving} className="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl disabled:opacity-50">Save</button>
+        <div className="flex gap-3">
+          <button onClick={() => handleSave()} disabled={saving} className="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl disabled:opacity-50">Save</button>
+          <button onClick={() => handleSave(true)} disabled={saving} className="px-6 py-2 bg-slate-400 hover:bg-slate-500 text-white text-sm font-bold rounded-xl disabled:opacity-50">Save &amp; Close</button>
+        </div>
       </div>
     </div>
   );

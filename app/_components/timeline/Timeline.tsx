@@ -20,7 +20,7 @@ export default function Timeline() {
   if (items.length === 0) return <p className="text-slate-400 dark:text-slate-500 text-center py-10">No timeline entries yet.</p>;
 
   return (
-    <div className="relative pl-8 before:absolute before:left-3 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-indigo-400 before:to-purple-400 before:rounded-full">
+    <div className="relative pl-8 before:absolute before:left-[16px] before:top-[10px] before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-indigo-400 before:to-purple-400 before:rounded-full">
       {items.map((item, i) => (
         <div key={item.id || i} className="relative pb-10 last:pb-0">
           <div className="absolute left-[-1.35rem] top-1 w-3 h-3 rounded-full bg-white dark:bg-slate-900 border-2 border-indigo-400 ring-2 ring-indigo-200/50 dark:ring-indigo-800/50" />

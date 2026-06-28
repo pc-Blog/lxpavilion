@@ -46,3 +46,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env.local
+
+# IDE
+.idea/
+
+# external assets
+/asset/html/
+
+# personal notes
+/docs/更新计划

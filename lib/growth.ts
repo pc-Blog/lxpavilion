@@ -97,6 +97,20 @@ export function getMonthLabel(key: string): string {
 
 const PER_PAGE = 30;
 
+/** 通过 ?per_page=1 的 Link header 获取总提交数 */
+export async function fetchTotalCommits(): Promise<number> {
+  try {
+    const res = await fetch(`${GITHUB_API}/commits?sha=master&per_page=1`, {
+      next: { revalidate: 3600 },
+    });
+    const link = res.headers.get("link") || "";
+    const match = link.match(/page=(\d+)>; rel="last"/);
+    return match ? Number(match[1]) : 0;
+  } catch {
+    return 0;
+  }
+}
+
 export async function fetchCommits(
   page = 1
 ): Promise<ApiResponse> {

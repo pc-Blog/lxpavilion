@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { label: "Tags", href: "/admin/tag" },
   { label: "Tech", href: "/admin/tech" },
   { label: "Media", href: "/admin/media" },
+  { label: "Deploys", href: "/admin/deploy" },
   { label: "About", href: "/admin/about" },
 ];
 

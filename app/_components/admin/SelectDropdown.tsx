@@ -16,7 +16,7 @@ interface SelectDropdownProps<T> {
 }
 
 export default function SelectDropdown<T>({
-  options, value, onChange, placeholder, renderOption, getValue, disabled, direction = "down", searchable,
+  options, value, onChange, placeholder, renderOption, getValue, disabled, direction = "auto", searchable,
 }: SelectDropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
