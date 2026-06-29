@@ -1,32 +1,19 @@
 /**
  * Email 处理器 — 接收 Email Routing 转发的邮件，归档后原样转发
  *
- * Worker 只做管理（归档），不修改邮件内容。
  * 使用 message.forward() 原样转发，发件人与正文完全保留。
- *
- * 依赖:
- *   postal-mime  — 解析原始 MIME 邮件内容
- *   DB           — D1 数据库（emails 表归档 + settings 表读取转发地址）
  */
 
 import PostalMime from "postal-mime";
 
 import type { Env } from "../types";
 
-/**
- * 从 settings 表读取转发目标地址
- */
-async function getForwardEmail(db: D1Database): Promise<string | null> {
-  const row = await db
-    .prepare("SELECT value FROM settings WHERE key = ?")
-    .bind("forward_email")
-    .first<{ value: string }>();
-  return row?.value ?? null;
+/** 从环境变量读取转发目标地址 */
+async function getForwardEmail(env: Env): Promise<string | null> {
+  return env.FORWARD_EMAIL || null;
 }
 
-/**
- * 将邮件信息写入 emails 表
- */
+/** 将邮件信息写入 emails 表 */
 async function storeEmail(
   db: D1Database,
   data: {
@@ -76,7 +63,7 @@ export async function handleEmail(
   const headersJson = JSON.stringify(Object.fromEntries(message.headers.entries()));
 
   // ── 2. 获取转发目标地址 ──
-  const forwardTo = await getForwardEmail(env.DB);
+  const forwardTo = await getForwardEmail(env);
 
   // ── 3. 归档到 D1 ──
   if (forwardTo) {

@@ -115,48 +115,15 @@ export async function handleGetForward(
   env: Env,
   origin: string | null,
 ): Promise<Response> {
-  try {
-    const row = await env.DB
-      .prepare("SELECT value FROM settings WHERE key = ?")
-      .bind("forward_email")
-      .first<{ value: string }>();
-
-    return respond({ address: row?.value ?? "" }, "ok", 1, origin);
-  } catch (err) {
-    return respond(null, `查询失败: ${err}`, 0, origin);
-  }
+  return respond({ address: env.FORWARD_EMAIL || "" }, "ok", 1, origin);
 }
 
 // ── 设置转发目标 ──
 
 export async function handleSetForward(
-  request: Request,
-  env: Env,
+  _request: Request,
+  _env: Env,
   origin: string | null,
 ): Promise<Response> {
-  let body: { address?: string };
-  try {
-    body = await request.json();
-  } catch {
-    return respond(null, "请求体必须是 JSON", 0, origin);
-  }
-
-  const address = body.address?.trim();
-  if (!address) {
-    return respond(null, "缺少字段 address", 0, origin);
-  }
-  if (!address.includes("@")) {
-    return respond(null, "邮箱地址格式不正确", 0, origin);
-  }
-
-  try {
-    await env.DB
-      .prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)")
-      .bind("forward_email", address)
-      .run();
-
-    return respond({ address }, "转发目标已更新", 1, origin);
-  } catch (err) {
-    return respond(null, `更新失败: ${err}`, 0, origin);
-  }
+  return respond(null, "转发地址已在环境变量中配置，请修改 FORWARD_EMAIL 后重新部署", 0, origin);
 }

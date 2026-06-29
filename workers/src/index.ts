@@ -24,6 +24,9 @@ import { handleAuth } from "./auth/handler";
 import { handleView } from "./view/handler";
 import { handleComment } from "./comment/handler";
 import { handleEmail } from "./email/handler";
+import { handleSubscribe } from "./subscribe/handler";
+import { handleVerifySubscribe, handleDeleteSubscribe } from "./subscribe/api";
+import { handleRssPush, handleRssPushDetail, handleRssPushCount, handleRssPushDeleteAll } from "./rss-push/handler";
 import {
   handleList as handleEmailList,
   handleDetail as handleEmailDetail,
@@ -40,6 +43,14 @@ export default {
     ctx: ExecutionContext,
   ): Promise<void> {
     await handleEmail(message, env, ctx);
+  },
+  // ── Cron 入口（RSS 定时推送） ──
+  async scheduled(
+    _event: ScheduledEvent,
+    env: Env,
+    _ctx: ExecutionContext,
+  ): Promise<void> {
+    await handleRssPush(env);
   },
   async fetch(
     request: Request,
@@ -133,6 +144,47 @@ export default {
         default:
           return respond(null, "Not Found", 0, origin);
       }
+    }
+
+    // POST /api/subscribe — 邮件订阅
+    if (request.method === "POST" && url.pathname === "/api/subscribe") {
+      return handleSubscribe(request, env, origin);
+    }
+
+    // GET /api/subscribe/verify — 验证 D1 与 MailerLite 数据一致性
+    if (request.method === "GET" && url.pathname === "/api/subscribe/verify") {
+      return handleVerifySubscribe(env, origin);
+    }
+
+    // POST /api/subscribe/delete — 从 D1 和 MailerLite 同步删除订阅者
+    if (request.method === "POST" && url.pathname === "/api/subscribe/delete") {
+      return handleDeleteSubscribe(request, env, origin);
+    }
+
+    // POST /api/rss-push — 手动触发 RSS 推送（用于测试）
+    if (request.method === "POST" && url.pathname === "/api/rss-push") {
+      const pushResult = await handleRssPush(env);
+      return respond(
+        { pushed: true, push_log_id: pushResult?.id ?? null, campaign_id: pushResult?.campaign_id ?? null, status: pushResult?.status ?? null },
+        "RSS push completed",
+        1,
+        origin,
+      );
+    }
+
+    // DELETE /api/rss-push — 清空所有推送日志
+    if (request.method === "DELETE" && url.pathname === "/api/rss-push") {
+      return handleRssPushDeleteAll(env, origin);
+    }
+
+    // GET /api/rss-push/count — 推送日志总数
+    if (request.method === "GET" && url.pathname === "/api/rss-push/count") {
+      return handleRssPushCount(env, origin);
+    }
+
+    // GET /api/rss-push/detail?id=N — 查询单条推送日志
+    if (request.method === "GET" && url.pathname === "/api/rss-push/detail") {
+      return handleRssPushDetail(request, env, origin);
     }
 
     // 404 兜底

@@ -11,6 +11,8 @@ interface ArticleItem {
   title: string;
   summary?: string;
   content?: string;
+  categoryName?: string;
+  tags?: { id: number; name: string }[];
   createdAt?: string;
 }
 
@@ -33,6 +35,8 @@ export async function GET() {
       <guid>${link}</guid>
       <pubDate>${date.toUTCString()}</pubDate>
       <description><![CDATA[${a.summary || a.content?.slice(0, 200) || ""}]]></description>
+      ${a.categoryName ? `<category>${a.categoryName}</category>` : ""}
+      ${a.tags?.length ? a.tags.map(t => `<tag>${t.name}</tag>`).join("\n      ") : ""}
       <author>${AUTHOR_NAME}</author>
     </item>`;
   }).join("");

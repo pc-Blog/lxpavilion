@@ -8,6 +8,7 @@ import { get as getAbout } from "@/lib/api/about";
 import type { ArticleVO } from "@/lib/types";
 import Link from "next/link";
 import ArticleTOC from "./ArticleTOC";
+import SubscribeForm from "@/app/_components/subscribe/SubscribeForm";
 
 export default function ArticleSidebar({ content }: { content: string }) {
   const [recentPosts, setRecentPosts] = useState<ArticleVO[]>([]);
@@ -49,6 +50,9 @@ export default function ArticleSidebar({ content }: { content: string }) {
           </div>
         )}
       </div>
+
+      {/* Subscribe */}
+      <SubscribeForm />
 
       {/* Recent posts */}
       {recentPosts.length > 0 && (

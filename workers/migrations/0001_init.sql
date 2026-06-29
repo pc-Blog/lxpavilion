@@ -68,9 +68,33 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_emails_message_id ON emails(message_id);
 
 -- ── 系统设置 ──
 
-CREATE TABLE IF NOT EXISTS settings (
-  key   TEXT PRIMARY KEY,
-  value TEXT NOT NULL
+-- ── 系统设置（已废弃）
+-- forward_email → 环境变量 FORWARD_EMAIL
+
+-- ── 邮件订阅者 ──
+
+CREATE TABLE IF NOT EXISTS subscribers (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  email         TEXT NOT NULL,
+  group_name    TEXT NOT NULL DEFAULT 'article',
+  created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(email, group_name)
 );
 
-INSERT OR IGNORE INTO settings (key, value) VALUES ('forward_email', '2194844980@qq.com');
+CREATE INDEX IF NOT EXISTS idx_subscribers_email ON subscribers(email);
+
+-- ── RSS 推送记录 ──
+
+CREATE TABLE IF NOT EXISTS push_logs (
+  id               INTEGER PRIMARY KEY AUTOINCREMENT,
+  pushed_at        TEXT NOT NULL DEFAULT (datetime('now')),
+  article_count    INTEGER NOT NULL DEFAULT 0,
+  subscriber_count INTEGER NOT NULL DEFAULT 0,
+  group_name       TEXT NOT NULL DEFAULT 'article',
+  status           TEXT NOT NULL DEFAULT 'success',
+  error_msg        TEXT,
+  articles_end_date TEXT,
+  article_ids      TEXT DEFAULT ''
+);
+
+CREATE INDEX IF NOT EXISTS idx_push_logs_pushed_at ON push_logs(pushed_at);

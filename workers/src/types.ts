@@ -14,6 +14,13 @@ export interface Env {
   JUEJIN_USER_ID?: string;
   CNBLOGS_BLOGAPP?: string;
 
+  // 邮件转发目标（环境变量，运行时只读）
+  FORWARD_EMAIL?: string;
+
+  // MailerLite 邮件订阅
+  MAILERLITE_API_KEY: string;
+  RSS_MAX_ARTICLES?: string;
+
   // GitHub App 评论系统
   GITHUB_APP_ID: string;
   GITHUB_APP_PRIVATE_KEY: string;
