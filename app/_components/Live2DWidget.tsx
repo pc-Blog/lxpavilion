@@ -546,6 +546,61 @@ export default function Live2DWidget() {
       menu.appendChild(mBtn);
     }
 
+    // 热点新闻按钮
+    let hotLoading = false;
+    const HOTSPOT_URL = "https://hotspot.lxpavilion.top/report.json";
+    if (menu && !document.querySelector(".pio-hot")) {
+      const hBtn = document.createElement("span");
+      hBtn.className = "pio-hot";
+      hBtn.title = "今日热点";
+      hBtn.onmouseover = () => {
+        const pio = window.pio_reference;
+        if (pio?.modules) pio.modules.render("想知道今天有什么热点吗？🔥");
+      };
+      hBtn.onclick = async () => {
+        if (hotLoading) return;
+        hotLoading = true;
+        stopIdleTimer();
+        try {
+          const res = await fetch(HOTSPOT_URL);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json() as {
+            results: { keyword: string; hotspots: { rank: number; title: string; url: string; summary: string; source: string }[] }[];
+          };
+          if (!data.results || data.results.length === 0) {
+            const pio = window.pio_reference;
+            if (pio?.modules) pio.modules.render("今天好像没有热点新闻呢…");
+            return;
+          }
+          // 展平所有热点
+          const allItems: { title: string; url: string; keyword: string; source?: string }[] = [];
+          for (const r of data.results) {
+            for (const h of r.hotspots || []) {
+              allItems.push({ title: h.title, url: h.url || "", keyword: r.keyword, source: h.source });
+            }
+          }
+          if (allItems.length === 0) {
+            const pio = window.pio_reference;
+            if (pio?.modules) pio.modules.render("今天好像没有热点新闻呢…");
+            return;
+          }
+          const item = allItems[Math.floor(Math.random() * allItems.length)];
+          const msg = item.url
+            ? `<a href="${item.url.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer" style="color:#FF6B35;text-decoration:none;">🔥</a> ${item.title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}`
+            : `🔥 ${item.title}`;
+          const pio = window.pio_reference;
+          if (pio?.modules) pio.modules.render(msg);
+          startIdleTimer();
+        } catch {
+          const pio = window.pio_reference;
+          if (pio?.modules) pio.modules.render("唔…热点没抓到(´;ω;`)");
+        } finally {
+          hotLoading = false;
+        }
+      };
+      menu.appendChild(hBtn);
+    }
+
     // 点击部位不同反应（多组对话，随机选取）
     const hitTexts: Record<string, Record<string, string[]>> = {
       Diana: {

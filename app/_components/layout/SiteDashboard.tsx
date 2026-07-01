@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { siteConfig } from "@/lib/siteConfig";
 
 export default function SiteDashboard() {
@@ -44,16 +45,27 @@ export default function SiteDashboard() {
         </div>
 
         {footerBadges && footerBadges.length > 0 && (
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             {(footerBadges as {name:string}[]).map((badge, i) => (
               <span key={i} className="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm flex items-center gap-1 border border-white/40 dark:border-slate-600 text-[11px]">
                 {(badge as Record<string, string>)["name"]}
               </span>
             ))}
+            <Link
+              href={`https://${siteConfig.hotspot}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm border border-white/40 dark:border-slate-600 text-[11px] font-bold text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-500/30 hover:shadow-lg hover:shadow-orange-500/20 hover:border-orange-300 dark:hover:border-orange-500/50 transition-all flex items-center gap-1"
+            >
+              <span>🔥</span>
+              <span>每日热点</span>
+            </Link>
           </div>
         )}
 
-        
+        {/* 移除独立的热点 Link */}
+
+
       </div>
     </div>
   );

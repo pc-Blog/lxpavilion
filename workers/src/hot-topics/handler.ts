@@ -1,0 +1,371 @@
+/**
+ * 热点推送 —— 基于 Hotspot 项目的每日技术热点邮件推送
+ *
+ * 数据源: https://hotspot.lxpavilion.top/report.json
+ * 周期:   每天 1:00 UTC（北京时间 09:00）
+ * 逻辑:   抓报告 → 去重 → 截取 → 渲染 → 发送 → 记录
+ */
+
+import type { Env } from "../types";
+import { respond } from "../utils/response";
+import { renderHotEmail } from "./template";
+import type { HotItem } from "./template";
+
+// ── 常量 ──
+
+const HOTSPOT_URL = "https://hotspot.lxpavilion.top/report.json";
+const HOT_GROUP_ID = "191576388726163183";
+const FROM_EMAIL = "notify@lxpavilion.top";
+const FROM_NAME = "ppc";
+const CAMPAIGN_NAME = "栏轩·阁｜今日技术热点";
+const DEFAULT_MAX_ARTICLES = 10;
+const MAX_PER_KEYWORD = 2;
+
+// ── URL 哈希（用于去重） ──
+
+function hashUrl(url: string): string {
+  if (!url) return "";
+  let hash = 0;
+  for (let i = 0; i < url.length; i++) {
+    hash = ((hash << 5) - hash) + url.charCodeAt(i);
+    hash |= 0;
+  }
+  return (hash >>> 0).toString(16).slice(0, 8);
+}
+
+// ── 抓取热点报告 ──
+
+interface HotspotReport {
+  report_time: string;
+  total_hotspots: number;
+  results: {
+    keyword: string;
+    hotspots: {
+      rank: number;
+      title: string;
+      url: string;
+      summary: string;
+      source: string;
+      published_time: string;
+      perspectives: { stance: string; summary: string }[];
+    }[];
+  }[];
+}
+
+async function fetchHotspotReport(): Promise<HotspotReport | null> {
+  const resp = await fetch(HOTSPOT_URL);
+  if (!resp.ok) {
+    console.error(`[HotPush] Fetch report.json failed: ${resp.status}`);
+    return null;
+  }
+  return resp.json() as Promise<HotspotReport>;
+}
+
+// ── 展平并分组 ──
+
+interface KeywordGroup {
+  keyword: string;
+  items: HotItem[];
+}
+
+function flattenAndGroup(report: HotspotReport): KeywordGroup[] {
+  const groups: KeywordGroup[] = [];
+
+  for (const result of report.results) {
+    if (!result.hotspots || result.hotspots.length === 0) continue;
+
+    const items: HotItem[] = result.hotspots.map((h) => ({
+      rank: h.rank,
+      title: h.title,
+      url: h.url || "",
+      summary: h.summary || "",
+      source: h.source || "",
+      published_time: h.published_time || "",
+      keyword: result.keyword,
+      perspectives: h.perspectives || [],
+      urlHash: hashUrl(h.url),
+    }));
+
+    groups.push({ keyword: result.keyword, items });
+  }
+
+  return groups;
+}
+
+// ── 获取已推送的 URL 哈希 ──
+
+async function getPushedHashes(env: Env): Promise<Set<string>> {
+  const rows = await env.DB
+    .prepare(
+      `SELECT article_ids FROM push_logs
+       WHERE status = 'success' AND group_name = 'hot-topics'`,
+    )
+    .all<{ article_ids: string }>();
+
+  const hashes = new Set<string>();
+  for (const row of rows.results || []) {
+    if (row.article_ids) {
+      try {
+        const ids = JSON.parse(row.article_ids) as string[];
+        ids.forEach((id) => hashes.add(id));
+      } catch { /* 跳过格式异常 */ }
+    }
+  }
+  return hashes;
+}
+
+// ── 获取 Hotspot 分组的活跃订阅者数 ──
+
+async function getSubscriberCount(env: Env): Promise<number> {
+  try {
+    const resp = await fetch(
+      `https://connect.mailerlite.com/api/groups/${HOT_GROUP_ID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
+          Accept: "application/json",
+        },
+      },
+    );
+    if (!resp.ok) return 0;
+    const { data } = await resp.json() as { data: { active_count: number } };
+    return data.active_count ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+// ── 创建并发送 MailerLite Campaign ──
+
+async function pushToMailerLite(
+  env: Env,
+  groups: KeywordGroup[],
+  totalCount: number,
+  keywordCount: number,
+  reportDate: string,
+): Promise<string> {
+  const html = renderHotEmail(groups, totalCount, keywordCount, reportDate);
+
+  const createResp = await fetch("https://connect.mailerlite.com/api/campaigns", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name: CAMPAIGN_NAME,
+      type: "regular",
+      groups: [HOT_GROUP_ID],
+      emails: [{
+        subject: CAMPAIGN_NAME,
+        from: FROM_EMAIL,
+        from_name: FROM_NAME,
+        content: html,
+      }],
+    }),
+  });
+
+  if (!createResp.ok) {
+    const err = await createResp.text();
+    throw new Error(`Campaign creation failed: ${createResp.status} ${err}`);
+  }
+
+  const { data } = await createResp.json() as { data: { id: string } };
+  const campaignId = data.id;
+  console.log(`[HotPush] Campaign created: ${campaignId}`);
+
+  const sendResp = await fetch(
+    `https://api.mailerlite.com/api/v2/campaigns/${campaignId}/actions/send`,
+    {
+      method: "POST",
+      headers: {
+        "X-MailerLite-ApiKey": env.MAILERLITE_API_KEY,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!sendResp.ok) {
+    const err = await sendResp.text();
+    throw new Error(`Campaign send failed: ${sendResp.status} ${err}`);
+  }
+
+  console.log(`[HotPush] Campaign sent`);
+
+  return campaignId;
+}
+
+// ── 主入口 ──
+
+interface PushResult {
+  id: number;
+  status: string;
+  campaign_id?: string;
+}
+
+export async function handleHotPush(env: Env): Promise<PushResult | null> {
+  console.log("[HotPush] Starting hot topics push...");
+
+  // 1. 抓取热点报告
+  const report = await fetchHotspotReport();
+  if (!report) {
+    console.error("[HotPush] Failed to fetch report.json");
+    const result = await env.DB.prepare(
+      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
+       VALUES (0, 0, 'hot-topics', 'failed', 'fetch report.json failed')`,
+    ).run();
+    return { id: result.meta.last_row_id, status: "failed" };
+  }
+
+  if (!report.results || report.results.length === 0) {
+    console.log("[HotPush] Report has no results");
+    const result = await env.DB.prepare(
+      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
+       VALUES (0, 0, 'hot-topics', 'skipped')`,
+    ).run();
+    return { id: result.meta.last_row_id, status: "skipped" };
+  }
+
+  // 2. 展平并分组
+  const allGroups = flattenAndGroup(report);
+  const flatItems = allGroups.flatMap((g) => g.items);
+
+  if (flatItems.length === 0) {
+    console.log("[HotPush] No hotspot items found in report");
+    const result = await env.DB.prepare(
+      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
+       VALUES (0, 0, 'hot-topics', 'skipped')`,
+    ).run();
+    return { id: result.meta.last_row_id, status: "skipped" };
+  }
+
+  // 3. 去重
+  const pushedHashes = await getPushedHashes(env);
+
+  const filteredGroups: KeywordGroup[] = [];
+
+  for (const group of allGroups) {
+    const fresh = group.items.filter((item) => !pushedHashes.has(item.urlHash));
+    if (fresh.length > 0) {
+      filteredGroups.push({ keyword: group.keyword, items: fresh });
+    }
+  }
+
+  const totalFresh = filteredGroups.reduce((sum, g) => sum + g.items.length, 0);
+
+  if (totalFresh === 0) {
+    console.log("[HotPush] All items already pushed");
+    const result = await env.DB.prepare(
+      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
+       VALUES (0, 0, 'hot-topics', 'skipped')`,
+    ).run();
+    return { id: result.meta.last_row_id, status: "skipped" };
+  }
+
+  // 4. 轮询选择：每个关键词最多取 2 条，按日期偏移轮转取数
+  const maxArticles = Number(env.HOT_MAX_ARTICLES) || DEFAULT_MAX_ARTICLES;
+
+  // 对每个关键词组限制条数
+  const cappedGroups = filteredGroups.map((g) => ({
+    keyword: g.keyword,
+    items: g.items.slice(0, MAX_PER_KEYWORD),
+  }));
+
+  // 按关键词名排序，保证轮询顺序稳定
+  const sortedGroups = [...cappedGroups].sort((a, b) =>
+    a.keyword.localeCompare(b.keyword),
+  );
+
+  // 计算轮询偏移量 = 年积日 % 分组数
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor(
+    (now.getTime() - startOfYear.getTime()) / 86_400_000,
+  );
+  const offset = dayOfYear % sortedGroups.length;
+
+  // 轮询取数：从 offset 开始，每轮每个组取 1 条，直到凑满或取完
+  const pointers = new Array(sortedGroups.length).fill(0);
+  const selected: HotItem[] = [];
+
+  while (selected.length < maxArticles) {
+    let anyRemaining = false;
+
+    for (let gi = 0; gi < sortedGroups.length; gi++) {
+      const idx = (offset + gi) % sortedGroups.length;
+      const group = sortedGroups[idx];
+
+      if (pointers[idx] < group.items.length) {
+        anyRemaining = true;
+        selected.push(group.items[pointers[idx]]);
+        pointers[idx]++;
+        if (selected.length >= maxArticles) break;
+      }
+    }
+
+    if (!anyRemaining) break;
+  }
+
+  const selectedHashes = selected.map((item) => item.urlHash);
+
+  // 按 keyword 重新分组
+  const keywordOrder: string[] = [];
+  const groupMap = new Map<string, HotItem[]>();
+
+  for (const item of selected) {
+    if (!groupMap.has(item.keyword)) {
+      groupMap.set(item.keyword, []);
+      keywordOrder.push(item.keyword);
+    }
+    groupMap.get(item.keyword)!.push(item);
+  }
+
+  const finalGroups: KeywordGroup[] = keywordOrder
+    .map((kw) => ({ keyword: kw, items: groupMap.get(kw) || [] }))
+    .filter((g) => g.items.length > 0);
+
+  const finalCount = selected.length;
+  const finalKeywordCount = finalGroups.length;
+
+  console.log(
+    `[HotPush] ${finalCount} new items across ${finalKeywordCount} keywords (round-robin offset: ${offset}, per-keyword cap: ${MAX_PER_KEYWORD})`,
+  );
+
+  // 5. 推送到 MailerLite
+  const reportDate = report.report_time ? report.report_time.slice(0, 10) : "";
+  let campaignId: string | undefined;
+
+  try {
+    campaignId = await pushToMailerLite(
+      env,
+      finalGroups,
+      finalCount,
+      finalKeywordCount,
+      reportDate,
+    );
+  } catch (e) {
+    const errMsg = (e as Error).message;
+    console.error(`[HotPush] Push failed: ${errMsg}`);
+    const result = await env.DB.prepare(
+      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
+       VALUES (?, 0, 'hot-topics', 'failed', ?)`,
+    ).bind(finalCount, errMsg).run();
+    return { id: result.meta.last_row_id, status: "failed" };
+  }
+
+  // 6. 记录推送日志
+  const subscriberCount = await getSubscriberCount(env);
+
+  const result = await env.DB.prepare(
+    `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, article_ids)
+     VALUES (?, ?, 'hot-topics', 'success', ?)`,
+  ).bind(finalCount, subscriberCount, JSON.stringify(selectedHashes)).run();
+
+  console.log(
+    `[HotPush] Logged: ${finalCount} items, ${subscriberCount} subscribers`,
+  );
+  console.log(`[HotPush] Done! (id=${result.meta.last_row_id})`);
+
+  return { id: result.meta.last_row_id, status: "success", campaign_id: campaignId };
+}

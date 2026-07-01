@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import Tooltip from "@/app/_components/common/Tooltip";
+import SubscribeForm from "@/app/_components/subscribe/SubscribeForm";
+import HotTopicsSubscribeForm from "@/app/_components/subscribe/HotTopicsSubscribeForm";
 
 interface NavItem {
   label: string;
@@ -71,6 +73,13 @@ const CATEGORIES: Category[] = [
       { icon: "💡", label: "功能建议", href: "/tools/wishes" },
     ],
   },
+  {
+    icon: "📬",
+    label: "订阅",
+    items: [
+      { icon: "🔥", label: "热点技术", desc: "AI 每日精选 · 热点技术订阅", href: "#subscribe" },
+    ],
+  },
 ];
 
 const submenuVariants: Variants = {
@@ -107,6 +116,17 @@ const cardVariants: Variants = {
 
 export default function FloatingNav() {
   const [active, setActive] = useState<number | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  const [submenuOffset, setSubmenuOffset] = useState(0);
+
+  useLayoutEffect(() => {
+    if (active === null || !navRef.current) { setSubmenuOffset(0); return; }
+    const btn = navRef.current.querySelector(`[data-nav-btn="${active}"]`) as HTMLElement | null;
+    if (!btn) return;
+    const navRect = navRef.current.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+    setSubmenuOffset(btnRect.top - navRect.top);
+  }, [active]);
 
   const itemCount = active !== null ? CATEGORIES[active].items.length : 0;
   const gridCols =
@@ -115,112 +135,125 @@ export default function FloatingNav() {
         "grid-cols-3";
 
   return (
-    <div className="fixed right-4 top-1/2 z-50 flex items-start gap-3" style={{ transform: "translateY(-50%)" }}>
-      {/* Submenu */}
-      <AnimatePresence mode="wait">
-        {active !== null && (
-          <motion.div
-            key={active}
-            variants={submenuVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="relative z-20 bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xl rounded-2xl p-4 min-w-[200px] overflow-visible"
-            onMouseEnter={() => setActive(active)}
-            onMouseLeave={() => setActive(null)}
-          >
-            <div className="mb-3 pb-2 border-b border-slate-200/50 dark:border-white/5 text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase">
-              {CATEGORIES[active].icon} {CATEGORIES[active].label}
-            </div>
+    <div className="fixed right-4 top-1/2 z-50" style={{ transform: "translateY(-50%)" }}>
+      <div className="relative flex items-start">
+        {/* Submenu */}
+        <AnimatePresence mode="wait">
+          {active !== null && (
             <motion.div
-              className={`grid ${gridCols} gap-2`}
-              variants={containerVariants}
+              key={active}
+              variants={submenuVariants}
               initial="hidden"
               animate="visible"
+              exit="exit"
+              className="absolute z-20 bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xl rounded-2xl p-4 min-w-[300px] overflow-visible"
+              style={{ right: "calc(100% + 0.75rem)", top: submenuOffset }}
+              onMouseEnter={() => setActive(active)}
+              onMouseLeave={() => setActive(null)}
             >
-              {CATEGORIES[active].items.map((item) => {
-                const isExternal = item.href.startsWith("http");
-                const Comp = isExternal ? "a" : Link;
-                const extraProps = isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {};
-                const card = (
-                  <motion.div
-                    whileHover={{ y: -4, scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  >
-                    <Comp
-                      href={item.href}
-                      className="flex flex-col items-center justify-center aspect-square rounded-xl bg-white/50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 p-2"
-                      {...extraProps}
-                    >
-                      <motion.span
-                        className="text-2xl"
-                        whileHover={{ rotate: [0, -10, 10, -5, 0] }}
-                        transition={{ duration: 0.4 }}
+              <div className="mb-3 pb-2 border-b border-slate-200/50 dark:border-white/5 text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase">
+                {CATEGORIES[active].icon} {CATEGORIES[active].label}
+              </div>
+              {CATEGORIES[active].label === "订阅" ? (
+                <div className="flex flex-col gap-4">
+                  <SubscribeForm />
+                  <HotTopicsSubscribeForm />
+                </div>
+              ) : (
+                <motion.div
+                  className={`grid ${gridCols} gap-2`}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {CATEGORIES[active].items.map((item) => {
+                    const isExternal = item.href.startsWith("http");
+                    const Comp = isExternal ? "a" : Link;
+                    const extraProps = isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {};
+                    const card = (
+                      <motion.div
+                        whileHover={{ y: -4, scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
                       >
-                        {item.icon}
-                      </motion.span>
-                      <span className="text-[10px] font-medium mt-1 text-center leading-tight break-words max-w-full">
-                        {item.label}
-                      </span>
-                    </Comp>
-                  </motion.div>
-                );
-                return (
-                  <motion.div key={item.href} variants={cardVariants}>
-                    {item.desc ? (
-                      <Tooltip text={item.desc} position="top">
-                        {card}
-                      </Tooltip>
-                    ) : card}
-                  </motion.div>
-                );
-              })}
+                        <Comp
+                          href={item.href}
+                          className="flex flex-col items-center justify-center aspect-square rounded-xl bg-white/50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 p-2"
+                          {...extraProps}
+                        >
+                          <motion.span
+                            className="text-2xl"
+                            whileHover={{ rotate: [0, -10, 10, -5, 0] }}
+                            transition={{ duration: 0.4 }}
+                          >
+                            {item.icon}
+                          </motion.span>
+                          <span className="text-[10px] font-medium mt-1 text-center leading-tight break-words max-w-full">
+                            {item.label}
+                          </span>
+                        </Comp>
+                      </motion.div>
+                    );
+                    return (
+                      <motion.div key={item.href} variants={cardVariants}>
+                        {item.desc ? (
+                          <Tooltip text={item.desc} position="top">
+                            {card}
+                          </Tooltip>
+                        ) : card}
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
+              )}
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
 
-      {/* Nav bar */}
-      <div
-        className="flex flex-col gap-1 bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-2xl rounded-2xl py-3 px-2 overflow-y-auto max-h-[85vh]"
-        onMouseLeave={() => setActive(null)}
-      >
-        {CATEGORIES.map((cat, i) => {
-          const isDirect = cat.items.length === 1;
-          const btn = (
-            <motion.button
-              key={cat.label}
-              onMouseEnter={() => !isDirect && setActive(i)}
-              className={`flex flex-col items-center gap-0.5 px-1.5 py-2 rounded-xl transition-colors duration-200 group ${active === i
-                ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50"
-                }`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.92 }}
-              animate={active === i ? { scale: [1, 1.12, 1] } : { scale: 1 }}
-              transition={active === i ? { duration: 0.4, ease: "easeInOut" } : { duration: 0.2 }}
-            >
-              <motion.span
-                className="text-lg"
-                whileHover={{ rotate: [0, -8, 8, -4, 0] }}
-                transition={{ duration: 0.35 }}
+        {/* Nav bar */}
+        <div
+          ref={navRef}
+          className="flex flex-col gap-1 bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-2xl rounded-2xl py-3 px-2 overflow-y-auto max-h-[85vh]"
+          onMouseLeave={() => setActive(null)}
+        >
+          {CATEGORIES.map((cat, i) => {
+            const isDirect = cat.items.length === 1 && cat.label !== "订阅";
+            const btn = (
+              <motion.button
+                key={cat.label}
+                data-nav-btn={i}
+                onMouseEnter={() => !isDirect && setActive(i)}
+                className={`flex flex-col items-center gap-0.5 px-1.5 py-2 rounded-xl transition-colors duration-200 group ${active === i
+                  ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"
+                  : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50"
+                  }`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.92 }}
+                animate={active === i ? { scale: [1, 1.12, 1] } : { scale: 1 }}
+                transition={active === i ? { duration: 0.4, ease: "easeInOut" } : { duration: 0.2 }}
               >
-                {cat.icon}
-              </motion.span>
-              <span className="text-[9px] font-bold tracking-widest">{cat.label}</span>
-            </motion.button>
-          );
-          return isDirect ? (
-            <Link
-              key={cat.label}
-              href={cat.items[0].href}
-              className={`flex flex-col items-center gap-0.5 px-1.5 py-2 rounded-xl transition-colors duration-200 group text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50`}
-            >
-              <span className="text-lg">{cat.icon}</span>
-              <span className="text-[9px] font-bold tracking-widest">{cat.label}</span>
-            </Link>
-          ) : btn;
-        })}
+                <motion.span
+                  className="text-lg"
+                  whileHover={{ rotate: [0, -8, 8, -4, 0] }}
+                  transition={{ duration: 0.35 }}
+                >
+                  {cat.icon}
+                </motion.span>
+                <span className="text-[9px] font-bold tracking-widest">{cat.label}</span>
+              </motion.button>
+            );
+            return isDirect ? (
+              <Link
+                key={cat.label}
+                data-nav-btn={i}
+                href={cat.items[0].href}
+                className={`flex flex-col items-center gap-0.5 px-1.5 py-2 rounded-xl transition-colors duration-200 group text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50`}
+              >
+                <span className="text-lg">{cat.icon}</span>
+                <span className="text-[9px] font-bold tracking-widest">{cat.label}</span>
+              </Link>
+            ) : btn;
+          })}
+        </div>
       </div>
     </div>
   );

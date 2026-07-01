@@ -5,12 +5,24 @@ const ThemeContext = createContext({ isDark: true, toggleTheme: () => {} });
 
 function subscribe(callback: () => void) {
   window.addEventListener("theme-changed", callback);
-  return () => window.removeEventListener("theme-changed", callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    window.removeEventListener("theme-changed", callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+/** 从 cookie 读取主题 (跨子域共享) */
+function getCookieTheme(): string | null {
+  if (typeof window === "undefined") return null;
+  const m = document.cookie.match('(?:^|;)\\s*blog-theme=([^;]+)');
+  return m ? decodeURIComponent(m[1]) : null;
 }
 
 function getSnapshot(): string | null {
   if (typeof window === "undefined") return null;
-  return window.localStorage.getItem("blog-theme");
+  // 优先读 cookie (跨子域同步)，其次 localStorage
+  return getCookieTheme() || window.localStorage.getItem("blog-theme");
 }
 
 function getServerSnapshot() {
@@ -41,6 +53,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.classList.remove("dark");
     }
     window.localStorage.setItem("blog-theme", next ? "dark" : "light");
+    // 写入跨子域 cookie，与 hotspot.lxpavilion.top 同步主题
+    document.cookie = "blog-theme=" + (next ? "dark" : "light") +
+      "; domain=.lxpavilion.top; path=/; max-age=" + (365 * 24 * 3600) + "; SameSite=Lax";
     // Force re-render by dispatching a custom event that subscribe picks up
     window.dispatchEvent(new Event("theme-changed"));
   }, [isDark]);

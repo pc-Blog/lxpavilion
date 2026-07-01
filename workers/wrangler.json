@@ -27,7 +27,7 @@
     }
   ],
   "triggers": {
-    "crons": ["0 0 * * *"]
+    "crons": ["0 0 * * *", "0 1 * * *"]
   },
   "vars": {
     "CF_ZONE_ID": "5bf4f5d460e2073282b6ff62d01f2ca4",
@@ -36,6 +36,7 @@
     "CNBLOGS_BLOGAPP": "pc2005",
     "FORWARD_EMAIL": "2194844980@qq.com",
     "RSS_MAX_ARTICLES": "3",
+    "HOT_MAX_ARTICLES": "10",
     "JWT_SECRET": "【必填】JWT 签名密钥（从 git 历史清理，请轮换后回填）",
     "GITHUB_CLIENT_ID": "Iv23liAI2h53TjkCBu67",
     "GITHUB_REDIRECT_URI": "https://api.lxpavilion.top/api/auth/github/callback",

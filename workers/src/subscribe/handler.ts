@@ -2,10 +2,16 @@ import { respond } from "../utils/response";
 import type { Env } from "../types";
 
 const MAILERLITE_GROUP_ID = "191576374630155327";
+const HOT_MAILERLITE_GROUP_ID = "191576388726163183";
 const ADMIN_GROUP_ID = "191757744228795902";
 
 const FROM_EMAIL = "notify@lxpavilion.top";
 const FROM_NAME = "ppc";
+
+const GROUP_MAP: Record<string, { mailerliteId: string; label: string }> = {
+  article: { mailerliteId: MAILERLITE_GROUP_ID, label: "文章推送" },
+  "hot-topics": { mailerliteId: HOT_MAILERLITE_GROUP_ID, label: "技术热点" },
+};
 
 // ── 管理员通知模板 ──
 
@@ -28,11 +34,14 @@ function renderAdminNotification(
 async function sendAdminNotification(
   env: Env,
   email: string,
+  groupLabel: string,
+  groupName: string,
 ): Promise<void> {
   try {
-    // 1. 查当前总订阅数
+    // 1. 查当前分组的总订阅数
     const { results } = await env.DB
-      .prepare("SELECT COUNT(*) as count FROM subscribers WHERE group_name = 'article'")
+      .prepare("SELECT COUNT(*) as count FROM subscribers WHERE group_name = ?")
+      .bind(groupName)
       .all<{ count: number }>();
     const total = results?.[0]?.count ?? 0;
 
@@ -40,7 +49,7 @@ async function sendAdminNotification(
     const now = new Date();
     const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
     const campaignName = `新订阅通知 - ${email}`;
-    const html = renderAdminNotification(email, "文章推送（article）", time, total);
+    const html = renderAdminNotification(email, `${groupLabel}（${groupName}）`, time, total);
 
     // 3. 创建 Campaign → main 组
     const createResp = await fetch("https://connect.mailerlite.com/api/campaigns", {
@@ -99,7 +108,7 @@ export async function handleSubscribe(
   env: Env,
   origin: string | null,
 ): Promise<Response> {
-  let body: { email?: string };
+  let body: { email?: string; group?: string };
   try {
     body = await request.json();
   } catch {
@@ -111,13 +120,19 @@ export async function handleSubscribe(
     return respond(null, "请输入有效的邮箱地址", 0, origin);
   }
 
+  const group = body.group?.trim().toLowerCase() || "article";
+  const groupConfig = GROUP_MAP[group];
+  if (!groupConfig) {
+    return respond(null, `不支持的订阅类型：${group}`, 0, origin);
+  }
+
   try {
     // 1. 写入 D1（先写，即使 MailerLite 失败也已留底）
     await env.DB.prepare(
       "INSERT OR IGNORE INTO subscribers (email, group_name) VALUES (?, ?)",
-    ).bind(email, "article").run();
+    ).bind(email, group).run();
 
-    // 2. MailerLite API — 添加订阅者到 article 分组
+    // 2. MailerLite API — 添加订阅者到对应的分组
     //    Automation 会自动发欢迎邮件
     const mlResp = await fetch("https://connect.mailerlite.com/api/subscribers", {
       method: "POST",
@@ -128,7 +143,7 @@ export async function handleSubscribe(
       },
       body: JSON.stringify({
         email,
-        groups: [MAILERLITE_GROUP_ID],
+        groups: [groupConfig.mailerliteId],
         status: "active",
       }),
     });
@@ -141,9 +156,9 @@ export async function handleSubscribe(
     }
 
     // 3. 给管理员发通知（不阻断主流程）
-    await sendAdminNotification(env, email);
+    await sendAdminNotification(env, email, groupConfig.label, group);
 
-    return respond({ email }, "订阅成功 🎉 欢迎加入！", 1, origin);
+    return respond({ email, group }, "订阅成功 🎉 欢迎加入！", 1, origin);
   } catch (e) {
     console.error("[Subscribe] Error:", e);
     return respond(null, "订阅失败，请稍后重试", 0, origin);

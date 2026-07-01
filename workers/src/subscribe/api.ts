@@ -125,12 +125,18 @@ async function deleteMLSubscriber(apiKey: string, email: string): Promise<{ succ
  *   - is_consistent                        — 是否完全一致
  */
 export async function handleVerifySubscribe(
+  request: Request,
   env: Env,
   origin: string | null,
 ): Promise<Response> {
-  // 1. 获取 D1 所有订阅者
+  // 支持按分组查询：?group=hot-topics，默认 article
+  const url = new URL(request.url);
+  const group = url.searchParams.get("group")?.trim().toLowerCase() || "article";
+
+  // 1. 获取 D1 指定分组的订阅者
   const d1Result = await env.DB
-    .prepare("SELECT email, created_at FROM subscribers WHERE group_name = 'article' ORDER BY email")
+    .prepare("SELECT email, created_at FROM subscribers WHERE group_name = ? ORDER BY email")
+    .bind(group)
     .all<{ email: string; created_at: string }>();
 
   const d1Emails = new Map<string, string>();
@@ -166,6 +172,7 @@ export async function handleVerifySubscribe(
   }
 
   return respond({
+    group,
     d1_total: d1Emails.size,
     mailerlite_total: mlEmails.size,
     matched,
@@ -191,12 +198,14 @@ export async function handleDeleteSubscribe(
   env: Env,
   origin: string | null,
 ): Promise<Response> {
-  let body: { email?: string; emails?: string[] };
+  let body: { email?: string; emails?: string[]; group?: string };
   try {
     body = await request.json();
   } catch {
     return respond(null, "请求体必须是 JSON", 0, origin);
   }
+
+  const group = body.group?.trim().toLowerCase() || "article";
 
   // 收集待删除邮箱
   let emailsToDelete: string[];
@@ -232,11 +241,11 @@ export async function handleDeleteSubscribe(
   for (const email of emailsToDelete) {
     const result: DeleteResult = { email, d1_deleted: false, mailerlite_deleted: false };
 
-    // 1. 从 D1 删除
+    // 1. 从 D1 删除指定分组的订阅
     try {
       const d1Result = await env.DB
-        .prepare("DELETE FROM subscribers WHERE email = ? AND group_name = 'article'")
-        .bind(email)
+        .prepare("DELETE FROM subscribers WHERE email = ? AND group_name = ?")
+        .bind(email, group)
         .run();
       result.d1_deleted = true; // D1 不会因为行不存在而报错
     } catch (e) {
@@ -255,6 +264,7 @@ export async function handleDeleteSubscribe(
   }
 
   const summary = {
+    group,
     total: results.length,
     fully_deleted: results.filter(r => r.d1_deleted && r.mailerlite_deleted).length,
     partial: results.filter(r => r.d1_deleted !== r.mailerlite_deleted).length,

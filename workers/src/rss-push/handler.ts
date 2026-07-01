@@ -169,7 +169,11 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
   const allArticles = await fetchRssArticles();
   if (allArticles.length === 0) {
     console.log("[RssPush] No articles found in feed");
-    return null;
+    const result = await env.DB.prepare(
+      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
+       VALUES (0, 0, 'article', 'failed', 'feed empty')`,
+    ).run();
+    return { id: result.meta.last_row_id, status: "failed" };
   }
 
   // 2. 收集已推送过的文章 ID（从所有成功的 push_logs 中汇总）

@@ -42,6 +42,9 @@ export const siteConfig = {
   /** 获取站点流量/AI 聊天的接口 */
   analytics: "api.lxpavilion.top",
 
+  /** 热点报告页面 */
+  hotspot: "hotspot.lxpavilion.top",
+
   /** 仓库信息 */
   repo: "pc-Blog/next",
   repoId: "R_kgDOSk99gw",

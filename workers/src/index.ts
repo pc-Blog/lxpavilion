@@ -27,6 +27,7 @@ import { handleEmail } from "./email/handler";
 import { handleSubscribe } from "./subscribe/handler";
 import { handleVerifySubscribe, handleDeleteSubscribe } from "./subscribe/api";
 import { handleRssPush, handleRssPushDetail, handleRssPushCount, handleRssPushDeleteAll } from "./rss-push/handler";
+import { handleHotPush } from "./hot-topics/handler";
 import {
   handleList as handleEmailList,
   handleDetail as handleEmailDetail,
@@ -44,13 +45,17 @@ export default {
   ): Promise<void> {
     await handleEmail(message, env, ctx);
   },
-  // ── Cron 入口（RSS 定时推送） ──
+  // ── Cron 入口（RSS 推送 00:00 UTC / 热点推送 01:00 UTC） ──
   async scheduled(
-    _event: ScheduledEvent,
+    event: ScheduledEvent,
     env: Env,
     _ctx: ExecutionContext,
   ): Promise<void> {
-    await handleRssPush(env);
+    if (event.cron === "0 1 * * *") {
+      await handleHotPush(env);
+    } else {
+      await handleRssPush(env);
+    }
   },
   async fetch(
     request: Request,
@@ -153,7 +158,7 @@ export default {
 
     // GET /api/subscribe/verify — 验证 D1 与 MailerLite 数据一致性
     if (request.method === "GET" && url.pathname === "/api/subscribe/verify") {
-      return handleVerifySubscribe(env, origin);
+      return handleVerifySubscribe(request, env, origin);
     }
 
     // POST /api/subscribe/delete — 从 D1 和 MailerLite 同步删除订阅者
@@ -167,6 +172,17 @@ export default {
       return respond(
         { pushed: true, push_log_id: pushResult?.id ?? null, campaign_id: pushResult?.campaign_id ?? null, status: pushResult?.status ?? null },
         "RSS push completed",
+        1,
+        origin,
+      );
+    }
+
+    // POST /api/hot-push — 手动触发热点推送（用于测试）
+    if (request.method === "POST" && url.pathname === "/api/hot-push") {
+      const pushResult = await handleHotPush(env);
+      return respond(
+        { pushed: true, push_log_id: pushResult?.id ?? null, campaign_id: pushResult?.campaign_id ?? null, status: pushResult?.status ?? null },
+        "Hot push completed",
         1,
         origin,
       );

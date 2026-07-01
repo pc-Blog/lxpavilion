@@ -20,6 +20,7 @@ export interface Env {
   // MailerLite 邮件订阅
   MAILERLITE_API_KEY: string;
   RSS_MAX_ARTICLES?: string;
+  HOT_MAX_ARTICLES?: string;
 
   // GitHub App 评论系统
   GITHUB_APP_ID: string;

@@ -7,7 +7,7 @@ const API_BASE = "https://api.lxpavilion.top";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export default function SubscribeForm() {
+export default function HotTopicsSubscribeForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [msg, setMsg] = useState("");
@@ -20,14 +20,14 @@ export default function SubscribeForm() {
       const res = await fetch(`${API_BASE}/api/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, group: "hot-topics" }),
       });
 
       const data = await res.json();
 
       if (data.code === 1) {
         setStatus("success");
-        setMsg("订阅成功 🎉 欢迎加入！");
+        setMsg("订阅成功 🎉 每日热点准时送达！");
         setEmail("");
       } else {
         setStatus("error");
@@ -40,21 +40,21 @@ export default function SubscribeForm() {
   };
 
   return (
-    <div className="glass-card p-5">
-      <div className="flex items-center gap-2 mb-1 pl-4 border-l-4 border-indigo-500">
+    <div className="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-5">
+      <div className="flex items-center gap-2 mb-1 pl-4 border-l-4 border-orange-500">
         <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
-          订阅技术速递
+          订阅技术热点
         </h4>
-        <Tooltip text="周末推送原创实战笔记。涵盖前后端工程化（框架选型/性能调优）、独立开发实战（域名/CI/CD 踩坑记录）、AI 应用落地（模型接入真实产品的麻烦事）、底层知识补全（网络协议/数据库原理/操作系统）以及工具链与效率（编辑器配置/调试技巧/自动化脚本）">
+        <Tooltip text="AI 每日扫描 20+ 技术关键词，自动检索全网热点、去重验证、整理分类。覆盖前端、AI、后端、云原生等多领域，每条热点附带多角度观点整理，附原文链接一键直达。每天 09:00 推送">
           <span className="inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px] font-bold
                           text-slate-400 cursor-help bg-slate-200 dark:bg-slate-700
-                          hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-500 transition-colors">
+                          hover:bg-orange-500 hover:text-white dark:hover:bg-orange-500 transition-colors">
             ?
           </span>
         </Tooltip>
       </div>
       <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 pl-4">
-        每周一篇，随时退订
+        AI 每日精选 · 随时退订
       </p>
 
       {status === "success" ? (
@@ -70,15 +70,15 @@ export default function SubscribeForm() {
             disabled={status === "loading"}
             className="flex-1 min-w-0 rounded-lg border border-slate-300 bg-white/80 px-3 py-2 text-xs
                        placeholder-slate-400 outline-none transition
-                       focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20
+                       focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
                        dark:border-slate-600 dark:bg-slate-800/80 dark:text-slate-200
-                       dark:placeholder-slate-500 dark:focus:border-indigo-400"
+                       dark:placeholder-slate-500 dark:focus:border-orange-400"
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="shrink-0 rounded-lg bg-indigo-600 px-4 py-2 text-xs font-medium text-white
-                       transition hover:bg-indigo-700 active:bg-indigo-800
+            className="shrink-0 rounded-lg bg-orange-600 px-4 py-2 text-xs font-medium text-white
+                       transition hover:bg-orange-700 active:bg-orange-800
                        disabled:cursor-not-allowed disabled:opacity-60"
           >
             {status === "loading" ? "..." : "订阅"}

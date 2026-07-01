@@ -264,7 +264,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Row 4: Site Dashboard */}
+        {/* Row 5: Site Dashboard */}
         <SiteDashboard />
       </div>
     </>
