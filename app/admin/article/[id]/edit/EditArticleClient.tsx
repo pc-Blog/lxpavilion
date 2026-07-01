@@ -27,8 +27,8 @@ export default function EditArticlePage(props: { params: Promise<{ id: string }>
   const router = useRouter();
 
   useEffect(() => {
-    getCategories().then((d) => setCategories(d.rows.filter((c) => c.type === "ARTICLE"))).catch(() => {});
-    getTags().then((d) => setTags(d.rows)).catch(() => {});
+    getCategories(undefined, 1, 9999).then((d) => setCategories(d.rows.filter((c) => c.type === "ARTICLE"))).catch(() => {});
+    getTags(undefined, 1, 9999).then((d) => setTags(d.rows)).catch(() => {});
     api.get(`/article/${id}`).then((raw: unknown) => {
       const a = raw as Record<string, unknown>;
       setTitle(String(a.title || ""));

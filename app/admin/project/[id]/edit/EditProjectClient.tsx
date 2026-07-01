@@ -30,7 +30,7 @@ export default function EditProjectPage(props: { params: Promise<{ id: string }>
   const router = useRouter();
 
   useEffect(() => {
-    getCategories().then((d) => setCategories(d.rows.filter((c) => c.type === "PROJECT"))).catch(() => {});
+    getCategories(undefined, 1, 9999).then((d) => setCategories(d.rows.filter((c) => c.type === "PROJECT"))).catch(() => {});
     getTechList().then((d) => setTechs(d)).catch(() => {});
     api.get(`/project/${id}`).then((raw: unknown) => {
       const p = raw as Record<string, unknown>;

@@ -25,8 +25,8 @@ export default function NewArticlePage() {
   const router = useRouter();
 
   useEffect(() => {
-    getCategories().then((d) => setCategories(d.rows.filter((c) => c.type === "ARTICLE"))).catch(() => {});
-    getTags().then((d) => setTags(d.rows)).catch(() => {});
+    getCategories(undefined, 1, 9999).then((d) => setCategories(d.rows.filter((c) => c.type === "ARTICLE"))).catch(() => {});
+    getTags(undefined, 1, 9999).then((d) => setTags(d.rows)).catch(() => {});
   }, []);
 
   const handleSave = async (publish: boolean) => {
