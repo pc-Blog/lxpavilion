@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import type { OpArticle, OpTag } from "@/lib/types";
 import { getArticleList } from "@/lib/api/op";
 import BackButton from "@/app/_components/article/BackButton";
-import Loading from "@/app/_components/common/Loading";
 import CommentSection from "@/app/_components/comment/CommentSection";
 import { jsonLdSchema } from "@/lib/seo";
 import { tagIconMap } from "@/app/_components/literature/tag-icons";
@@ -87,24 +86,10 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
     });
   }, []);
 
-  if (loading) return (
-    <div className="py-24">
-      <div className="max-w-3xl mx-auto px-5">
-        {props.articleTitle && (
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">
-            {props.articleTitle}
-          </h1>
-        )}
-        {props.initialContent && (
-          <div className="text-slate-600 dark:text-slate-400 leading-relaxed mt-4 whitespace-pre-wrap">
-            {props.initialContent}
-          </div>
-        )}
-        <div className="mt-8"><Loading /></div>
-      </div>
-    </div>
-  );
-  if (!item) return <div className="text-center py-24 text-slate-400">Work not found.</div>;
+  const displayContent = item?.content || props.initialContent || "";
+
+  // API 返回失败且没有 SSR 兜底数据
+  if (!loading && !item) return <div className="text-center py-24 text-slate-400">Work not found.</div>;
 
   return (
     <>
@@ -131,10 +116,10 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
 
         <header className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-slate-900 dark:text-white transition-all duration-500 hover:text-indigo-500 dark:hover:text-indigo-400 hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.3)]">
-            {item.title}
+            {item?.title || props.articleTitle}
           </h1>
 
-          {item.writtenAt && (
+          {item?.writtenAt && (
             <p className="mt-3 text-sm text-slate-400">
               {new Date(item.writtenAt).toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
             </p>
@@ -151,10 +136,10 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
           )}
         </header>
 
-        {item.content && (
+        {displayContent && (
           <div className="relative" onMouseMove={handleSpotMove} onMouseLeave={() => setSpotXY({ x: -50, y: -50 })}>
             <div className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
-              {item.content}
+              {displayContent}
             </div>
             <div
               className="absolute inset-0 leading-relaxed whitespace-pre-wrap pointer-events-none text-amber-200/90 dark:text-yellow-400/90 drop-shadow-[0_0_3px_rgba(253,230,138,0.6)] dark:drop-shadow-[0_0_3px_rgba(251,191,36,0.5)]"
@@ -163,7 +148,7 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
                 maskImage: `radial-gradient(60px circle at ${spotXY.x}% ${spotXY.y}%, black 20%, transparent 100%)`,
               }}
             >
-              {item.content}
+              {displayContent}
             </div>
           </div>
         )}
