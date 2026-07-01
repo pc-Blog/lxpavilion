@@ -2,6 +2,97 @@ import { respond } from "../utils/response";
 import type { Env } from "../types";
 
 const MAILERLITE_GROUP_ID = "191576374630155327";
+const ADMIN_GROUP_ID = "191757744228795902";
+
+const FROM_EMAIL = "notify@lxpavilion.top";
+const FROM_NAME = "ppc";
+
+// ── 管理员通知模板 ──
+
+import adminTpl from "./admin-notification.html";
+
+function renderAdminNotification(
+  email: string,
+  service: string,
+  time: string,
+  total: number,
+): string {
+  return adminTpl
+    .replace(/\{\{EMAIL\}\}/g, email)
+    .replace(/\{\{SERVICE\}\}/g, service)
+    .replace(/\{\{TIME\}\}/g, time)
+    .replace(/\{\{TOTAL_SUBSCRIBERS\}\}/g, String(total));
+}
+
+/** 订阅成功后给管理员发通知邮件 */
+async function sendAdminNotification(
+  env: Env,
+  email: string,
+): Promise<void> {
+  try {
+    // 1. 查当前总订阅数
+    const { results } = await env.DB
+      .prepare("SELECT COUNT(*) as count FROM subscribers WHERE group_name = 'article'")
+      .all<{ count: number }>();
+    const total = results?.[0]?.count ?? 0;
+
+    // 2. 渲染模板
+    const now = new Date();
+    const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    const campaignName = `新订阅通知 - ${email}`;
+    const html = renderAdminNotification(email, "文章推送（article）", time, total);
+
+    // 3. 创建 Campaign → main 组
+    const createResp = await fetch("https://connect.mailerlite.com/api/campaigns", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        name: campaignName,
+        type: "regular",
+        groups: [ADMIN_GROUP_ID],
+        emails: [{
+          subject: `栏轩阁 - 新订阅通知`,
+          from: FROM_EMAIL,
+          from_name: FROM_NAME,
+          content: html,
+        }],
+      }),
+    });
+
+    if (!createResp.ok) {
+      const err = await createResp.text();
+      console.error(`[Subscribe] Admin campaign create failed (${createResp.status}): ${err}`);
+      return;
+    }
+
+    const { data } = await createResp.json() as { data: { id: string } };
+    const campaignId = data.id;
+
+    // 4. v2 API 发送
+    const sendResp = await fetch(
+      `https://api.mailerlite.com/api/v2/campaigns/${campaignId}/actions/send`,
+      {
+        method: "POST",
+        headers: {
+          "X-MailerLite-ApiKey": env.MAILERLITE_API_KEY,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!sendResp.ok) {
+      const err = await sendResp.text();
+      console.error(`[Subscribe] Admin campaign send failed (${sendResp.status}): ${err}`);
+    }
+  } catch (e) {
+    // 通知失败不影响订阅流程
+    console.error("[Subscribe] Admin notification error:", e);
+  }
+}
 
 export async function handleSubscribe(
   request: Request,
@@ -48,6 +139,9 @@ export async function handleSubscribe(
       console.error(`[Subscribe] MailerLite error (${mlResp.status}):`, err);
       // 不阻断：D1 已记录，留给后续重试
     }
+
+    // 3. 给管理员发通知（不阻断主流程）
+    await sendAdminNotification(env, email);
 
     return respond({ email }, "订阅成功 🎉 欢迎加入！", 1, origin);
   } catch (e) {

@@ -107,7 +107,7 @@ async function pushToMailerLite(
     body: JSON.stringify({
       name: CAMPAIGN_NAME,
       type: "regular",
-      recipients: { groups: [GROUP_ID] },
+      groups: [GROUP_ID],
       emails: [{
         subject: CAMPAIGN_NAME,
         from: FROM_EMAIL,
