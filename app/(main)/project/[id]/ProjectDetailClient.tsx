@@ -15,7 +15,7 @@ import { jsonLdSchema } from "@/lib/seo";
 import { assetUrl } from "@/lib/asset-url";
 import { useContentStore } from "@/stores/contentStore";
 
-export default function ProjectDetailClient(props: { params: Promise<{ id: string }> }) {
+export default function ProjectDetailClient(props: { params: Promise<{ id: string }>; projectName?: string; initialContent?: string }) {
   const { id } = use(props.params);
   const [project, setProject] = useState<ProjectDetailVO | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,7 +52,23 @@ export default function ProjectDetailClient(props: { params: Promise<{ id: strin
     return () => { useContentStore.getState().clearContent(); };
   }, [project]);
 
-  if (loading) return <div className="min-h-screen py-24"><Loading /></div>;
+  if (loading) return (
+    <div className="min-h-screen py-24">
+      <div className="p-5 md:p-10 max-w-4xl mx-auto">
+        {props.projectName && (
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight mb-4">
+            {props.projectName}
+          </h1>
+        )}
+        {props.initialContent && (
+          <div className="text-slate-600 dark:text-slate-400 text-base leading-relaxed mb-8 whitespace-pre-wrap">
+            {props.initialContent}
+          </div>
+        )}
+        <Loading />
+      </div>
+    </div>
+  );
   if (!project) return <div className="text-center py-24 text-slate-400">Project not found.</div>;
 
   return (

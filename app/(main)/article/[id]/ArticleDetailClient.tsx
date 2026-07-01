@@ -17,7 +17,7 @@ import { assetUrl } from "@/lib/asset-url";
 import { useContentStore } from "@/stores/contentStore";
 import { siteConfig } from "@/lib/siteConfig";
 
-export default function ArticleDetailClient(props: { params: Promise<{ id: string }> }) {
+export default function ArticleDetailClient(props: { params: Promise<{ id: string }>; articleTitle?: string; initialContent?: string }) {
   const { id } = use(props.params);
   const [article, setArticle] = useState<ArticleDetailVO | null>(null);
   const [viewCount, setViewCount] = useState<number>(0);
@@ -59,7 +59,23 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
     return () => { useContentStore.getState().clearContent(); };
   }, [article]);
 
-  if (loading) return <div className="min-h-screen py-24"><Loading /></div>;
+  if (loading) return (
+    <div className="min-h-screen py-24">
+      <div className="p-5 md:p-10 max-w-4xl mx-auto">
+        {props.articleTitle && (
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+            {props.articleTitle}
+          </h1>
+        )}
+        {props.initialContent && (
+          <div className="text-slate-600 dark:text-slate-400 text-base leading-relaxed mb-8 whitespace-pre-wrap">
+            {props.initialContent}
+          </div>
+        )}
+        <Loading />
+      </div>
+    </div>
+  );
   if (!article) return <div className="text-center py-24 text-slate-400">Article not found.</div>;
 
   const date = article.createdAt

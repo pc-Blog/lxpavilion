@@ -7,7 +7,7 @@ import { OG_TITLE_SUFFIX, defaultOgImage, breadcrumbSchema, SITE_URL } from "@/l
 function readArticle(id: string) {
   try {
     const p = path.join(process.cwd(), "public", "data", "articles", `${id}.json`);
-    return JSON.parse(fs.readFileSync(p, "utf-8")) as { title: string; summary?: string; coverImage?: string };
+    return JSON.parse(fs.readFileSync(p, "utf-8")) as { title: string; summary?: string; coverImage?: string; content?: string };
   } catch { return null; }
 }
 
@@ -50,7 +50,7 @@ export default async function ArticleDetailPage(props: { params: Promise<{ id: s
           ])),
         }}
       />
-      <ArticleDetailClient params={props.params} />
+      <ArticleDetailClient params={props.params} articleTitle={data?.title || ""} initialContent={data?.content || ""} />
     </>
   );
 }

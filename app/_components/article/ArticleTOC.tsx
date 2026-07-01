@@ -10,11 +10,26 @@ interface TOCItem {
 
 function extractTOC(content: string): TOCItem[] {
   const items: TOCItem[] = [];
-  const regex = /^(#{1,3})\s+(.+)$/gm;
-  let match;
-  while ((match = regex.exec(content)) !== null) {
+  const idCount = new Map<string, number>();
+  const headingRegex = /^(#{1,3})\s+(.+)$/;
+  const fenceRegex = /^(```|~~~)/;
+  let inCodeBlock = false;
+
+  for (const line of content.split("\n")) {
+    if (fenceRegex.test(line.trim())) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+
+    const match = headingRegex.exec(line);
+    if (!match) continue;
+
     const text = match[2].trim().replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
-    const id = text.toLowerCase().replace(/[^a-z0-9一-鿿]+/g, "-").replace(/(^-|-$)/g, "");
+    let id = text.toLowerCase().replace(/[^a-z0-9一-鿿]+/g, "-").replace(/(^-|-$)/g, "");
+    const count = idCount.get(id) || 0;
+    idCount.set(id, count + 1);
+    if (count > 0) id = `${id}-${count}`;
     items.push({ id, text, level: match[1].length });
   }
   return items;
@@ -32,7 +47,14 @@ export default function ArticleTOC({ content }: { content: string }) {
     if (!articleEl) return;
 
     const headings = articleEl.querySelectorAll("h1, h2, h3");
-    headings.forEach((h) => { h.id = h.textContent?.toLowerCase().replace(/[^a-z0-9一-鿿]+/g, "-").replace(/(^-|-$)/g, "") || ""; });
+    const headingIdCount = new Map<string, number>();
+    headings.forEach((h) => {
+      let id = h.textContent?.toLowerCase().replace(/[^a-z0-9一-鿿]+/g, "-").replace(/(^-|-$)/g, "") || "";
+      const count = headingIdCount.get(id) || 0;
+      headingIdCount.set(id, count + 1);
+      if (count > 0) id = `${id}-${count}`;
+      h.id = id;
+    });
 
     const onScroll = () => {
       for (let i = items.length - 1; i >= 0; i--) {

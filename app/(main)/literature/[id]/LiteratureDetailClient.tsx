@@ -12,7 +12,7 @@ import { jsonLdSchema } from "@/lib/seo";
 import { tagIconMap } from "@/app/_components/literature/tag-icons";
 import { useContentStore } from "@/stores/contentStore";
 
-export default function LiteratureDetailPage(props: { params: Promise<{ id: string }> }) {
+export default function LiteratureDetailPage(props: { params: Promise<{ id: string }>; articleTitle?: string; initialContent?: string }) {
   const { id } = use(props.params);
   const [item, setItem] = useState<OpArticle | null>(null);
   const [loading, setLoading] = useState(true);
@@ -87,7 +87,23 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
     });
   }, []);
 
-  if (loading) return <div className="py-24"><Loading /></div>;
+  if (loading) return (
+    <div className="py-24">
+      <div className="max-w-3xl mx-auto px-5">
+        {props.articleTitle && (
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">
+            {props.articleTitle}
+          </h1>
+        )}
+        {props.initialContent && (
+          <div className="text-slate-600 dark:text-slate-400 leading-relaxed mt-4 whitespace-pre-wrap">
+            {props.initialContent}
+          </div>
+        )}
+        <div className="mt-8"><Loading /></div>
+      </div>
+    </div>
+  );
   if (!item) return <div className="text-center py-24 text-slate-400">Work not found.</div>;
 
   return (

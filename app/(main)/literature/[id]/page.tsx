@@ -61,7 +61,7 @@ export default async function LiteratureDetailPage(props: { params: Promise<{ id
           ])),
         }}
       />
-      <LiteratureDetailClient params={props.params} />
+      <LiteratureDetailClient params={props.params} articleTitle={found?.title || ""} initialContent={found?.content || ""} />
     </>
   );
 }
