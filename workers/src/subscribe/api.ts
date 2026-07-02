@@ -63,7 +63,7 @@ async function fetchAllMLSubscribers(apiKey: string): Promise<Map<string, { id: 
 
 // ── 从 MailerLite 删除单个订阅者（按邮箱查找 → 按 ID 删除） ──
 
-async function deleteMLSubscriber(apiKey: string, email: string): Promise<{ success: boolean; error?: string }> {
+export async function deleteMLSubscriber(apiKey: string, email: string): Promise<{ success: boolean; error?: string }> {
   // 1. 按邮箱查找
   const lookupResp = await fetch(
     `https://connect.mailerlite.com/api/subscribers/${encodeURIComponent(email)}`,

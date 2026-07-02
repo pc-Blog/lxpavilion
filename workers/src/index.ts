@@ -26,6 +26,7 @@ import { handleComment } from "./comment/handler";
 import { handleEmail } from "./email/handler";
 import { handleSubscribe } from "./subscribe/handler";
 import { handleVerifySubscribe, handleDeleteSubscribe } from "./subscribe/api";
+import { handleUnsubscribe } from "./subscribe/unsubscribe";
 import { handleRssPush, handleRssPushDetail, handleRssPushCount, handleRssPushDeleteAll } from "./rss-push/handler";
 import { handleHotPush } from "./hot-topics/handler";
 import {
@@ -164,6 +165,11 @@ export default {
     // POST /api/subscribe/delete — 从 D1 和 MailerLite 同步删除订阅者
     if (request.method === "POST" && url.pathname === "/api/subscribe/delete") {
       return handleDeleteSubscribe(request, env, origin);
+    }
+
+    // GET/POST /api/unsubscribe — 自定义退订
+    if (url.pathname === "/api/unsubscribe") {
+      return handleUnsubscribe(request, env, origin);
     }
 
     // POST /api/rss-push — 手动触发 RSS 推送（用于测试）

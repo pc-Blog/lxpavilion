@@ -22,14 +22,14 @@ const CARD = `
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
   <tr>
     <td>
-      <h3 style="font-family: 'Inter', sans-serif; color: #FFFFFF; font-size: 18px; line-height: 1.25; font-weight: normal; margin: 0 0 6px;">
+      <h3 style="font-family: 'Inter', sans-serif; color: #FFFFFF; font-size: 19px; line-height: 1.35; font-weight: 600; margin: 0 0 8px;">
         <a href="{{LINK}}" target="_blank" style="color: #FFFFFF; text-decoration: none;">{{TITLE}}</a>
       </h3>
-      <p style="font-family: 'Inter', sans-serif; color: #C0C0C0; font-size: 13px; margin: 0 0 6px;">{{DATE}}{{CATEGORY}}</p>
-      <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 13px; margin: 0 0 10px;">{{TAGS}}</p>
-      <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 1.5; margin: 0 0 10px;">{{SUMMARY}}</p>
+      <p style="font-family: 'Inter', sans-serif; color: #9CA3AF; font-size: 12px; margin: 0 0 8px;">{{DATE}}{{CATEGORY}}</p>
+      <p style="font-family: 'Inter', sans-serif; color: #9CA3AF; font-size: 12px; margin: 0 0 12px;">{{TAGS}}</p>
+      <p style="font-family: 'Inter', sans-serif; color: #D1D5DB; font-size: 14px; line-height: 1.7; margin: 0 0 12px;">{{SUMMARY}}</p>
       <p style="margin: 0;">
-        <a href="{{LINK}}" target="_blank" style="color: #8B5CF6; text-decoration: underline; font-family: 'Inter', sans-serif; font-size: 14px;">Read more →</a>
+        <a href="{{LINK}}" target="_blank" style="color: #8B5CF6; text-decoration: underline; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;">Read more →</a>
       </p>
     </td>
   </tr>

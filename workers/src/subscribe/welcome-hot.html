@@ -98,7 +98,7 @@
                                                     <td style="padding: 4px 14px; background-color: rgba(139, 92, 246, 0.12); border-radius: 20px;">
                                                         <a builder-link-id="-1"
                                                             style="color: rgba(196, 181, 253, 0.5); font-weight: 400; font-style: normal; text-decoration: none; letter-spacing: 0.3px; font-size: 12px;"
-                                                            href>在浏览器中查看 ↗</a>
+                                                            href="{$viewemail}">在浏览器中查看 ↗</a>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -149,7 +149,7 @@
                                                                                 <tr>
                                                                                     <td>
                                                                                         <h1 style="font-family: 'Merriweather', serif; color: #FFFFFF; font-size: 36px; line-height: 125%; font-weight: bold; font-style: normal; text-decoration: none; margin-bottom: 10px; text-align: center;">🔥 技术热点 · 每日精选</h1>
-                                                                                        <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 165%; margin-top: 0; margin-bottom: 10px; text-align: center;">你好，我是栏轩。感谢订阅技术热点推送服务。</p>
+                                                                                        <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 165%; margin-top: 0; margin-bottom: 10px; text-align: center;">你好，感谢订阅技术热点推送服务。</p>
                                                                                         <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 165%; margin-top: 0; margin-bottom: 10px; text-align: center;">这封邮件确认你已成功订阅。从今天起，我会通过 AI 每天两次扫描 20+ 技术关键词，自动检索全网热点、去重验证、整理分类，把真正值得关注的技术动态送到你的邮箱。</p>
                                                                                         <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 165%; margin-top: 0; margin-bottom: 10px; text-align: center;">不刷屏、不凑数，只挑有质量的。</p>
                                                                                     </td>
@@ -267,6 +267,9 @@
                                                         如果邮件不小心跑进了垃圾箱，麻烦点一下"移入收件箱"——这对独立创作者来说真的很重要。
                                                     </p>
                                                     <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 15px; line-height: 180%; margin-top: 16px; margin-bottom: 0;">
+                                                        欢迎来信至 email@lxpavilion.top，我本人会看。
+                                                    </p>
+                                                    <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 15px; line-height: 180%; margin-top: 16px; margin-bottom: 0;">
                                                         祝编码愉快
                                                     </p>
                                                 </td>
@@ -324,7 +327,8 @@
                                                                     <tr>
                                                                         <td align="left">
                                                                             <p style="font-family: 'Inter', sans-serif; color: #ffffff; font-size: 14px; line-height: 150%; margin-bottom: 0;">
-                                                                                <a href="{$unsubscribe}" builder-link-id="-2" href style="color: #ffffff; font-weight: normal; font-style: normal; text-decoration: underline;">Unsubscribe</a>
+                                                                                <a href="https://api.lxpavilion.top/api/unsubscribe?email={$email}&group=hot-topics" builder-link-id="-2" style="color: #ffffff; font-weight: normal; font-style: normal; text-decoration: underline;">Unsubscribe</a>
+                                                            <a href="{$unsubscribe}" style="color: #8B5CF6; text-decoration: none; font-size: 0px;"> </a>
                                                                             </p>
                                                                         </td>
                                                                     </tr>
@@ -354,7 +358,7 @@
                     <tr class="ml-hide-branding">
                         <td align="center">
                             <a builder-link-id="-3" href="https://www.mailerlite.com" target="_blank" style="text-decoration: none;">
-                                <img width="100" border="0" alt="Sent by MailerLite" src="https://assets.mlcdn.com/ml/logo/sent-by-mailerlite.png" style="display: block;">
+                                <img width="100" border="0" alt="Sent by MailerLite" src="https://assets.mlcdn.com/ml/logo/sent-by-mailerlite.png" style="display: none !important;">
                             </a>
                         </td>
                     </tr>

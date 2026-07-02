@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import Tooltip from "@/app/_components/common/Tooltip";
@@ -117,6 +117,7 @@ const cardVariants: Variants = {
 export default function FloatingNav() {
   const [active, setActive] = useState<number | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
+  const submenuRef = useRef<HTMLDivElement>(null);
   const [submenuOffset, setSubmenuOffset] = useState(0);
 
   useLayoutEffect(() => {
@@ -126,6 +127,28 @@ export default function FloatingNav() {
     const navRect = navRef.current.getBoundingClientRect();
     const btnRect = btn.getBoundingClientRect();
     setSubmenuOffset(btnRect.top - navRect.top);
+  }, [active]);
+
+  // 子菜单打开时：Escape 关闭、点击外部关闭
+  useEffect(() => {
+    if (active === null) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActive(null);
+    };
+    const onClickOutside = (e: MouseEvent) => {
+      if (submenuRef.current && !submenuRef.current.contains(e.target as Node)) {
+        setActive(null);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    const timer = setTimeout(() => {
+      document.addEventListener("click", onClickOutside);
+    }, 0);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      clearTimeout(timer);
+      document.removeEventListener("click", onClickOutside);
+    };
   }, [active]);
 
   const itemCount = active !== null ? CATEGORIES[active].items.length : 0;
@@ -142,6 +165,7 @@ export default function FloatingNav() {
           {active !== null && (
             <motion.div
               key={active}
+              ref={submenuRef}
               variants={submenuVariants}
               initial="hidden"
               animate="visible"
@@ -149,7 +173,10 @@ export default function FloatingNav() {
               className="absolute z-20 bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xl rounded-2xl p-4 min-w-[300px] overflow-visible"
               style={{ right: "calc(100% + 0.75rem)", top: submenuOffset }}
               onMouseEnter={() => setActive(active)}
-              onMouseLeave={() => setActive(null)}
+              onMouseLeave={() => {
+                if (document.activeElement && submenuRef.current?.contains(document.activeElement)) return;
+                setActive(null);
+              }}
             >
               <div className="mb-3 pb-2 border-b border-slate-200/50 dark:border-white/5 text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase">
                 {CATEGORIES[active].icon} {CATEGORIES[active].label}

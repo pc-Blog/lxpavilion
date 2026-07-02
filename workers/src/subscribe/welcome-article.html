@@ -98,7 +98,7 @@
                                                     <td style="padding: 4px 14px; background-color: rgba(139, 92, 246, 0.12); border-radius: 20px;">
                                                         <a builder-link-id="-1"
                                                             style="color: rgba(196, 181, 253, 0.5); font-weight: 400; font-style: normal; text-decoration: none; letter-spacing: 0.3px; font-size: 12px;"
-                                                            href>在浏览器中查看 ↗</a>
+                                                            href="{$viewemail}">在浏览器中查看 ↗</a>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -149,7 +149,7 @@
                                                                                 <tr>
                                                                                     <td>
                                                                                         <h1 style="font-family: 'Merriweather', serif; color: #FFFFFF; font-size: 36px; line-height: 125%; font-weight: bold; font-style: normal; text-decoration: none; margin-bottom: 10px; text-align: center;">欢迎订阅 LXPavilion</h1>
-                                                                                        <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 165%; margin-top: 0; margin-bottom: 10px; text-align: center;">你好，我是栏轩。这封邮件确认你已成功订阅。</p>
+                                                                                        <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 165%; margin-top: 0; margin-bottom: 10px; text-align: center;">你好，这封邮件确认你已成功订阅。</p>
                                                                                         <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 165%; margin-top: 0; margin-bottom: 10px; text-align: center;">接下来的日子里，你会在周末收到一封不灌水、不跟风的实战笔记。内容主要围绕我在 Web 开发、独立架构和 AI 落地中的真实踩坑与解法。</p>
                                                                                         <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 14px; line-height: 165%; margin-top: 0; margin-bottom: 10px; text-align: center;">你可以期待：不跟风、不标题党、经过沉淀的解决方案。</p>
                                                                                     </td>
@@ -212,6 +212,7 @@
                                                         <p style="margin-bottom: 14px;"><strong style="color: #C4B5FD;">3. AI 应用落地</strong><br>—— 不追概念，只记录把模型塞进真实产品后，那些文档里找不到的麻烦事</p>
                                                         <p style="margin-bottom: 14px;"><strong style="color: #C4B5FD;">4. 底层知识补全</strong><br>—— 网络协议、数据库原理、操作系统，遇到瓶颈时回头啃书的笔记</p>
                                                         <p style="margin-bottom: 0;"><strong style="color: #C4B5FD;">5. 工具链与效率</strong><br>—— 编辑器配置、调试技巧、自动化脚本，那些让开发变顺手的小东西</p>
+                                                        <p style="margin-bottom: 0; margin-top: 14px;"><strong style="color: #C4B5FD;">6. 问题排查与修复</strong><br>—— 从报错到定位根因，记录真实开发中的调试过程与解决方案</p>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -261,7 +262,7 @@
                                                 <td class="row" style="padding: 0 50px;">
                                                     <h1 style="font-family: 'Inter', sans-serif; color: #FFFFFF; font-size: 28px; line-height: 125%; font-weight: bold; font-style: normal; text-decoration: none; margin-bottom: 12px;">最后，再说两句</h1>
                                                     <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 15px; line-height: 180%; margin-top: 0; margin-bottom: 0;">
-                                                        写技术笔记这件事，我坚持了很久。不是为了追流量，而是觉得每一次踩坑、每一次弄明白一个原理，都值得被记下来。如果你也有类似的想法，或者正在做自己的 side project，欢迎随时交流——直接回复这封邮件就行，我本人会看。
+                                                        写技术笔记这件事，我坚持了很久。不是为了追流量，而是觉得每一次踩坑、每一次弄明白一个原理，都值得被记下来。如果你也有类似的想法，或者正在做自己的 side project，欢迎来信至 email@lxpavilion.top，我本人会看。
                                                     </p>
                                                     <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 15px; line-height: 180%; margin-top: 16px; margin-bottom: 0;">
                                                         另外，如果后续我的邮件不小心跑进了垃圾箱，麻烦动动手指点一下"移入收件箱"——这对独立创作者来说真的很重要。
@@ -324,7 +325,8 @@
                                                                     <tr>
                                                                         <td align="left">
                                                                             <p style="font-family: 'Inter', sans-serif; color: #ffffff; font-size: 14px; line-height: 150%; margin-bottom: 0;">
-                                                                                <a href="{$unsubscribe}" builder-link-id="-2" href style="color: #ffffff; font-weight: normal; font-style: normal; text-decoration: underline;">Unsubscribe</a>
+                                                                                <a href="https://api.lxpavilion.top/api/unsubscribe?email={$email}&group=article" builder-link-id="-2" style="color: #ffffff; font-weight: normal; font-style: normal; text-decoration: underline;">Unsubscribe</a>
+                                                            <a href="{$unsubscribe}" style="color: #8B5CF6; text-decoration: none; font-size: 0px;"> </a>
                                                                             </p>
                                                                         </td>
                                                                     </tr>
@@ -354,7 +356,7 @@
                     <tr class="ml-hide-branding">
                         <td align="center">
                             <a builder-link-id="-3" href="https://www.mailerlite.com" target="_blank" style="text-decoration: none;">
-                                <img width="100" border="0" alt="Sent by MailerLite" src="https://assets.mlcdn.com/ml/logo/sent-by-mailerlite.png" style="display: block;">
+                                <img width="100" border="0" alt="Sent by MailerLite" src="https://assets.mlcdn.com/ml/logo/sent-by-mailerlite.png" style="display: none !important;">
                             </a>
                         </td>
                     </tr>

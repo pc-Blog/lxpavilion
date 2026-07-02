@@ -25,7 +25,7 @@ function renderGroupHeader(keyword: string): string {
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 8px;">
   <tr>
     <td style="padding-bottom: 4px; border-bottom: 1px solid #4A4A4A;">
-      <h2 style="font-family: 'Inter', sans-serif; color: #C4B5FD; font-size: 15px; line-height: 1.4; font-weight: 600; margin: 0;">📌 ${keyword}</h2>
+      <h2 style="font-family: 'Inter', sans-serif; color: #C4B5FD; font-size: 16px; line-height: 1.4; font-weight: 700; margin: 0; letter-spacing: 0.5px;">📌 ${keyword}</h2>
     </td>
   </tr>
 </table>`;
@@ -37,14 +37,24 @@ const HOT_CARD = `
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
   <tr>
     <td>
-      <p style="font-family: 'Inter', sans-serif; color: #C0C0C0; font-size: 12px; margin: 0 0 2px;">#{{RANK}}  {{SOURCE}}<span style="float: right;">{{TIME}}</span></p>
-      <h3 style="font-family: 'Inter', sans-serif; color: #FFFFFF; font-size: 16px; line-height: 1.35; font-weight: normal; margin: 0 0 4px;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td width="36" valign="top" style="padding-top: 2px;">
+            <span style="display: inline-block; background: #8B5CF6; color: #FFFFFF; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px;">#{{RANK}}</span>
+          </td>
+          <td valign="top">
+            <span style="font-family: 'Inter', sans-serif; color: #9CA3AF; font-size: 11px;">{{SOURCE}}</span>
+            <span style="font-family: 'Inter', sans-serif; color: #6B7280; font-size: 11px; float: right;">{{TIME}}</span>
+          </td>
+        </tr>
+      </table>
+      <h3 style="font-family: 'Inter', sans-serif; color: #FFFFFF; font-size: 17px; line-height: 1.4; font-weight: 600; margin: 6px 0 8px;">
         <a href="{{URL}}" target="_blank" style="color: #FFFFFF; text-decoration: none;">{{TITLE}}</a>
       </h3>
-      <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 13px; line-height: 1.6; margin: 0 0 4px;">{{SUMMARY}}</p>
+      <p style="font-family: 'Inter', sans-serif; color: #D1D5DB; font-size: 13px; line-height: 1.7; margin: 0 0 10px;">{{SUMMARY}}</p>
       {{PERSPECTIVES}}
-      <p style="margin: 4px 0 0;">
-        <a href="{{URL}}" target="_blank" style="color: #8B5CF6; text-decoration: underline; font-family: 'Inter', sans-serif; font-size: 13px;">查看原文 →</a>
+      <p style="margin: 8px 0 0;">
+        <a href="{{URL}}" target="_blank" style="color: #8B5CF6; text-decoration: underline; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;">查看原文 →</a>
       </p>
     </td>
   </tr>
@@ -54,15 +64,24 @@ const HOT_CARD = `
 
 function renderPerspectives(perspectives: { stance: string; summary: string }[]): string {
   if (!perspectives || perspectives.length === 0) return "";
-  return perspectives
+  const items = perspectives
     .map(
       (p) => `
-    <div style="margin: 2px 0 0;">
-      <span style="color: #C4B5FD; font-size: 12px; font-family: 'Inter', sans-serif;">${escHtml(p.stance)}</span>
-      <span style="color: #A0A0A0; font-size: 12px; font-family: 'Inter', sans-serif;"> — ${escHtml(p.summary)}</span>
-    </div>`,
+            <div style="margin: 0 0 8px;">
+              <span style="display: inline-block; background: rgba(139, 92, 246, 0.15); color: #C4B5FD; font-size: 11px; font-family: 'Inter', sans-serif; font-weight: 600; padding: 1px 6px; border-radius: 3px; margin-bottom: 2px;">${escHtml(p.stance)}</span>
+              <span style="color: #9CA3AF; font-size: 12px; font-family: 'Inter', sans-serif; display: block; margin-top: 2px;">${escHtml(p.summary)}</span>
+            </div>`,
     )
     .join("");
+
+  return `
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 4px;">
+          <tr>
+            <td style="padding: 8px 0 0 12px; border-left: 2px solid rgba(139, 92, 246, 0.3);">
+              ${items}
+            </td>
+          </tr>
+        </table>`;
 }
 
 // ── HTML 转义 ──

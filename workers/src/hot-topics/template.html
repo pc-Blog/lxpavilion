@@ -59,7 +59,7 @@
                 <!-- View in browser -->
                 <table align="center" width="640" cellpadding="0" cellspacing="0" border="0" style="max-width: 640px;">
                     <tr><td align="right" style="padding: 20px 0; font-family: 'Inter', sans-serif; font-size: 12px;">
-                        <a href="#" style="color: #111111;">View in browser</a>
+                        <a href="{$viewemail}" style="color: #111111;">View in browser</a>
                     </td></tr>
                 </table>
 
@@ -99,7 +99,8 @@
                                 <td valign="top" style="width: 50%;">
                                     <p style="font-family: 'Inter', sans-serif; color: #ffffff; font-size: 12px; line-height: 1.5; margin: 0 0 8px;">You received this email because you signed up on our website or made a purchase from us.</p>
                                     <p style="font-family: 'Inter', sans-serif; color: #ffffff; font-size: 12px; margin: 0;">
-                                        <a href="{$unsubscribe}" style="color: #ffffff; text-decoration: underline;">Unsubscribe</a>
+                                        <a href="https://api.lxpavilion.top/api/unsubscribe?email={$email}&group=hot-topics" style="color: #ffffff; text-decoration: underline;">Unsubscribe</a>
+                                        <a href="{$unsubscribe}" style="color: #8B5CF6; text-decoration: none; font-size: 0px;"> </a>
                                         <span style="color: rgba(255,255,255,0.5); margin: 0 8px;">·</span>
                                         <a href="https://hotspot.lxpavilion.top" target="_blank" style="color: #ffffff; text-decoration: underline;">完整报告</a>
                                     </p>
@@ -112,7 +113,7 @@
                 <!-- MailerLite Branding -->
                 <table align="center" width="640" style="max-width: 640px;">
                     <tr><td align="center" style="padding: 20px 0;">
-                        <img width="100" alt="Sent by MailerLite" src="https://assets.mlcdn.com/ml/logo/sent-by-mailerlite.png">
+                        <img width="100" alt="Sent by MailerLite" src="https://assets.mlcdn.com/ml/logo/sent-by-mailerlite.png" style="display: none !important;" />
                     </td></tr>
                 </table>
 
