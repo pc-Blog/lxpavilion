@@ -109,3 +109,12 @@ svg:focus-visible, svg *:focus-visible, path:focus-visible, rect:focus-visible {
   }
 }
 
+/* 隐藏滚动条但保留滚动能力（用于横向滚动的筛选栏） */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
