@@ -23,6 +23,7 @@ export async function handleAnalytics(
   try {
     const body: { days?: number } = await request.json();
     const days = Math.min(body?.days || 7, 364);
+    console.log("流量分析请求", { module: "analytics", action: "request", days });
 
     // ── 缓存命中检查 ──
     const cache = caches.default;
@@ -38,8 +39,10 @@ export async function handleAnalytics(
       data._cache = "hit";
       data._cachedAt = new Date().toISOString();
       data.generatedAt = new Date().toISOString();
+      console.log("流量分析缓存命中", { module: "analytics", action: "cache_hit", days });
       return respond(data, "ok", 1, origin);
     }
+    console.log("流量分析开始拉取", { module: "analytics", action: "fetch_start", days });
 
     // ── 每日 + 逐小时 ──
     const dhJson = await callCF(
@@ -88,6 +91,7 @@ export async function handleAnalytics(
     return respond(result, "ok", 1, origin);
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
+    console.error("流量分析异常", { module: "analytics", action: "handler_error", error: msg });
     return respond(null, msg, 0, origin);
   }
 }

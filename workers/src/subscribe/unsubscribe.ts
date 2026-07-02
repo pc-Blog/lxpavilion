@@ -38,8 +38,11 @@ export async function handleUnsubscribe(
   origin: string | null,
 ): Promise<Response> {
   const url = new URL(request.url);
+  const method = request.method;
 
-  if (request.method === "GET") {
+  console.log("退订请求", { module: "subscribe", action: "unsubscribe", method });
+
+  if (method === "GET") {
     const email = url.searchParams.get("email")?.trim().toLowerCase() || "";
     const group = url.searchParams.get("group")?.trim().toLowerCase() || "article";
     const groupLabel = GROUP_MAP[group] || group;
@@ -110,7 +113,7 @@ export async function handleUnsubscribe(
       // 2. 从 MailerLite 删除（复用已有逻辑）
       const mlResult = await deleteMLSubscriber(env.MAILERLITE_API_KEY, email);
       if (!mlResult.success) {
-        console.error(`[Unsubscribe] MailerLite delete failed for ${email}:`, mlResult.error);
+        console.error("退订 MailerLite 删除失败", { module: "subscribe", action: "unsubscribe_ml_error", email, error: mlResult.error });
       }
 
       // 3. 给管理员发通知（不阻断主流程）
@@ -154,7 +157,7 @@ export async function handleUnsubscribe(
 
         if (!createResp.ok) {
           const err = await createResp.text();
-          console.error(`[Unsubscribe] Admin campaign create failed (${createResp.status}): ${err}`);
+          console.error("退订通知创建失败", { module: "subscribe", action: "unsubscribe_notify_error", status: createResp.status, error: err });
         } else {
           const { data } = await createResp.json() as { data: { id: string } };
           const sendResp = await fetch(
@@ -169,16 +172,16 @@ export async function handleUnsubscribe(
           );
           if (!sendResp.ok) {
             const err = await sendResp.text();
-            console.error(`[Unsubscribe] Admin campaign send failed (${sendResp.status}): ${err}`);
+            console.error("退订通知发送失败", { module: "subscribe", action: "unsubscribe_notify_send_error", status: sendResp.status, error: err });
           }
         }
       } catch (e) {
-        console.error("[Unsubscribe] Admin notification error:", e);
+        console.error("退订通知异常", { module: "subscribe", action: "unsubscribe_notify_error", email, error: String(e) });
       }
 
       return respond({ email, group }, "退订成功", 1, origin);
     } catch (e) {
-      console.error("[Unsubscribe] Error:", e);
+      console.error("退订异常", { module: "subscribe", action: "unsubscribe_handler_error", email, error: String(e) });
       return respond(null, "退订失败，请稍后重试", 0, origin);
     }
   }

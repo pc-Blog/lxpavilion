@@ -50,7 +50,7 @@ export async function handleEmail(
   env: Env,
   ctx: ExecutionContext,
 ): Promise<void> {
-  console.log(`[Email] Received: from=${message.from} to=${message.to}`);
+  console.log("收到邮件", { module: "email", action: "receive", from: message.from, to: message.to });
 
   // ── 1. 解析原始邮件 ──
   const raw = await new Response(message.raw).arrayBuffer();
@@ -77,9 +77,9 @@ export async function handleEmail(
       htmlBody,
       headers: headersJson,
     });
-    console.log(`[Email] ✅ 已归档到 D1`);
+    console.log("邮件已归档", { module: "email", action: "stored", messageId });
   } else {
-    console.warn(`[Email] ⚠️ 未设置转发目标，邮件已归档但未转发`);
+    console.warn("邮件未设置转发目标", { module: "email", action: "no_forward", messageId });
     await storeEmail(env.DB, {
       messageId,
       fromAddr: message.from,
@@ -96,8 +96,8 @@ export async function handleEmail(
   // ── 4. 原样转发（保留原始发件人、正文、附件） ──
   try {
     await message.forward(forwardTo);
-    console.log(`[Email] ✅ 已原样转发到 ${forwardTo}`);
+    console.log("邮件已转发", { module: "email", action: "forwarded", forwardTo });
   } catch (err) {
-    console.error(`[Email] ❌ 转发失败: ${err}`);
+    console.error("邮件转发失败", { module: "email", action: "forward_error", error: String(err) });
   }
 }

@@ -19,6 +19,8 @@ export async function handleList(
   const pageSize = Math.min(100, Math.max(1, parseInt(url.searchParams.get("pageSize") || "20", 10)));
   const offset = (page - 1) * pageSize;
 
+  console.log("查询邮件列表", { module: "email", action: "list", page, pageSize });
+
   try {
     const total = await env.DB
       .prepare("SELECT COUNT(*) AS count FROM emails")
@@ -63,6 +65,8 @@ export async function handleDetail(
     return respond(null, "缺少参数 id", 0, origin);
   }
 
+  console.log("查询邮件详情", { module: "email", action: "detail", id });
+
   try {
     const row = await env.DB
       .prepare("SELECT * FROM emails WHERE id = ?")
@@ -91,6 +95,8 @@ export async function handleDelete(
   if (!id) {
     return respond(null, "缺少参数 id", 0, origin);
   }
+
+  console.log("删除邮件", { module: "email", action: "delete", id });
 
   try {
     const result = await env.DB

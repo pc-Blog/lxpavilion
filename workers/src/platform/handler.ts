@@ -19,8 +19,10 @@ export async function handlePlatform(
       const data = (await cached.json()) as PlatformSummary;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (data as any)._cache = "hit";
+      console.log("平台统计缓存命中", { module: "platform", action: "cache_hit" });
       return respond(data, "ok", 1, origin);
     }
+    console.log("平台统计开始拉取", { module: "platform", action: "fetch_start" });
 
     // ── 并发请求三个平台 ──
     const [csdn, juejin, cnblogs] = await Promise.allSettled([
@@ -32,6 +34,10 @@ export async function handlePlatform(
     const csdnData = csdn.status === "fulfilled" ? csdn.value : null;
     const juejinData = juejin.status === "fulfilled" ? juejin.value : null;
     const cnblogsData = cnblogs.status === "fulfilled" ? cnblogs.value : null;
+
+    console.log("CSDN 返回结果", { module: "platform", platform: "csdn", ok: csdn.status === "fulfilled", articles: csdnData?.articleCount ?? 0, views: csdnData?.totalViews ?? 0 });
+    console.log("掘金返回结果", { module: "platform", platform: "juejin", ok: juejin.status === "fulfilled", articles: juejinData?.articleCount ?? 0, views: juejinData?.totalViews ?? 0 });
+    console.log("博客园返回结果", { module: "platform", platform: "cnblogs", ok: cnblogs.status === "fulfilled", articles: cnblogsData?.articleCount ?? 0, views: cnblogsData?.totalViews ?? 0 });
 
     // ── 合并文章 ──
     const allArticles: ArticleMap = {};
@@ -99,10 +105,22 @@ export async function handlePlatform(
       generatedAt: new Date().toISOString(),
     };
 
-    // 后台写缓存（3600s）— 只存纯数据，不包 respond 外层
-    ctx.waitUntil(
-      caches.default.put(cacheKey, cacheableResponse(result, origin))
-    );
+    // 仅三平台全部成功才写缓存（避免缓存含 null 的失败结果）
+    if (csdn.status === "fulfilled" && juejin.status === "fulfilled" && cnblogs.status === "fulfilled") {
+      ctx.waitUntil(
+        caches.default.put(cacheKey, cacheableResponse(result, origin))
+      );
+    }
+
+    console.log("平台统计聚合完成", {
+      module: "platform",
+      action: "summary",
+      csdn: csdnData?.articleCount ?? 0,
+      juejin: juejinData?.articleCount ?? 0,
+      cnblogs: cnblogsData?.articleCount ?? 0,
+      merged: mergedArticles.length,
+      cached: csdn.status === "fulfilled" && juejin.status === "fulfilled" && cnblogs.status === "fulfilled",
+    });
 
     return respond(result, "ok", 1, origin);
   } catch (e) {

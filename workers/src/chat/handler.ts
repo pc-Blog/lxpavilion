@@ -155,6 +155,8 @@ export async function handleChat(request: Request, env: Env, origin: string | nu
   const modeKey = (!mode || mode === "chat") ? "chat" : mode;
   const ch = character as keyof typeof CHAR_ID;
 
+  console.log("AI 聊天请求", { module: "chat", action: "request", character, mode: modeKey, messageLength: message?.length });
+
   try {
     const system = MODE_PROMPTS[modeKey]?.[ch] ?? MODE_PROMPTS.chat.Ava;
     const isChat = modeKey === "chat";
@@ -174,9 +176,11 @@ export async function handleChat(request: Request, env: Env, origin: string | nu
   } catch (e: any) {
     const errStr = JSON.stringify(e?.message || e?.toString() || e);
     if (errStr.includes("3036") || errStr.includes("used up") || errStr.includes("limit")) {
+      console.warn("AI 额度用尽", { module: "chat", action: "quota_exhausted", character, mode: modeKey });
       const msgs = (QUOTA_MSGS[modeKey]?.[ch] ?? QUOTA_MSGS.chat.Ava);
       return respond({ reply: msgs[Math.floor(Math.random() * msgs.length)] }, "ok", 1, origin);
     }
+    console.error("AI 聊天异常", { module: "chat", action: "handler_error", error: e.message });
     return respond({ error: e.message }, "AI error", 0, origin);
   }
 }

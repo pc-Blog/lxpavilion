@@ -35,6 +35,8 @@ export async function handlePurge(
     return respond(null, 'Body must have "files" or "prefixes"', 0, origin);
   }
 
+  console.log("缓存清除请求", { module: "purge", action: "request", prefixes: body.prefixes, files: body.files });
+
   try {
     const resp = await fetch(`${CF_API_BASE}/zones/${env.CF_ZONE_ID}/purge_cache`, {
       method: "POST",
@@ -48,11 +50,15 @@ export async function handlePurge(
     const result = await resp.json();
 
     if (!resp.ok) {
+      console.error("缓存清除失败", { module: "purge", action: "error", status: resp.status });
       return respond(result, "Purge failed", 0, origin);
     }
 
+    console.log("缓存清除成功", { module: "purge", action: "success" });
     return respond(result, "Cache purged", 1, origin);
   } catch (e) {
-    return respond(null, `Purge error: ${(e as Error).message}`, 0, origin);
+    const msg = (e as Error).message;
+    console.error("缓存清除异常", { module: "purge", action: "handler_error", error: msg });
+    return respond(null, `Purge error: ${msg}`, 0, origin);
   }
 }

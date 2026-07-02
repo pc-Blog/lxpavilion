@@ -598,6 +598,7 @@ export async function handleComment(request: Request, env: Env, origin: string |
      * ════════════════════════════════════════════ */
 
     if (method === "GET" && url.pathname === "/api/comment/stats") {
+      console.log("查询评论统计", { module: "comment", action: "stats" });
       const token = await getInstallationToken(env);
       const data = await gql<StatsResult>(token, STATS_QUERY, {
         owner: env.GITHUB_REPO_OWNER,
@@ -622,6 +623,7 @@ export async function handleComment(request: Request, env: Env, origin: string |
     if (method === "GET" && url.pathname === "/api/comment/count") {
       const path = url.searchParams.get("path");
       if (!path) return respond(null, "缺少 path 参数", 0, origin);
+      console.log("查询评论数", { module: "comment", action: "count", path });
 
       const token = await getInstallationToken(env);
       // 同时搜有无斜杠结尾
@@ -639,6 +641,7 @@ export async function handleComment(request: Request, env: Env, origin: string |
     if (method === "GET" && url.pathname === "/api/comment/counts") {
       const prefix = url.searchParams.get("prefix");
       if (!prefix) return respond(null, "缺少 prefix 参数", 0, origin);
+      console.log("批量查询评论数", { module: "comment", action: "counts", prefix });
 
       const token = await getInstallationToken(env);
       const searchQuery = REPO_SEARCH(env.GITHUB_REPO_OWNER, env.GITHUB_REPO_NAME) + ' "' + prefix + '" in:title';
@@ -655,6 +658,7 @@ export async function handleComment(request: Request, env: Env, origin: string |
 if (method === "GET" && url.pathname === "/api/comment/list") {
       const path = url.searchParams.get("path");
       if (!path) return respond(null, "缺少 path 参数", 0, origin);
+      console.log("查询评论列表", { module: "comment", action: "list", path });
 
       const sort = url.searchParams.get("sort") || "oldest";
 
@@ -728,6 +732,7 @@ if (method === "GET" && url.pathname === "/api/comment/list") {
     if (method === "POST" && url.pathname === "/api/comment/reaction") {
       const auth = request.headers.get("Authorization");
       if (!auth?.startsWith("Bearer ")) return respond(null, "未登录", 0, origin);
+      console.log("评论反应操作", { module: "comment", action: "reaction" });
       const payload = await verifyJwt(auth.slice(7), env.JWT_SECRET);
       if (!payload) return respond(null, "登录已过期", 0, origin);
 
@@ -807,6 +812,7 @@ if (method === "GET" && url.pathname === "/api/comment/list") {
     if (method === "POST" && url.pathname === "/api/comment") {
       const auth = request.headers.get("Authorization");
       if (!auth?.startsWith("Bearer ")) return respond(null, "未登录", 0, origin);
+      console.log("创建评论", { module: "comment", action: "create" });
       const payload = await verifyJwt(auth.slice(7), env.JWT_SECRET);
       if (!payload) return respond(null, "登录已过期", 0, origin);
 
@@ -945,6 +951,7 @@ if (method === "GET" && url.pathname === "/api/comment/list") {
     return respond(null, "Not Found", 0, origin);
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "未知错误";
+    console.error("评论接口异常", { module: "comment", action: "handler_error", method, path: url.pathname, error: msg });
     return respond({ error: msg }, "评论服务错误", 0, origin);
   }
 }

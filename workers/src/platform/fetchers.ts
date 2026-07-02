@@ -3,7 +3,10 @@ import type { Env, CSDNData, JuejinData, CnblogsData, PlatformArticle } from "..
 // ── CSDN ──
 
 export async function fetchCSDN(env: Env): Promise<CSDNData | null> {
-  if (!env.CSDN_USER) return null;
+  if (!env.CSDN_USER) {
+    console.warn("CSDN 未配置用户名", { module: "platform", platform: "csdn", action: "skip" });
+    return null;
+  }
 
   const url = "https://blog.csdn.net/community/home-api/v1/get-business-list";
   const params = {
@@ -13,6 +16,8 @@ export async function fetchCSDN(env: Env): Promise<CSDNData | null> {
     username: env.CSDN_USER,
   };
 
+  console.log("CSDN 开始请求", { module: "platform", platform: "csdn", action: "fetch", username: env.CSDN_USER });
+
   const resp = await fetch(`${url}?${new URLSearchParams(params)}`, {
     headers: {
       "User-Agent": "Mozilla/5.0",
@@ -20,10 +25,16 @@ export async function fetchCSDN(env: Env): Promise<CSDNData | null> {
     },
   });
 
-  if (!resp.ok) throw new Error(`CSDN HTTP ${resp.status}`);
+  if (!resp.ok) {
+    console.error("CSDN 请求失败", { module: "platform", platform: "csdn", action: "error", status: resp.status });
+    throw new Error(`CSDN HTTP ${resp.status}`);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: Record<string, any> = await resp.json();
   const list = data?.data?.list || [];
+
+  console.log("CSDN 请求成功", { module: "platform", platform: "csdn", action: "success", status: resp.status, articles: list.length });
 
   return {
     articleCount: list.length,
@@ -50,9 +61,13 @@ function formatDate(ts: number): string {
 }
 
 export async function fetchJuejin(env: Env): Promise<JuejinData | null> {
-  if (!env.JUEJIN_USER_ID) return null;
+  if (!env.JUEJIN_USER_ID) {
+    console.warn("掘金未配置用户 ID", { module: "platform", platform: "juejin", action: "skip" });
+    return null;
+  }
 
   // 用户信息
+  console.log("掘金开始请求用户信息", { module: "platform", platform: "juejin", action: "fetch_user" });
   const userResp = await fetch(
     `https://api.juejin.cn/user_api/v1/user/get?user_id=${env.JUEJIN_USER_ID}`,
     { headers: { "User-Agent": "Mozilla/5.0" } }
@@ -83,6 +98,8 @@ export async function fetchJuejin(env: Env): Promise<JuejinData | null> {
     cursor = String(Number(cursor) + 10);
   }
 
+  console.log("掘金请求成功", { module: "platform", platform: "juejin", action: "success", articles: allArticles.length, views: user.got_view_count ?? 0 });
+
   return {
     articleCount: allArticles.length,
     totalViews: user.got_view_count || 0,
@@ -109,16 +126,24 @@ export async function fetchJuejin(env: Env): Promise<JuejinData | null> {
 // ── 博客园 ──
 
 export async function fetchCnblogs(env: Env): Promise<CnblogsData | null> {
-  if (!env.CNBLOGS_BLOGAPP) return null;
+  if (!env.CNBLOGS_BLOGAPP) {
+    console.warn("博客园未配置 blogApp", { module: "platform", platform: "cnblogs", action: "skip" });
+    return null;
+  }
 
   const baseUrl = `https://www.cnblogs.com/${env.CNBLOGS_BLOGAPP}`;
   const allArticles: PlatformArticle[] = [];
+
+  console.log("博客园开始请求", { module: "platform", platform: "cnblogs", action: "fetch" });
 
   for (let page = 1; page <= 100; page++) {
     const resp = await fetch(`${baseUrl}/default.html?page=${page}`, {
       headers: { "User-Agent": "Mozilla/5.0" },
     });
-    if (!resp.ok) break;
+    if (!resp.ok) {
+      console.warn("博客园页面请求失败", { module: "platform", platform: "cnblogs", action: "page_error", page, status: resp.status });
+      break;
+    }
 
     const html = await resp.text();
 
@@ -130,7 +155,10 @@ export async function fetchCnblogs(env: Env): Promise<CnblogsData | null> {
     const dateRegex = /posted @ (\d{4}-\d{2}-\d{2})/g;
 
     const titles = [...html.matchAll(articleRegex)];
-    if (titles.length === 0) break;
+    if (titles.length === 0) {
+      console.log("博客园本页无文章", { module: "platform", platform: "cnblogs", action: "page_empty", page });
+      break;
+    }
 
     const views = [...html.matchAll(viewRegex)].map((m) => Number(m[1]));
     const diggs = [...html.matchAll(diggRegex)].map((m) => Number(m[1]));
@@ -153,8 +181,15 @@ export async function fetchCnblogs(env: Env): Promise<CnblogsData | null> {
       });
     }
 
-    if (!html.includes(">下一页<") && !html.includes(">Next<")) break;
+    console.log("博客园页面解析完成", { module: "platform", platform: "cnblogs", action: "page_done", page, articles: titles.length });
+
+    if (!html.includes(">下一页<") && !html.includes(">Next<")) {
+      console.log("博客园无更多页", { module: "platform", platform: "cnblogs", action: "no_more_page", page });
+      break;
+    }
   }
+
+  console.log("博客园请求完成", { module: "platform", platform: "cnblogs", action: "success", articles: allArticles.length });
 
   return {
     articleCount: allArticles.length,

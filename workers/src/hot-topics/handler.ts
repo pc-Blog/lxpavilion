@@ -55,7 +55,7 @@ interface HotspotReport {
 async function fetchHotspotReport(): Promise<HotspotReport | null> {
   const resp = await fetch(HOTSPOT_URL);
   if (!resp.ok) {
-    console.error(`[HotPush] Fetch report.json failed: ${resp.status}`);
+    console.error("热点报告获取失败", { module: "hot_push", action: "fetch_report_error", status: resp.status });
     return null;
   }
   return resp.json() as Promise<HotspotReport>;
@@ -173,7 +173,7 @@ async function pushToMailerLite(
 
   const { data } = await createResp.json() as { data: { id: string } };
   const campaignId = data.id;
-  console.log(`[HotPush] Campaign created: ${campaignId}`);
+  console.log("热点 Campaign 已创建", { module: "hot_push", action: "campaign_created", campaignId });
 
   const sendResp = await fetch(
     `https://api.mailerlite.com/api/v2/campaigns/${campaignId}/actions/send`,
@@ -191,7 +191,7 @@ async function pushToMailerLite(
     throw new Error(`Campaign send failed: ${sendResp.status} ${err}`);
   }
 
-  console.log(`[HotPush] Campaign sent`);
+  console.log("热点 Campaign 已发送", { module: "hot_push", action: "campaign_sent" });
 
   return campaignId;
 }
@@ -205,12 +205,12 @@ interface PushResult {
 }
 
 export async function handleHotPush(env: Env): Promise<PushResult | null> {
-  console.log("[HotPush] Starting hot topics push...");
+  console.log("热点推送开始", { module: "hot_push", action: "start" });
 
   // 1. 抓取热点报告
   const report = await fetchHotspotReport();
   if (!report) {
-    console.error("[HotPush] Failed to fetch report.json");
+    console.error("热点推送报告为空", { module: "hot_push", action: "report_empty" });
     const result = await env.DB.prepare(
       `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
        VALUES (0, 0, 'hot-topics', 'failed', 'fetch report.json failed')`,
@@ -219,7 +219,7 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   }
 
   if (!report.results || report.results.length === 0) {
-    console.log("[HotPush] Report has no results");
+    console.warn("热点报告无结果", { module: "hot_push", action: "no_results" });
     const result = await env.DB.prepare(
       `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
        VALUES (0, 0, 'hot-topics', 'skipped')`,
@@ -232,7 +232,7 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   const flatItems = allGroups.flatMap((g) => g.items);
 
   if (flatItems.length === 0) {
-    console.log("[HotPush] No hotspot items found in report");
+    console.warn("热点报告无热点条目", { module: "hot_push", action: "no_items" });
     const result = await env.DB.prepare(
       `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
        VALUES (0, 0, 'hot-topics', 'skipped')`,
@@ -255,7 +255,7 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   const totalFresh = filteredGroups.reduce((sum, g) => sum + g.items.length, 0);
 
   if (totalFresh === 0) {
-    console.log("[HotPush] All items already pushed");
+    console.log("热点推送无新条目", { module: "hot_push", action: "all_pushed" });
     const result = await env.DB.prepare(
       `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
        VALUES (0, 0, 'hot-topics', 'skipped')`,
@@ -328,9 +328,7 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   const finalCount = selected.length;
   const finalKeywordCount = finalGroups.length;
 
-  console.log(
-    `[HotPush] ${finalCount} new items across ${finalKeywordCount} keywords (round-robin offset: ${offset}, per-keyword cap: ${MAX_PER_KEYWORD})`,
-  );
+  console.log("热点推送新条目", { module: "hot_push", action: "new_items", count: finalCount, keywords: finalKeywordCount, offset });
 
   // 5. 推送到 MailerLite
   const reportDate = report.report_time ? report.report_time.slice(0, 10) : "";
@@ -346,7 +344,7 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
     );
   } catch (e) {
     const errMsg = (e as Error).message;
-    console.error(`[HotPush] Push failed: ${errMsg}`);
+    console.error("热点推送失败", { module: "hot_push", action: "push_failed", error: errMsg });
     const result = await env.DB.prepare(
       `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
        VALUES (?, 0, 'hot-topics', 'failed', ?)`,
@@ -362,10 +360,7 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
      VALUES (?, ?, 'hot-topics', 'success', ?)`,
   ).bind(finalCount, subscriberCount, JSON.stringify(selectedHashes)).run();
 
-  console.log(
-    `[HotPush] Logged: ${finalCount} items, ${subscriberCount} subscribers`,
-  );
-  console.log(`[HotPush] Done! (id=${result.meta.last_row_id})`);
+  console.log("热点推送完成", { module: "hot_push", action: "done", items: finalCount, subscribers: subscriberCount, logId: result.meta.last_row_id });
 
   return { id: result.meta.last_row_id, status: "success", campaign_id: campaignId };
 }

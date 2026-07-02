@@ -74,7 +74,7 @@ async function sendAdminNotification(
 
     if (!createResp.ok) {
       const err = await createResp.text();
-      console.error(`[Subscribe] Admin campaign create failed (${createResp.status}): ${err}`);
+      console.error("管理员通知创建失败", { module: "subscribe", action: "admin_notify_create_error", status: createResp.status, error: err });
       return;
     }
 
@@ -95,11 +95,11 @@ async function sendAdminNotification(
 
     if (!sendResp.ok) {
       const err = await sendResp.text();
-      console.error(`[Subscribe] Admin campaign send failed (${sendResp.status}): ${err}`);
+      console.error("管理员通知发送失败", { module: "subscribe", action: "admin_notify_send_error", status: sendResp.status, error: err });
     }
   } catch (e) {
     // 通知失败不影响订阅流程
-    console.error("[Subscribe] Admin notification error:", e);
+    console.error("管理员通知异常", { module: "subscribe", action: "admin_notify_error", error: String(e) });
   }
 }
 
@@ -126,6 +126,8 @@ export async function handleSubscribe(
     return respond(null, `不支持的订阅类型：${group}`, 0, origin);
   }
 
+  console.log("订阅请求", { module: "subscribe", action: "request", email, group });
+
   try {
     // 1. 写入 D1（先写，即使 MailerLite 失败也已留底）
     await env.DB.prepare(
@@ -151,8 +153,10 @@ export async function handleSubscribe(
     // 409 = 已存在，不计为错误
     if (!mlResp.ok && mlResp.status !== 409) {
       const err = await mlResp.text();
-      console.error(`[Subscribe] MailerLite error (${mlResp.status}):`, err);
+      console.error("MailerLite 订阅错误", { module: "subscribe", action: "mailerlite_error", status: mlResp.status, email, error: err });
       // 不阻断：D1 已记录，留给后续重试
+    } else {
+      console.log("MailerLite 订阅成功", { module: "subscribe", action: "mailerlite_success", email, status: mlResp.status });
     }
 
     // 3. 给管理员发通知（不阻断主流程）
@@ -160,7 +164,7 @@ export async function handleSubscribe(
 
     return respond({ email, group }, "订阅成功 🎉 欢迎加入！", 1, origin);
   } catch (e) {
-    console.error("[Subscribe] Error:", e);
+    console.error("订阅异常", { module: "subscribe", action: "handler_error", email, error: String(e) });
     return respond(null, "订阅失败，请稍后重试", 0, origin);
   }
 }

@@ -68,6 +68,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
   try {
     // ── POST /api/auth/login ──
     if (method === "POST" && url.pathname === "/api/auth/login") {
+      console.log("用户登录", { module: "auth", action: "login" });
       const { username, password } = await request.json() as { username: string; password: string };
       if (!username || !password) {
         return respond(null, "用户名或密码不能为空", 0, origin);
@@ -87,6 +88,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
 
     // ── POST /api/auth/register ──
     if (method === "POST" && url.pathname === "/api/auth/register") {
+      console.log("用户注册", { module: "auth", action: "register" });
       const { username, password, nickname, avatar } = await request.json() as {
         username: string; password: string; nickname?: string; avatar?: string;
       };
@@ -127,6 +129,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
     if (method === "GET" && url.pathname === "/api/auth/github/callback") {
       const code = url.searchParams.get("code");
       if (!code) return respond(null, "缺少 code 参数", 0, origin);
+      console.log("GitHub OAuth 回调", { module: "auth", action: "github_callback" });
 
       // 1. exchange code for access_token
       const tokenResp = await fetch("https://github.com/login/oauth/access_token", {
@@ -198,6 +201,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
 
     return respond(null, "Not Found", 0, origin);
   } catch (e: any) {
+    console.error("认证接口异常", { module: "auth", action: "handler_error", method, path: url.pathname, error: e.message });
     return respond({ error: e.message }, "服务器错误", 0, origin);
   }
 }

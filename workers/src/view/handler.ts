@@ -11,7 +11,9 @@ export async function handleView(request: Request, env: Env, origin: string | nu
       const { results } = await env.DB.prepare(
         "SELECT SUM(views) as total FROM article_view"
       ).all();
-      return respond({ total: (results as any[])[0]?.total || 0 }, "ok", 1, origin);
+      const total = (results as any[])[0]?.total || 0;
+      console.log("查询总浏览数", { module: "view", action: "total", total });
+      return respond({ total }, "ok", 1, origin);
     }
 
     // GET /api/view/articles — 返回全部文章浏览数
@@ -19,6 +21,7 @@ export async function handleView(request: Request, env: Env, origin: string | nu
       const { results } = await env.DB.prepare(
         "SELECT article_id, views, updated_at FROM article_view ORDER BY article_id"
       ).all();
+      console.log("查询全部浏览数", { module: "view", action: "articles", count: results.length });
       return respond({ rows: results }, "ok", 1, origin);
     }
 
@@ -51,11 +54,13 @@ export async function handleView(request: Request, env: Env, origin: string | nu
       const row = await env.DB.prepare("SELECT views FROM article_view WHERE article_id = ?")
         .bind(articleId).first<{ views: number }>();
 
+      console.log("文章浏览 +1", { module: "view", action: "increment", articleId, views: row?.views ?? 1 });
       return respond({ article_id: articleId, views: row?.views ?? 1, counted: true }, "ok", 1, origin);
     }
 
     return respond(null, "Not Found", 0, origin);
   } catch (e: any) {
+    console.error("浏览数接口异常", { module: "view", action: "handler_error", method, path: url.pathname, error: e.message });
     return respond({ error: e.message }, "服务器错误", 0, origin);
   }
 }

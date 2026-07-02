@@ -124,7 +124,7 @@ async function pushToMailerLite(
 
   const { data } = await createResp.json() as { data: { id: string } };
   const campaignId = data.id;
-  console.log(`[RssPush] Campaign created: ${campaignId}`);
+  console.log("RSS Campaign 已创建", { module: "rss_push", action: "campaign_created", campaignId });
 
   const sendResp = await fetch(
     `https://api.mailerlite.com/api/v2/campaigns/${campaignId}/actions/send`,
@@ -142,7 +142,7 @@ async function pushToMailerLite(
     throw new Error(`Campaign send failed: ${sendResp.status} ${err}`);
   }
 
-  console.log(`[RssPush] Campaign sent`);
+  console.log("RSS Campaign 已发送", { module: "rss_push", action: "campaign_sent" });
 
   return campaignId;
 }
@@ -163,12 +163,12 @@ interface PushResult {
 }
 
 export async function handleRssPush(env: Env): Promise<PushResult | null> {
-  console.log("[RssPush] Starting RSS push check...");
+  console.log("RSS 推送开始", { module: "rss_push", action: "start" });
 
   // 1. 获取 RSS 文章
   const allArticles = await fetchRssArticles();
   if (allArticles.length === 0) {
-    console.log("[RssPush] No articles found in feed");
+    console.warn("RSS 推送无文章", { module: "rss_push", action: "feed_empty" });
     const result = await env.DB.prepare(
       `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
        VALUES (0, 0, 'article', 'failed', 'feed empty')`,
@@ -205,7 +205,7 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
     .slice(0, maxArticles);
 
   if (newArticles.length === 0) {
-    console.log("[RssPush] No new articles to push");
+    console.log("RSS 推送无新文章", { module: "rss_push", action: "no_new_articles" });
     const result = await env.DB.prepare(
       `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
        VALUES (0, 0, 'article', 'skipped')`,
@@ -213,10 +213,7 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
     return { id: result.meta.last_row_id, status: "skipped" };
   }
 
-  console.log(`[RssPush] ${newArticles.length} new article(s):`);
-  for (const a of newArticles) {
-    console.log(`  - ${a.title} (${a.date})`);
-  }
+  console.log("RSS 推送新文章", { module: "rss_push", action: "new_articles", count: newArticles.length, titles: newArticles.map(a => a.title) });
 
   // 4. 推送到 MailerLite
   let campaignId: string | undefined;
@@ -224,7 +221,7 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
     campaignId = await pushToMailerLite(env, newArticles);
   } catch (e) {
     const errMsg = (e as Error).message;
-    console.error(`[RssPush] Push failed: ${errMsg}`);
+    console.error("RSS 推送失败", { module: "rss_push", action: "push_failed", error: errMsg });
     const result = await env.DB.prepare(
       `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
        VALUES (?, 0, 'article', 'failed', ?)`,
@@ -243,10 +240,7 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
      VALUES (?, ?, 'article', 'success', ?)`,
   ).bind(newArticles.length, subscriberCount, JSON.stringify(newArticleIds)).run();
 
-  console.log(
-    `[RssPush] Logged: ${newArticles.length} articles, ${subscriberCount} subscribers, ids=${JSON.stringify(newArticleIds)}`,
-  );
-  console.log(`[RssPush] Done! (id=${result.meta.last_row_id})`);
+  console.log("RSS 推送完成", { module: "rss_push", action: "done", articles: newArticles.length, subscribers: subscriberCount, logId: result.meta.last_row_id });
 
   return { id: result.meta.last_row_id, status: "success", campaign_id: campaignId };
 }
@@ -362,7 +356,7 @@ export async function handleRssPushDeleteAll(
       });
       if (delResp.status === 204) deletedCount++;
     } catch (e) {
-      console.error(`[RssPush] Delete campaign ${c.id} failed:`, e);
+      console.error("RSS 推送删除 campaign 失败", { module: "rss_push", action: "delete_campaign_error", campaignId: c.id, error: String(e) });
     }
   }
 

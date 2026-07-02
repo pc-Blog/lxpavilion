@@ -47,6 +47,7 @@ async function fetchAllMLSubscribers(apiKey: string): Promise<Map<string, { id: 
 
     if (!resp.ok) {
       const errText = await resp.text();
+      console.error("MailerLite 列表获取失败", { module: "subscribe", action: "fetch_ml_list_error", status: resp.status });
       throw new Error(`MailerLite list failed: ${resp.status} ${errText}`);
     }
 
@@ -132,6 +133,7 @@ export async function handleVerifySubscribe(
   // 支持按分组查询：?group=hot-topics，默认 article
   const url = new URL(request.url);
   const group = url.searchParams.get("group")?.trim().toLowerCase() || "article";
+  console.log("验证订阅一致性", { module: "subscribe", action: "verify", group });
 
   // 1. 获取 D1 指定分组的订阅者
   const d1Result = await env.DB

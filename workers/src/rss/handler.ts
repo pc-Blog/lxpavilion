@@ -145,7 +145,12 @@ export async function handleRss(
   // ── Worker 内部缓存 ──
   const cacheKey = new Request(`${url}-v1`, { method: "GET" });
   const cached = await caches.default.match(cacheKey);
-  if (cached) return cached;
+  if (cached) {
+    console.log("RSS 缓存命中", { module: "rss", action: "cache_hit", url: feedUrl });
+    return cached;
+  }
+
+  console.log("RSS 开始抓取", { module: "rss", action: "fetch", url: feedUrl });
 
   try {
     const resp = await fetch(feedUrl, {
@@ -157,6 +162,7 @@ export async function handleRss(
     });
 
     if (!resp.ok) {
+      console.warn("RSS 抓取失败", { module: "rss", action: "fetch_error", url: feedUrl, status: resp.status });
       return respondJson(
         { code: 0, data: null, msg: `Feed fetch failed: ${resp.status}` },
         origin,
@@ -170,8 +176,11 @@ export async function handleRss(
     const result = isAtom ? parseAtom(xml) : parseRss(xml);
 
     if (!result || result.articles.length === 0) {
+      console.warn("RSS 解析无文章", { module: "rss", action: "parse_empty", url: feedUrl });
       return respondJson({ code: 0, data: null, msg: "No articles found in feed" }, origin);
     }
+
+    console.log("RSS 抓取成功", { module: "rss", action: "success", url: feedUrl, type: isAtom ? "atom" : "rss", articles: result.articles.length });
 
     const response = respondJson({ code: 1, data: result, msg: "ok" }, origin);
 
@@ -180,6 +189,7 @@ export async function handleRss(
 
     return response;
   } catch (e) {
+    console.error("RSS 抓取异常", { module: "rss", action: "handler_error", url: feedUrl, error: (e as Error).message });
     return respondJson(
       { code: 0, data: null, msg: `Fetch error: ${(e as Error).message}` },
       origin,
