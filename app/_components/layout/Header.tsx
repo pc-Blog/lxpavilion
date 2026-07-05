@@ -126,7 +126,7 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 pl-4 pr-2 border-l border-slate-200 dark:border-slate-700 ml-4">
-          <Tooltip text={isDark ? "日间模式" : "夜间模式"}>
+          <Tooltip text={isDark ? "日间模式" : "夜间模式"} position="bottom">
             <button onClick={toggleTheme}
               className="rounded-2xl backdrop-blur-md border shadow-lg p-2 flex items-center justify-center transition-all duration-500 hover:scale-[1.05] bg-white/40 dark:bg-slate-800/40 border-white/60 dark:border-slate-600/50 text-slate-500 dark:text-slate-300"
             >
@@ -140,7 +140,7 @@ export default function Navbar() {
           </button>
           </Tooltip>
           <div className="relative">
-            <Tooltip text="设置">
+            <Tooltip text="设置" position="bottom">
               <button onClick={() => setSettingsOpen(!settingsOpen)}
                 className="rounded-2xl backdrop-blur-md border shadow-lg p-2 flex items-center justify-center transition-all duration-500 hover:scale-[1.05] bg-white/40 dark:bg-slate-800/40 border-white/60 dark:border-slate-600/50 text-slate-500 dark:text-slate-300"
               >
