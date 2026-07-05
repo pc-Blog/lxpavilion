@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { motion } from "framer-motion";
+import { createPortal } from "react-dom";
 
 interface TagDropdownProps<T> {
   options: T[];
@@ -19,12 +20,19 @@ export default function TagDropdown<T>({
 }: TagDropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [scrollKey, setScrollKey] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  // 点击外部关闭：触发器 + Portal 面板
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setSearch(""); }
+      if (!ref.current) return;
+      const target = e.target as Node;
+      const isOutside = !ref.current.contains(target)
+        && (!panelRef.current || !panelRef.current.contains(target));
+      if (isOutside) { setOpen(false); setSearch(""); }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -36,6 +44,18 @@ export default function TagDropdown<T>({
     }
     if (!open) setSearch("");
   }, [open, searchable]);
+
+  // 打开期间监听 scroll/resize → 触发重渲染以重新计算 fixed 定位
+  useLayoutEffect(() => {
+    if (!open) return;
+    const rePosition = () => setScrollKey(k => k + 1);
+    window.addEventListener("scroll", rePosition, { capture: true, passive: true });
+    window.addEventListener("resize", rePosition);
+    return () => {
+      window.removeEventListener("scroll", rePosition, { capture: true });
+      window.removeEventListener("resize", rePosition);
+    };
+  }, [open]);
 
   const filteredOptions = searchable && search
     ? options.filter((o) => renderOption(o).toLowerCase().includes(search.toLowerCase()))
@@ -76,15 +96,18 @@ export default function TagDropdown<T>({
         <svg className={`w-4 h-4 text-slate-400 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -4, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.97 }}
-            transition={{ duration: 0.15 }}
-            className="absolute z-50 top-full mt-1 left-0 right-0 glass-card !rounded-xl p-1 shadow-xl"
-          >
+      {open && createPortal(
+        <motion.div
+          ref={panelRef}
+          initial={{ opacity: 0, y: -4, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.15 }}
+          style={ref.current ? (() => {
+            const rect = ref.current.getBoundingClientRect();
+            return { position: "fixed" as const, top: rect.bottom + 4, left: rect.left, width: rect.width };
+          })() : { position: "fixed" as const, top: -9999, left: -9999 }}
+          className="z-[9999] glass-card !rounded-xl p-1 shadow-xl"
+        >
             {searchable && (
               <div className="px-2 pt-1 pb-1.5">
                 <input
@@ -130,9 +153,9 @@ export default function TagDropdown<T>({
                 })
               )}
             </div>
-          </motion.div>
+          </motion.div>,
+          document.body
         )}
-      </AnimatePresence>
     </div>
   );
 }
