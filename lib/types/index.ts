@@ -106,6 +106,7 @@ export interface ArticleVO {
   viewCount: number;
   commentCount: number;
   createdAt: string;
+  updateTime?: string;
 }
 
 export interface ArticleNav {

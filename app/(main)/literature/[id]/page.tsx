@@ -2,13 +2,13 @@ import fs from "fs";
 import path from "path";
 import type { Metadata } from "next";
 import LiteratureDetailClient from "./LiteratureDetailClient";
-import { OG_TITLE_SUFFIX, defaultOgImage, breadcrumbSchema, SITE_URL } from "@/lib/seo";
+import { OG_TITLE_SUFFIX, defaultOgImage, breadcrumbSchema, jsonLdSchema, SITE_URL } from "@/lib/seo";
 
 function findLiterature(id: string) {
   try {
     const p = path.join(process.cwd(), "public", "data", "op-articles.json");
     const raw = fs.readFileSync(p, "utf-8");
-    const data = JSON.parse(raw) as { rows: { articles: { id: number; title: string; content?: string }[] }[] };
+    const data = JSON.parse(raw) as { rows: { articles: { id: number; title: string; content?: string; writtenAt?: string }[] }[] };
     for (const tag of data.rows || []) {
       const found = tag.articles?.find((a) => String(a.id) === id);
       if (found) return found;
@@ -37,6 +37,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (found) return {
     title: found.title,
     description: found.content?.slice(0, 200) || "",
+    alternates: {
+      canonical: `/literature/${id}/`,
+    },
     openGraph: {
       title: `${found.title} ${OG_TITLE_SUFFIX}`,
       description: found.content?.slice(0, 200) || "",
@@ -61,6 +64,14 @@ export default async function LiteratureDetailPage(props: { params: Promise<{ id
           ])),
         }}
       />
+      {found && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLdSchema("CreativeWork", found.title, found.content?.slice(0, 200), found.writtenAt)),
+          }}
+        />
+      )}
       <LiteratureDetailClient params={props.params} articleTitle={found?.title || ""} initialContent={found?.content || ""} />
     </>
   );

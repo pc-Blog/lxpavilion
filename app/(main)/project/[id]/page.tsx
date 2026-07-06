@@ -2,13 +2,22 @@ import fs from "fs";
 import path from "path";
 import type { Metadata } from "next";
 import ProjectDetailClient from "./ProjectDetailClient";
-import { OG_TITLE_SUFFIX, defaultOgImage, breadcrumbSchema, SITE_URL } from "@/lib/seo";
+import { OG_TITLE_SUFFIX, defaultOgImage, breadcrumbSchema, jsonLdSchema, SITE_URL } from "@/lib/seo";
 
 function readProject(id: string) {
   try {
     const p = path.join(process.cwd(), "public", "data", "projects", `${id}.json`);
     return JSON.parse(fs.readFileSync(p, "utf-8")) as { name: string; summary?: string; coverImage?: string; content?: string };
   } catch { return null; }
+}
+
+function getProjectDate(id: string): string | undefined {
+  try {
+    const p = path.join(process.cwd(), "public", "data", "projects.json");
+    const raw = fs.readFileSync(p, "utf-8");
+    const data = JSON.parse(raw) as { rows: { id: number; createTime?: string }[] };
+    return data.rows?.find(a => String(a.id) === id)?.createTime;
+  } catch { return undefined; }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -20,6 +29,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title: data.name,
     description: data.summary || "",
+    alternates: {
+      canonical: `/project/${id}/`,
+    },
     openGraph: {
       title: `${data.name} ${OG_TITLE_SUFFIX}`,
       description: data.summary || "",
@@ -38,6 +50,10 @@ export function generateStaticParams() {
 export default async function ProjectDetailPage(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
   const data = readProject(id);
+  const projectDate = getProjectDate(id);
+  const coverUrl = data?.coverImage
+    ? (data.coverImage.startsWith("http") ? data.coverImage : `${SITE_URL}${data.coverImage}`)
+    : undefined;
   return (
     <>
       <script
@@ -50,6 +66,14 @@ export default async function ProjectDetailPage(props: { params: Promise<{ id: s
           ])),
         }}
       />
+      {data && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLdSchema("CreativeWork", data.name, data.summary, projectDate, coverUrl)),
+          }}
+        />
+      )}
       <ProjectDetailClient params={props.params} projectName={data?.name || ""} initialContent={data?.content || ""} />
     </>
   );

@@ -11,8 +11,8 @@ import ViewCount from "@/app/_components/article/ViewCount";
 import CommentSection from "@/app/_components/comment/CommentSection";
 import { downloadContentAsZip, downloadMarkdown } from "@/lib/download-content";
 import { showSuccessToast, showErrorToast } from "@/lib/toast";
-import { jsonLdSchema } from "@/lib/seo";
 import { assetUrl } from "@/lib/asset-url";
+import Link from "next/link";
 import { useContentStore } from "@/stores/contentStore";
 import { siteConfig } from "@/lib/siteConfig";
 
@@ -70,20 +70,6 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
 
   return (
     <>
-      {article && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLdSchema(
-              "Article",
-              article.title,
-              article.summary,
-              article.createdAt,
-              article.coverImage ? assetUrl(article.coverImage) : undefined,
-            )),
-          }}
-        />
-      )}
       <div className="min-h-screen relative pb-20">
         <div className="flex flex-col lg:flex-row gap-8">
           <article className="flex-1 min-w-0 bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 dark:border-white/10 overflow-hidden">
@@ -105,7 +91,9 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
                         {date}
                       </span>
                       {article.categoryName && (
-                        <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 font-bold text-[10px]">{article.categoryName}</span>
+                        <Link href={`/article?categoryId=${article.categoryId}`} className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 font-bold text-[10px] hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">
+                          {article.categoryName}
+                        </Link>
                       )}
                       <ViewCount count={viewCount} />
                       <span>{liveCommentCount ?? article.commentCount} comments</span>
@@ -180,9 +168,9 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
                 {article?.tags && article.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
                     {article.tags.map((tag) => (
-                      <span key={tag.id} className="text-xs text-pink-500 dark:text-pink-400 font-medium">
+                      <Link key={tag.id} href={`/article?tagId=${tag.id}`} className="text-xs text-pink-500 dark:text-pink-400 font-medium hover:text-pink-600 dark:hover:text-pink-300 transition-colors">
                         #{tag.name}
-                      </span>
+                      </Link>
                     ))}
                   </div>
                 )}

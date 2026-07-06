@@ -21,6 +21,12 @@ export default function ArticlePage() {
       setCategories(data.rows.filter((c) => c.type === "ARTICLE"))
     ).catch(() => {});
     getTags().then((data) => setTags(data.rows)).catch(() => {});
+    // 从 URL 参数读取初始筛选条件
+    const params = new URLSearchParams(window.location.search);
+    const cid = params.get("categoryId");
+    const tid = params.get("tagId");
+    if (cid) setCategoryId(Number(cid));
+    if (tid) setTagId(Number(tid));
   }, []);
 
   return (

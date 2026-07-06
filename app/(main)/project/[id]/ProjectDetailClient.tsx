@@ -10,7 +10,6 @@ import BackButton from "@/app/_components/article/BackButton";
 import CommentSection from "@/app/_components/comment/CommentSection";
 import { downloadContentAsZip, downloadMarkdown } from "@/lib/download-content";
 import { showSuccessToast, showErrorToast } from "@/lib/toast";
-import { jsonLdSchema } from "@/lib/seo";
 import { assetUrl } from "@/lib/asset-url";
 import { useContentStore } from "@/stores/contentStore";
 
@@ -59,20 +58,6 @@ export default function ProjectDetailClient(props: { params: Promise<{ id: strin
 
   return (
     <>
-      {project && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLdSchema(
-              "CreativeWork",
-              project.name,
-              project.summary,
-              project.createdAt,
-              project.coverImage ? assetUrl(project.coverImage) : undefined,
-            )),
-          }}
-        />
-      )}
       <div className="min-h-screen relative pb-20">
         <div className="flex flex-col lg:flex-row gap-8">
           <article className="flex-1 min-w-0 bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 dark:border-white/10 overflow-hidden">

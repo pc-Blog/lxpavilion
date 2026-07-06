@@ -34,6 +34,9 @@ export const metadata: Metadata = {
   description: siteConfig.seoDescription,
   keywords: SITE_KEYWORDS,
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: siteConfig.title,
     description: siteConfig.seoDescription,

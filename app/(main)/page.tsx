@@ -86,7 +86,8 @@ export default function Home() {
                     <img src={assetUrl(siteConfig.avatarUrl)} alt={`${authorName} 的头像`} className="w-full h-full rounded-lg md:rounded-xl object-cover bg-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tighter">{authorName}</h1>
+                    <h1 className="sr-only">{siteConfig.title}</h1>
+                    <span className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tighter">{authorName}</span>
                     <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">{bio}</p>
                   </div>
                 </div>
