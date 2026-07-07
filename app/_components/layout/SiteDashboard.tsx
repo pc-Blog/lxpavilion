@@ -51,15 +51,17 @@ export default function SiteDashboard() {
                 {(badge as Record<string, string>)["name"]}
               </span>
             ))}
-            <Link
-              href={`https://${siteConfig.hotspot}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm border border-white/40 dark:border-slate-600 text-[11px] font-bold text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-500/30 hover:shadow-lg hover:shadow-orange-500/20 hover:border-orange-300 dark:hover:border-orange-500/50 transition-all flex items-center gap-1"
-            >
-              <span>🔥</span>
-              <span>每日热点</span>
-            </Link>
+            {siteConfig.featureHotTopics && (
+              <Link
+                href={`https://${siteConfig.hotspot}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm border border-white/40 dark:border-slate-600 text-[11px] font-bold text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-500/30 hover:shadow-lg hover:shadow-orange-500/20 hover:border-orange-300 dark:hover:border-orange-500/50 transition-all flex items-center gap-1"
+              >
+                <span>🔥</span>
+                <span>每日热点</span>
+              </Link>
+            )}
           </div>
         )}
 

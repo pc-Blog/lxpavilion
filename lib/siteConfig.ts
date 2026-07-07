@@ -57,4 +57,59 @@ export const siteConfig = {
 
   /** 后端地址 */
   backUrl: "localhost:18016",
+
+  /**
+   * ───────────────────────────────────────────────
+   *  功能开关（Feature Flags）
+   *  用于第三方服务未配置时的功能降级处理。
+   *
+   *  适用场景：
+   *  - fork 项目后不想配置所有第三方服务，关掉对应的功能即可
+   *  - 某个第三方服务不稳定或到期，临时关闭对应功能
+   *  - 按需精简博客功能，只保留需要的模块
+   *
+   *  使用方式：
+   *  将对应项设为 false 后，该功能会从前端隐藏（导航栏/首页/浮动菜单等入口消失），
+   *  直接访问页面也会显示友好提示而非报错。
+   *
+   *  注意：
+   *  - featureAuth（登录系统）关闭时，文章/项目详情页的评论输入框也会隐藏
+   *  - featureComments（评论区）关闭时，tools/心愿 页面也会一并隐藏
+   * ───────────────────────────────────────────────
+   */
+  /** 浏览分析（流量统计页面，依赖 Cloudflare Worker + Cloudflare Analytics API）*/
+  featureAnalytics: true,
+
+  /** 第三方博客统计（CSDN/掘金/博客园数据抓取，依赖 Cloudflare Worker）*/
+  featurePlatformData: true,
+
+  /** 友链页 RSS 文章预览（依赖 Cloudflare Worker 代理抓取）*/
+  featureFriendsRss: true,
+
+  /** AI 看板娘聊天（依赖 Cloudflare Worker + Workers AI）*/
+  featureAiChat: true,
+
+  /** 评论区（依赖 Cloudflare Worker + GitHub Discussions API）*/
+  featureComments: true,
+
+  /** 登录系统（账号密码登录 + GitHub OAuth，依赖 Cloudflare Worker）*/
+  featureAuth: true,
+
+  /** RSS 邮件推送（技术速递订阅表单，依赖 Cloudflare Worker + MailerLite）*/
+  featureRssPush: true,
+
+  /** 每日热点（首页热点按钮 + 看板娘热点按钮 + 热点邮件订阅，依赖 hotspot 服务）*/
+  featureHotTopics: true,
+
+  /** 文学创作页面（依赖独立的 Java 后端接口）*/
+  featureLiterature: true,
+
+  /** 音乐播放器（独立组件，可关闭隐藏）*/
+  featureMusic: true,
+
+  /** 成长记录页面（GitHub Commits / Workflows 统计）*/
+  featureGrowth: true,
+
+  /** 浏览数（文章列表/详情/首页，依赖 Cloudflare Worker）*/
+  featureViewCount: true,
 };

@@ -262,6 +262,9 @@ export default function AnalyticsPage() {
   const isDark = useDarkMode();
   const tooltip = isDark ? DARK_TOOLTIP : LIGHT_TOOLTIP;
 
+  const hasAnalytics = siteConfig.featureAnalytics;
+  const hasPlatform = siteConfig.featurePlatformData;
+
   const load = useCallback(async (d: number) => {
     setLoading(true);
     setError("");
@@ -275,16 +278,17 @@ export default function AnalyticsPage() {
     }
   }, []);
 
-  useEffect(() => { load(days); }, [days, load]);
+  useEffect(() => { if (hasAnalytics) load(days); else setLoading(false); }, [days, load, hasAnalytics]);
 
   // 多平台统计
   const WORKER_URL = `https://${siteConfig.analytics}`;
   useEffect(() => {
+    if (!hasPlatform) return;
     fetch(`${WORKER_URL}/platform`)
       .then((r) => r.json())
       .then((d) => { if (d.code === 1) setPlatformData(d.data); })
       .catch(() => { });
-  }, []);
+  }, [hasPlatform]);
 
   return (
     <div className="pb-16">
@@ -297,87 +301,95 @@ export default function AnalyticsPage() {
             Site traffic and visitor insights.
           </p>
         </div>
-        <div className="flex gap-2">
-          {[7, 14, 30, 364].map((d) => (
-            <button
-              key={d}
-              onClick={() => setDays(d)}
-              className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${days === d
-                ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/30"
-                : "glass-btn text-slate-500 dark:text-slate-400 hover:text-indigo-500"
-                }`}
-            >
-              {d === 364 ? "1年" : `${d} 天`}
-            </button>
-          ))}
-        </div>
+        {hasAnalytics && (
+          <div className="flex gap-2">
+            {[7, 14, 30, 364].map((d) => (
+              <button
+                key={d}
+                onClick={() => setDays(d)}
+                className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${days === d
+                  ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/30"
+                  : "glass-btn text-slate-500 dark:text-slate-400 hover:text-indigo-500"
+                  }`}
+              >
+                {d === 364 ? "1年" : `${d} 天`}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {loading ? (
-        <div className="py-24"><Loading /></div>
-      ) : error ? (
-        <div className="rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-8 text-center">
-          <p className="text-sm text-red-500">{error}</p>
-          <button onClick={() => load(days)} className="mt-4 text-xs font-bold text-indigo-500 hover:text-indigo-600 transition-colors">
-            重试
-          </button>
-        </div>
-      ) : data ? (
-        <div className="flex flex-col gap-6">
-          <SummaryCards totals={data.totals} />
+      {/* 流量分析 */}
+      {hasAnalytics && (
+        loading ? (
+          <div className="py-24"><Loading /></div>
+        ) : error ? (
+          <div className="rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-8 text-center">
+            <p className="text-sm text-red-500">{error}</p>
+            <button onClick={() => load(days)} className="mt-4 text-xs font-bold text-indigo-500 hover:text-indigo-600 transition-colors">
+              重试
+            </button>
+          </div>
+        ) : data ? (
+          <div className="flex flex-col gap-6">
+            <SummaryCards totals={data.totals} />
 
-          {data.hourly.length > 0 && (
+            {data.hourly.length > 0 && (
+              <LazyMount>
+                <div>
+                  <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">⏱ 小时趋势（最近 3 天）</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <TrendChart data={data.hourly} dataKey="requests" name="请求数" color={COLORS.requests} isHourly tooltip={tooltip} />
+                    <TrendChart data={data.hourly} dataKey="uniqueVisitors" name="独立访客" color={COLORS.visitors} isHourly tooltip={tooltip} />
+                    <TrendChart data={data.hourly} dataKey="cacheHitRate" name="缓存命中率 (%)" color={COLORS.cacheRate} unit="%" isHourly tooltip={tooltip} />
+                    <TrendChart data={data.hourly} dataKey="bandwidthMB" name="带宽消耗 (MB)" color={COLORS.bandwidth} unit=" MB" isHourly tooltip={tooltip} />
+                  </div>
+                </div>
+              </LazyMount>
+            )}
+
             <LazyMount>
               <div>
-                <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">⏱ 小时趋势（最近 3 天）</h2>
+                <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">📈 每日趋势</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <TrendChart data={data.hourly} dataKey="requests" name="请求数" color={COLORS.requests} isHourly tooltip={tooltip} />
-                  <TrendChart data={data.hourly} dataKey="uniqueVisitors" name="独立访客" color={COLORS.visitors} isHourly tooltip={tooltip} />
-                  <TrendChart data={data.hourly} dataKey="cacheHitRate" name="缓存命中率 (%)" color={COLORS.cacheRate} unit="%" isHourly tooltip={tooltip} />
-                  <TrendChart data={data.hourly} dataKey="bandwidthMB" name="带宽消耗 (MB)" color={COLORS.bandwidth} unit=" MB" isHourly tooltip={tooltip} />
+                  <TrendChart data={data.daily} dataKey="requests" name="请求数" color={COLORS.requests} tooltip={tooltip} />
+                  <TrendChart data={data.daily} dataKey="uniqueVisitors" name="独立访客" color={COLORS.visitors} tooltip={tooltip} />
+                  <TrendChart data={data.daily} dataKey="cacheHitRateBytes" name="缓存命中率 (%)" color={COLORS.cacheRate} unit="%" tooltip={tooltip} />
+                  <TrendChart data={data.daily} dataKey="bandwidthMB" name="带宽消耗 (MB)" color={COLORS.bandwidth} unit=" MB" tooltip={tooltip} />
                 </div>
               </div>
             </LazyMount>
-          )}
 
-          <LazyMount>
-            <div>
-              <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">📈 每日趋势</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TrendChart data={data.daily} dataKey="requests" name="请求数" color={COLORS.requests} tooltip={tooltip} />
-                <TrendChart data={data.daily} dataKey="uniqueVisitors" name="独立访客" color={COLORS.visitors} tooltip={tooltip} />
-                <TrendChart data={data.daily} dataKey="cacheHitRateBytes" name="缓存命中率 (%)" color={COLORS.cacheRate} unit="%" tooltip={tooltip} />
-                <TrendChart data={data.daily} dataKey="bandwidthMB" name="带宽消耗 (MB)" color={COLORS.bandwidth} unit=" MB" tooltip={tooltip} />
-              </div>
-            </div>
-          </LazyMount>
-
-          <LazyMount>
-            <div>
-              <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">👥 访客画像</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {data.byCountry.length > 0 && <HorizontalBar data={data.byCountry} title="🌏 国家分布" tooltip={tooltip} />}
-                {data.byDevice.length > 0 && <DonutChart data={data.byDevice} title="📱 设备类型" colorMap={DEVICE_COLORS} tooltip={tooltip} />}
-                {data.byBrowser.length > 0 && <HorizontalBar data={data.byBrowser} title="🌐 浏览器排行" tooltip={tooltip} />}
-                {data.byOS.length > 0 && <HorizontalBar data={data.byOS} title="💻 操作系统" tooltip={tooltip} />}
-              </div>
-            </div>
-          </LazyMount>
-
-          <LazyMount>
-            <div>
-              <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">🔧 技术指标</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {data.byCacheStatus.length > 0 && <DonutChart data={data.byCacheStatus} title="🔄 缓存状态" colorMap={CACHE_COLORS} tooltip={tooltip} />}
-                {data.byHTTPProtocol.length > 0 && <DonutChart data={data.byHTTPProtocol} title="📡 HTTP 协议" colorMap={HTTP_COLORS} tooltip={tooltip} />}
-              </div>
-            </div>
-          </LazyMount>
-
-          {platformData && (
             <LazyMount>
               <div>
-                <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">📊 多平台统计</h2>
+                <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">👥 访客画像</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {data.byCountry.length > 0 && <HorizontalBar data={data.byCountry} title="🌏 国家分布" tooltip={tooltip} />}
+                  {data.byDevice.length > 0 && <DonutChart data={data.byDevice} title="📱 设备类型" colorMap={DEVICE_COLORS} tooltip={tooltip} />}
+                  {data.byBrowser.length > 0 && <HorizontalBar data={data.byBrowser} title="🌐 浏览器排行" tooltip={tooltip} />}
+                  {data.byOS.length > 0 && <HorizontalBar data={data.byOS} title="💻 操作系统" tooltip={tooltip} />}
+                </div>
+              </div>
+            </LazyMount>
+
+            <LazyMount>
+              <div>
+                <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">🔧 技术指标</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {data.byCacheStatus.length > 0 && <DonutChart data={data.byCacheStatus} title="🔄 缓存状态" colorMap={CACHE_COLORS} tooltip={tooltip} />}
+                  {data.byHTTPProtocol.length > 0 && <DonutChart data={data.byHTTPProtocol} title="📡 HTTP 协议" colorMap={HTTP_COLORS} tooltip={tooltip} />}
+                </div>
+              </div>
+            </LazyMount>
+          </div>
+        ) : null
+      )}
+
+      {/* 第三方博客平台统计 */}
+      {hasPlatform && platformData && (
+        <LazyMount>
+          <div className={hasAnalytics && data ? "mt-6" : ""}>
+            <h2 className="text-lg font-black text-slate-700 dark:text-slate-300 mb-3">📊 多平台统计</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   {["csdn", "juejin", "cnblogs"].map((key) => {
                     const p = platformData[key as keyof PlatformResult] as PlatformData | null;
@@ -459,8 +471,7 @@ export default function AnalyticsPage() {
               </div>
             </LazyMount>
           )}
-        </div>
-      ) : null}
     </div>
   );
 }
+

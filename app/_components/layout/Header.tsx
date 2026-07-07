@@ -16,13 +16,15 @@ const NAV_ITEMS = [
   { name: "Home", href: "/" },
   { name: "Articles", href: "/article" },
   { name: "Projects", href: "/project" },
-  { name: "Literature", href: "/literature" },
+  ...(siteConfig.featureLiterature ? [{ name: "Literature" as const, href: "/literature" as const }] : []),
   { name: "Gallery", href: "/gallery" },
   { name: "Timeline", href: "/timeline" },
   { name: "Chatter", href: "/chatter" },
   { name: "Friends", href: "/friends" },
-  { name: "Growth", href: "/growth" },
-  { name: "Analytics", href: "/analytics" },
+  ...(siteConfig.featureGrowth ? [{ name: "Growth" as const, href: "/growth" as const }] : []),
+  ...(siteConfig.featureAnalytics || siteConfig.featurePlatformData
+    ? [{ name: "Analytics" as const, href: "/analytics" as const }]
+    : []),
   { name: "About", href: "/about" },
 ];
 
@@ -95,7 +97,7 @@ export default function Navbar() {
           })}
 
           {/* Auth */}
-          {!isStatic && (
+          {siteConfig.featureAuth && !isStatic && (
             <Link
               href="/admin"
               className="text-xs text-indigo-500 hover:text-indigo-400 transition-colors ml-2 mr-2"
@@ -103,25 +105,27 @@ export default function Navbar() {
               Admin
             </Link>
           )}
-          {isLoggedIn ? (
-            <div className="flex items-center gap-2 ml-2">
-              <span className="text-xs text-slate-500">
-                {user?.nickname || user?.username || "User"}
-              </span>
+          {siteConfig.featureAuth && (
+            isLoggedIn ? (
+              <div className="flex items-center gap-2 ml-2">
+                <span className="text-xs text-slate-500">
+                  {user?.nickname || user?.username || "User"}
+                </span>
+                <button
+                  onClick={logout}
+                  className="text-xs text-slate-400 hover:text-red-500 transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
               <button
-                onClick={logout}
-                className="text-xs text-slate-400 hover:text-red-500 transition-colors"
+                onClick={() => router.push("/auth/login")}
+                className="glass-btn !text-xs !py-1 !px-3 ml-2"
               >
-                Sign Out
+                Sign In
               </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => router.push("/auth/login")}
-              className="glass-btn !text-xs !py-1 !px-3 ml-2"
-            >
-              Sign In
-            </button>
+            )
           )}
         </nav>
 

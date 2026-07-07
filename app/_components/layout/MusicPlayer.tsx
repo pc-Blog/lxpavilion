@@ -3,6 +3,7 @@
 import { useAudioPlayer } from "@/lib/useAudioPlayer";
 import Tooltip from "@/app/_components/common/Tooltip";
 import { assetUrl } from "@/lib/asset-url";
+import { siteConfig } from "@/lib/siteConfig";
 
 function fmt(sec: number) {
   if (!sec || isNaN(sec)) return "00:00";
@@ -12,6 +13,16 @@ function fmt(sec: number) {
 }
 
 export default function MusicPlayer() {
+  if (!siteConfig.featureMusic) {
+    return (
+      <div className="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 min-h-[220px] h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+        <div className="text-3xl mb-3">🎵</div>
+        <p className="text-xs font-bold tracking-widest uppercase">Music Unavailable</p>
+        <p className="text-[10px] mt-1">音乐播放器未启用</p>
+      </div>
+    );
+  }
+
   const {
     currentTrack, isPlaying,
     progress, currentTime, duration, volume, isCoverSpinning,

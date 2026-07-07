@@ -26,6 +26,11 @@ export default function RssPopover({
   rssUrl: string;
   children: React.ReactNode;
 }) {
+  // 功能降级：未启用时直接透传 children，不加载 Worker 请求
+  if (!siteConfig.featureFriendsRss) {
+    return <>{children}</>;
+  }
+
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<RssResult | null>(null);
   const [loading, setLoading] = useState(false);

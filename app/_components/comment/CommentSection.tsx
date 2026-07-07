@@ -553,6 +553,9 @@ function CommentCard({ comment, onReply, onEdit, onDelete, onReaction, onUpvote 
 interface CommentSectionProps { path: string }
 
 export default function CommentSection({ path }: CommentSectionProps) {
+  // 功能降级：未启用时隐藏评论区
+  if (!siteConfig.featureComments) return null;
+
   const { user, isLoggedIn } = useAuthStore();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

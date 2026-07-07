@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { ArticleVO, ArticleQueryDTO } from "@/lib/types";
 import { getPublicList, getViewCounts } from "@/lib/api/article";
+import { siteConfig } from "@/lib/siteConfig";
 import ArticleCard from "./ArticleCard";
 import Pagination from "../common/Pagination";
 import Loading from "../common/Loading";
@@ -43,11 +44,13 @@ export default function ArticleList({ categoryId, tagId, keyword }: Props) {
         if (!cancelled) {
           setArticles(data.rows);
           setTotal(data.total);
-          getViewCounts().then((rows) => {
-            const m: Record<number, number> = {};
-            rows.forEach((r) => { m[r.article_id] = r.views; });
-            setViewMap(m);
-          }).catch(() => {});
+          if (siteConfig.featureViewCount) {
+            getViewCounts().then((rows) => {
+              const m: Record<number, number> = {};
+              rows.forEach((r) => { m[r.article_id] = r.views; });
+              setViewMap(m);
+            }).catch(() => {});
+          }
         }
       } catch {
         if (!cancelled) {

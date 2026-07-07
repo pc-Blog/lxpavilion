@@ -502,7 +502,7 @@ export default function Live2DWidget() {
     // 添加 AI 对话按钮到 Pio 菜单
     const pioContainer = document.querySelector(".pio-container");
     const menu = pioContainer?.querySelector(".pio-action");
-    if (menu && !document.querySelector(".pio-ai")) {
+    if (menu && !document.querySelector(".pio-ai") && siteConfig.featureAiChat) {
       const btn = document.createElement("span");
       btn.className = "pio-ai";
       btn.title = "AI 聊天";
@@ -549,7 +549,7 @@ export default function Live2DWidget() {
     // 热点新闻按钮
     let hotLoading = false;
     const HOTSPOT_URL = "https://hotspot.lxpavilion.top/report.json";
-    if (menu && !document.querySelector(".pio-hot")) {
+    if (menu && !document.querySelector(".pio-hot") && siteConfig.featureHotTopics) {
       const hBtn = document.createElement("span");
       hBtn.className = "pio-hot";
       hBtn.title = "今日热点";
@@ -747,7 +747,7 @@ export default function Live2DWidget() {
 
   return (
     <>
-      {inputOpen && (
+      {siteConfig.featureAiChat && inputOpen && (
         <div
           ref={inputContainerRef}
           className={`fixed z-[9999] ${closing ? "animate-pio-chat-out" : "animate-pio-chat"}`}

@@ -6,8 +6,23 @@ import { login } from "@/lib/api/auth";
 import { useAuthStore } from "@/stores/authStore";
 import GitHubButton from "@/app/_components/auth/GitHubButton";
 import Link from "next/link";
+import { siteConfig } from "@/lib/siteConfig";
 
 export default function LoginPage() {
+  if (!siteConfig.featureAuth) {
+    return (
+      <div className="max-w-sm mx-auto mt-12">
+        <div className="glass-card p-12 text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <h1 className="text-xl font-black text-slate-900 dark:text-white mb-2">Sign In</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            登录功能未启用，请在 <code className="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded">lib/siteConfig.ts</code> 中设置 <code className="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded">featureAuth: true</code>。
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

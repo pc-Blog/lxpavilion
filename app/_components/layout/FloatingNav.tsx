@@ -6,6 +6,7 @@ import { motion, AnimatePresence, type Variants } from "framer-motion";
 import Tooltip from "@/app/_components/common/Tooltip";
 import SubscribeForm from "@/app/_components/subscribe/SubscribeForm";
 import HotTopicsSubscribeForm from "@/app/_components/subscribe/HotTopicsSubscribeForm";
+import { siteConfig } from "@/lib/siteConfig";
 
 interface NavItem {
   label: string;
@@ -66,20 +67,20 @@ const CATEGORIES: Category[] = [
       { icon: "📄", label: "老鱼简历", desc: "免费在线简历制作工具", href: "https://www.laoyujianli.com/" },
     ],
   },
-  {
+  ...(siteConfig.featureComments ? [{
     icon: "💭",
     label: "心愿",
     items: [
       { icon: "💡", label: "功能建议", href: "/tools/wishes" },
     ],
-  },
-  {
+  }] : []),
+  ...(siteConfig.featureRssPush || siteConfig.featureHotTopics ? [{
     icon: "📬",
     label: "订阅",
     items: [
       { icon: "🔥", label: "热点技术", desc: "AI 每日精选 · 热点技术订阅", href: "#subscribe" },
     ],
-  },
+  }] : []),
 ];
 
 const submenuVariants: Variants = {

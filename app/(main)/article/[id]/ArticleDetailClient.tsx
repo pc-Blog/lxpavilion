@@ -12,9 +12,9 @@ import CommentSection from "@/app/_components/comment/CommentSection";
 import { downloadContentAsZip, downloadMarkdown } from "@/lib/download-content";
 import { showSuccessToast, showErrorToast } from "@/lib/toast";
 import { assetUrl } from "@/lib/asset-url";
+import { siteConfig } from "@/lib/siteConfig";
 import Link from "next/link";
 import { useContentStore } from "@/stores/contentStore";
-import { siteConfig } from "@/lib/siteConfig";
 
 export default function ArticleDetailClient(props: { params: Promise<{ id: string }>; articleTitle?: string; initialContent?: string }) {
   const { id } = use(props.params);
@@ -31,11 +31,15 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
       try {
         const data = await getPublicDetail(Number(id));
         setArticle(data);
-        addView(Number(id)).then(setViewCount).catch(() => {});
-        fetch(`https://${siteConfig.analytics}/api/comment/count?path=/article/${id}`)
-          .then(r => r.json())
-          .then(j => { if (j.code === 1) setLiveCommentCount(j.data.count); })
-          .catch(() => {});
+        if (siteConfig.featureViewCount) {
+          addView(Number(id)).then(setViewCount).catch(() => {});
+        }
+        if (siteConfig.featureComments) {
+          fetch(`https://${siteConfig.analytics}/api/comment/count?path=/article/${id}`)
+            .then(r => r.json())
+            .then(j => { if (j.code === 1) setLiveCommentCount(j.data.count); })
+            .catch(() => {});
+        }
       } catch {
         setArticle(null);
       } finally {
@@ -95,8 +99,10 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
                           {article.categoryName}
                         </Link>
                       )}
-                      <ViewCount count={viewCount} />
-                      <span>{liveCommentCount ?? article.commentCount} comments</span>
+                      {siteConfig.featureViewCount && <ViewCount count={viewCount} />}
+                      {siteConfig.featureComments && (
+                        <span>{liveCommentCount ?? article.commentCount} comments</span>
+                      )}
                       <button
                         onClick={async () => {
                           setDownloading(true);
@@ -179,7 +185,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
               <ArticleProse content={displayContent} />
               {article && <ArticleNav prev={article.prev} next={article.next} />}
 
-              {article && (
+              {article && siteConfig.featureComments && (
                 <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
                   <CommentSection path={`/article/${id}`} />
                 </div>

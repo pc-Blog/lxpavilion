@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Tooltip from "@/app/_components/common/Tooltip";
+import { siteConfig } from "@/lib/siteConfig";
 
 const API_BASE = "https://api.lxpavilion.top";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export default function HotTopicsSubscribeForm() {
+  if (!siteConfig.featureHotTopics) return null;
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [msg, setMsg] = useState("");

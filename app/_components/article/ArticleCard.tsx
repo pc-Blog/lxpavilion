@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ArticleVO } from "@/lib/types";
 import ViewCount from "./ViewCount";
+import { siteConfig } from "@/lib/siteConfig";
 import { assetUrl } from "@/lib/asset-url";
 
 const THEMES = [
@@ -106,7 +107,7 @@ export default function ArticleCard({ article, viewCount = 0 }: { article: Artic
             <span>·</span>
             <span>{date}</span>
             <span>·</span>
-            <ViewCount count={viewCount} />
+            {siteConfig.featureViewCount && <ViewCount count={viewCount} />}
           </div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-snug group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
             {article.title}

@@ -30,22 +30,28 @@ export default function Home() {
   useEffect(() => {
     get().then(dashData => {
       setDash(dashData);
-      fetch(`https://${siteConfig.analytics}/api/comment/stats`)
-        .then(r => r.json())
-        .then(json => {
-          if (json.code === 1) setDash(prev => prev ? { ...prev, commentCount: json.data.totalComments } : prev);
-        }).catch(() => {});
-      fetch(`https://${siteConfig.analytics}/api/view/total`)
-        .then(r => r.json())
-        .then(json => {
-          if (json.code === 1) setDash(prev => prev ? { ...prev, totalViews: json.data.total } : prev);
-        }).catch(() => {});
+      if (siteConfig.featureComments) {
+        fetch(`https://${siteConfig.analytics}/api/comment/stats`)
+          .then(r => r.json())
+          .then(json => {
+            if (json.code === 1) setDash(prev => prev ? { ...prev, commentCount: json.data.totalComments } : prev);
+          }).catch(() => {});
+      }
+      if (siteConfig.featureViewCount) {
+        fetch(`https://${siteConfig.analytics}/api/view/total`)
+          .then(r => r.json())
+          .then(json => {
+            if (json.code === 1) setDash(prev => prev ? { ...prev, totalViews: json.data.total } : prev);
+          }).catch(() => {});
+      }
     }).catch(() => { });
     getAbout().then(about => { loadConfig(about); setConfigReady(true); }).catch(() => { });
-    getArticleList().then(d => {
-      const total = d.rows.reduce((sum, t) => sum + t.articles.length, 0);
-      setLiteratureCount(total);
-    }).catch(() => { });
+    if (siteConfig.featureLiterature) {
+      getArticleList().then(d => {
+        const total = d.rows.reduce((sum, t) => sum + t.articles.length, 0);
+        setLiteratureCount(total);
+      }).catch(() => { });
+    }
     getFriendLinks().then(list => {
       setFriendCount(Array.isArray(list) ? list.length : (list as { rows?: unknown[] })?.rows?.length ?? null);
     }).catch(() => { });
@@ -244,9 +250,9 @@ export default function Home() {
             {dash && (
               <div className="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 flex items-center gap-8 flex-wrap">
                 {[
-                  { v: dash.commentCount, l: "Comments" },
-                  { v: dash.totalViews ?? "—", l: "Views" },
-                  { v: literatureCount ?? "—", l: "Literature" },
+                  ...(siteConfig.featureComments ? [{ v: dash.commentCount, l: "Comments" as const }] : []),
+                  ...(siteConfig.featureViewCount ? [{ v: dash.totalViews ?? "—", l: "Views" as const }] : []),
+                  ...(siteConfig.featureLiterature ? [{ v: literatureCount ?? "—", l: "Literature" as const }] : []),
                   { v: dash.timelineCount, l: "Milestones" },
                   { v: friendCount ?? "—", l: "Friends" },
                   { v: chatterCount ?? "—", l: "Chatter" },

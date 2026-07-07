@@ -4,8 +4,22 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "@/lib/api/auth";
 import Link from "next/link";
+import { siteConfig } from "@/lib/siteConfig";
 
 export default function RegisterPage() {
+  if (!siteConfig.featureAuth) {
+    return (
+      <div className="max-w-sm mx-auto mt-12">
+        <div className="glass-card p-12 text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <h1 className="text-xl font-black text-slate-900 dark:text-white mb-2">Register</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            注册功能未启用。
+          </p>
+        </div>
+      </div>
+    );
+  }
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
