@@ -57,6 +57,7 @@ function SyncPanel({ label, syncing, progress, logs, result, onSync }: {
 export default function AdminDashboardPage() {
   const [dash, setDash] = useState<DashboardVO | null>(null);
   const [literatureCount, setLiteratureCount] = useState<number | null>(null);
+  const [workerCommentCount, setWorkerCommentCount] = useState<number | null>(null);
   const [token, setToken] = useState("");
   const [savedToken, setSavedToken] = useState("");
   const [jsonSync, setJsonSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
@@ -72,6 +73,10 @@ export default function AdminDashboardPage() {
       const total = d.rows.reduce((sum, t) => sum + t.articles.length, 0);
       setLiteratureCount(total);
     }).catch(() => { });
+    fetch(`https://${siteConfig.analytics}/api/comment/stats`)
+      .then(r => r.json())
+      .then(json => { if (json.code === 1) setWorkerCommentCount(json.data.totalComments); })
+      .catch(() => {});
     const stored = localStorage.getItem(STORAGE_KEY) || "";
     setSavedToken(stored);
   }, []);
@@ -250,7 +255,7 @@ export default function AdminDashboardPage() {
           { label: "Literature", value: literatureCount ?? 0, href: "/literature", color: "text-emerald-500" },
           { label: "Projects", value: dash.projectCount, href: "/admin/project", color: "text-purple-500" },
           { label: "Skills", value: dash.skillCount, href: "/admin/skill", color: "text-pink-500" },
-          { label: "Comments", value: dash.commentCount, href: "#", color: "text-emerald-500" },
+          { label: "Comments", value: workerCommentCount ?? dash.commentCount, href: "#", color: "text-emerald-500" },
           { label: "Total Views", value: dash.totalViews, href: "#", color: "text-amber-500" },
           { label: "Timeline", value: dash.timelineCount, href: "/admin/timeline", color: "text-cyan-500" },
         ].map((s) => (

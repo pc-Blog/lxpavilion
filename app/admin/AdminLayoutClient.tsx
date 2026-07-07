@@ -18,6 +18,7 @@ import {
   HardDrive,
   Upload,
   Info,
+  Database,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -36,6 +37,7 @@ const NAV_ITEMS = [
   { label: "Tech", href: "/admin/tech", icon: Monitor, tooltip: "技术栈管理" },
   { label: "Media", href: "/admin/media", icon: HardDrive, tooltip: "媒体资源" },
   { label: "Deploys", href: "/admin/deploy", icon: Upload, tooltip: "部署管理" },
+  { label: "Sync Data", href: "/admin/sync-data", icon: Database, tooltip: "数据同步" },
   { label: "About", href: "/admin/about", icon: Info, tooltip: "关于页面" },
 ];
 

@@ -29,6 +29,7 @@ import { handleVerifySubscribe, handleDeleteSubscribe } from "./subscribe/api";
 import { handleUnsubscribe } from "./subscribe/unsubscribe";
 import { handleRssPush, handleRssPushDetail, handleRssPushCount, handleRssPushDeleteAll } from "./rss-push/handler";
 import { handleHotPush } from "./hot-topics/handler";
+import { handleSync } from "./sync/handler";
 import {
   handleList as handleEmailList,
   handleDetail as handleEmailDetail,
@@ -207,6 +208,11 @@ export default {
     // GET /api/rss-push/detail?id=N — 查询单条推送日志
     if (request.method === "GET" && url.pathname === "/api/rss-push/detail") {
       return handleRssPushDetail(request, env, origin);
+    }
+
+    // /api/sync/* — 数据同步（供 Java 后端拉取）
+    if (url.pathname.startsWith("/api/sync")) {
+      return handleSync(request, env, origin);
     }
 
     // 404 兜底
