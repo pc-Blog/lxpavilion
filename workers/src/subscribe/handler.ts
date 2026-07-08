@@ -1,36 +1,72 @@
 import { respond } from "../utils/response";
 import type { Env } from "../types";
 
-const MAILERLITE_GROUP_ID = "191576374630155327";
-const HOT_MAILERLITE_GROUP_ID = "191576388726163183";
-const ADMIN_GROUP_ID = "191757744228795902";
+// ── 欢迎邮件模板 ──
 
-const FROM_EMAIL = "notify@lxpavilion.top";
-const FROM_NAME = "ppc";
-
-const GROUP_MAP: Record<string, { mailerliteId: string; label: string }> = {
-  article: { mailerliteId: MAILERLITE_GROUP_ID, label: "文章推送" },
-  "hot-topics": { mailerliteId: HOT_MAILERLITE_GROUP_ID, label: "技术热点" },
-};
+import welcomeArticleTpl from "./welcome-article.html";
+import welcomeHotTpl from "./welcome-hot.html";
 
 // ── 管理员通知模板 ──
 
 import adminTpl from "./admin-notification.html";
 
-function renderAdminNotification(
-  email: string,
-  service: string,
-  time: string,
-  total: number,
-): string {
-  return adminTpl
-    .replace(/\{\{EMAIL\}\}/g, email)
-    .replace(/\{\{SERVICE\}\}/g, service)
-    .replace(/\{\{TIME\}\}/g, time)
-    .replace(/\{\{TOTAL_SUBSCRIBERS\}\}/g, String(total));
+const GROUP_MAP: Record<string, { label: string; tpl: string }> = {
+  article: { label: "文章推送", tpl: welcomeArticleTpl },
+  "hot-topics": { label: "技术热点", tpl: welcomeHotTpl },
+};
+
+// ── Resend 发送辅助 ──
+
+async function sendViaResend(
+  env: Env,
+  to: string,
+  subject: string,
+  html: string,
+): Promise<void> {
+  const fromName = env.EMAIL_FROM_NAME || "ppc";
+  const fromAddr = env.EMAIL_FROM_ADDRESS || "mail@lxpavilion.top";
+
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: `${fromName} <${fromAddr}>`,
+        to: [to],
+        subject,
+        html,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("Resend 发送失败", { module: "subscribe", action: "resend_error", to, subject, error: err });
+    }
+  } catch (e) {
+    console.error("Resend 请求异常", { module: "subscribe", action: "resend_exception", to, subject, error: String(e) });
+  }
 }
 
-/** 订阅成功后给管理员发通知邮件 */
+// ── 发送欢迎邮件 ──
+
+async function sendWelcomeEmail(env: Env, email: string, group: string): Promise<void> {
+  const config = GROUP_MAP[group];
+  if (!config) return;
+
+  const unsubUrl = `https://api.lxpavilion.top/api/unsubscribe?email=${encodeURIComponent(email)}&group=${group}`;
+  const html = config.tpl
+    .replace(/\{\$email\}/g, email)
+    .replace(/\{\$viewemail\}/g, "https://www.lxpavilion.top")
+    .replace(/\{\$unsubscribe\}/g, unsubUrl);
+
+  await sendViaResend(env, email, `欢迎订阅 LXPavilion — ${config.label}`, html);
+}
+
+// ── 发送管理员通知 ──
+
 async function sendAdminNotification(
   env: Env,
   email: string,
@@ -38,70 +74,27 @@ async function sendAdminNotification(
   groupName: string,
 ): Promise<void> {
   try {
-    // 1. 查当前分组的总订阅数
     const { results } = await env.DB
       .prepare("SELECT COUNT(*) as count FROM subscribers WHERE group_name = ?")
       .bind(groupName)
       .all<{ count: number }>();
     const total = results?.[0]?.count ?? 0;
 
-    // 2. 渲染模板
     const now = new Date();
     const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-    const campaignName = `新订阅通知 - ${email}`;
-    const html = renderAdminNotification(email, `${groupLabel}（${groupName}）`, time, total);
+    const html = adminTpl
+      .replace(/\{\{EMAIL\}\}/g, email)
+      .replace(/\{\{SERVICE\}\}/g, `${groupLabel}（${groupName}）`)
+      .replace(/\{\{TIME\}\}/g, time)
+      .replace(/\{\{TOTAL_SUBSCRIBERS\}\}/g, String(total));
 
-    // 3. 创建 Campaign → main 组
-    const createResp = await fetch("https://connect.mailerlite.com/api/campaigns", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        name: campaignName,
-        type: "regular",
-        groups: [ADMIN_GROUP_ID],
-        emails: [{
-          subject: `栏轩阁 - 新订阅通知`,
-          from: FROM_EMAIL,
-          from_name: FROM_NAME,
-          content: html,
-        }],
-      }),
-    });
-
-    if (!createResp.ok) {
-      const err = await createResp.text();
-      console.error("管理员通知创建失败", { module: "subscribe", action: "admin_notify_create_error", status: createResp.status, error: err });
-      return;
-    }
-
-    const { data } = await createResp.json() as { data: { id: string } };
-    const campaignId = data.id;
-
-    // 4. v2 API 发送
-    const sendResp = await fetch(
-      `https://api.mailerlite.com/api/v2/campaigns/${campaignId}/actions/send`,
-      {
-        method: "POST",
-        headers: {
-          "X-MailerLite-ApiKey": env.MAILERLITE_API_KEY,
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    if (!sendResp.ok) {
-      const err = await sendResp.text();
-      console.error("管理员通知发送失败", { module: "subscribe", action: "admin_notify_send_error", status: sendResp.status, error: err });
-    }
+    await sendViaResend(env, "msg@lxpavilion.top", "栏轩阁 - 新订阅通知", html);
   } catch (e) {
-    // 通知失败不影响订阅流程
     console.error("管理员通知异常", { module: "subscribe", action: "admin_notify_error", error: String(e) });
   }
 }
+
+// ── 主入口 ──
 
 export async function handleSubscribe(
   request: Request,
@@ -129,37 +122,25 @@ export async function handleSubscribe(
   console.log("订阅请求", { module: "subscribe", action: "request", email, group });
 
   try {
-    // 1. 写入 D1（先写，即使 MailerLite 失败也已留底）
-    await env.DB.prepare(
-      "INSERT OR IGNORE INTO subscribers (email, group_name) VALUES (?, ?)",
-    ).bind(email, group).run();
+    // 1. 检查是否已订阅
+    const existing = await env.DB
+      .prepare("SELECT id FROM subscribers WHERE email = ? AND group_name = ?")
+      .bind(email, group)
+      .all();
 
-    // 2. MailerLite API — 添加订阅者到对应的分组
-    //    Automation 会自动发欢迎邮件
-    const mlResp = await fetch("https://connect.mailerlite.com/api/subscribers", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        groups: [groupConfig.mailerliteId],
-        status: "active",
-      }),
-    });
-
-    // 409 = 已存在，不计为错误
-    if (!mlResp.ok && mlResp.status !== 409) {
-      const err = await mlResp.text();
-      console.error("MailerLite 订阅错误", { module: "subscribe", action: "mailerlite_error", status: mlResp.status, email, error: err });
-      // 不阻断：D1 已记录，留给后续重试
-    } else {
-      console.log("MailerLite 订阅成功", { module: "subscribe", action: "mailerlite_success", email, status: mlResp.status });
+    if (existing.results && existing.results.length > 0) {
+      return respond({ email, group }, "您已订阅，无需重复订阅", 1, origin);
     }
 
-    // 3. 给管理员发通知（不阻断主流程）
+    // 2. 写入 D1
+    await env.DB.prepare(
+      "INSERT INTO subscribers (email, group_name) VALUES (?, ?)",
+    ).bind(email, group).run();
+
+    // 3. 发送欢迎邮件（不阻断主流程）
+    await sendWelcomeEmail(env, email, group);
+
+    // 4. 给管理员发通知（不阻断主流程）
     await sendAdminNotification(env, email, groupConfig.label, group);
 
     return respond({ email, group }, "订阅成功 🎉 欢迎加入！", 1, origin);

@@ -25,9 +25,9 @@ import { handleView } from "./view/handler";
 import { handleComment } from "./comment/handler";
 import { handleEmail } from "./email/handler";
 import { handleSubscribe } from "./subscribe/handler";
-import { handleVerifySubscribe, handleDeleteSubscribe } from "./subscribe/api";
+import { handleDeleteSubscribe } from "./subscribe/api";
 import { handleUnsubscribe } from "./subscribe/unsubscribe";
-import { handleRssPush, handleRssPushDetail, handleRssPushCount, handleRssPushDeleteAll } from "./rss-push/handler";
+import { handleRssPush } from "./rss-push/handler";
 import { handleHotPush } from "./hot-topics/handler";
 import { handleSync } from "./sync/handler";
 import {
@@ -158,12 +158,7 @@ export default {
       return handleSubscribe(request, env, origin);
     }
 
-    // GET /api/subscribe/verify — 验证 D1 与 MailerLite 数据一致性
-    if (request.method === "GET" && url.pathname === "/api/subscribe/verify") {
-      return handleVerifySubscribe(request, env, origin);
-    }
-
-    // POST /api/subscribe/delete — 从 D1 和 MailerLite 同步删除订阅者
+    // POST /api/subscribe/delete — 从 D1 删除订阅者
     if (request.method === "POST" && url.pathname === "/api/subscribe/delete") {
       return handleDeleteSubscribe(request, env, origin);
     }
@@ -177,7 +172,7 @@ export default {
     if (request.method === "POST" && url.pathname === "/api/rss-push") {
       const pushResult = await handleRssPush(env);
       return respond(
-        { pushed: true, push_log_id: pushResult?.id ?? null, campaign_id: pushResult?.campaign_id ?? null, status: pushResult?.status ?? null },
+        { pushed: true, push_log_id: pushResult?.id ?? null, status: pushResult?.status ?? null },
         "RSS push completed",
         1,
         origin,
@@ -188,26 +183,11 @@ export default {
     if (request.method === "POST" && url.pathname === "/api/hot-push") {
       const pushResult = await handleHotPush(env);
       return respond(
-        { pushed: true, push_log_id: pushResult?.id ?? null, campaign_id: pushResult?.campaign_id ?? null, status: pushResult?.status ?? null },
+        { pushed: true, push_log_id: pushResult?.id ?? null, status: pushResult?.status ?? null },
         "Hot push completed",
         1,
         origin,
       );
-    }
-
-    // DELETE /api/rss-push — 清空所有推送日志
-    if (request.method === "DELETE" && url.pathname === "/api/rss-push") {
-      return handleRssPushDeleteAll(env, origin);
-    }
-
-    // GET /api/rss-push/count — 推送日志总数
-    if (request.method === "GET" && url.pathname === "/api/rss-push/count") {
-      return handleRssPushCount(env, origin);
-    }
-
-    // GET /api/rss-push/detail?id=N — 查询单条推送日志
-    if (request.method === "GET" && url.pathname === "/api/rss-push/detail") {
-      return handleRssPushDetail(request, env, origin);
     }
 
     // /api/sync/* — 数据同步（供 Java 后端拉取）

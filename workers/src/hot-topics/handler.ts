@@ -3,7 +3,7 @@
  *
  * 数据源: https://hotspot.lxpavilion.top/report.json
  * 周期:   每天 1:00 UTC（北京时间 09:00）
- * 逻辑:   抓报告 → 去重 → 截取 → 渲染 → 发送 → 记录
+ * 逻辑:   抓报告 → 去重 → 截取 → 渲染 → 通过 Resend 群发 → 记录
  */
 
 import type { Env } from "../types";
@@ -14,7 +14,6 @@ import type { HotItem } from "./template";
 // ── 常量 ──
 
 const HOTSPOT_URL = "https://hotspot.lxpavilion.top/report.json";
-const HOT_GROUP_ID = "191576388726163183";
 const FROM_EMAIL = "notify@lxpavilion.top";
 const FROM_NAME = "ppc";
 const CAMPAIGN_NAME = "栏轩·阁｜今日技术热点";
@@ -114,86 +113,64 @@ async function getPushedHashes(env: Env): Promise<Set<string>> {
   return hashes;
 }
 
-// ── 获取 Hotspot 分组的活跃订阅者数 ──
+// ── 从 D1 获取 Hotspot 分组的订阅者数 ──
 
 async function getSubscriberCount(env: Env): Promise<number> {
   try {
-    const resp = await fetch(
-      `https://connect.mailerlite.com/api/groups/${HOT_GROUP_ID}`,
-      {
-        headers: {
-          Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-          Accept: "application/json",
-        },
-      },
-    );
-    if (!resp.ok) return 0;
-    const { data } = await resp.json() as { data: { active_count: number } };
-    return data.active_count ?? 0;
+    const { results } = await env.DB
+      .prepare("SELECT COUNT(*) as count FROM subscribers WHERE group_name = 'hot-topics'")
+      .all<{ count: number }>();
+    return results?.[0]?.count ?? 0;
   } catch {
     return 0;
   }
 }
 
-// ── 创建并发送 MailerLite Campaign ──
+// ── 通过 Resend Batch 群发 ──
 
-async function pushToMailerLite(
+async function pushViaResend(
   env: Env,
-  groups: KeywordGroup[],
-  totalCount: number,
-  keywordCount: number,
-  reportDate: string,
-): Promise<string> {
-  const html = renderHotEmail(groups, totalCount, keywordCount, reportDate);
+  html: string,
+  subject: string,
+): Promise<void> {
+  const { results } = await env.DB
+    .prepare("SELECT email FROM subscribers WHERE group_name = 'hot-topics'")
+    .all<{ email: string }>();
 
-  const createResp = await fetch("https://connect.mailerlite.com/api/campaigns", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      name: CAMPAIGN_NAME,
-      type: "regular",
-      groups: [HOT_GROUP_ID],
-      emails: [{
-        subject: CAMPAIGN_NAME,
-        from: FROM_EMAIL,
-        from_name: FROM_NAME,
-        content: html,
-      }],
-    }),
-  });
-
-  if (!createResp.ok) {
-    const err = await createResp.text();
-    throw new Error(`Campaign creation failed: ${createResp.status} ${err}`);
+  if (!results || results.length === 0) {
+    console.warn("热点推送无订阅者", { module: "hot_push", action: "no_subscribers" });
+    return;
   }
 
-  const { data } = await createResp.json() as { data: { id: string } };
-  const campaignId = data.id;
-  console.log("热点 Campaign 已创建", { module: "hot_push", action: "campaign_created", campaignId });
+  const fromName = env.EMAIL_FROM_NAME || FROM_NAME;
+  const fromAddr = env.EMAIL_FROM_ADDRESS || FROM_EMAIL;
 
-  const sendResp = await fetch(
-    `https://api.mailerlite.com/api/v2/campaigns/${campaignId}/actions/send`,
-    {
+  const batchSize = 100;
+  for (let i = 0; i < results.length; i += batchSize) {
+    const batch = results.slice(i, i + batchSize);
+    const payload = batch.map(sub => ({
+      from: `${fromName} <${fromAddr}>`,
+      to: [sub.email],
+      subject,
+      html,
+    }));
+
+    const res = await fetch("https://api.resend.com/emails/batch", {
       method: "POST",
       headers: {
-        "X-MailerLite-ApiKey": env.MAILERLITE_API_KEY,
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-    },
-  );
+      body: JSON.stringify(payload),
+    });
 
-  if (!sendResp.ok) {
-    const err = await sendResp.text();
-    throw new Error(`Campaign send failed: ${sendResp.status} ${err}`);
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`Resend batch send failed: ${res.status} ${err}`);
+    }
+
+    console.log("热点 Batch 已发送", { module: "hot_push", action: "batch_sent", count: batch.length });
   }
-
-  console.log("热点 Campaign 已发送", { module: "hot_push", action: "campaign_sent" });
-
-  return campaignId;
 }
 
 // ── 主入口 ──
@@ -201,7 +178,6 @@ async function pushToMailerLite(
 interface PushResult {
   id: number;
   status: string;
-  campaign_id?: string;
 }
 
 export async function handleHotPush(env: Env): Promise<PushResult | null> {
@@ -266,18 +242,15 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   // 4. 轮询选择：每个关键词最多取 2 条，按日期偏移轮转取数
   const maxArticles = Number(env.HOT_MAX_ARTICLES) || DEFAULT_MAX_ARTICLES;
 
-  // 对每个关键词组限制条数
   const cappedGroups = filteredGroups.map((g) => ({
     keyword: g.keyword,
     items: g.items.slice(0, MAX_PER_KEYWORD),
   }));
 
-  // 按关键词名排序，保证轮询顺序稳定
   const sortedGroups = [...cappedGroups].sort((a, b) =>
     a.keyword.localeCompare(b.keyword),
   );
 
-  // 计算轮询偏移量 = 年积日 % 分组数
   const now = new Date();
   const startOfYear = new Date(now.getFullYear(), 0, 0);
   const dayOfYear = Math.floor(
@@ -285,7 +258,6 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   );
   const offset = dayOfYear % sortedGroups.length;
 
-  // 轮询取数：从 offset 开始，每轮每个组取 1 条，直到凑满或取完
   const pointers = new Array(sortedGroups.length).fill(0);
   const selected: HotItem[] = [];
 
@@ -309,7 +281,6 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
 
   const selectedHashes = selected.map((item) => item.urlHash);
 
-  // 按 keyword 重新分组
   const keywordOrder: string[] = [];
   const groupMap = new Map<string, HotItem[]>();
 
@@ -330,18 +301,12 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
 
   console.log("热点推送新条目", { module: "hot_push", action: "new_items", count: finalCount, keywords: finalKeywordCount, offset });
 
-  // 5. 推送到 MailerLite
+  // 5. 渲染并群发
   const reportDate = report.report_time ? report.report_time.slice(0, 10) : "";
-  let campaignId: string | undefined;
+  const html = renderHotEmail(finalGroups, finalCount, finalKeywordCount, reportDate);
 
   try {
-    campaignId = await pushToMailerLite(
-      env,
-      finalGroups,
-      finalCount,
-      finalKeywordCount,
-      reportDate,
-    );
+    await pushViaResend(env, html, CAMPAIGN_NAME);
   } catch (e) {
     const errMsg = (e as Error).message;
     console.error("热点推送失败", { module: "hot_push", action: "push_failed", error: errMsg });
@@ -362,5 +327,5 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
 
   console.log("热点推送完成", { module: "hot_push", action: "done", items: finalCount, subscribers: subscriberCount, logId: result.meta.last_row_id });
 
-  return { id: result.meta.last_row_id, status: "success", campaign_id: campaignId };
+  return { id: result.meta.last_row_id, status: "success" };
 }

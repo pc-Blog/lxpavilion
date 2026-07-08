@@ -1,0 +1,149 @@
+{
+  // ── Worker 名称（在 Cloudflare Dashboard 中显示） ──
+  "name": "blog-api",
+
+  // ── 入口文件（相对于此目录） ──
+  "main": "src/index.ts",
+
+  // ── Cloudflare Workers 运行时兼容性日期（锁定 API 版本，避免意外破坏性变更） ──
+  "compatibility_date": "2026-06-10",
+
+  // ── 部署位置策略 ──
+  //   smart  → 根据用户地理位置自动选择最近的区域（延迟最优）
+  //   global → 部署到所有 Cloudflare 节点
+  "placement": {
+    "mode": "smart"
+  },
+
+  // ── 日志与可观测性 ──
+  //   head_sampling_rate: 采样率，1 = 记录所有请求（100%）
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+
+  // ── 模块规则 ──
+  //   导入 .html 文件时作为文本模块处理，而不是 JS
+  //   用途：邮件模板（welcome-article.html 等）通过 import 加载
+  "rules": [
+    { "type": "Text", "globs": ["**/*.html"] }
+  ],
+
+  // ── Workers AI 绑定 ──
+  //   用于 AI 看板娘对话功能
+  "ai": {
+    "binding": "AI"
+  },
+
+  // ── D1 数据库 ──
+  //   binding:      代码中用 env.DB 访问
+  //   database_name: Cloudflare Dashboard 中的数据库名称
+  //   database_id:   数据库 UUID
+  //   migrations_dir: 迁移文件存放目录
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blog-database",
+      "database_id": "c7e2f4b1-9937-4c7f-acd6-46aea0cb0504",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // ── 自定义域名路由 ──
+  //   绑定 api.lxpavilion.top 到该 Worker
+  //   如需部署到其他域名，修改 pattern 和 zone_name 即可
+  "routes": [
+    {
+      "pattern": "api.lxpavilion.top",
+      "zone_name": "lxpavilion.top",
+      "custom_domain": true
+    }
+  ],
+
+  // ── Cron 触发器（时区：UTC） ──
+  //   第一个 Cron：RSS 文章推送
+  //     0 0 * * *   每天 UTC 0:00 运行 (北京时间 08:00)
+  //   第二个 Cron：技术热点推送
+  //     0 1 * * *   每天 UTC 1:00 运行 (北京时间 09:00)
+  "triggers": {
+    "crons": ["0 0 * * *", "0 1 * * *"]
+  },
+
+  // ── 环境变量（在 Dashboard 中可修改，且可用 wrangler secret 替代敏感字段） ──
+  "vars": {
+
+    // ★ Cloudflare API 配置（必须）★
+    "CF_ZONE_ID": "5bf4f5d460e2073282b6ff62d01f2ca4",
+    // Cloudflare Zone ID，用于缓存清除（Cache Purge）和流量分析（Analytics GraphQL API）
+    // 需配合 CF_API_TOKEN 使用（CF_API_TOKEN 建议用 wrangler secret 设置，不写在配置文件里）
+    // 权限要求：Cache:Purge + Analytics:Read
+
+    // ★ 多平台数据源（选填，不配则对应平台不显示） ★
+    "CSDN_USER": "2604_96186443",               // CSDN 用户名（用于拉取文章统计）
+    "JUEJIN_USER_ID": "3154917256866522",       // 掘金用户 ID（用于拉取文章统计）
+    "CNBLOGS_BLOGAPP": "pc2005",                // 博客园 blogApp（用于拉取文章统计）
+
+    // ★ 邮件转发（Email Routing 收件归档用） ★
+    "FORWARD_EMAIL": "2194844980@qq.com",
+    // Email Routing 接收 mail@lxpavilion.top 的邮件后，原样转发到此地址
+    // 同时作为管理员通知的收件地址
+
+    // ★ Resend 邮件发送 ★
+    "RESEND_API_KEY": "re_4czhWjga_Cw3aBiixCuEhvicvnjFFj9hw",
+    // Resend API Key，用于发送所有邮件（欢迎邮件、订阅通知、RSS/热点推送）
+    // 免费版：100 封/天，可发送到任意未验证的收件地址
+    // 注册：https://resend.com
+
+    "EMAIL_FROM_NAME": "ppc",
+    // 发件人显示名称（收件人看到的发件人名字）
+
+    "EMAIL_FROM_ADDRESS": "mail@lxpavilion.top",
+    // 发件人邮箱地址（必须在 Resend Dashboard 中验证过域名）
+
+    // ★ 推送数量限制 ★
+    "RSS_MAX_ARTICLES": "3",
+    // 每次 RSS 推送最多包含的文章数（防止邮件过长）
+
+    "HOT_MAX_ARTICLES": "10",
+    // 每次热点推送最多包含的热点条目数
+
+    // ★ JWT 密钥（管理后台认证） ★
+    "JWT_SECRET": "【必填】JWT 签名密钥（从 git 历史清理，请轮换后回填）",
+    // 生产环境务必改为随机字符串！建议用 openssl rand -hex 32 生成
+
+    // ★ GitHub OAuth App（用于管理员 GitHub 登录） ★
+    "GITHUB_CLIENT_ID": "Iv23liAI2h53TjkCBu67",
+    // GitHub OAuth App 的 Client ID
+    // 在 https://github.com/settings/developers 创建
+
+    "GITHUB_REDIRECT_URI": "https://api.lxpavilion.top/api/auth/github/callback",
+    // GitHub OAuth 回调地址（需在 GitHub App 配置中设为相同值）
+
+    "FRONTEND_URL": "https://www.lxpavilion.top",
+    // 前端首页地址（CORS 跨域白名单、OAuth 跳转用）
+
+    // ★ GitHub App（用于 Giscus 评论系统） ★
+    "GITHUB_APP_ID": "3753438",
+    // GitHub App ID（用于生成 GitHub 安装 token，操作 Discussion API）
+
+    "GITHUB_INSTALLATION_ID": "142872893",
+    // GitHub App 的安装 ID（安装到仓库后的 ID）
+
+    "GITHUB_REPO_OWNER": "pc-Blog",
+    // 存放评论的 GitHub 仓库所有者
+
+    "GITHUB_REPO_NAME": "next",
+    // 存放评论的 GitHub 仓库名称
+
+    "GITHUB_DISCUSSION_CATEGORY_ID": "DIC_kwDOSk99g84C9uoJ",
+    // Discussion 分类 ID（在 GitHub 仓库 Discussions 页面 URL 中可找到）
+
+    // ★ GitHub App 私钥（用于 JWT 签名，连接 GitHub API） ★
+    "GITHUB_APP_PRIVATE_KEY": "-----BEGIN PRIVATE KEY-----
+【必填】GitHub App 私钥（从 git 历史清理，请轮换后回填）
+-----END PRIVATE KEY-----"
+    // 从 GitHub App 设置页面生成的私钥（PEM 格式）
+    // \n 是换行符，保持单行字符串即可
+    // 注意：fork 后必须替换为自己的 GitHub App 私钥
+  }
+}

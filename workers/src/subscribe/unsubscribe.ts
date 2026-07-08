@@ -7,7 +7,6 @@
 
 import type { Env } from "../types";
 import { respond } from "../utils/response";
-import { deleteMLSubscriber } from "./api";
 import tpl from "./unsubscribe.html";
 import notifyTpl from "./unsubscribe-notification.html";
 
@@ -15,10 +14,6 @@ const GROUP_MAP: Record<string, string> = {
   article: "文章推送",
   "hot-topics": "技术热点",
 };
-
-const ADMIN_GROUP_ID = "191757744228795902";
-const FROM_EMAIL = "notify@lxpavilion.top";
-const FROM_NAME = "ppc";
 
 function escHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -30,6 +25,40 @@ function renderUnsubscribePage(email: string, group: string, groupLabel: string)
     .replace(/\{\{GROUP_LABEL\}\}/g, escHtml(groupLabel))
     .replace(/\{\{EMAIL_JSON\}\}/g, JSON.stringify(email))
     .replace(/\{\{GROUP_JSON\}\}/g, JSON.stringify(group));
+}
+
+// ── Resend 发送辅助 ──
+
+async function sendViaResend(
+  env: Env,
+  to: string,
+  subject: string,
+  html: string,
+): Promise<void> {
+  const fromName = env.EMAIL_FROM_NAME || "ppc";
+  const fromAddr = env.EMAIL_FROM_ADDRESS || "mail@lxpavilion.top";
+
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: `${fromName} <${fromAddr}>`,
+        to: [to],
+        subject,
+        html,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("Resend 发送失败", { module: "subscribe", action: "unsubscribe_resend_error", error: err });
+    }
+  } catch (e) {
+    console.error("Resend 请求异常", { module: "subscribe", action: "unsubscribe_resend_exception", error: String(e) });
+  }
 }
 
 export async function handleUnsubscribe(
@@ -77,7 +106,7 @@ export async function handleUnsubscribe(
     }
 
     try {
-      // 1. 先查 D1 是否有这条订阅
+      // 1. 查 D1 是否有这条订阅
       const existing = await env.DB
         .prepare("SELECT id FROM subscribers WHERE email = ? AND group_name = ?")
         .bind(email, group)
@@ -86,22 +115,7 @@ export async function handleUnsubscribe(
       const existsInD1 = existing.results && existing.results.length > 0;
 
       if (!existsInD1) {
-        // D1 没有，再看 MailerLite 有没有
-        const checkML = await fetch(
-          `https://connect.mailerlite.com/api/subscribers/${encodeURIComponent(email)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-              Accept: "application/json",
-            },
-          },
-        );
-        if (checkML.status === 404) {
-          return new Response(
-            JSON.stringify({ code: 0, data: null, msg: "该邮箱未订阅，无法退订" }),
-            { status: 200, headers: { "Content-Type": "application/json" } },
-          );
-        }
+        return respond(null, "该邮箱未订阅，无法退订", 0, origin);
       }
 
       // 2. 从 D1 删除
@@ -109,12 +123,6 @@ export async function handleUnsubscribe(
         .prepare("DELETE FROM subscribers WHERE email = ? AND group_name = ?")
         .bind(email, group)
         .run();
-
-      // 2. 从 MailerLite 删除（复用已有逻辑）
-      const mlResult = await deleteMLSubscriber(env.MAILERLITE_API_KEY, email);
-      if (!mlResult.success) {
-        console.error("退订 MailerLite 删除失败", { module: "subscribe", action: "unsubscribe_ml_error", email, error: mlResult.error });
-      }
 
       // 3. 给管理员发通知（不阻断主流程）
       try {
@@ -127,54 +135,14 @@ export async function handleUnsubscribe(
         const now = new Date();
         const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
         const groupLabel = GROUP_MAP[group] || group;
-        const campaignName = `退订通知 - ${email}`;
 
         const html = notifyTpl
-          .replace(/\{\{EMAIL\}\}/g, email.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"))
+          .replace(/\{\{EMAIL\}\}/g, escHtml(email))
           .replace(/\{\{SERVICE\}\}/g, groupLabel)
           .replace(/\{\{TIME\}\}/g, time)
           .replace(/\{\{TOTAL_SUBSCRIBERS\}\}/g, String(total));
 
-        const createResp = await fetch("https://connect.mailerlite.com/api/campaigns", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            name: campaignName,
-            type: "regular",
-            groups: [ADMIN_GROUP_ID],
-            emails: [{
-              subject: `栏轩阁 - 退订通知`,
-              from: FROM_EMAIL,
-              from_name: FROM_NAME,
-              content: html,
-            }],
-          }),
-        });
-
-        if (!createResp.ok) {
-          const err = await createResp.text();
-          console.error("退订通知创建失败", { module: "subscribe", action: "unsubscribe_notify_error", status: createResp.status, error: err });
-        } else {
-          const { data } = await createResp.json() as { data: { id: string } };
-          const sendResp = await fetch(
-            `https://api.mailerlite.com/api/v2/campaigns/${data.id}/actions/send`,
-            {
-              method: "POST",
-              headers: {
-                "X-MailerLite-ApiKey": env.MAILERLITE_API_KEY,
-                "Content-Type": "application/json",
-              },
-            },
-          );
-          if (!sendResp.ok) {
-            const err = await sendResp.text();
-            console.error("退订通知发送失败", { module: "subscribe", action: "unsubscribe_notify_send_error", status: sendResp.status, error: err });
-          }
-        }
+        await sendViaResend(env, "msg@lxpavilion.top", "栏轩阁 - 退订通知", html);
       } catch (e) {
         console.error("退订通知异常", { module: "subscribe", action: "unsubscribe_notify_error", email, error: String(e) });
       }

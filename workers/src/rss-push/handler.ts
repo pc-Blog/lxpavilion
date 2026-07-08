@@ -4,7 +4,7 @@
  * 每天 0:00 UTC 自动运行：
  *   1. 抓取博客 RSS feed
  *   2. 筛选最近一周的文章
- *   3. 编译模板 → 创建 MailerLite Campaign → 发送
+ *   3. 编译模板 → 通过 Resend Batch 群发给所有订阅者
  *   4. 记录推送日志
  */
 
@@ -14,7 +14,6 @@ import { renderRssEmail } from "./template";
 import type { Article } from "./template";
 
 const FEED_URL = "https://www.lxpavilion.top/feed.xml";
-const GROUP_ID = "191576374630155327";
 const FROM_EMAIL = "notify@lxpavilion.top";
 const FROM_NAME = "ppc";
 const CAMPAIGN_NAME = "栏轩·阁｜本周技术速递";
@@ -70,81 +69,64 @@ async function fetchRssArticles(): Promise<Article[]> {
   return items;
 }
 
-/** 获取 article 分组的活跃订阅者数 */
+/** 从 D1 获取 article 分组的活跃订阅者数 */
 async function getSubscriberCount(env: Env): Promise<number> {
   try {
-    const resp = await fetch(
-      `https://connect.mailerlite.com/api/groups/${GROUP_ID}`,
-      {
-        headers: {
-          Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-          Accept: "application/json",
-        },
-      },
-    );
-    if (!resp.ok) return 0;
-    const { data } = await resp.json() as { data: { active_count: number } };
-    return data.active_count ?? 0;
+    const { results } = await env.DB
+      .prepare("SELECT COUNT(*) as count FROM subscribers WHERE group_name = 'article'")
+      .all<{ count: number }>();
+    return results?.[0]?.count ?? 0;
   } catch {
     return 0;
   }
 }
 
-/** 创建并发送 MailerLite Campaign — 返回 campaign ID */
-async function pushToMailerLite(
+/** 通过 Resend Batch 群发邮件给所有订阅者 */
+async function pushViaResend(
   env: Env,
-  articles: Article[],
-): Promise<string> {
-  const html = renderRssEmail(articles);
+  html: string,
+  subject: string,
+): Promise<void> {
+  // 从 D1 查所有订阅者
+  const { results } = await env.DB
+    .prepare("SELECT email FROM subscribers WHERE group_name = 'article'")
+    .all<{ email: string }>();
 
-  const createResp = await fetch("https://connect.mailerlite.com/api/campaigns", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      name: CAMPAIGN_NAME,
-      type: "regular",
-      groups: [GROUP_ID],
-      emails: [{
-        subject: CAMPAIGN_NAME,
-        from: FROM_EMAIL,
-        from_name: FROM_NAME,
-        content: html,
-      }],
-    }),
-  });
-
-  if (!createResp.ok) {
-    const err = await createResp.text();
-    throw new Error(`Campaign creation failed: ${createResp.status} ${err}`);
+  if (!results || results.length === 0) {
+    console.warn("RSS 推送无订阅者", { module: "rss_push", action: "no_subscribers" });
+    return;
   }
 
-  const { data } = await createResp.json() as { data: { id: string } };
-  const campaignId = data.id;
-  console.log("RSS Campaign 已创建", { module: "rss_push", action: "campaign_created", campaignId });
+  const fromName = env.EMAIL_FROM_NAME || FROM_NAME;
+  const fromAddr = env.EMAIL_FROM_ADDRESS || FROM_EMAIL;
 
-  const sendResp = await fetch(
-    `https://api.mailerlite.com/api/v2/campaigns/${campaignId}/actions/send`,
-    {
+  // Resend Batch 一次最多 100 封
+  const batchSize = 100;
+  for (let i = 0; i < results.length; i += batchSize) {
+    const batch = results.slice(i, i + batchSize);
+    const payload = batch.map(sub => ({
+      from: `${fromName} <${fromAddr}>`,
+      to: [sub.email],
+      subject,
+      html,
+    }));
+
+    const res = await fetch("https://api.resend.com/emails/batch", {
       method: "POST",
       headers: {
-        "X-MailerLite-ApiKey": env.MAILERLITE_API_KEY,
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-    },
-  );
+      body: JSON.stringify(payload),
+    });
 
-  if (!sendResp.ok) {
-    const err = await sendResp.text();
-    throw new Error(`Campaign send failed: ${sendResp.status} ${err}`);
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`Resend batch send failed: ${res.status} ${err}`);
+    }
+
+    console.log("RSS Batch 已发送", { module: "rss_push", action: "batch_sent", count: batch.length });
   }
-
-  console.log("RSS Campaign 已发送", { module: "rss_push", action: "campaign_sent" });
-
-  return campaignId;
 }
 
 // ── 从 RSS 链接提取文章 ID ──
@@ -159,7 +141,6 @@ function extractArticleId(link: string): number | null {
 interface PushResult {
   id: number;
   status: string;
-  campaign_id?: string;
 }
 
 export async function handleRssPush(env: Env): Promise<PushResult | null> {
@@ -176,7 +157,7 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
     return { id: result.meta.last_row_id, status: "failed" };
   }
 
-  // 2. 收集已推送过的文章 ID（从所有成功的 push_logs 中汇总）
+  // 2. 收集已推送过的文章 ID
   const pushedRows = await env.DB
     .prepare(
       `SELECT article_ids FROM push_logs
@@ -194,7 +175,7 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
     }
   }
 
-  // 3. 筛选未推送过的文章（按文章 ID 去重，而不是按日期）
+  // 3. 筛选未推送过的文章
   const maxArticles = Number(env.RSS_MAX_ARTICLES) || DEFAULT_MAX_ARTICLES;
 
   const newArticles = allArticles
@@ -215,10 +196,12 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
 
   console.log("RSS 推送新文章", { module: "rss_push", action: "new_articles", count: newArticles.length, titles: newArticles.map(a => a.title) });
 
-  // 4. 推送到 MailerLite
-  let campaignId: string | undefined;
+  // 4. 渲染模板
+  const html = renderRssEmail(newArticles);
+
+  // 5. 通过 Resend 群发
   try {
-    campaignId = await pushToMailerLite(env, newArticles);
+    await pushViaResend(env, html, CAMPAIGN_NAME);
   } catch (e) {
     const errMsg = (e as Error).message;
     console.error("RSS 推送失败", { module: "rss_push", action: "push_failed", error: errMsg });
@@ -229,7 +212,7 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
     return { id: result.meta.last_row_id, status: "failed" };
   }
 
-  // 5. 记录推送日志（记录文章 ID 列表，替代原来的时间戳）
+  // 6. 记录推送日志
   const subscriberCount = await getSubscriberCount(env);
   const newArticleIds = newArticles
     .map((a) => extractArticleId(a.link))
@@ -242,128 +225,5 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
 
   console.log("RSS 推送完成", { module: "rss_push", action: "done", articles: newArticles.length, subscribers: subscriberCount, logId: result.meta.last_row_id });
 
-  return { id: result.meta.last_row_id, status: "success", campaign_id: campaignId };
-}
-
-// ══════════════════════════════════════════════════════════════
-// MailerLite Campaign 查询与管理 API
-// ══════════════════════════════════════════════════════════════
-
-const ML_API_BASE = "https://connect.mailerlite.com/api";
-
-/**
- * 查询 MailerLite Campaign 详情（含投递统计）
- *
- * GET /api/rss-push/detail?id=<campaign_id>
- */
-export async function handleRssPushDetail(
-  request: Request,
-  env: Env,
-  origin: string | null,
-): Promise<Response> {
-  const url = new URL(request.url);
-  const id = url.searchParams.get("id");
-
-  if (!id) {
-    return respond(null, "缺少 id 参数（MailerLite campaign ID）", 0, origin);
-  }
-
-  const resp = await fetch(`${ML_API_BASE}/campaigns/${encodeURIComponent(id)}`, {
-    headers: {
-      Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-      Accept: "application/json",
-    },
-  });
-
-  if (resp.status === 404) {
-    return respond(null, "Campaign 不存在", 0, origin);
-  }
-
-  if (!resp.ok) {
-    const err = await resp.text();
-    return respond(null, `查询失败: ${resp.status} ${err}`, 0, origin);
-  }
-
-  const result = await resp.json() as { data: unknown };
-  return respond(result.data, "ok", 1, origin);
-}
-
-/**
- * 获取 MailerLite Campaign 总数
- *
- * GET /api/rss-push/count
- */
-export async function handleRssPushCount(
-  env: Env,
-  origin: string | null,
-): Promise<Response> {
-  // MailerLite v3 不分页时默认返回所有 campaigns
-  const resp = await fetch(`${ML_API_BASE}/campaigns`, {
-    headers: {
-      Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-      Accept: "application/json",
-    },
-  });
-
-  if (!resp.ok) {
-    const err = await resp.text();
-    return respond(null, `获取 Campaign 列表失败: ${resp.status} ${err}`, 0, origin);
-  }
-
-  const result = await resp.json() as { data: unknown[] };
-  return respond({ total: result.data.length }, "ok", 1, origin);
-}
-
-/**
- * 批量删除所有 MailerLite Campaign
- *
- * DELETE /api/rss-push
- */
-export async function handleRssPushDeleteAll(
-  env: Env,
-  origin: string | null,
-): Promise<Response> {
-  // 1. 获取所有 campaign
-  const listResp = await fetch(`${ML_API_BASE}/campaigns`, {
-    headers: {
-      Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-      Accept: "application/json",
-    },
-  });
-
-  if (!listResp.ok) {
-    const err = await listResp.text();
-    return respond(null, `获取 Campaign 列表失败: ${listResp.status} ${err}`, 0, origin);
-  }
-
-  const result = await listResp.json() as { data: { id: string }[] };
-  const campaigns = result.data;
-
-  if (campaigns.length === 0) {
-    return respond({ deleted_count: 0 }, "没有待删除的 Campaign", 1, origin);
-  }
-
-  // 2. 逐个删除
-  let deletedCount = 0;
-  for (const c of campaigns) {
-    try {
-      const delResp = await fetch(`${ML_API_BASE}/campaigns/${c.id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${env.MAILERLITE_API_KEY}`,
-          Accept: "application/json",
-        },
-      });
-      if (delResp.status === 204) deletedCount++;
-    } catch (e) {
-      console.error("RSS 推送删除 campaign 失败", { module: "rss_push", action: "delete_campaign_error", campaignId: c.id, error: String(e) });
-    }
-  }
-
-  return respond(
-    { deleted_count: deletedCount },
-    `已删除 ${deletedCount} 个 Campaign`,
-    1,
-    origin,
-  );
+  return { id: result.meta.last_row_id, status: "success" };
 }

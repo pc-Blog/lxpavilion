@@ -17,8 +17,6 @@ export interface Env {
   // 邮件转发目标（环境变量，运行时只读）
   FORWARD_EMAIL?: string;
 
-  // MailerLite 邮件订阅
-  MAILERLITE_API_KEY: string;
   RSS_MAX_ARTICLES?: string;
   HOT_MAX_ARTICLES?: string;
 
