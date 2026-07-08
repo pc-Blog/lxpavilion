@@ -35,8 +35,8 @@ import {
   handleDetail as handleEmailDetail,
   handleDelete as handleEmailDelete,
   handleGetForward,
-  handleSetForward,
 } from "./email/api";
+import { handleSend } from "./email/send";
 
 export default {
   // ── Email 入口（由 Cloudflare Email Routing 触发） ──
@@ -146,8 +146,8 @@ export default {
           return handleEmailDelete(request, env, origin);
         case request.method === "GET" && url.pathname === "/api/email/forward":
           return handleGetForward(request, env, origin);
-        case request.method === "PUT" && url.pathname === "/api/email/forward":
-          return handleSetForward(request, env, origin);
+        case request.method === "POST" && url.pathname === "/api/email/send":
+          return handleSend(request, env, origin);
         default:
           return respond(null, "Not Found", 0, origin);
       }

@@ -29,6 +29,11 @@ export interface Env {
   GITHUB_REPO_OWNER: string;
   GITHUB_REPO_NAME: string;
   GITHUB_DISCUSSION_CATEGORY_ID: string;
+
+  // Resend 邮件发送
+  RESEND_API_KEY: string;
+  EMAIL_FROM_NAME?: string;
+  EMAIL_FROM_ADDRESS?: string;
 }
 
 // ── API 统一响应格式 ──

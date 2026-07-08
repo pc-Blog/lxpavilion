@@ -25,12 +25,15 @@ async function storeEmail(
     textBody: string;
     htmlBody: string;
     headers: string;
+    fromName: string;
+    toName: string;
+    direction: string;
   },
 ): Promise<void> {
   await db
     .prepare(
-      `INSERT OR IGNORE INTO emails (message_id, from_addr, to_addr, forward_to, subject, text_body, html_body, headers)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT OR IGNORE INTO emails (message_id, from_addr, to_addr, forward_to, subject, text_body, html_body, headers, from_name, to_name, direction)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .bind(
       data.messageId,
@@ -41,6 +44,9 @@ async function storeEmail(
       data.textBody,
       data.htmlBody,
       data.headers,
+      data.fromName,
+      data.toName,
+      data.direction,
     )
     .run();
 }
@@ -62,6 +68,10 @@ export async function handleEmail(
   const htmlBody = parsed.html || "";
   const headersJson = JSON.stringify(Object.fromEntries(message.headers.entries()));
 
+  // 发件人名称
+  const fromName = parsed.from?.name || "";
+  const toName = env.EMAIL_FROM_NAME || "";
+
   // ── 2. 获取转发目标地址 ──
   const forwardTo = await getForwardEmail(env);
 
@@ -76,6 +86,9 @@ export async function handleEmail(
       textBody,
       htmlBody,
       headers: headersJson,
+      fromName,
+      toName,
+      direction: "in",
     });
     console.log("邮件已归档", { module: "email", action: "stored", messageId });
   } else {
@@ -89,6 +102,9 @@ export async function handleEmail(
       textBody,
       htmlBody,
       headers: headersJson,
+      fromName,
+      toName,
+      direction: "in",
     });
     return;
   }

@@ -16,6 +16,7 @@ import {
   Hash,
   Monitor,
   HardDrive,
+  Mail,
   Upload,
   Info,
   Database,
@@ -23,22 +24,50 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const NAV_ITEMS = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard, tooltip: "控制台" },
-  { label: "Articles", href: "/admin/article", icon: FileText, tooltip: "文章管理" },
-  { label: "Projects", href: "/admin/project", icon: FolderKanban, tooltip: "项目管理" },
-  { label: "Timeline", href: "/admin/timeline", icon: Clock, tooltip: "时间线管理" },
-  { label: "Skills", href: "/admin/skill", icon: Wrench, tooltip: "技能管理" },
-  { label: "Chatters", href: "/admin/chatter", icon: MessageCircle, tooltip: "说说管理" },
-  { label: "Albums", href: "/admin/album", icon: Image, tooltip: "相册管理" },
-  { label: "Friend Links", href: "/admin/friend-link", icon: LinkIcon, tooltip: "友链管理" },
-  { label: "Categories", href: "/admin/category", icon: Tags, tooltip: "分类管理" },
-  { label: "Tags", href: "/admin/tag", icon: Hash, tooltip: "标签管理" },
-  { label: "Tech", href: "/admin/tech", icon: Monitor, tooltip: "技术栈管理" },
-  { label: "Media", href: "/admin/media", icon: HardDrive, tooltip: "媒体资源" },
-  { label: "Deploys", href: "/admin/deploy", icon: Upload, tooltip: "部署管理" },
-  { label: "Sync Data", href: "/admin/sync-data", icon: Database, tooltip: "数据同步" },
-  { label: "About", href: "/admin/about", icon: Info, tooltip: "关于页面" },
+type NavItem = { label: string; href: string; icon: React.ComponentType<{ size?: number; className?: string }>; tooltip: string };
+
+const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
+  {
+    group: "概览",
+    items: [
+      { label: "Dashboard", href: "/admin", icon: LayoutDashboard, tooltip: "控制台" },
+    ],
+  },
+  {
+    group: "内容管理",
+    items: [
+      { label: "Articles", href: "/admin/article", icon: FileText, tooltip: "文章管理" },
+      { label: "Projects", href: "/admin/project", icon: FolderKanban, tooltip: "项目管理" },
+      { label: "Categories", href: "/admin/category", icon: Tags, tooltip: "分类管理" },
+      { label: "Tags", href: "/admin/tag", icon: Hash, tooltip: "标签管理" },
+      { label: "Tech", href: "/admin/tech", icon: Monitor, tooltip: "技术栈管理" },
+    ],
+  },
+  {
+    group: "社交管理",
+    items: [
+      { label: "Friend Links", href: "/admin/friend-link", icon: LinkIcon, tooltip: "友链管理" },
+      { label: "Email", href: "/admin/email", icon: Mail, tooltip: "邮箱管理" },
+    ],
+  },
+  {
+    group: "数据管理",
+    items: [
+      { label: "Albums", href: "/admin/album", icon: Image, tooltip: "相册管理" },
+      { label: "Chatters", href: "/admin/chatter", icon: MessageCircle, tooltip: "说说管理" },
+      { label: "Timeline", href: "/admin/timeline", icon: Clock, tooltip: "时间线管理" },
+      { label: "Skills", href: "/admin/skill", icon: Wrench, tooltip: "技能管理" },
+    ],
+  },
+  {
+    group: "系统",
+    items: [
+      { label: "About", href: "/admin/about", icon: Info, tooltip: "关于页面" },
+      { label: "Media", href: "/admin/media", icon: HardDrive, tooltip: "媒体资源" },
+      { label: "Deploys", href: "/admin/deploy", icon: Upload, tooltip: "部署管理" },
+      { label: "Sync Data", href: "/admin/sync-data", icon: Database, tooltip: "数据同步" },
+    ],
+  },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -106,36 +135,50 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Navigation */}
         <nav className="flex flex-col gap-0.5 text-sm">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const active = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-lg transition-colors ${
-                  collapsed
-                    ? "flex items-center justify-center py-2 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/50"
-                    : `block px-3 py-2 ${
-                        active
-                          ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-bold"
-                          : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/50"
-                      }`
-                }`}
-                onMouseEnter={(e) => {
-                  if (!collapsed) return;
-                  setHoveredTooltip({ text: item.tooltip, rect: e.currentTarget.getBoundingClientRect() });
-                }}
-                onMouseLeave={() => setHoveredTooltip(null)}
-              >
-                {collapsed ? (
-                  <Icon size={18} className="flex-shrink-0" />
-                ) : (
-                  item.label
-                )}
-              </Link>
-            );
-          })}
+          {NAV_GROUPS.map((navGroup, gi) => (
+            <div key={navGroup.group}>
+              {/* 分组标题（仅展开显示） */}
+              {!collapsed && (
+                <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  {navGroup.group}
+                </div>
+              )}
+              {navGroup.items.map((item) => {
+                const Icon = item.icon;
+                const active = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`rounded-lg transition-colors ${
+                      collapsed
+                        ? "flex items-center justify-center py-2 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/50"
+                        : `block px-3 py-2 ${
+                            active
+                              ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-bold"
+                              : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/50"
+                          }`
+                    }`}
+                    onMouseEnter={(e) => {
+                      if (!collapsed) return;
+                      setHoveredTooltip({ text: item.tooltip, rect: e.currentTarget.getBoundingClientRect() });
+                    }}
+                    onMouseLeave={() => setHoveredTooltip(null)}
+                  >
+                    {collapsed ? (
+                      <Icon size={18} className="flex-shrink-0" />
+                    ) : (
+                      item.label
+                    )}
+                  </Link>
+                );
+              })}
+              {/* 分组分割线（最后一组不需要） */}
+              {gi < NAV_GROUPS.length - 1 && (
+                <div className={`border-t border-slate-200 dark:border-slate-700 ${collapsed ? "my-2 mx-1" : "my-2 mx-3"}`} />
+              )}
+            </div>
+          ))}
         </nav>
       </aside>
       <main className="flex-1 p-8 flex flex-col min-h-0">{children}</main>

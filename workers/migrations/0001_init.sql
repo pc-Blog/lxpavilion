@@ -61,7 +61,10 @@ CREATE TABLE IF NOT EXISTS emails (
   text_body   TEXT DEFAULT '',
   html_body   TEXT DEFAULT '',
   headers     TEXT DEFAULT '{}',
-  created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+  from_name   TEXT NOT NULL DEFAULT '',
+  to_name     TEXT NOT NULL DEFAULT '',
+  direction   TEXT NOT NULL DEFAULT 'in'
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_emails_message_id ON emails(message_id);

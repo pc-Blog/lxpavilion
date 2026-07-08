@@ -18,23 +18,42 @@ export async function handleList(
   const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
   const pageSize = Math.min(100, Math.max(1, parseInt(url.searchParams.get("pageSize") || "20", 10)));
   const offset = (page - 1) * pageSize;
+  const direction = url.searchParams.get("direction"); // "in" | "out" | null
 
-  console.log("查询邮件列表", { module: "email", action: "list", page, pageSize });
+  console.log("查询邮件列表", { module: "email", action: "list", page, pageSize, direction });
 
   try {
-    const total = await env.DB
-      .prepare("SELECT COUNT(*) AS count FROM emails")
-      .first<{ count: number }>();
+    let total: { count: number } | null;
+    let list: { results: unknown[] };
 
-    const list = await env.DB
-      .prepare(
-        `SELECT id, message_id, from_addr, to_addr, forward_to, subject, text_body, created_at
-         FROM emails
-         ORDER BY created_at DESC
-         LIMIT ? OFFSET ?`,
-      )
-      .bind(pageSize, offset)
-      .all();
+    if (direction === "in" || direction === "out") {
+      total = await env.DB
+        .prepare("SELECT COUNT(*) AS count FROM emails WHERE direction = ?")
+        .bind(direction)
+        .first<{ count: number }>();
+
+      list = await env.DB
+        .prepare(
+          `SELECT id, message_id, from_addr, to_addr, forward_to, subject, text_body, created_at, from_name, to_name, direction
+           FROM emails WHERE direction = ?
+           ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+        )
+        .bind(direction, pageSize, offset)
+        .all();
+    } else {
+      total = await env.DB
+        .prepare("SELECT COUNT(*) AS count FROM emails")
+        .first<{ count: number }>();
+
+      list = await env.DB
+        .prepare(
+          `SELECT id, message_id, from_addr, to_addr, forward_to, subject, text_body, created_at, from_name, to_name, direction
+           FROM emails
+           ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+        )
+        .bind(pageSize, offset)
+        .all();
+    }
 
     return respond(
       {
@@ -122,14 +141,4 @@ export async function handleGetForward(
   origin: string | null,
 ): Promise<Response> {
   return respond({ address: env.FORWARD_EMAIL || "" }, "ok", 1, origin);
-}
-
-// ── 设置转发目标 ──
-
-export async function handleSetForward(
-  _request: Request,
-  _env: Env,
-  origin: string | null,
-): Promise<Response> {
-  return respond(null, "转发地址已在环境变量中配置，请修改 FORWARD_EMAIL 后重新部署", 0, origin);
 }

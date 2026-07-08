@@ -355,3 +355,27 @@ export interface OpMusic {
   url: string;
   pictureUrl: string;
 }
+
+// ========== Email (Worker API) ==========
+
+export interface Email {
+  id: number;
+  message_id: string;
+  from_addr: string;
+  to_addr?: string;
+  subject: string;
+  text_body?: string;
+  html_body?: string;
+  forward_to?: string;
+  created_at: string;
+  from_name?: string;
+  to_name?: string;
+  direction?: "in" | "out";
+}
+
+export interface EmailListResult {
+  list: Email[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
