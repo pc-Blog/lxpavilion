@@ -1,0 +1,14 @@
+{
+  "name": "blog-publisher",
+  "version": "1.0.0",
+  "description": "Publish articles to 栏轩阁 blog backend",
+  "main": "main.js",
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --outfile=main.js --external:obsidian --format=cjs --platform=node",
+    "dev": "esbuild src/main.ts --bundle --outfile=main.js --external:obsidian --format=cjs --platform=node --sourcemap=inline"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0",
+    "obsidian": "^1.7.2"
+  }
+}

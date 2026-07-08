@@ -1,0 +1,9 @@
+{
+  "id": "blog-publisher",
+  "name": "Blog Publisher",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "发布文章到栏轩阁博客后端",
+  "author": "pc2005",
+  "isDesktopOnly": true
+}
