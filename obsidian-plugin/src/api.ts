@@ -58,6 +58,14 @@ export function decodeArticleId(raw: unknown): number | undefined {
   }
 }
 
+/**
+ * 移除 YAML frontmatter 块，只保留正文
+ */
+export function stripFrontmatter(content: string): string {
+  const match = content.match(/^---\n[\s\S]*?\n---\n*/);
+  return match ? content.slice(match[0].length) : content;
+}
+
 export class ApiClient {
   constructor(private baseUrl: string) {}
 

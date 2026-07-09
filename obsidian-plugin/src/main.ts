@@ -1,5 +1,5 @@
 import { Plugin, PluginSettingTab, Setting, Notice, MarkdownView, TFile, Editor } from "obsidian";
-import { ApiClient, ArticleSaveRequest, encodeArticleId, decodeArticleId } from "./api";
+import { ApiClient, ArticleSaveRequest, encodeArticleId, decodeArticleId, stripFrontmatter } from "./api";
 import { PublishModal } from "./publish-modal";
 import { ArticleSelectorModal } from "./article-selector";
 
@@ -153,8 +153,9 @@ export default class BlogPublisherPlugin extends Plugin {
     }
 
     // 直接读文件，不走 cache
-    const content = await this.app.vault.read(file);
-    const fm = this.parseFrontmatter(content);
+    const rawContent = await this.app.vault.read(file);
+    const fm = this.parseFrontmatter(rawContent);
+    const content = stripFrontmatter(rawContent);
 
     const title = (fm?.title as string)?.trim() || file.basename;
     const summary = (fm?.summary as string)?.trim() || "";

@@ -1,5 +1,5 @@
 import { App, Modal, Notice, TFile } from "obsidian";
-import { ApiClient, encodeArticleId } from "./api";
+import { ApiClient, encodeArticleId, stripFrontmatter } from "./api";
 
 export class ArticleSelectorModal extends Modal {
   private api: ApiClient;
@@ -120,8 +120,9 @@ export class ArticleSelectorModal extends Modal {
     yamlParts.push(`article_id: ${encodeArticleId(id)}`);
     yamlParts.push("---");
 
-    // 3. 完整内容：frontmatter + 正文
-    const newContent = yamlParts.join("\n") + "\n" + (detail.content || "");
+    // 3. 完整内容：frontmatter + 正文（移除正文中已有的旧 frontmatter）
+    const body = stripFrontmatter(detail.content || "");
+    const newContent = yamlParts.join("\n") + "\n" + body;
 
     // 4. 写入文件
     try {

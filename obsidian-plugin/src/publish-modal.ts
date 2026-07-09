@@ -1,5 +1,5 @@
 import { App, Modal, Notice, TFile } from "obsidian";
-import { ApiClient, Category, Tag, ArticleSaveRequest, encodeArticleId, decodeArticleId } from "./api";
+import { ApiClient, Category, Tag, ArticleSaveRequest, encodeArticleId, decodeArticleId, stripFrontmatter } from "./api";
 
 export class PublishModal extends Modal {
   private api: ApiClient;
@@ -35,7 +35,7 @@ export class PublishModal extends Modal {
     super(app);
     this.api = api;
     this.file = file;
-    this.content = content;
+    this.content = stripFrontmatter(content);
 
     const fm = frontmatter || {};
     this.title = String(fm.title || file.basename || "");
