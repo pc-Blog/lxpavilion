@@ -13,10 +13,24 @@ function PreBlock({ children, ...props }: React.ComponentPropsWithoutRef<"pre">)
   const codeText = extractText(children);
 
   const copy = useCallback(() => {
-    navigator.clipboard.writeText(codeText).then(() => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(codeText).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      });
+    } else {
+      // fallback: 非安全上下文（自定义域名 HTTP）下 clipboard API 不可用
+      const ta = document.createElement("textarea");
+      ta.value = codeText;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    });
+    }
   }, [codeText]);
 
   return (
