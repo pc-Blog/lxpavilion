@@ -10,6 +10,51 @@ import CommentSection from "@/app/_components/comment/CommentSection";
 import { tagIconMap } from "@/app/_components/literature/tag-icons";
 import { useContentStore } from "@/stores/contentStore";
 
+/* ── 复制按钮 ── */
+function CopyButton({ title, content }: { title: string; content: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copy = useCallback(() => {
+    const text = `${title}\n\n${content}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      });
+    } else {
+      // fallback: 非安全上下文（HTTP）下 clipboard API 不可用
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
+  }, [title, content]);
+
+  return (
+    <button
+      onClick={copy}
+      className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors"
+      aria-label="复制全文"
+    >
+      {copied ? (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+      ) : (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
 export default function LiteratureDetailPage(props: { params: Promise<{ id: string }>; articleTitle?: string; initialContent?: string }) {
   const { id } = use(props.params);
   const [item, setItem] = useState<OpArticle | null>(null);
@@ -61,19 +106,30 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
 
   const relatedArticles = useMemo(() => {
     if (!item || allTags.length === 0) return [];
-    const currentTagIds = new Set(item.tagIds);
-    const related: OpArticle[] = [];
-    const seen = new Set<number>();
-    for (const tag of allTags) {
-      for (const article of tag.articles) {
-        if (article.id === item.id || seen.has(article.id)) continue;
-        if (article.tagIds.some((tid) => currentTagIds.has(tid))) {
-          related.push(article);
-          seen.add(article.id);
-        }
+    // 取主要分类
+    const primaryTag = allTags.find((t) => t.id === item.tagIds[0]);
+    if (!primaryTag) return [];
+    // 按 writtenAt 降序排列
+    const sorted = [...primaryTag.articles].sort(
+      (a, b) => new Date(b.writtenAt || 0).getTime() - new Date(a.writtenAt || 0).getTime()
+    );
+    const idx = sorted.findIndex((a) => a.id === item.id);
+    if (idx === -1) return [];
+    // 从当前位置向两侧扩展，取前 3 + 后 3
+    const result: OpArticle[] = [];
+    let left = idx - 1;
+    let right = idx + 1;
+    while (result.length < 6 && (left >= 0 || right < sorted.length)) {
+      if (left >= 0) {
+        result.push(sorted[left]);
+        left--;
+      }
+      if (right < sorted.length && result.length < 6) {
+        result.push(sorted[right]);
+        right++;
       }
     }
-    return related.slice(0, 6);
+    return result;
   }, [allTags, item]);
 
   const [spotXY, setSpotXY] = useState({ x: 50, y: 50 });
@@ -106,9 +162,12 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
           </h1>
 
           {item?.writtenAt && (
-            <p className="mt-3 text-sm text-slate-400">
-              {new Date(item.writtenAt).toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
-            </p>
+            <div className="flex items-center gap-2 mt-3">
+              <p className="text-sm text-slate-400">
+                {new Date(item.writtenAt).toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
+              </p>
+              <CopyButton title={item?.title || props.articleTitle || ""} content={displayContent} />
+            </div>
           )}
 
           {tagNames.length > 0 && (
