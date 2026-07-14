@@ -32,6 +32,12 @@ export interface Env {
   RESEND_API_KEY: string;
   EMAIL_FROM_NAME?: string;
   EMAIL_FROM_ADDRESS?: string;
+
+  // 自动通知专用发件地址（notify@lxpavilion.top）
+  NOTIFY_FROM_ADDRESS?: string;
+
+  // 管理员通知收件地址（msg@lxpavilion.top）
+  NOTIFY_TO_ADDRESS?: string;
 }
 
 // ── API 统一响应格式 ──

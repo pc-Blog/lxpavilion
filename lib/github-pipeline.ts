@@ -1,5 +1,7 @@
+import { siteConfig } from "./siteConfig";
+
 const GH_API = "https://api.github.com";
-const [OWNER, REPO] = ["pc-Blog", "next"] as const;
+const [OWNER, REPO] = siteConfig.repo.split("/") as [string, string];
 
 export interface WorkflowRun {
   id: number;

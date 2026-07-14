@@ -32,7 +32,7 @@ export async function getPublicDetail(id: number) {
   return api.get<ArticleDetailVO, ArticleDetailVO>(`/article/public/${id}`);
 }
 
-const VIEW_API = "https://api.lxpavilion.top/api/view";
+const VIEW_API = `https://${siteConfig.workerApi}/api/view`;
 
 /** 获取所有文章浏览数 */
 export async function getViewCounts(): Promise<{ article_id: number; views: number }[]> {

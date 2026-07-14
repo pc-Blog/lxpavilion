@@ -89,7 +89,7 @@
     // 同时作为管理员通知的收件地址
 
     // ★ Resend 邮件发送 ★
-    "RESEND_API_KEY": "re_4czhWjga_Cw3aBiixCuEhvicvnjFFj9hw",
+    "RESEND_API_KEY": "re_5xNRspgw_9bAUjSS2zNkf6e4ZeWvHP8JW",
     // Resend API Key，用于发送所有邮件（欢迎邮件、订阅通知、RSS/热点推送）
     // 免费版：100 封/天，可发送到任意未验证的收件地址
     // 注册：https://resend.com
@@ -99,6 +99,12 @@
 
     "EMAIL_FROM_ADDRESS": "mail@lxpavilion.top",
     // 发件人邮箱地址（必须在 Resend Dashboard 中验证过域名）
+
+    "NOTIFY_FROM_ADDRESS": "notify@lxpavilion.top",
+    // 自动通知专用发件地址（密码重置、订阅、推送等）
+
+    "NOTIFY_TO_ADDRESS": "msg@lxpavilion.top",
+    // 管理员通知收件地址（新订阅、退订通知等）
 
     // ★ 推送数量限制 ★
     "RSS_MAX_ARTICLES": "3",

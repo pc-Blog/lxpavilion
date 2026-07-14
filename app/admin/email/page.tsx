@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Email } from "@/lib/types";
 import { getEmailList, getEmailDetail, deleteEmail, getForwardTarget, sendEmail } from "@/lib/api/email";
+import { siteConfig } from "@/lib/siteConfig";
 import Tooltip from "@/app/_components/common/Tooltip";
 import Dialog from "@/app/_components/common/Dialog";
 import Pagination from "@/app/_components/common/Pagination";
@@ -35,6 +36,7 @@ export default function AdminEmailPage() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
+  const [bodyTab, setBodyTab] = useState<"text" | "html">("text");
 
   // Send test email
   const [testOpen, setTestOpen] = useState(false);
@@ -108,7 +110,7 @@ export default function AdminEmailPage() {
     if (!testTo.trim()) return;
     setSending(true);
     try {
-      await sendEmail(testTo.trim(), testSubject.trim() || "【栏轩阁】发件功能测试", testBody.trim() || "这是一封来自后台的测试邮件。", testToName.trim() || undefined);
+      await sendEmail(testTo.trim(), testSubject.trim() || `【${siteConfig.navTitle}】发件功能测试`, testBody.trim() || "这是一封来自后台的测试邮件。", testToName.trim() || undefined);
       showSuccessToast("发送成功");
       refresh(pageNum, pageSize);
       setTestTo("");
@@ -313,26 +315,49 @@ export default function AdminEmailPage() {
               )}
             </div>
 
-            {selectedEmail.text_body && (
+            {(selectedEmail.text_body || selectedEmail.html_body) && (
               <div>
-                <div className="text-xs font-bold text-slate-400 uppercase mb-1">正文（文本）</div>
-                <pre className="glass-card !rounded-xl p-3 text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap break-words max-h-60 overflow-y-auto bg-white/50 dark:bg-slate-800/50">
-                  {selectedEmail.text_body}
-                </pre>
-              </div>
-            )}
-
-            {selectedEmail.html_body && (
-              <div>
-                <div className="text-xs font-bold text-slate-400 uppercase mb-1">正文（HTML）</div>
-                <div className="glass-card !rounded-xl p-3 text-xs max-h-60 overflow-y-auto bg-white/50 dark:bg-slate-800/50">
-                  <iframe
-                    srcDoc={selectedEmail.html_body}
-                    className="w-full h-48 border-0"
-                    title="邮件 HTML 预览"
-                    sandbox=""
-                  />
+                <div className="flex gap-2 mb-2">
+                  {selectedEmail.text_body && (
+                    <button
+                      onClick={() => setBodyTab("text")}
+                      className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${
+                        bodyTab === "text"
+                          ? "bg-indigo-500 text-white"
+                          : "bg-slate-100 dark:bg-slate-700 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                      }`}
+                    >
+                      文本
+                    </button>
+                  )}
+                  {selectedEmail.html_body && (
+                    <button
+                      onClick={() => setBodyTab("html")}
+                      className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${
+                        bodyTab === "html"
+                          ? "bg-indigo-500 text-white"
+                          : "bg-slate-100 dark:bg-slate-700 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                      }`}
+                    >
+                      HTML
+                    </button>
+                  )}
                 </div>
+                {bodyTab === "text" && selectedEmail.text_body && (
+                  <pre className="glass-card !rounded-xl p-3 text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap break-words max-h-60 overflow-y-auto bg-white/50 dark:bg-slate-800/50">
+                    {selectedEmail.text_body}
+                  </pre>
+                )}
+                {bodyTab === "html" && selectedEmail.html_body && (
+                  <div className="glass-card !rounded-xl p-3 text-xs max-h-60 overflow-y-auto bg-white/50 dark:bg-slate-800/50">
+                    <iframe
+                      srcDoc={selectedEmail.html_body}
+                      className="w-full h-48 border-0"
+                      title="邮件 HTML 预览"
+                      sandbox=""
+                    />
+                  </div>
+                )}
               </div>
             )}
           </div>

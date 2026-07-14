@@ -31,14 +31,14 @@ export default function Home() {
     get().then(dashData => {
       setDash(dashData);
       if (siteConfig.featureComments) {
-        fetch(`https://${siteConfig.analytics}/api/comment/stats`)
+        fetch(`https://${siteConfig.workerApi}/api/comment/stats`)
           .then(r => r.json())
           .then(json => {
             if (json.code === 1) setDash(prev => prev ? { ...prev, commentCount: json.data.totalComments } : prev);
           }).catch(() => {});
       }
       if (siteConfig.featureViewCount) {
-        fetch(`https://${siteConfig.analytics}/api/view/total`)
+        fetch(`https://${siteConfig.workerApi}/api/view/total`)
           .then(r => r.json())
           .then(json => {
             if (json.code === 1) setDash(prev => prev ? { ...prev, totalViews: json.data.total } : prev);

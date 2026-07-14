@@ -73,7 +73,7 @@ export default function AdminDashboardPage() {
       const total = d.rows.reduce((sum, t) => sum + t.articles.length, 0);
       setLiteratureCount(total);
     }).catch(() => { });
-    fetch(`https://${siteConfig.analytics}/api/comment/stats`)
+    fetch(`https://${siteConfig.workerApi}/api/comment/stats`)
       .then(r => r.json())
       .then(json => { if (json.code === 1) setWorkerCommentCount(json.data.totalComments); })
       .catch(() => {});

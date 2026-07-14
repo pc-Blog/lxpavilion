@@ -41,7 +41,7 @@ function buildFooter(url?: string): string {
   const blog = siteConfig.blog;
   if (blog) {
     const href = url ? `https://${blog}/${url}` : `https://${blog}`;
-    lines.push(`📝 本文发布于 [栏轩阁](${href})\n`);
+    lines.push(`📝 本文发布于 [${siteConfig.navTitle}](${href})\n`);
   }
 
   const links: { key: keyof typeof siteConfig; label: string }[] = [

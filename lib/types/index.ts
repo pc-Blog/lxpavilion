@@ -55,6 +55,7 @@ export interface User {
   deleted?: number;
   createTime?: string;
   updateTime?: string;
+  loginTime?: string;
 }
 
 // ========== Tag ==========

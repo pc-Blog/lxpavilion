@@ -98,7 +98,7 @@ async function pushViaResend(
   }
 
   const fromName = env.EMAIL_FROM_NAME || FROM_NAME;
-  const fromAddr = env.EMAIL_FROM_ADDRESS || FROM_EMAIL;
+  const fromAddr = env.NOTIFY_FROM_ADDRESS;
 
   // Resend Batch 一次最多 100 封
   const batchSize = 100;

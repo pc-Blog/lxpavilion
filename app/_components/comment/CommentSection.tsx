@@ -36,7 +36,7 @@ const mdComponents: Components = {
 
 /* ── 常量 ── */
 
-const WORKER_API = `https://${siteConfig.analytics}/api`;
+const WORKER_API = `https://${siteConfig.workerApi}/api`;
 
 const EMOJIS = [
   // 表情

@@ -5,6 +5,7 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isLoggedIn: boolean;
+  hydrated: boolean;
   setAuth: (token: string, user: User) => void;
   logout: () => void;
 }
@@ -15,17 +16,18 @@ export const useAuthStore = create<AuthState>()((set) => ({
   user: null,
   token: null,
   isLoggedIn: false,
+  hydrated: false,
 
   setAuth: (token, user) => {
     localStorage.setItem("token", token);
     localStorage.setItem(USER_KEY, JSON.stringify(user));
-    set({ token, user, isLoggedIn: true });
+    set({ token, user, isLoggedIn: true, hydrated: true });
   },
 
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem(USER_KEY);
-    set({ token: null, user: null, isLoggedIn: false });
+    set({ token: null, user: null, isLoggedIn: false, hydrated: true });
   },
 }));
 
@@ -39,6 +41,8 @@ if (typeof window !== "undefined") {
       if (raw) user = JSON.parse(raw);
     } catch { /* ignore */ }
 
-    useAuthStore.setState({ token, user, isLoggedIn: true });
+    useAuthStore.setState({ token, user, isLoggedIn: true, hydrated: true });
+  } else {
+    useAuthStore.setState({ hydrated: true });
   }
 }

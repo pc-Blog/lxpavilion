@@ -5,8 +5,9 @@
  */
 
 import type { Email, EmailListResult } from "@/lib/types";
+import { siteConfig } from "@/lib/siteConfig";
 
-const WORKER_API = "https://api.lxpavilion.top/api";
+const WORKER_API = `https://${siteConfig.workerApi}/api`;
 
 async function workerFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${WORKER_API}${path}`, {

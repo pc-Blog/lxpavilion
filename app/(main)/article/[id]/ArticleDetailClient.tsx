@@ -36,7 +36,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
           addView(Number(id)).then(setViewCount).catch(() => {});
         }
         if (siteConfig.featureComments) {
-          fetch(`https://${siteConfig.analytics}/api/comment/count?path=/article/${id}`)
+          fetch(`https://${siteConfig.workerApi}/api/comment/count?path=/article/${id}`)
             .then(r => r.json())
             .then(j => { if (j.code === 1) setLiveCommentCount(j.data.count); })
             .catch(() => {});

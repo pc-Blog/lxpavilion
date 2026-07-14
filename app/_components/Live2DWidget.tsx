@@ -186,7 +186,7 @@ export default function Live2DWidget() {
     if (!c) return;
     commentaryCache.current.loading = true;
     try {
-      const res = await fetch(`https://${siteConfig.analytics}/ai/chat`, {
+      const res = await fetch(`https://${siteConfig.workerApi}/ai/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -264,7 +264,7 @@ export default function Live2DWidget() {
     try { const h = localStorage.getItem(key); if (h) history = JSON.parse(h); } catch {}
 
     try {
-      const res = await fetch(`https://${siteConfig.analytics}/ai/chat`, {
+      const res = await fetch(`https://${siteConfig.workerApi}/ai/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, character: char, history, mode: "chat" }),
@@ -548,7 +548,7 @@ export default function Live2DWidget() {
 
     // 热点新闻按钮
     let hotLoading = false;
-    const HOTSPOT_URL = "https://hotspot.lxpavilion.top/report.json";
+    const HOTSPOT_URL = `https://${siteConfig.hotspot}/report.json`;
     if (menu && !document.querySelector(".pio-hot") && siteConfig.featureHotTopics) {
       const hBtn = document.createElement("span");
       hBtn.className = "pio-hot";

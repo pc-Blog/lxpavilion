@@ -52,7 +52,7 @@ export interface AnalyticsData {
 
 import { siteConfig } from "./siteConfig";
 
-const WORKER_URL = `https://${siteConfig.analytics}`;
+const WORKER_URL = `https://${siteConfig.workerApi}`;
 
 // ── Fetch all analytics data from Worker ──
 export async function fetchAnalytics(days: number = 7): Promise<AnalyticsData> {

@@ -24,7 +24,7 @@ async function sendViaResend(
   html: string,
 ): Promise<void> {
   const fromName = env.EMAIL_FROM_NAME || "ppc";
-  const fromAddr = env.EMAIL_FROM_ADDRESS || "mail@lxpavilion.top";
+  const fromAddr = env.NOTIFY_FROM_ADDRESS;
 
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -88,7 +88,7 @@ async function sendAdminNotification(
       .replace(/\{\{TIME\}\}/g, time)
       .replace(/\{\{TOTAL_SUBSCRIBERS\}\}/g, String(total));
 
-    await sendViaResend(env, "msg@lxpavilion.top", "栏轩阁 - 新订阅通知", html);
+    await sendViaResend(env, env.NOTIFY_TO_ADDRESS, "栏轩阁 - 新订阅通知", html);
   } catch (e) {
     console.error("管理员通知异常", { module: "subscribe", action: "admin_notify_error", error: String(e) });
   }

@@ -281,7 +281,7 @@ export default function AnalyticsPage() {
   useEffect(() => { if (hasAnalytics) load(days); else setLoading(false); }, [days, load, hasAnalytics]);
 
   // 多平台统计
-  const WORKER_URL = `https://${siteConfig.analytics}`;
+  const WORKER_URL = `https://${siteConfig.workerApi}`;
   useEffect(() => {
     if (!hasPlatform) return;
     fetch(`${WORKER_URL}/platform`)

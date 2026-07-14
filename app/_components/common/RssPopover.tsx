@@ -17,7 +17,7 @@ interface RssResult {
   articles: RssArticle[];
 }
 
-const WORKER_URL = `https://${siteConfig.analytics}`;
+const WORKER_URL = `https://${siteConfig.workerApi}`;
 
 export default function RssPopover({
   rssUrl,

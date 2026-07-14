@@ -144,7 +144,7 @@ export function jsonLdSchema(
     author: { "@type": "Person", name: siteConfig.authorName },
     publisher: {
       "@type": "Organization",
-      name: "栏轩阁",
+      name: siteConfig.navTitle,
       url: SITE_URL,
       logo: {
         "@type": "ImageObject",

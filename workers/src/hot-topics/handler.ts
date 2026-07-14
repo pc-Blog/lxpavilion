@@ -143,7 +143,7 @@ async function pushViaResend(
   }
 
   const fromName = env.EMAIL_FROM_NAME || FROM_NAME;
-  const fromAddr = env.EMAIL_FROM_ADDRESS || FROM_EMAIL;
+  const fromAddr = env.NOTIFY_FROM_ADDRESS;
 
   const batchSize = 100;
   for (let i = 0; i < results.length; i += batchSize) {

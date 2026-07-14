@@ -36,7 +36,7 @@ async function sendViaResend(
   html: string,
 ): Promise<void> {
   const fromName = env.EMAIL_FROM_NAME || "ppc";
-  const fromAddr = env.EMAIL_FROM_ADDRESS || "mail@lxpavilion.top";
+  const fromAddr = env.NOTIFY_FROM_ADDRESS;
 
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -142,7 +142,7 @@ export async function handleUnsubscribe(
           .replace(/\{\{TIME\}\}/g, time)
           .replace(/\{\{TOTAL_SUBSCRIBERS\}\}/g, String(total));
 
-        await sendViaResend(env, "msg@lxpavilion.top", "栏轩阁 - 退订通知", html);
+        await sendViaResend(env, env.NOTIFY_TO_ADDRESS, "栏轩阁 - 退订通知", html);
       } catch (e) {
         console.error("退订通知异常", { module: "subscribe", action: "unsubscribe_notify_error", email, error: String(e) });
       }

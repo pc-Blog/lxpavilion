@@ -3,14 +3,16 @@
 import { useState } from "react";
 import Tooltip from "@/app/_components/common/Tooltip";
 import { siteConfig } from "@/lib/siteConfig";
+import { useAuthStore } from "@/stores/authStore";
 
-const API_BASE = "https://api.lxpavilion.top";
+const API_BASE = `https://${siteConfig.workerApi}`;
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export default function HotTopicsSubscribeForm() {
   if (!siteConfig.featureHotTopics) return null;
-  const [email, setEmail] = useState("");
+  const user = useAuthStore((s) => s.user);
+  const [email, setEmail] = useState(user?.email || "");
   const [status, setStatus] = useState<Status>("idle");
   const [msg, setMsg] = useState("");
 
