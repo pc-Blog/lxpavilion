@@ -35,14 +35,23 @@ export interface DownloadResult {
   imageFailed: number;
 }
 
-function buildFooter(url?: string): string {
-  const lines: string[] = ["\n\n---\n"];
-
+function buildHeader(url?: string): string {
   const blog = siteConfig.blog;
-  if (blog) {
-    const href = url ? `https://${blog}/${url}` : `https://${blog}`;
-    lines.push(`📝 本文发布于 [${siteConfig.navTitle}](${href})\n`);
-  }
+  if (!blog) return "";
+  const href = url ? `https://${blog}/${url}` : `https://${blog}`;
+  return [
+    "---",
+    `> 📝 **本文首发于 [${siteConfig.navTitle}](${href})**`,
+    ">",
+    "> 欢迎访问阅读原文，获取更好的阅读体验。",
+    "---",
+    "",
+    "",
+  ].join("\n");
+}
+
+function buildFooter(): string {
+  const lines: string[] = ["\n\n---\n"];
 
   const links: { key: keyof typeof siteConfig; label: string }[] = [
     { key: "cnblogs", label: "博客园" },
@@ -86,7 +95,7 @@ export function downloadMarkdown(params: {
     });
   }
 
-  const blob = new Blob([content + buildFooter(articleUrl)], { type: "text/markdown;charset=utf-8" });
+  const blob = new Blob([buildHeader(articleUrl) + content + buildFooter()], { type: "text/markdown;charset=utf-8" });
   const blobUrl = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = blobUrl;
@@ -139,7 +148,7 @@ export async function downloadContentAsZip(params: {
 
   // Add markdown file with updated local paths (content + footer)
   const safeName = title.replace(/[<>:"/\\|?*]/g, "_");
-  zip.file(`${safeName}.md`, finalContent + buildFooter(articleUrl));
+  zip.file(`${safeName}.md`, buildHeader(articleUrl) + finalContent + buildFooter());
 
   // Add images
   for (const [url, filename] of urlToFilename) {

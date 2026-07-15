@@ -20,14 +20,7 @@
         "Name": "待机",
         "File": "motions/Ava_idle.motion3.json"
       }],
-      "Shake": [{
-        "Name": "晕",
-        "File": "motions/Ava_shake01.motion3.json",
-        "Text": "啊呜...",
-        "TextDuration": 2000
-      }, {
-        "File": "motions/Ava_shake02.motion3.json"
-      }],
+      "Shake": [],
       "Tap左手": [{
         "Name": "吉他",
         "File": "motions/Ava_tap01.motion3.json",
@@ -101,32 +94,11 @@
         "TextDelay": 200,
         "TextDuration": 1000
       }],
-      "Tap左眼": [{
-        "Name": "墨镜",
-        "File": "motions/Ava_tap10.motion3.json",
-        "Text": "嗯哼~我超帅的",
-        "TextDelay": 700,
-        "TextDuration": 2000
-      }],
-      "Tap右马尾   ": [{
-        "Name": "水母",
-        "File": "motions/Ava_tap11.motion3.json"
-      }],
-      "Tap左马尾": [{
-        "Name": "><",
-        "File": "motions/Ava_shake02.motion3.json",
-        "Text": "头发摸乱了啦~",
-        "TextDelay": 500,
-        "TextDuration": 2000
-      }],
       "Tap右手臂": [{
         "File": "motions/Ava_tap06.motion3.json",
         "Text": "嗯？老戳我干嘛，快去干正事啦 ",
         "TextDelay": 550,
         "TextDuration": 4000
-      }],
-      "Tap左中马尾": [{
-        "File": "motions/Ava_tap11.motion3.json"
       }]
     }
   },

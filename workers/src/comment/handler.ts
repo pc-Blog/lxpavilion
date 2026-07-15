@@ -53,16 +53,32 @@ interface EmbeddedUser {
 }
 
 function parseUser(body: string): EmbeddedUser {
+  // 登录用户: <!--u:userId|nickname|avatar-->
   const match = body.match(/^<!--u:(\d+)\|(.+?)\|(.*?)-->\n?/);
-  if (!match) {
-    return { userId: 0, nickname: "Anonymous", avatar: "", cleanBody: body };
+  if (match) {
+    return {
+      userId: Number(match[1]),
+      nickname: match[2],
+      avatar: match[3],
+      cleanBody: body.slice(match[0].length),
+    };
   }
-  return {
-    userId: Number(match[1]),
-    nickname: match[2],
-    avatar: match[3],
-    cleanBody: body.slice(match[0].length),
-  };
+  // 游客: <!--guest:sessionId|nickname-->
+  const guestMatch = body.match(/^<!--guest:([a-f0-9-]+)\|(.+?)-->\n?/);
+  if (guestMatch) {
+    return {
+      userId: 0,
+      nickname: guestMatch[2],
+      avatar: "",
+      cleanBody: body.slice(guestMatch[0].length),
+    };
+  }
+  return { userId: 0, nickname: "Anonymous", avatar: "", cleanBody: body };
+}
+
+function extractGuestSession(body: string): string | null {
+  const match = body.match(/^<!--guest:([a-f0-9-]+)\|/);
+  return match ? match[1] : null;
 }
 
 /* ── GraphQL 执行 ── */
@@ -317,6 +333,15 @@ async function checkOwnership(token: string, nodeId: string, userId: number, nic
   }
 }
 
+async function checkGuestOwnership(token: string, nodeId: string, guestSession: string): Promise<boolean> {
+  try {
+    const data = await gql<{ node: CommentNode }>(token, GET_COMMENT, { id: nodeId });
+    return extractGuestSession(data.node?.body || "") === guestSession;
+  } catch {
+    return false;
+  }
+}
+
 /* ── 删除评论 ── */
 
 const DELETE_COMMENT = `
@@ -531,9 +556,7 @@ function buildCommentTree(
   const toVo = (c: GqlComment): CommentVO => {
     const u = parseUser(c.body || "");
     const uv = upvotes.get(c.id) || { upvoteCount: 0, viewerHasUpvoted: false };
-    // 优先用 <!--u:...-->，没有则回退到 GitHub author
-    const author = u.userId ? { id: u.userId, nickname: u.nickname, avatar: u.avatar || "" }
-      : { id: 0, nickname: c.author.login || "Anonymous", avatar: c.author.avatarUrl || "" };
+    const author = { id: u.userId, nickname: u.nickname, avatar: u.avatar || "" };
     return {
       nodeId: c.id,
       content: u.cleanBody,
@@ -811,21 +834,37 @@ if (method === "GET" && url.pathname === "/api/comment/list") {
 
     if (method === "POST" && url.pathname === "/api/comment") {
       const auth = request.headers.get("Authorization");
-      if (!auth?.startsWith("Bearer ")) return respond(null, "未登录", 0, origin);
+      const guestSession = request.headers.get("X-Guest-Session");
       console.log("创建评论", { module: "comment", action: "create" });
-      const payload = await verifyJwt(auth.slice(7), env.JWT_SECRET);
-      if (!payload) return respond(null, "登录已过期", 0, origin);
 
-      const body = (await request.json()) as { path: string; content: string; replyToId?: string };
+      let userId: number | null = null;
+      let nickname = "";
+      let avatar = "";
+
+      if (auth?.startsWith("Bearer ")) {
+        const payload = await verifyJwt(auth.slice(7), env.JWT_SECRET);
+        if (!payload) return respond(null, "登录已过期", 0, origin);
+        userId = Number(payload.sub);
+        const user = await env.DB
+          .prepare("SELECT id, nickname, avatar FROM user WHERE id = ? AND deleted = 0")
+          .bind(userId)
+          .first<{ id: number; nickname: string; avatar?: string }>();
+        if (!user) return respond(null, "用户不存在", 0, origin);
+        nickname = user.nickname;
+        avatar = user.avatar || "";
+      } else if (!guestSession) {
+        return respond(null, "未登录", 0, origin);
+      }
+
+      const body = (await request.json()) as { path: string; content: string; replyToId?: string; nickname?: string };
       if (!body.path || !body.content?.trim()) {
         return respond(null, "缺少 path 或 content", 0, origin);
       }
 
-      const user = await env.DB
-        .prepare("SELECT id, nickname, avatar FROM user WHERE id = ? AND deleted = 0")
-        .bind(Number(payload.sub))
-        .first<{ id: number; nickname: string; avatar?: string }>();
-      if (!user) return respond(null, "用户不存在", 0, origin);
+      if (!userId) {
+        if (!body.nickname?.trim()) return respond(null, "请提供昵称", 0, origin);
+        nickname = body.nickname.trim().slice(0, 20);
+      }
 
       const token = await getInstallationToken(env);
       const searchQuery = `${REPO_SEARCH(env.GITHUB_REPO_OWNER, env.GITHUB_REPO_NAME)} "${body.path}" in:title`;
@@ -847,21 +886,26 @@ if (method === "GET" && url.pathname === "/api/comment/list") {
         discussionId = created.createDiscussion.discussion.id;
       }
 
-      // 尝试用用户的 GitHub token 发评论（显示真实身份）
-      const ghToken = await getUserToken(env, user.id);
-      const useGhToken = !!ghToken;
-      const writeToken = ghToken || token;
-      const finalBody = embedUser(body.content.trim(), user.id, user.nickname, user.avatar);
+      let writeToken: string;
+      let finalBody: string;
+      let author: { id: number; nickname: string; avatar: string };
+
+      if (userId) {
+        const ghToken = await getUserToken(env, userId);
+        writeToken = ghToken || token;
+        finalBody = embedUser(body.content.trim(), userId, nickname, avatar);
+        author = { id: userId, nickname, avatar };
+      } else {
+        writeToken = token;
+        finalBody = `<!--guest:${guestSession}|${nickname}-->\n${body.content.trim()}`;
+        author = { id: 0, nickname, avatar: "" };
+      }
 
       const variables: Record<string, unknown> = { discussionId, body: finalBody };
       if (body.replyToId) variables.replyToId = body.replyToId;
 
       const result = await gql<AddCommentResult>(writeToken, ADD_COMMENT, variables);
       const c = result.addDiscussionComment.comment;
-
-      const author = useGhToken
-        ? { id: user.id, nickname: user.nickname, avatar: user.avatar || "" }
-        : (() => { const p = parseUser(c.body || ""); return { id: p.userId, nickname: p.nickname, avatar: p.avatar }; })();
 
       return respond(
         {
@@ -886,29 +930,36 @@ if (method === "GET" && url.pathname === "/api/comment/list") {
 
     if (method === "PATCH" && url.pathname.startsWith("/api/comment/")) {
       const auth = request.headers.get("Authorization");
-      if (!auth?.startsWith("Bearer ")) return respond(null, "未登录", 0, origin);
-      const payload = await verifyJwt(auth.slice(7), env.JWT_SECRET);
-      if (!payload) return respond(null, "登录已过期", 0, origin);
+      const guestSession = request.headers.get("X-Guest-Session");
+      if (!auth?.startsWith("Bearer ") && !guestSession) return respond(null, "未登录", 0, origin);
 
       const nodeId = url.pathname.replace("/api/comment/", "");
-      const { content } = (await request.json()) as { content: string };
-      if (!content?.trim()) return respond(null, "内容不能为空", 0, origin);
-
-      const user = await env.DB
-        .prepare("SELECT id, nickname, avatar FROM user WHERE id = ? AND deleted = 0")
-        .bind(Number(payload.sub))
-        .first<{ id: number; nickname: string; avatar?: string }>();
-      if (!user) return respond(null, "用户不存在", 0, origin);
+      const editBody = (await request.json()) as { content: string; nickname?: string };
+      if (!editBody.content?.trim()) return respond(null, "内容不能为空", 0, origin);
 
       const token = await getInstallationToken(env);
 
-      // 所有权校验
-      if (!(await checkOwnership(token, nodeId, user.id, user.nickname))) {
-        return respond(null, "无权编辑此评论", 0, origin);
+      if (auth?.startsWith("Bearer ")) {
+        const payload = await verifyJwt(auth.slice(7), env.JWT_SECRET);
+        if (!payload) return respond(null, "登录已过期", 0, origin);
+        const user = await env.DB
+          .prepare("SELECT id, nickname, avatar FROM user WHERE id = ? AND deleted = 0")
+          .bind(Number(payload.sub))
+          .first<{ id: number; nickname: string; avatar?: string }>();
+        if (!user) return respond(null, "用户不存在", 0, origin);
+        if (!(await checkOwnership(token, nodeId, user.id, user.nickname))) {
+          return respond(null, "无权编辑此评论", 0, origin);
+        }
+        const commentBody = embedUser(editBody.content.trim(), user.id, user.nickname, user.avatar);
+        await gql(token, UPDATE_COMMENT, { commentId: nodeId, body: commentBody });
+      } else {
+        if (!(await checkGuestOwnership(token, nodeId, guestSession!))) {
+          return respond(null, "无权编辑此评论", 0, origin);
+        }
+        const guestNickname = editBody.nickname?.trim().slice(0, 20) || "";
+        const commentBody = `<!--guest:${guestSession}|${guestNickname}-->\n${editBody.content.trim()}`;
+        await gql(token, UPDATE_COMMENT, { commentId: nodeId, body: commentBody });
       }
-
-      const commentBody = embedUser(content.trim(), user.id, user.nickname, user.avatar);
-      await gql(token, UPDATE_COMMENT, { commentId: nodeId, body: commentBody });
       return respond(null, "编辑成功", 1, origin);
     }
 
@@ -918,32 +969,33 @@ if (method === "GET" && url.pathname === "/api/comment/list") {
 
     if (method === "DELETE" && url.pathname.startsWith("/api/comment/")) {
       const auth = request.headers.get("Authorization");
-      if (!auth?.startsWith("Bearer ")) return respond(null, "未登录", 0, origin);
-      const payload = await verifyJwt(auth.slice(7), env.JWT_SECRET);
-      if (!payload) return respond(null, "登录已过期", 0, origin);
+      const guestSession = request.headers.get("X-Guest-Session");
+      if (!auth?.startsWith("Bearer ") && !guestSession) return respond(null, "未登录", 0, origin);
 
       const nodeId = url.pathname.replace("/api/comment/", "");
-
-      const userDel = await env.DB
-        .prepare("SELECT nickname FROM user WHERE id = ? AND deleted = 0")
-        .bind(Number(payload.sub))
-        .first<{ nickname: string }>();
-      if (!userDel) return respond(null, "用户不存在", 0, origin);
-
       const token = await getInstallationToken(env);
 
-      // 所有权校验
-      if (!(await checkOwnership(token, nodeId, Number(payload.sub), userDel.nickname))) {
-        return respond(null, "无权删除此评论", 0, origin);
+      if (auth?.startsWith("Bearer ")) {
+        const payload = await verifyJwt(auth.slice(7), env.JWT_SECRET);
+        if (!payload) return respond(null, "登录已过期", 0, origin);
+        const userDel = await env.DB
+          .prepare("SELECT nickname FROM user WHERE id = ? AND deleted = 0")
+          .bind(Number(payload.sub))
+          .first<{ nickname: string }>();
+        if (!userDel) return respond(null, "用户不存在", 0, origin);
+        if (!(await checkOwnership(token, nodeId, Number(payload.sub), userDel.nickname))) {
+          return respond(null, "无权删除此评论", 0, origin);
+        }
+      } else {
+        if (!(await checkGuestOwnership(token, nodeId, guestSession!))) {
+          return respond(null, "无权删除此评论", 0, origin);
+        }
       }
 
-      // 先查该评论的回复
       const replyIds = await getReplyIds(token, nodeId);
-      // 删所有回复
       for (const rid of replyIds) {
         await gql(token, DELETE_COMMENT, { commentId: rid }).catch(() => {});
       }
-      // 删父评论
       await gql(token, DELETE_COMMENT, { commentId: nodeId });
       return respond(null, "删除成功", 1, origin);
     }

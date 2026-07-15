@@ -121,15 +121,33 @@ interface ListResponse {
 
 /* ── API ── */
 
+/** 从 localStorage 检查当前游客是否拥有某条评论 */
+function isGuestOwner(nodeId: string): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const ids: string[] = JSON.parse(localStorage.getItem("guestCommentIds") || "[]");
+    return ids.includes(nodeId);
+  } catch { return false; }
+}
+
+function genId(): string {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const token = localStorage.getItem("token");
-  const res = await fetch(`${WORKER_API}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    ...options,
-  });
+  const guestSession = localStorage.getItem("guestSession");
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  } else if (guestSession) {
+    headers["X-Guest-Session"] = guestSession;
+  }
+  const res = await fetch(`${WORKER_API}${path}`, { headers, ...options });
   const json = await res.json();
   if (json.code !== 1) throw new Error(json.msg || "请求失败");
   return json.data as T;
@@ -402,7 +420,7 @@ function ReplyItem({ reply, onReaction, onUpvote, onEdit, onDelete }: {
         <div className="flex items-center gap-1 mt-1 flex-wrap">
           <UpvoteBtn count={reply.upvoteCount} active={reply.viewerHasUpvoted} disabled={!user} onClick={() => onUpvote(reply.nodeId)} />
           <ReactionBar subjectId={reply.nodeId} reactions={reply.reactions} onToggle={onReaction} disabled={!user} />
-          {Date.now() - new Date(reply.createdAt).getTime() < 3600000 && (user?.id === reply.author.id || (reply.author.id === 0 && user?.nickname === reply.author.nickname)) && (
+          {Date.now() - new Date(reply.createdAt).getTime() < 3600000 && (user?.id === reply.author.id || (reply.author.id === 0 && user?.nickname === reply.author.nickname) || (!user && isGuestOwner(reply.nodeId))) && (
             <div className="flex gap-1 ml-auto">
               <button onClick={() => setEditing(true)} className="text-[11px] text-slate-400 hover:text-indigo-500 px-1.5 py-0.5">编辑</button>
               {confirmDelete ? (
@@ -488,11 +506,11 @@ function CommentCard({ comment, onReply, onEdit, onDelete, onReaction, onUpvote 
           <ReactionBar subjectId={comment.nodeId} reactions={comment.reactions} onToggle={onReaction} disabled={!user} />
 
           <div className="flex gap-1 ml-auto">
-            {user && (
+            {(user || isGuestOwner(comment.nodeId)) && (
               <button onClick={() => { setShowReplyForm(!showReplyForm); setEditing(false); }}
                 className="text-xs text-slate-400 hover:text-indigo-500 transition-colors px-2 py-1">回复</button>
             )}
-            {Date.now() - new Date(comment.createdAt).getTime() < 3600000 && (user?.id === comment.author.id || (comment.author.id === 0 && user?.nickname === comment.author.nickname)) && (
+            {Date.now() - new Date(comment.createdAt).getTime() < 3600000 && (user?.id === comment.author.id || (comment.author.id === 0 && user?.nickname === comment.author.nickname) || (!user && isGuestOwner(comment.nodeId))) && (
               <>
                 <button onClick={() => { setEditing(true); setShowReplyForm(false); }}
                   className="text-xs text-slate-400 hover:text-indigo-500 transition-colors px-2 py-1">编辑</button>
@@ -563,6 +581,18 @@ export default function CommentSection({ path }: CommentSectionProps) {
   const [sortBy, setSortBy] = useState<"oldest" | "newest">("newest");
   const [submitting, setSubmitting] = useState(false);
 
+  // 游客会话
+  const [guestSession] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    let s = localStorage.getItem("guestSession");
+    if (!s) { s = genId(); localStorage.setItem("guestSession", s); }
+    return s;
+  });
+  const [guestNickname, setGuestNickname] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return localStorage.getItem("guestNickname") || "";
+  });
+
   const load = useCallback(async () => {
     setLoading(true); setError(null);
     try { setData(await apiFetch<ListResponse>(`/comment/list?path=${encodeURIComponent(path)}`)); }
@@ -580,16 +610,33 @@ export default function CommentSection({ path }: CommentSectionProps) {
   useEffect(() => { load(); }, [load]);
 
   const handleSubmit = async (content: string) => {
-    if (!isLoggedIn || submitting) return;
+    if (submitting) return;
     setSubmitting(true);
     try {
-      const newComment = await apiFetch<CommentData>("/comment", { method: "POST", body: JSON.stringify({ path, content }) });
+      const body: Record<string, unknown> = { path, content };
+      if (!isLoggedIn && guestSession) {
+        if (!guestNickname.trim()) { setSubmitting(false); return; }
+        body.nickname = guestNickname.trim();
+      }
+      const newComment = await apiFetch<CommentData>("/comment", { method: "POST", body: JSON.stringify(body) });
+      if (!isLoggedIn && guestSession) {
+        const ids: string[] = JSON.parse(localStorage.getItem("guestCommentIds") || "[]");
+        ids.push(newComment.nodeId);
+        localStorage.setItem("guestCommentIds", JSON.stringify(ids));
+      }
       setData((prev) => prev ? { ...prev, comments: sortBy === "newest" ? [newComment, ...prev.comments] : [...prev.comments, newComment] } : prev);
     } finally { setSubmitting(false); }
   };
 
   const handleReply = async (replyToId: string, content: string) => {
-    const newReply = await apiFetch<CommentData>("/comment", { method: "POST", body: JSON.stringify({ path, content, replyToId }) });
+    const body: Record<string, unknown> = { path, content, replyToId };
+    if (!isLoggedIn && guestSession) body.nickname = guestNickname.trim();
+    const newReply = await apiFetch<CommentData>("/comment", { method: "POST", body: JSON.stringify(body) });
+    if (!isLoggedIn && guestSession) {
+      const ids: string[] = JSON.parse(localStorage.getItem("guestCommentIds") || "[]");
+      ids.push(newReply.nodeId);
+      localStorage.setItem("guestCommentIds", JSON.stringify(ids));
+    }
     setData((prev) => {
       if (!prev) return prev;
       const addTo = (c: CommentData) => c.nodeId === replyToId ? { ...c, replies: [...c.replies, newReply] } : c;
@@ -598,7 +645,6 @@ export default function CommentSection({ path }: CommentSectionProps) {
   };
 
   const handleEdit = async (nodeId: string, content: string) => {
-    // 乐观更新
     const oldData = data;
     setData((prev) => {
       if (!prev) return prev;
@@ -610,8 +656,11 @@ export default function CommentSection({ path }: CommentSectionProps) {
         ),
       };
     });
-    try { await apiFetch(`/comment/${nodeId}`, { method: "PATCH", body: JSON.stringify({ content }) }); }
-    catch { setData(oldData); }
+    try {
+      const patchBody: Record<string, string> = { content };
+      if (!isLoggedIn && guestSession) patchBody.nickname = guestNickname;
+      await apiFetch(`/comment/${nodeId}`, { method: "PATCH", body: JSON.stringify(patchBody) });
+    } catch { setData(oldData); }
   };
 
   const handleDelete = async (nodeId: string) => {
@@ -718,6 +767,18 @@ export default function CommentSection({ path }: CommentSectionProps) {
       <div className="glass-card !rounded-2xl p-5 mb-4">
         {isLoggedIn ? (
           <Editor placeholder="写下你的评论..." submitLabel="发表评论" onSubmit={handleSubmit} loading={submitting} />
+        ) : guestSession ? (
+          <div>
+            <input
+              type="text"
+              value={guestNickname}
+              onChange={(e) => { const v = e.target.value.slice(0, 20); setGuestNickname(v); localStorage.setItem("guestNickname", v); }}
+              placeholder="输入昵称后发表评论..."
+              className="w-full bg-transparent text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 outline-none mb-3 border-b border-slate-200 dark:border-slate-700 pb-2"
+              maxLength={20}
+            />
+            <Editor placeholder="写下你的评论..." submitLabel="发表评论" onSubmit={handleSubmit} loading={submitting} />
+          </div>
         ) : (
           <div className="text-center">
             <p className="text-sm text-slate-400 dark:text-slate-500">

@@ -112,6 +112,9 @@ export default function ArticleProse({ content }: { content: string }) {
   /* ── 自定义组件映射（使用闭包中的 openLightbox） ── */
   const components: Components = {
     pre: PreBlock,
+    a: ({ href, children }) => (
+      <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+    ),
     img({ src, alt, ...props }) {
       const resolvedSrc = typeof src === "string" ? assetUrl(src) : src;
       return (

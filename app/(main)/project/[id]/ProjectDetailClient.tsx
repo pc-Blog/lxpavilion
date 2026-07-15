@@ -12,6 +12,7 @@ import { downloadContentAsZip, downloadMarkdown } from "@/lib/download-content";
 import { showSuccessToast, showErrorToast } from "@/lib/toast";
 import { assetUrl } from "@/lib/asset-url";
 import { useContentStore } from "@/stores/contentStore";
+import ScrollProgress from "@/app/_components/common/ScrollProgress";
 
 export default function ProjectDetailClient(props: { params: Promise<{ id: string }>; projectName?: string; initialContent?: string }) {
   const { id } = use(props.params);
@@ -214,6 +215,7 @@ export default function ProjectDetailClient(props: { params: Promise<{ id: strin
           <ArticleSidebar content={displayContent} />
         </div>
       </div>
+      <ScrollProgress />
     </>
   );
 }

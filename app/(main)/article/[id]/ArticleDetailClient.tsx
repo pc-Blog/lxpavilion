@@ -15,6 +15,7 @@ import { assetUrl } from "@/lib/asset-url";
 import { siteConfig } from "@/lib/siteConfig";
 import Link from "next/link";
 import { useContentStore } from "@/stores/contentStore";
+import ScrollProgress from "@/app/_components/common/ScrollProgress";
 
 export default function ArticleDetailClient(props: { params: Promise<{ id: string }>; articleTitle?: string; initialContent?: string }) {
   const { id } = use(props.params);
@@ -230,6 +231,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
           <ArticleSidebar content={displayContent} />
         </div>
       </div>
+      <ScrollProgress />
     </>
   );
 }
