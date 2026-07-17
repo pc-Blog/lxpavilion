@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import type { Timeline as TimelineType } from "@/lib/types";
 import { getList } from "@/lib/api/timeline";
-import Loading from "../common/Loading";
+import Loading from "@/app/_components/common/Loading";
 
 export default function Timeline() {
   const [items, setItems] = useState<TimelineType[]>([]);

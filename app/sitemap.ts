@@ -38,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
-      url: `${BASE_URL}/timeline/`,
+      url: `${BASE_URL}/personal/timeline/`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
@@ -68,7 +68,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
-      url: `${BASE_URL}/growth/`,
+      url: `${BASE_URL}/personal/commits/`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.5,

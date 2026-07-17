@@ -216,7 +216,7 @@ export const timelineMetadata: Metadata = meta(
   "学习历程与技术成长",
   "记录编程从入门到进阶的完整成长路径，整理系统化学习笔记、技能清单与关键里程碑，见证长期坚持下的技术沉淀与能力提升轨迹。",
   SEO_IMAGE,
-  "/timeline",
+  "/personal/timeline",
 );
 
 /** 文学创作页 */
@@ -272,5 +272,5 @@ export const growthMetadata: Metadata = meta(
   "博客成长记录",
   "全程追踪栏轩阁博客的发展历程，记录每一次代码提交、功能迭代与版本更新，见证站点逐步完善的技术演进与成长轨迹。",
   SEO_IMAGE,
-  "/growth",
+  "/personal/commits",
 );

@@ -18,10 +18,8 @@ const NAV_ITEMS = [
   { name: "Projects", href: "/project" },
   ...(siteConfig.featureLiterature ? [{ name: "Literature" as const, href: "/literature" as const }] : []),
   { name: "Gallery", href: "/gallery" },
-  { name: "Timeline", href: "/timeline" },
   { name: "Chatter", href: "/chatter" },
   { name: "Friends", href: "/friends" },
-  ...(siteConfig.featureGrowth ? [{ name: "Growth" as const, href: "/growth" as const }] : []),
   ...(siteConfig.featureAnalytics || siteConfig.featurePlatformData
     ? [{ name: "Analytics" as const, href: "/analytics" as const }]
     : []),
@@ -160,6 +158,18 @@ export default function Navbar() {
             <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
           </div>
           <FullscreenToggle />
+          <Tooltip text="个人空间" position="bottom">
+            <a
+              href="/personal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-2xl backdrop-blur-md border shadow-lg p-2 flex items-center justify-center transition-all duration-500 hover:scale-[1.05] bg-white/40 dark:bg-slate-800/40 border-white/60 dark:border-slate-600/50 text-slate-500 dark:text-slate-300"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </a>
+          </Tooltip>
         </div>
       </div>
     </header>

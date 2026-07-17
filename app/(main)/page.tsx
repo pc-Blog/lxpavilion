@@ -236,7 +236,7 @@ export default function Home() {
             <h3 className="text-lg font-black text-slate-900 dark:text-white group-hover:-translate-y-0.5 transition-transform">Projects</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Code &amp; Portfolio</p>
           </Link>
-          <Link href="/timeline" className="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 transition-all duration-700 hover:scale-[1.02] group">
+          <Link href="/personal/timeline" className="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 transition-all duration-700 hover:scale-[1.02] group">
             <span className="inline-block px-2 py-0.5 text-[10px] font-bold rounded-md bg-pink-500/80 text-white backdrop-blur-lg mb-3">Learn</span>
             <h3 className="text-lg font-black text-slate-900 dark:text-white group-hover:-translate-y-0.5 transition-transform">Timeline</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Learning Path</p>

@@ -1,7 +1,7 @@
 "use client";
 
-import Timeline from "@/app/_components/timeline/Timeline";
-import SkillBar from "@/app/_components/timeline/SkillBar";
+import Timeline from "./Timeline";
+import SkillBar from "./SkillBar";
 
 export default function TimelineClient() {
   return (

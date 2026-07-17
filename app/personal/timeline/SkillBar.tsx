@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import type { Skill } from "@/lib/types";
 import { getList } from "@/lib/api/skill";
-import Loading from "../common/Loading";
+import Loading from "@/app/_components/common/Loading";
 
 export default function SkillBar() {
   const [skills, setSkills] = useState<Skill[]>([]);

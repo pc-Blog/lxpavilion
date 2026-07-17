@@ -79,6 +79,11 @@ const PAGE_MESSAGES: Record<string, string[]> = {
     "数据可视化真好看～", "博客热度不错哦～", "又来看数据啦～", "每一个访问都很珍贵呢～",
     "数据背后都是真实的读者呢～", "分析页面最有意思了～",
   ],
+  personal: [
+    "欢迎来到你的个人空间～", "这里记录了你的成长呢～", "属于自己的小天地～", "偷偷努力的地方～",
+    "每次进步都看得见！", "今天也要加油呀～", "这里只有你知道～", "默默变强的感觉真好～",
+    "积累的力量最强大～", "在看不见的地方悄悄成长～",
+  ],
 };
 
 const FALLBACK_MESSAGES = [
@@ -108,8 +113,11 @@ export default function Live2DWidget() {
     if (p.startsWith("/tools")) return PAGE_MESSAGES.tools;
     if (p.startsWith("/gallery")) return PAGE_MESSAGES.gallery;
     if (p.startsWith("/chatter")) return PAGE_MESSAGES.chatter;
-    if (p.startsWith("/timeline")) return PAGE_MESSAGES.timeline;
-    if (p.startsWith("/growth")) return PAGE_MESSAGES.growth;
+    if (p === "/personal" || p.startsWith("/personal/")) {
+      if (p.startsWith("/personal/timeline")) return PAGE_MESSAGES.timeline;
+      if (p.startsWith("/personal/commits")) return PAGE_MESSAGES.growth;
+      return PAGE_MESSAGES.personal;
+    }
     if (p.startsWith("/literature")) return PAGE_MESSAGES.literature;
     return FALLBACK_MESSAGES;
   };
