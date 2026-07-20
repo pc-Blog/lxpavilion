@@ -517,6 +517,16 @@ async function collectAllData(ghToken?: string, existing?: Map<string, string>, 
     console.error("[SYNC] Failed to fetch friend links:", e);
   }
 
+  // Bookmarks
+  try {
+    const bookmarks = await apiGet<unknown>("/bookmark/list");
+    files.push({ path: "bookmarks.json", content: JSON.stringify(bookmarks, null, 2) });
+    const bookmarkCats = await apiGet<unknown>("/bookmark/category/tree");
+    files.push({ path: "bookmarkCategories.json", content: JSON.stringify(bookmarkCats, null, 2) });
+  } catch (e) {
+    console.error("[SYNC] Failed to fetch bookmarks:", e);
+  }
+
   // Op / Literature data
   try {
     const opArticles = await apiPost<unknown, unknown>("/op/article", {});
@@ -528,7 +538,7 @@ async function collectAllData(ghToken?: string, existing?: Map<string, string>, 
   files.push({
     path: "index.json",
     content: JSON.stringify(
-      ["dashboard", "about", "articles", "projects", "categories", "tags", "timeline", "skills", "media", "comments", "music", "op-articles", "albums", "friendLinks", "chatters"],
+      ["dashboard", "about", "articles", "projects", "categories", "tags", "timeline", "skills", "media", "comments", "music", "op-articles", "albums", "friendLinks", "chatters", "bookmarks", "bookmarkCategories"],
       null, 2
     ),
   });

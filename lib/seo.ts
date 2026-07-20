@@ -8,7 +8,7 @@ function ogImg(url: string) {
 
 // ── Shared constants ────────────────────────────────
 /** 站点默认 OG 图片 — 首页及未单独配置的页面使用 */
-export const defaultOgImage = "/seo/logo.png";
+export const defaultOgImage = "/seo/logo.jpeg";
 
 /** 站点关键词 */
 export const SITE_KEYWORDS = [
@@ -148,7 +148,7 @@ export function jsonLdSchema(
       url: SITE_URL,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/seo/logo.png`,
+        url: `${SITE_URL}/seo/logo.jpeg`,
       },
     },
     image: image || undefined,
@@ -194,7 +194,7 @@ export function breadcrumbSchema(items: { name: string; path: string }[]) {
 // 页面 SEO 配置 — 统一在此处修改，全局生效
 // ══════════════════════════════════════════════════════
 
-const SEO_IMAGE = "/seo/logo.png";
+const SEO_IMAGE = "/seo/logo.jpeg";
 /** 文章列表页 */
 export const articleMetadata: Metadata = meta(
   "技术文章与开发笔记",
@@ -265,6 +265,14 @@ export const analyticsMetadata: Metadata = meta(
   "栏轩阁站点公开数据统计中心，可实时查看网站流量、访客数据与访问趋势，监控站点运行状态与各项核心性能指标。",
   SEO_IMAGE,
   "/analytics",
+);
+
+/** 网站导航页 */
+export const bookmarksMetadata: Metadata = meta(
+  "网站导航",
+  "栏轩阁网站导航页，分类整理优质网站资源，涵盖 AI 工具、开发平台、文档图片处理、下载工具等精选收藏，一键直达常用站点。",
+  SEO_IMAGE,
+  "/bookmarks",
 );
 
 /** 成长记录页 */

@@ -1,4 +1,7 @@
 import GrowthClient from "./GrowthClient";
+import { growthMetadata as metadata } from "@/lib/seo";
+
+export { metadata };
 
 export default function CommitsPage() {
   return (

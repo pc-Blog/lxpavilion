@@ -1,4 +1,7 @@
 import TimelineClient from "./TimelineClient";
+import { timelineMetadata as metadata } from "@/lib/seo";
+
+export { metadata };
 
 export default function TimelinePage() {
   return (

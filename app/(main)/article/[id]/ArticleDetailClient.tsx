@@ -103,7 +103,7 @@ export default function ArticleDetailClient(props: { params: Promise<{ id: strin
                       )}
                       {siteConfig.featureViewCount && <ViewCount count={viewCount} />}
                       {siteConfig.featureComments && (
-                        <span>{liveCommentCount ?? article.commentCount} comments</span>
+                        <span>{liveCommentCount ?? 0} comments</span>
                       )}
                       <button
                         onClick={async () => {

@@ -27,6 +27,8 @@
 
 .pio-container.right {
     right: 0;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .pio-container .pio-show {

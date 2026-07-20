@@ -111,7 +111,8 @@ function loadlive2d(canvas_id, json_object_or_url, on_load) {
             model.x = 30  // 向右偏移，防止左边被裁剪
             canvas.width = model.width + 230  // 左右各预留空间
         } else {
-            model.x = canvas.width - model.width
+            model.x = 80  // 向右偏移，给左侧头发留空间
+            canvas.width = model.width + 160  // 宽画布，左侧预留80px
         }
 
         // Hit callback definition

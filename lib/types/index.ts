@@ -105,7 +105,6 @@ export interface ArticleVO {
   isPinned: number;
   isPublished: number;
   viewCount: number;
-  commentCount: number;
   createdAt: string;
   updateTime?: string;
 }
@@ -278,13 +277,6 @@ export interface TopArticle {
   viewCount: number;
 }
 
-export interface LatestComment {
-  id: number;
-  authorName: string;
-  content: string;
-  createTime: string;
-}
-
 export interface DashboardVO {
   articleCount: number;
   projectCount: number;
@@ -293,7 +285,32 @@ export interface DashboardVO {
   commentCount: number;
   totalViews: number;
   topArticles: TopArticle[];
-  latestComments: LatestComment[];
+}
+
+// ========== Bookmark ==========
+
+export interface BookmarkCategory {
+  id?: number;
+  name: string;
+  parentId?: number | null;
+  sortOrder?: number;
+  deleted?: number;
+  createTime?: string;
+  updateTime?: string;
+}
+
+export interface Bookmark {
+  id?: number;
+  name: string;
+  url: string;
+  description?: string;
+  icon?: string;
+  categoryId?: number | null;
+  isPin?: number;
+  sortOrder?: number;
+  deleted?: number;
+  createTime?: string;
+  updateTime?: string;
 }
 
 // ========== Op (Tomcat proxy) ==========

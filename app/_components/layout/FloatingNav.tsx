@@ -7,12 +7,15 @@ import Tooltip from "@/app/_components/common/Tooltip";
 import SubscribeForm from "@/app/_components/subscribe/SubscribeForm";
 import HotTopicsSubscribeForm from "@/app/_components/subscribe/HotTopicsSubscribeForm";
 import { siteConfig } from "@/lib/siteConfig";
+import { getPinnedList } from "@/lib/api/bookmark";
+import type { Bookmark } from "@/lib/types";
 
 interface NavItem {
   label: string;
   href: string;
   icon: string;
   desc?: string;
+  target?: string;
 }
 
 interface Category {
@@ -58,14 +61,7 @@ const CATEGORIES: Category[] = [
   {
     icon: "🔖",
     label: "收藏夹",
-    items: [
-      { icon: "🎬", label: "Bibz Video", desc: "B站视频无水印下载，支持4K/1080P高清画质及弹幕导出", href: "https://bibz.me/video-extractor" },
-      { icon: "⬇️", label: "Kdown", desc: "百度网盘高速下载解析服务，加速下载网盘文件", href: "https://kdown.moiu.cn/" },
-      { icon: "🧰", label: "遐客", desc: "GitHub文件、Releases、归档代理加速下载", href: "https://xiake.pro/" },
-      { icon: "📄", label: "CDKM", desc: "免费在线将Word、Excel等文档批量转换为PDF", href: "https://cdkm.com/cn/doc-to-pdf" },
-      { icon: "📝", label: "MD转Word", desc: "免费在线Markdown转Word文档转换器", href: "https://markdowntoword.io/zh" },
-      { icon: "📄", label: "老鱼简历", desc: "免费在线简历制作工具", href: "https://www.laoyujianli.com/" },
-    ],
+    items: [],
   },
   ...(siteConfig.featureComments ? [{
     icon: "💭",
@@ -120,6 +116,11 @@ export default function FloatingNav() {
   const navRef = useRef<HTMLDivElement>(null);
   const submenuRef = useRef<HTMLDivElement>(null);
   const [submenuOffset, setSubmenuOffset] = useState(0);
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+
+  useEffect(() => {
+    getPinnedList().then(setBookmarks).catch(() => {});
+  }, []);
 
   useLayoutEffect(() => {
     if (active === null || !navRef.current) { setSubmenuOffset(0); return; }
@@ -152,7 +153,21 @@ export default function FloatingNav() {
     };
   }, [active]);
 
-  const itemCount = active !== null ? CATEGORIES[active].items.length : 0;
+  const activeItems = (() => {
+    if (active === null) return [];
+    if (CATEGORIES[active].label === "收藏夹") {
+      const items: NavItem[] = bookmarks.map((b) => ({
+        icon: b.icon || "🔗",
+        label: b.name,
+        desc: b.description || undefined,
+        href: b.url,
+      }));
+      items.push({ icon: "🧭", label: "查看全部", desc: "打开网站导航页 · 查看所有收藏网站", href: "/bookmarks", target: "_blank" });
+      return items;
+    }
+    return CATEGORIES[active].items;
+  })();
+  const itemCount = activeItems.length;
   const gridCols =
     itemCount === 1 ? "grid-cols-1" :
       itemCount === 2 ? "grid-cols-2" :
@@ -194,8 +209,8 @@ export default function FloatingNav() {
                   initial="hidden"
                   animate="visible"
                 >
-                  {CATEGORIES[active].items.map((item) => {
-                    const isExternal = item.href.startsWith("http");
+                  {activeItems.map((item) => {
+                    const isExternal = item.href.startsWith("http") || item.target === "_blank";
                     const Comp = isExternal ? "a" : Link;
                     const extraProps = isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {};
                     const card = (
@@ -209,11 +224,15 @@ export default function FloatingNav() {
                           {...extraProps}
                         >
                           <motion.span
-                            className="text-2xl"
-                            whileHover={{ rotate: [0, -10, 10, -5, 0] }}
+                            className="text-2xl inline-flex items-center justify-center"
+                            whileHover={{ rotate: item.icon?.startsWith("http") ? undefined : [0, -10, 10, -5, 0] }}
                             transition={{ duration: 0.4 }}
                           >
-                            {item.icon}
+                            {item.icon?.startsWith("http") ? (
+                              <img src={item.icon} alt="" className="w-6 h-6 rounded" />
+                            ) : (
+                              item.icon
+                            )}
                           </motion.span>
                           <span className="text-[10px] font-medium mt-1 text-center leading-tight break-words max-w-full">
                             {item.label}

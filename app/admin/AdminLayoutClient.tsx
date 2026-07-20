@@ -22,6 +22,7 @@ import {
   Database,
   ChevronLeft,
   ChevronRight,
+  Bookmark,
 } from "lucide-react";
 
 type NavItem = { label: string; href: string; icon: React.ComponentType<{ size?: number; className?: string }>; tooltip: string };
@@ -47,6 +48,7 @@ const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
     group: "社交管理",
     items: [
       { label: "Friend Links", href: "/admin/friend-link", icon: LinkIcon, tooltip: "友链管理" },
+      { label: "Bookmarks", href: "/admin/bookmark", icon: Bookmark, tooltip: "收藏管理" },
       { label: "Email", href: "/admin/email", icon: Mail, tooltip: "邮箱管理" },
     ],
   },

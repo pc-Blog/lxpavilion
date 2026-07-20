@@ -84,6 +84,11 @@ const PAGE_MESSAGES: Record<string, string[]> = {
     "每次进步都看得见！", "今天也要加油呀～", "这里只有你知道～", "默默变强的感觉真好～",
     "积累的力量最强大～", "在看不见的地方悄悄成长～",
   ],
+  bookmarks: [
+    "在逛收藏夹呢～", "这里收藏了好多好东西呢～", "好丰富的收藏呀！", "发现宝藏网站了呢～",
+    "收藏了这么多呀～", "都是精选网站呢！", "看看又收藏了什么～", "网站导航真方便～",
+    "收藏夹满满的都是干货～", "每一条收藏都是精华呢～",
+  ],
 };
 
 const FALLBACK_MESSAGES = [
@@ -119,6 +124,7 @@ export default function Live2DWidget() {
       return PAGE_MESSAGES.personal;
     }
     if (p.startsWith("/literature")) return PAGE_MESSAGES.literature;
+    if (p.startsWith("/bookmarks")) return PAGE_MESSAGES.bookmarks;
     return FALLBACK_MESSAGES;
   };
   /** 文学详情页循环朗读器 */
@@ -423,7 +429,7 @@ export default function Live2DWidget() {
     if (loaded.current) return;
     loaded.current = true;
 
-    (window as any).pio_alignment = "left";
+    (window as any).pio_alignment = document.documentElement.dataset.pioAlign || "left";
 
     // 获取已合并的 GitHub 链接
     getAbout().then((about) => {
@@ -468,7 +474,7 @@ export default function Live2DWidget() {
   const initPio = () => {
     if (!window.Paul_Pio) return;
 
-    (window as any).pio_alignment = "left";
+    (window as any).pio_alignment = document.documentElement.dataset.pioAlign || "left";
     if (typeof (window as any)._pio_initialize_pixi === "function") {
       (window as any)._pio_initialize_pixi();
     }
