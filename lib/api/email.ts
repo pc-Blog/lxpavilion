@@ -10,8 +10,11 @@ import { siteConfig } from "@/lib/siteConfig";
 const WORKER_API = `https://${siteConfig.workerApi}/api`;
 
 async function workerFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const adminToken = typeof window !== "undefined" ? localStorage.getItem("admin_token") : null;
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (adminToken) headers["Authorization"] = `Bearer ${adminToken}`;
   const res = await fetch(`${WORKER_API}${path}`, {
-    headers: { "Content-Type": "application/json" },
+    headers,
     ...options,
   });
   const json = await res.json();

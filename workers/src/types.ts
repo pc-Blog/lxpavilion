@@ -38,6 +38,9 @@ export interface Env {
 
   // 管理员通知收件地址（msg@lxpavilion.top）
   NOTIFY_TO_ADDRESS?: string;
+
+  // 管理接口 Token
+  ADMIN_TOKEN: string;
 }
 
 // ── API 统一响应格式 ──

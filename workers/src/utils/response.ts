@@ -1,4 +1,4 @@
-import type { ApiResponse } from "../types";
+import type { Env, ApiResponse } from "../types";
 
 /**
  * 生成 CORS 响应头。
@@ -45,4 +45,19 @@ export function cacheableResponse<T>(
       ...corsHeaders(origin),
     },
   });
+}
+
+/**
+ * 管理接口 Token 校验。
+ * Authorization 头不等于 Bearer <ADMIN_TOKEN> 则返回 401 Response，否则返回 null。
+ */
+export function requireAdmin(request: Request, env: Env): Response | null {
+  const auth = request.headers.get("Authorization");
+  if (auth !== `Bearer ${env.ADMIN_TOKEN}`) {
+    return new Response(JSON.stringify({ code: 0, data: null, msg: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json", ...corsHeaders(request.headers.get("Origin")) },
+    });
+  }
+  return null;
 }

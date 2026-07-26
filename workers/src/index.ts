@@ -14,7 +14,7 @@
  */
 
 import type { Env } from "./types";
-import { corsHeaders, respond } from "./utils/response";
+import { corsHeaders, respond, requireAdmin } from "./utils/response";
 import { handleAnalytics } from "./analytics/handler";
 import { handlePlatform } from "./platform/handler";
 import { handleRss } from "./rss/handler";
@@ -112,6 +112,8 @@ export default {
 
     // POST /purge — 清空 CDN 缓存
     if (request.method === "POST" && url.pathname === "/purge") {
+      const adminCheck = requireAdmin(request, env);
+      if (adminCheck) return adminCheck;
       return handlePurge(request, env, ctx, origin);
     }
 
@@ -135,8 +137,10 @@ export default {
       return handleComment(request, env, origin);
     }
 
-    // /api/email/* — 邮件管理
+    // /api/email/* — 邮件管理（需 ADMIN_TOKEN）
     if (url.pathname.startsWith("/api/email")) {
+      const adminCheck = requireAdmin(request, env);
+      if (adminCheck) return adminCheck;
       switch (true) {
         case request.method === "GET" && url.pathname === "/api/email/list":
           return handleEmailList(request, env, origin);
@@ -160,6 +164,8 @@ export default {
 
     // POST /api/subscribe/delete — 从 D1 删除订阅者
     if (request.method === "POST" && url.pathname === "/api/subscribe/delete") {
+      const adminCheck = requireAdmin(request, env);
+      if (adminCheck) return adminCheck;
       return handleDeleteSubscribe(request, env, origin);
     }
 
@@ -168,8 +174,10 @@ export default {
       return handleUnsubscribe(request, env, origin);
     }
 
-    // POST /api/rss-push — 手动触发 RSS 推送（用于测试）
+    // POST /api/rss-push — 手动触发 RSS 推送（需 ADMIN_TOKEN）
     if (request.method === "POST" && url.pathname === "/api/rss-push") {
+      const adminCheck = requireAdmin(request, env);
+      if (adminCheck) return adminCheck;
       const pushResult = await handleRssPush(env);
       return respond(
         { pushed: true, push_log_id: pushResult?.id ?? null, status: pushResult?.status ?? null },
@@ -179,8 +187,10 @@ export default {
       );
     }
 
-    // POST /api/hot-push — 手动触发热点推送（用于测试）
+    // POST /api/hot-push — 手动触发热点推送（需 ADMIN_TOKEN）
     if (request.method === "POST" && url.pathname === "/api/hot-push") {
+      const adminCheck = requireAdmin(request, env);
+      if (adminCheck) return adminCheck;
       const pushResult = await handleHotPush(env);
       return respond(
         { pushed: true, push_log_id: pushResult?.id ?? null, status: pushResult?.status ?? null },
@@ -190,8 +200,10 @@ export default {
       );
     }
 
-    // /api/sync/* — 数据同步（供 Java 后端拉取）
+    // /api/sync/* — 数据同步（需 ADMIN_TOKEN，供 Java 后端拉取）
     if (url.pathname.startsWith("/api/sync")) {
+      const adminCheck = requireAdmin(request, env);
+      if (adminCheck) return adminCheck;
       return handleSync(request, env, origin);
     }
 

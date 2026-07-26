@@ -73,10 +73,11 @@
   "vars": {
 
     // ★ Cloudflare API 配置（必须）★
-    "CF_ZONE_ID": "5bf4f5d460e2073282b6ff62d01f2ca4",
-    // Cloudflare Zone ID，用于缓存清除（Cache Purge）和流量分析（Analytics GraphQL API）
-    // 需配合 CF_API_TOKEN 使用（CF_API_TOKEN 建议用 wrangler secret 设置，不写在配置文件里）
+    "CF_API_TOKEN": "【必填】你的 Cloudflare API Token，需 Cache:Purge + Analytics:Read 权限",
+    // Cloudflare API Token，用于缓存清除（Cache Purge）和流量分析（Analytics GraphQL API）
     // 权限要求：Cache:Purge + Analytics:Read
+
+    "CF_ZONE_ID": "5bf4f5d460e2073282b6ff62d01f2ca4",
 
     // ★ 多平台数据源（选填，不配则对应平台不显示） ★
     "CSDN_USER": "2604_96186443",               // CSDN 用户名（用于拉取文章统计）
@@ -89,7 +90,7 @@
     // 同时作为管理员通知的收件地址
 
     // ★ Resend 邮件发送 ★
-    "RESEND_API_KEY": "re_5xNRspgw_9bAUjSS2zNkf6e4ZeWvHP8JW",
+    "RESEND_API_KEY": "【必填】你的 Resend API Key，用于发送邮件（注册：https://resend.com）",
     // Resend API Key，用于发送所有邮件（欢迎邮件、订阅通知、RSS/热点推送）
     // 免费版：100 封/天，可发送到任意未验证的收件地址
     // 注册：https://resend.com
@@ -113,14 +114,20 @@
     "HOT_MAX_ARTICLES": "10",
     // 每次热点推送最多包含的热点条目数
 
+    // ★ 管理接口 Token ★
+    "ADMIN_TOKEN": "【必填】你的管理接口 Token，用于保护 /purge、/api/email/*、/api/sync/* 等接口",
+    // 管理接口的 Bearer Token，只有此 Token 才能调 /purge、/api/email/*、/api/sync/* 等接口
+
     // ★ JWT 密钥（管理后台认证） ★
-    "JWT_SECRET": "【必填】JWT 签名密钥（从 git 历史清理，请轮换后回填）",
+    "JWT_SECRET": "【必填】JWT 签名密钥，建议用 openssl rand -hex 32 生成随机字符串",
     // 生产环境务必改为随机字符串！建议用 openssl rand -hex 32 生成
 
     // ★ GitHub OAuth App（用于管理员 GitHub 登录） ★
     "GITHUB_CLIENT_ID": "Iv23liAI2h53TjkCBu67",
     // GitHub OAuth App 的 Client ID
-    // 在 https://github.com/settings/developers 创建
+
+    "GITHUB_CLIENT_SECRET": "【必填】你的 GitHub OAuth App Client Secret",
+    // GitHub OAuth App 的 Client Secret，用于 OAuth 授权码流程和 GitHub Token 刷新
 
     "GITHUB_REDIRECT_URI": "https://api.lxpavilion.top/api/auth/github/callback",
     // GitHub OAuth 回调地址（需在 GitHub App 配置中设为相同值）
@@ -145,9 +152,7 @@
     // Discussion 分类 ID（在 GitHub 仓库 Discussions 页面 URL 中可找到）
 
     // ★ GitHub App 私钥（用于 JWT 签名，连接 GitHub API） ★
-    "GITHUB_APP_PRIVATE_KEY": "-----BEGIN PRIVATE KEY-----
-【必填】GitHub App 私钥（从 git 历史清理，请轮换后回填）
------END PRIVATE KEY-----"
+    "GITHUB_APP_PRIVATE_KEY": "【必填】你的 GitHub App 私钥（PEM 格式，\\\\n 替换换行符保持单行）",
     // 从 GitHub App 设置页面生成的私钥（PEM 格式）
     // \n 是换行符，保持单行字符串即可
     // 注意：fork 后必须替换为自己的 GitHub App 私钥

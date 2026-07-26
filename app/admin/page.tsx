@@ -60,6 +60,9 @@ export default function AdminDashboardPage() {
   const [workerCommentCount, setWorkerCommentCount] = useState<number | null>(null);
   const [token, setToken] = useState("");
   const [savedToken, setSavedToken] = useState("");
+  const [adminToken, setAdminToken] = useState("");
+  const [savedAdminToken, setSavedAdminToken] = useState("");
+  const [showAdminTokenInput, setShowAdminTokenInput] = useState(false);
   const [jsonSync, setJsonSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [mediaSync, setMediaSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [musicSync, setMusicSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
@@ -79,6 +82,8 @@ export default function AdminDashboardPage() {
       .catch(() => {});
     const stored = localStorage.getItem(STORAGE_KEY) || "";
     setSavedToken(stored);
+    const storedAdmin = localStorage.getItem("admin_token") || "";
+    setSavedAdminToken(storedAdmin);
   }, []);
 
   const handleSaveToken = () => {
@@ -92,6 +97,22 @@ export default function AdminDashboardPage() {
     localStorage.removeItem(STORAGE_KEY);
     setSavedToken("");
   };
+
+  const handleSaveAdminToken = () => {
+    localStorage.setItem("admin_token", adminToken);
+    setSavedAdminToken(adminToken);
+    setAdminToken("");
+    setShowAdminTokenInput(false);
+  };
+
+  const handleClearAdminToken = () => {
+    localStorage.removeItem("admin_token");
+    setSavedAdminToken("");
+  };
+
+  const adminMasked = savedAdminToken.length > 8
+    ? savedAdminToken.slice(0, 4) + "****" + savedAdminToken.slice(-4)
+    : "";
 
   const handleJsonSync = async () => {
     if (!savedToken) return;
@@ -278,6 +299,75 @@ export default function AdminDashboardPage() {
             {a.label}
           </Link>
         ))}
+      </div>
+
+      {/* Admin Token */}
+      <h2 className="text-lg font-bold mt-10 mb-4 text-slate-700 dark:text-slate-300">
+        Admin Token
+      </h2>
+      <div className="glass-card p-5">
+        {!savedAdminToken || showAdminTokenInput ? (
+          <div className="flex flex-col gap-3">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Enter the Worker ADMIN_TOKEN to access management APIs (email, purge, etc.).
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="password"
+                value={adminToken}
+                onChange={(e) => setAdminToken(e.target.value)}
+                placeholder="ADMIN_TOKEN..."
+                className="flex-1 px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                onClick={handleSaveAdminToken}
+                disabled={!adminToken}
+                className="px-4 py-2 text-sm font-bold rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white disabled:opacity-50 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+            {savedAdminToken && (
+              <button onClick={() => setShowAdminTokenInput(false)} className="text-xs text-slate-400 hover:text-slate-600 self-start">
+                Cancel
+              </button>
+            )}
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center gap-3 text-sm">
+              <span className="text-slate-500 dark:text-slate-400">Admin Token:</span>
+              <code className="text-xs text-slate-600 dark:text-slate-300">{adminMasked}</code>
+              <button
+                onClick={() => setShowAdminTokenInput(true)}
+                className="text-xs text-indigo-500 hover:text-indigo-600"
+              >
+                修改
+              </button>
+              <button
+                onClick={handleClearAdminToken}
+                className="text-xs text-red-400 hover:text-red-500"
+              >
+                移除
+              </button>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {[
+                { label: "邮件列表", path: "GET /api/email/list" },
+                { label: "邮件详情", path: "GET /api/email/detail" },
+                { label: "删除邮件", path: "DELETE /api/email/delete" },
+                { label: "发送邮件", path: "POST /api/email/send" },
+                { label: "转发地址", path: "GET /api/email/forward" },
+                { label: "数据同步", path: "GET /api/sync/*" },
+              ].map((api) => (
+                <span key={api.path} className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">
+                  <span className="text-emerald-500">✓</span>
+                  {api.label}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Sync to GitHub */}
