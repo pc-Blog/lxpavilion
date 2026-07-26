@@ -8,9 +8,11 @@ interface PaginationProps {
   pageSize: number;
   onChange: (pageNum: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
+  /** 显示用的总数（如文章数），不传则用 total */
+  displayTotal?: number;
 }
 
-export default function Pagination({ total, pageNum, pageSize, onChange, onPageSizeChange }: PaginationProps) {
+export default function Pagination({ total, pageNum, pageSize, onChange, onPageSizeChange, displayTotal }: PaginationProps) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   const pages: (number | "...")[] = [];
@@ -28,7 +30,7 @@ export default function Pagination({ total, pageNum, pageSize, onChange, onPageS
 
   return (
     <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
-      <span className="text-xs text-slate-400">{total} items</span>
+      <span className="text-xs text-slate-400">{displayTotal ?? total} items</span>
 
       <div className="flex items-center gap-1">
         <button

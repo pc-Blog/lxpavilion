@@ -442,6 +442,33 @@ async function collectAllData(ghToken?: string, existing?: Map<string, string>, 
     }
   }
 
+  // 系列分组（从文章列表推算）
+  {
+    const parsed = JSON.parse(files.find(f => f.path === "articles.json")?.content || "{}");
+    const rows = (parsed?.rows || []) as { series?: string; coverImage?: string; summary?: string }[];
+    const seriesMap = new Map<string, { count: number; coverImage?: string; summary?: string }>();
+    for (const a of rows) {
+      if (a.series) {
+        const existing = seriesMap.get(a.series);
+        if (existing) {
+          existing.count++;
+          existing.coverImage = existing.coverImage || a.coverImage;
+        } else {
+          seriesMap.set(a.series, { count: 1, coverImage: a.coverImage, summary: a.summary });
+        }
+      }
+    }
+    const groups = Array.from(seriesMap.entries()).map(([series, info]) => ({
+      series,
+      count: info.count,
+      coverImage: info.coverImage,
+      summary: info.summary,
+    }));
+    if (groups.length > 0) {
+      files.push({ path: "series-groups.json", content: JSON.stringify(groups, null, 2) });
+    }
+  }
+
   const projectList = await apiPost<{ total: number; rows: { id: number }[] }, unknown>(
     "/project/public/page", PAGE
   );
@@ -477,12 +504,7 @@ async function collectAllData(ghToken?: string, existing?: Map<string, string>, 
     console.error("[SYNC] Failed to fetch media.json:", e);
   }
 
-  try {
-    const comments = await apiPost<unknown, unknown>("/comment/page", PAGE);
-    files.push({ path: "comments.json", content: JSON.stringify(comments, null, 2) });
-  } catch (e) {
-    console.error("[SYNC] Failed to fetch comments:", e);
-  }
+  // 评论区已迁移至 GitHub Discussions (Giscus)，不再从 Java 后端同步
 
   // Album / Gallery data
   try {

@@ -91,6 +91,7 @@ export interface ArticleQueryDTO {
   categoryId?: number;
   tagId?: number;
   keyword?: string;
+  series?: string;
   isPublished?: boolean;
 }
 
@@ -105,8 +106,37 @@ export interface ArticleVO {
   isPinned: number;
   isPublished: number;
   viewCount: number;
+  series?: string;
   createdAt: string;
   updateTime?: string;
+}
+
+export interface SeriesGroup {
+  series: string;
+  count: number;
+  coverImage?: string;
+  summary?: string;
+}
+
+export interface SeriesBrief {
+  series: string;
+  coverImage?: string;
+}
+
+export interface GroupedPageVO<T> {
+  total: number;
+  articleTotal: number;
+  rows: T[];
+}
+
+export interface GroupedItem {
+  type: "article" | "series";
+  // type = "article" 时
+  article?: ArticleVO;
+  // type = "series" 时
+  series?: string;
+  seriesArticleCount?: number;
+  seriesArticles?: ArticleVO[];
 }
 
 export interface ArticleNav {

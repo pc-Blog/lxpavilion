@@ -11,6 +11,7 @@ import AdminMarkdownEditor from "@/app/_components/admin/MarkdownEditor";
 import CoverImageInput from "@/app/_components/admin/CoverImageInput";
 import SelectDropdown from "@/app/_components/admin/SelectDropdown";
 import TagDropdown from "@/app/_components/admin/TagDropdown";
+import SeriesInput from "@/app/_components/admin/SeriesInput";
 
 export default function EditArticlePage(props: { params: Promise<{ id: string }> }) {
   const { id } = use(props.params);
@@ -20,6 +21,7 @@ export default function EditArticlePage(props: { params: Promise<{ id: string }>
   const [coverImage, setCoverImage] = useState("");
   const [categoryId, setCategoryId] = useState<number>(0);
   const [tagIds, setTagIds] = useState<number[]>([]);
+  const [series, setSeries] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [saving, setSaving] = useState(false);
@@ -36,6 +38,7 @@ export default function EditArticlePage(props: { params: Promise<{ id: string }>
       setContent(String(a.content || ""));
       setCoverImage(String(a.coverImage || ""));
       setCategoryId(Number(a.categoryId || 0));
+      setSeries(String(a.series || ""));
       const tags = (a.tags as { id: number }[]) || [];
       setTagIds(tags.map((t) => t.id));
     }).catch(() => {}).finally(() => setLoading(false));
@@ -45,7 +48,7 @@ export default function EditArticlePage(props: { params: Promise<{ id: string }>
     if (!title.trim()) return;
     setSaving(true);
     try {
-      await api.put("/article", { id: Number(id), title: title.trim(), summary, content, coverImage, categoryId, tagIds });
+      await api.put("/article", { id: Number(id), title: title.trim(), summary, content, coverImage, categoryId, tagIds, series: series.trim() || undefined });
       showSuccessToast("Saved");
       if (close) router.push("/admin/article");
     } catch { showErrorToast("Save failed"); }
@@ -79,6 +82,7 @@ export default function EditArticlePage(props: { params: Promise<{ id: string }>
             getValue={(t) => t.id!}
           />
         </div>
+        <SeriesInput value={series} onChange={setSeries} onCoverChange={(url) => url && setCoverImage(url)} placeholder="Series (e.g. Redis学习笔记)" />
         <label className="block text-xs font-bold text-slate-500">Content (Markdown)</label>
         <AdminMarkdownEditor value={content} onChange={setContent} />
         <div className="flex gap-3">

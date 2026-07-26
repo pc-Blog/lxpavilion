@@ -11,6 +11,7 @@ import AdminMarkdownEditor from "@/app/_components/admin/MarkdownEditor";
 import CoverImageInput from "@/app/_components/admin/CoverImageInput";
 import SelectDropdown from "@/app/_components/admin/SelectDropdown";
 import TagDropdown from "@/app/_components/admin/TagDropdown";
+import SeriesInput from "@/app/_components/admin/SeriesInput";
 
 export default function NewArticlePage() {
   const [title, setTitle] = useState("");
@@ -19,6 +20,7 @@ export default function NewArticlePage() {
   const [coverImage, setCoverImage] = useState("");
   const [categoryId, setCategoryId] = useState<number>(0);
   const [tagIds, setTagIds] = useState<number[]>([]);
+  const [series, setSeries] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [saving, setSaving] = useState(false);
@@ -33,7 +35,7 @@ export default function NewArticlePage() {
     if (!title.trim()) return;
     setSaving(true);
     try {
-      await api.post("/article", { title: title.trim(), summary, content, coverImage, categoryId, tagIds, isPublished: publish ? 1 : 0 });
+      await api.post("/article", { title: title.trim(), summary, content, coverImage, categoryId, tagIds, series: series.trim() || undefined, isPublished: publish ? 1 : 0 });
       showSuccessToast("Saved");
       router.push("/admin/article");
     } catch { showErrorToast("Save failed"); }
@@ -65,6 +67,7 @@ export default function NewArticlePage() {
             getValue={(t) => t.id!}
           />
         </div>
+        <SeriesInput value={series} onChange={setSeries} onCoverChange={(url) => url && setCoverImage(url)} placeholder="Series (e.g. Redis学习笔记)" />
         <label className="block text-xs font-bold text-slate-500">Content (Markdown)</label>
         <AdminMarkdownEditor value={content} onChange={setContent} />
         <div className="flex gap-3">
