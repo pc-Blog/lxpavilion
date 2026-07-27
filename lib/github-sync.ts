@@ -2,6 +2,7 @@
 
 import type { Media, OpMusic } from "@/lib/types";
 import { siteConfig } from "./siteConfig";
+import { sha1 as jsSha1 } from "js-sha1";
 
 const GH_API = "https://api.github.com";
 const [OWNER, REPO] = siteConfig.repo.split("/");
@@ -14,6 +15,33 @@ export interface SyncProgress {
 }
 
 type ProgressCb = (p: SyncProgress) => void;
+
+/** Compute GitHub blob SHA locally: SHA1("blob " + len + "\0" + content) */
+async function computeBlobSha(
+  content: string,
+  encoding: "utf-8" | "base64" = "utf-8"
+): Promise<string> {
+  const encoder = new TextEncoder();
+  const bytes = encoding === "utf-8"
+    ? encoder.encode(content)
+    : Uint8Array.from(atob(content), (c) => c.charCodeAt(0));
+  const prefix = encoder.encode(`blob ${bytes.length}\0`);
+  const combined = new Uint8Array(prefix.length + bytes.length);
+  combined.set(prefix);
+  combined.set(bytes, prefix.length);
+
+  if (crypto.subtle) {
+    const hash = await crypto.subtle.digest("SHA-1", combined);
+    const result = [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0")).join("");
+    console.log(`[SYNC] computeBlobSha using Web Crypto: ${result.slice(0, 7)}`);
+    return result;
+  }
+
+  const fallback = jsSha1.arrayBuffer(combined.buffer);
+  const result = [...new Uint8Array(fallback)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  console.log(`[SYNC] computeBlobSha using JS fallback (no crypto.subtle): ${result.slice(0, 7)}`);
+  return result;
+}
 
 /** Decode base64 to UTF-8 string (browser-safe) */
 function base64DecodeUtf8(base64: string): string {
@@ -41,8 +69,9 @@ async function gh(url: string, token: string, method = "GET", body?: unknown) {
     const elapsed = (performance.now() - start).toFixed(0);
     if (!res.ok) {
       const text = await res.text();
-      console.error(`[GH] ✗ ${label} (${elapsed}ms) → ${res.status}: ${text.slice(0, 300)}`);
-      throw new Error(`GitHub API ${res.status}: ${text.slice(0, 300)}`);
+      const truncated = res.status === 422 ? text : text.slice(0, 300);
+      console.error(`[GH] ✗ ${label} (${elapsed}ms) → ${res.status}: ${truncated}`);
+      throw new Error(`GitHub API ${res.status}: ${truncated}`);
     }
     const json = await res.json();
     console.log(`[GH] ✓ ${label} (${elapsed}ms)`);
@@ -114,25 +143,23 @@ interface MediaItem {
   updateTime?: string;
 }
 
-/** 从 data 分支读取 media-manifest.json */
+/** 从 data 分支读取 media-manifest.json（Contents API，1 请求） */
 async function getExistingMediaManifest(
   token: string
 ): Promise<Map<number, MediaItem>> {
   const result = new Map<number, MediaItem>();
   try {
-    const ref = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`, token);
-    const commit = await gh(ref.object.url, token);
-    const tree = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/trees/${commit.tree.sha}?recursive=1`, token);
-    const entry = (tree.tree || []).find((e: any) => e.path === "media-manifest.json");
-    if (!entry) return result;
-    const blob = await gh(entry.url, token);
-    const list = JSON.parse(base64DecodeUtf8(blob.content)) as MediaItem[];
+    const data: any = await gh(`${GH_API}/repos/${OWNER}/${REPO}/contents/media-manifest.json?ref=${BRANCH}`, token);
+    const content = (data.content as string).replace(/\n/g, '');
+    const list = JSON.parse(base64DecodeUtf8(content)) as MediaItem[];
     for (const item of list) {
       if (item.id != null) result.set(item.id, item);
     }
-  } catch (e) {
-    console.error("[SYNC] Failed to read manifest:", e);
-    /* no manifest yet */
+  } catch (e: any) {
+    if (!e?.message?.includes("404")) {
+      console.error("[SYNC] Failed to read manifest:", e);
+    }
+    /* 404 = first sync, no manifest yet */
   }
   return result;
 }
@@ -233,22 +260,26 @@ interface MusicFile {
   newPath: string;
 }
 
-async function getExistingMusicManifest(token: string): Promise<Map<number, { id: number }>> {
-  const result = new Map<number, { id: number }>();
+interface MusicManifestEntry {
+  id: number;
+  ext?: string;      // ".mp3", ".ogg", etc.
+  coverExt?: string; // ".png", ".jpg", etc.
+}
+
+async function getExistingMusicManifest(token: string): Promise<Map<number, MusicManifestEntry>> {
+  const result = new Map<number, MusicManifestEntry>();
   try {
-    const ref = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`, token);
-    const commit = await gh(ref.object.url, token);
-    const tree = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/trees/${commit.tree.sha}?recursive=1`, token);
-    const entry = (tree.tree || []).find((e: any) => e.path === "music-manifest.json");
-    if (!entry) return result;
-    const blob = await gh(entry.url, token);
-    const list = JSON.parse(base64DecodeUtf8(blob.content)) as { id: number }[];
+    const data: any = await gh(`${GH_API}/repos/${OWNER}/${REPO}/contents/music-manifest.json?ref=${BRANCH}`, token);
+    const content = (data.content as string).replace(/\n/g, '');
+    const list = JSON.parse(base64DecodeUtf8(content)) as MusicManifestEntry[];
     for (const item of list) {
       if (item.id != null) result.set(item.id, item);
     }
-  } catch (e) {
-    console.error("[SYNC] Failed to read manifest:", e);
-    /* no manifest yet */
+  } catch (e: any) {
+    if (!e?.message?.includes("404")) {
+      console.error("[SYNC] Failed to read manifest:", e);
+    }
+    /* 404 = first sync, no manifest yet */
   }
   return result;
 }
@@ -256,7 +287,7 @@ async function getExistingMusicManifest(token: string): Promise<Map<number, { id
 async function collectMusic(
   apiBase: string,
   onProgress?: ProgressCb,
-  existingManifest?: Map<number, { id: number }>
+  existingManifest?: Map<number, MusicManifestEntry>
 ): Promise<{ musicData: unknown; audioFiles: MusicFile[]; deletedIds: number[] }> {
   const res = await fetch(`${apiBase}/op/music/page`, {
     method: "POST",
@@ -350,8 +381,8 @@ async function collectMusic(
   return { musicData: body.data, audioFiles, deletedIds };
 }
 
-// Collect data from Java backend (incremental — skips unchanged details)
-async function collectAllData(ghToken?: string, existing?: Map<string, string>, onProgress?: ProgressCb): Promise<{ path: string; content: string }[]> {
+// Collect data from Java backend
+async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promise<{ path: string; content: string }[]> {
   const base = `http://${siteConfig.backUrl}/api`;
 
   async function apiGet<T>(ep: string): Promise<T> {
@@ -418,25 +449,11 @@ async function collectAllData(ghToken?: string, existing?: Map<string, string>, 
     "/article/public/page", PAGE
   );
   files.push({ path: "articles.json", content: JSON.stringify(articleList, null, 2) });
-  for (const a of articleList.rows as { id: number; updateTime?: string }[]) {
-    if (a.updateTime && existing) {
-      const existingContent = existing.get(`articles/${a.id}.json`);
-      if (existingContent) {
-        try {
-          const existingTime = JSON.parse(existingContent)?.updateTime;
-          if (existingTime === a.updateTime) {
-            files.push({ path: `articles/${a.id}.json`, content: existingContent });
-            // 跳过，不输出日志
-            continue;
-          }
-        } catch (e) {
-          console.warn("[SYNC] Article incremental check failed, re-fetching:", e);
-        }
-      }
-    }
+  for (const a of articleList.rows as { id: number }[]) {
     try {
-      const detail = await apiGet<unknown>(`/article/public/${a.id}`);
-      files.push({ path: `articles/${a.id}.json`, content: JSON.stringify(detail, null, 2) });
+      const detail = await apiGet<Record<string, any>>(`/article/public/${a.id}`);
+      const { viewCount, ...rest } = detail; // 剥离动态 viewCount，避免每次同步都判定为变更
+      files.push({ path: `articles/${a.id}.json`, content: JSON.stringify(rest, null, 2) });
     } catch (e) {
       console.error(`[SYNC] Failed to fetch article #${a.id}:`, e);
     }
@@ -473,22 +490,7 @@ async function collectAllData(ghToken?: string, existing?: Map<string, string>, 
     "/project/public/page", PAGE
   );
   files.push({ path: "projects.json", content: JSON.stringify(projectList, null, 2) });
-  for (const p of projectList.rows as { id: number; updateTime?: string }[]) {
-    if (p.updateTime && existing) {
-      const existingContent = existing.get(`projects/${p.id}.json`);
-      if (existingContent) {
-        try {
-          const existingTime = JSON.parse(existingContent)?.updateTime;
-          if (existingTime === p.updateTime) {
-            files.push({ path: `projects/${p.id}.json`, content: existingContent });
-            // 跳过，不输出日志
-            continue;
-          }
-        } catch (e) {
-          console.warn("[SYNC] Project incremental check failed:", e);
-        }
-      }
-    }
+  for (const p of projectList.rows as { id: number }[]) {
     try {
       const detail = await apiGet<unknown>(`/project/public/${p.id}`);
       files.push({ path: `projects/${p.id}.json`, content: JSON.stringify(detail, null, 2) });
@@ -612,12 +614,24 @@ async function syncFiles(
   files: SyncFile[],
   message: string,
   onProgress?: ProgressCb,
-  deletePaths?: string[]
+  deletePaths?: string[],
+  existingCommitSha?: string,
+  existingTreeSha?: string
 ): Promise<SyncResult> {
   onProgress?.({ stage: "blobs", message: "Connecting to GitHub..." });
-  const ref = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`, token);
-  const currentCommit = await gh(ref.object.url, token);
-  const baseTreeSha: string = currentCommit.tree.sha;
+  let baseTreeSha: string;
+  let parentCommitSha: string;
+  if (existingCommitSha && existingTreeSha) {
+    baseTreeSha = existingTreeSha;
+    parentCommitSha = existingCommitSha;
+    console.log(`[SYNC] syncFiles received existing: commit=${existingCommitSha.slice(0, 7)} tree=${existingTreeSha.slice(0, 7)}`);
+  } else {
+    console.log(`[SYNC] syncFiles fetching ref/commit (no existing params provided)`);
+    const ref = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`, token);
+    parentCommitSha = ref.object.sha as string;
+    const currentCommit = await gh(ref.object.url, token);
+    baseTreeSha = currentCommit.tree.sha as string;
+  }
 
   onProgress?.({ stage: "blobs", message: `Creating ${files.length} blobs...` });
   console.log(`[SYNC] syncFiles start: ${files.length} files, ${deletePaths?.length || 0} delete paths`);
@@ -657,64 +671,43 @@ async function syncFiles(
     return { success: false, filesCount: 0, error: "All files failed to upload" };
   }
 
-  const rootFiles = blobResults.filter((b) => !b.path.includes("/"));
-  const dirFiles = new Map<string, { path: string; sha: string }[]>();
-  for (const b of blobResults) {
-    const idx = b.path.indexOf("/");
-    if (idx !== -1) {
-      const dir = b.path.slice(0, idx);
-      if (!dirFiles.has(dir)) dirFiles.set(dir, []);
-      dirFiles.get(dir)!.push({ path: b.path.slice(idx + 1), sha: b.sha });
-    }
-  }
-
   onProgress?.({ stage: "tree", message: "Building tree..." });
-  const baseTree = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/trees/${baseTreeSha}`, token);
 
-  const treeChanges: { path: string; mode?: string; type?: string; sha: string | null }[] = [];
-
-  // 新增/替换的根级文件
-  for (const b of rootFiles) {
-    treeChanges.push({ path: b.path, mode: "100644", type: "blob", sha: b.sha });
+  // 扁平 tree：所有路径放在一次请求中，GitHub 自动处理嵌套目录
+  const treeItems: { path: string; mode?: string; type?: string; sha: string | null }[] = [];
+  for (const b of blobResults) {
+    treeItems.push({ path: b.path, mode: "100644", type: "blob", sha: b.sha });
+  }
+  for (const dp of deletePaths || []) {
+    treeItems.push({ path: dp, mode: "100644", type: "blob", sha: null });
   }
 
-  // 处理各个子目录（只传增量，依赖 base_tree 合并）
-  for (const [dir, entries] of dirFiles) {
-    if (entries.length === 0) continue;
-    const baseDir = baseTree.tree.find((e: any) => e.path === dir);
-    console.log(`[SYNC] Processing dir="${dir}": ${entries.length} new entries, baseDir=${!!baseDir}, baseTreeSha=${baseTreeSha.slice(0, 7)}`);
-
-    // 只用增量构建：新增 + 删除
-    const dirChanges: { path: string; mode?: string; type?: string; sha: string | null }[] = [];
-    for (const e of entries) {
-      dirChanges.push({ path: e.path, mode: "100644", type: "blob", sha: e.sha });
-    }
-    // 删除的文件（sha=null 表示从树中移除）
-    for (const dp of deletePaths || []) {
-      if (dp.startsWith(`${dir}/`)) {
-        dirChanges.push({ path: dp.slice(dir.length + 1), mode: "100644", type: "blob", sha: null });
-      }
-    }
-
-    console.log(`[SYNC]   dirChanges: ${dirChanges.length} entries (${entries.length} new + ${dirChanges.length - entries.length} deletes), bodySize≈${JSON.stringify({ base_tree: baseDir?.sha, tree: dirChanges }).length}B`);
-    const mergedTree = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/trees`, token, "POST", {
-      base_tree: baseDir?.sha,
-      tree: dirChanges,
+  const deletes = deletePaths?.length || 0;
+  const adds = blobResults.length;
+  const bodySize = JSON.stringify({ base_tree: baseTreeSha, tree: treeItems }).length;
+  console.log(`[SYNC] Tree POST: base_tree=${baseTreeSha.slice(0, 7)} items=${treeItems.length} (${adds} add + ${deletes} del) bodySize=${bodySize}B`);
+  for (const ti of treeItems) {
+    const shaStr = ti.sha ? ti.sha.slice(0, 7) : "null";
+    console.log(`[SYNC]   tree item: ${ti.path} (type=${ti.type} sha=${shaStr})`);
+  }
+  let newTree: any;
+  try {
+    newTree = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/trees`, token, "POST", {
+      base_tree: baseTreeSha,
+      tree: treeItems,
     });
-    treeChanges.push({ path: dir, mode: "040000", type: "tree", sha: mergedTree.sha as string });
+    console.log(`[SYNC] Tree POST succeeded: ${(newTree.sha as string).slice(0, 7)}`);
+  } catch (e) {
+    console.error(`[SYNC] Tree POST FAILED. base_tree=${baseTreeSha.slice(0, 7)} items=${treeItems.length}`);
+    // 原样抛出，上层处理
+    throw e;
   }
-
-  console.log(`[SYNC] Root tree changes: ${treeChanges.length} entries (${rootFiles.length} root + ${[...dirFiles.keys()].length} dirs), base_tree=${baseTreeSha.slice(0, 7)}`);
-  const newTree = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/trees`, token, "POST", {
-    base_tree: baseTreeSha,
-    tree: treeChanges,
-  });
 
   onProgress?.({ stage: "tree", message: "Creating commit..." });
   const newCommit = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/commits`, token, "POST", {
     message,
     tree: newTree.sha,
-    parents: [ref.object.sha],
+    parents: [parentCommitSha],
   });
 
   onProgress?.({ stage: "done", message: "Pushing to data branch..." });
@@ -731,38 +724,6 @@ async function syncFiles(
   return { success: failCount === 0, commitSha: newCommit.sha as string, filesCount: okCount };
 }
 
-// ── Download existing JSON files from data branch (for media URL replacement) ──
-
-async function getExistingJsonFiles(
-  token: string,
-  onProgress?: ProgressCb
-): Promise<Map<string, string>> {
-  const ref = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`, token);
-  const commit = await gh(ref.object.url, token);
-
-  const tree = await gh(
-    `${GH_API}/repos/${OWNER}/${REPO}/git/trees/${commit.tree.sha}?recursive=1`,
-    token
-  );
-
-  const result = new Map<string, string>();
-  const entries: any[] = tree.tree || [];
-  const jsonEntries = entries.filter((e: any) => e.type === "blob" && e.path.endsWith(".json"));
-
-  onProgress?.({ stage: "collecting", message: `Downloading ${jsonEntries.length} JSON files from GitHub...` });
-
-  for (const entry of jsonEntries) {
-    try {
-      const blob = await gh(entry.url, token);
-      result.set(entry.path, base64DecodeUtf8(blob.content));
-    } catch (e) {
-      console.error("[SYNC] Failed to read blob for entry:", entry?.path, e);
-    }
-  }
-
-  return result;
-}
-
 // ── Public sync functions ──
 
 export async function syncJson(
@@ -771,51 +732,44 @@ export async function syncJson(
 ): Promise<SyncResult> {
   console.log(`[SYNC JSON] Starting... repo=${OWNER}/${REPO} branch=${BRANCH}`);
   try {
-    onProgress?.({ stage: "collecting", message: "Fetching existing data from GitHub..." });
-    let existing = new Map<string, string>();
+    onProgress?.({ stage: "collecting", message: "Fetching existing tree from GitHub..." });
+    let existingShas = new Map<string, string>();
+    let commitSha = "";
+    let rootTreeSha = "";
     try {
       const ref = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`, token);
-      const commit = await gh(ref.object.url, token);
-      const tree = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/trees/${commit.tree.sha}?recursive=1`, token);
+      commitSha = ref.object.sha as string;
+      // 直接用分支名，跳过 GET /git/commits
+      const tree = await gh(`${GH_API}/repos/${OWNER}/${REPO}/git/trees/${BRANCH}?recursive=1`, token);
+      rootTreeSha = tree.sha as string;
       for (const e of (tree.tree || []).filter((x: any) => x.type === "blob" && x.path.endsWith(".json"))) {
-        try {
-          const blob = await gh(e.url, token);
-          existing.set(e.path, base64DecodeUtf8(blob.content));
-        } catch (e) {
-          console.error("[SYNC] Failed to read existing blob:", e);
-        }
+        existingShas.set(e.path, e.sha as string);
       }
     } catch (e) {
       console.log("[SYNC] No existing data branch yet (first sync or empty):", e);
     }
-    onProgress?.({ stage: "collecting", message: `Downloaded ${existing.size} existing files. Fetching new data...` });
+    onProgress?.({ stage: "collecting", message: `Existing tree: ${existingShas.size} files. Fetching new data...` });
 
-    const files = await collectAllData(token, existing, onProgress);
+    const files = await collectAllData(token, onProgress);
     onProgress?.({ stage: "collecting", message: `Collected ${files.length} files.` });
 
-    // 只上传变更的文件（内容没变的跳过）
-    const changed = files.filter((f) => {
-      const prev = existing.get(f.path);
-      return prev === undefined || prev !== f.content;
-    });
-    onProgress?.({ stage: "collecting", message: `Changed: ${changed.length}, unchanged: ${files.length - changed.length}.` });
-
-    // 检测已删除的详情文件（列表里不再有该 ID）
-    const deletePaths: string[] = [];
-    const newIds = new Map<string, Set<string>>();
+    // 计算 SHA 比对变更
+    const changed: { path: string; content: string }[] = [];
     for (const f of files) {
-      if (f.path.endsWith(".json") && f.path.includes("/")) {
-        const parts = f.path.split("/");
-        if (!newIds.has(parts[0])) newIds.set(parts[0], new Set());
-        newIds.get(parts[0])!.add(parts[1].replace(/\.json$/, ""));
+      const sha = await computeBlobSha(f.content);
+      if (existingShas.get(f.path) !== sha) {
+        changed.push(f);
       }
     }
-    for (const [dir, ids] of newIds) {
-      for (const [path] of existing) {
-        const m = path.match(new RegExp(`^${dir}/(\\d+)\\.json$`));
-        if (m && !ids.has(m[1])) {
-          deletePaths.push(path);
-        }
+    onProgress?.({ stage: "collecting", message: `Changed: ${changed.length}, unchanged: ${files.length - changed.length}.` });
+
+    // 检测已删除的详情文件（路径在 tree 中但不在新采集的 files 中）
+    const deletePaths: string[] = [];
+    const newPaths = new Set(files.map(f => f.path));
+    for (const path of existingShas.keys()) {
+      const isManagedSubFile = path.includes("/") && !path.startsWith("media/") && !path.startsWith("music/");
+      if (isManagedSubFile && !newPaths.has(path)) {
+        deletePaths.push(path);
       }
     }
     if (deletePaths.length > 0) {
@@ -833,7 +787,9 @@ export async function syncJson(
       changed.map((f) => ({ ...f, encoding: "utf-8" as const })),
       `${ts} sync json data`,
       onProgress,
-      deletePaths
+      deletePaths,
+      commitSha,
+      rootTreeSha
     );
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unknown error";
@@ -841,6 +797,15 @@ export async function syncJson(
     onProgress?.({ stage: "error", message: msg });
     return { success: false, filesCount: 0, error: msg };
   }
+}
+
+/** 获取 data 分支最新的 commit SHA 和根 tree SHA（1 请求替代 2 请求） */
+async function getBranchCommitAndTreeSha(token: string): Promise<{ commitSha: string; treeSha: string }> {
+  const data: any = await gh(`${GH_API}/repos/${OWNER}/${REPO}/commits/${BRANCH}`, token);
+  const commitSha = data.sha as string;
+  const treeSha = data.commit.tree.sha as string;
+  console.log(`[SYNC] getBranchCommitAndTreeSha: commit=${commitSha.slice(0, 7)} tree=${treeSha.slice(0, 7)}`);
+  return { commitSha, treeSha };
 }
 
 export async function syncMedia(
@@ -853,6 +818,7 @@ export async function syncMedia(
 
     onProgress?.({ stage: "collecting", message: "Fetching existing manifest from GitHub..." });
     const existingManifest = await getExistingMediaManifest(token);
+    const { commitSha: mediaCommit, treeSha: mediaTree } = await getBranchCommitAndTreeSha(token);
 
     onProgress?.({ stage: "collecting", message: "Fetching media from API..." });
     const { mediaItems, mediaMap, deletedIds } = await collectMedia(apiBase, onProgress, existingManifest);
@@ -889,7 +855,7 @@ export async function syncMedia(
     const downloadCount = mediaItems.filter((m) => m.base64).length;
     const ts = new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
     const commitMsg = `${ts} sync media (${downloadCount} downloaded, ${staleMediaPaths.length} deleted)`;
-    return await syncFiles(token, files, commitMsg, onProgress, staleMediaPaths);
+    return await syncFiles(token, files, commitMsg, onProgress, staleMediaPaths, mediaCommit, mediaTree);
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unknown error";
     console.error("[SYNC MEDIA] Error:", err);
@@ -908,6 +874,7 @@ export async function syncMusic(
 
     onProgress?.({ stage: "collecting", message: "Fetching existing manifest from GitHub..." });
     const existingManifest = await getExistingMusicManifest(token);
+    const { commitSha, treeSha } = await getBranchCommitAndTreeSha(token);
 
     onProgress?.({ stage: "collecting", message: "Fetching music from API..." });
     const { musicData, audioFiles, deletedIds } = await collectMusic(apiBase, onProgress, existingManifest);
@@ -917,16 +884,44 @@ export async function syncMusic(
       return { success: true, filesCount: 0 };
     }
 
-    // 删除的曲目路径
-    const stalePaths = deletedIds.map((id) => `music/${id}.mp3`);
+    // 删除的曲目路径（使用 manifest 记录的扩展名，兼容旧数据）
+    const stalePaths: string[] = [];
+    for (const id of deletedIds) {
+      const entry = existingManifest?.get(id);
+      stalePaths.push(`music/${id}${entry?.ext || ".mp3"}`);
+      if (entry?.coverExt) {
+        stalePaths.push(`music/${id}-cover${entry.coverExt}`);
+      }
+    }
 
-    // 构建最新 manifest（已有 ID + 新下载的 ID）
+    // 从新下载的 audioFiles 中提取扩展名
+    const newExts = new Map<number, { ext?: string; coverExt?: string }>();
+    for (const f of audioFiles) {
+      const fileName = f.path.split("/").pop() || "";
+      const dotIdx = fileName.lastIndexOf(".");
+      if (dotIdx === -1) continue;
+      const ext = fileName.slice(dotIdx);
+      const idMatch = fileName.match(/^(\d+)/);
+      if (!idMatch) continue;
+      const id = Number(idMatch[1]);
+      if (!newExts.has(id)) newExts.set(id, {});
+      const entry = newExts.get(id)!;
+      if (fileName.includes("-cover")) entry.coverExt = ext;
+      else entry.ext = ext;
+    }
+
+    // 构建最新 manifest（合并已有记录的扩展名 + 新下载的）
     const manifestIds = new Set((existingManifest?.keys() || []));
     for (const f of audioFiles) {
       const id = Number(f.path.split("/")[1].split(".")[0]);
       if (id) manifestIds.add(id);
     }
-    const manifestContent = JSON.stringify([...manifestIds].map((id) => ({ id })), null, 2);
+    const manifestEntries = [...manifestIds].map((id) => {
+      const prev = existingManifest?.get(id);
+      const update = newExts.get(id);
+      return { id, ext: update?.ext || prev?.ext, coverExt: update?.coverExt || prev?.coverExt };
+    });
+    const manifestContent = JSON.stringify(manifestEntries, null, 2);
 
     // 先解析对象，再逐条修改属性（避免 replaceAll 字符串替换污染其他曲目）
     const parsed = JSON.parse(JSON.stringify(musicData)) as { total: number; rows: OpMusic[] };
@@ -955,7 +950,7 @@ export async function syncMusic(
     }
 
     const ts = new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
-    return await syncFiles(token, files, `${ts} sync music (${audioFiles.length} files)`, onProgress, stalePaths);
+    return await syncFiles(token, files, `${ts} sync music (${audioFiles.length} files)`, onProgress, stalePaths, commitSha, treeSha);
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unknown error";
     console.error("[SYNC MUSIC] Error:", err);
@@ -964,121 +959,3 @@ export async function syncMusic(
   }
 }
 
-// ── Manual sync — export data as a ZIP + standalone BAT ──
-
-export async function generateSyncZip(
-  onProgress?: ProgressCb,
-  token?: string
-): Promise<{ blob: Blob; name: string; batContent: string }> {
-  const apiBase = `http://${siteConfig.backUrl}/api`;
-
-  // 1. Collect JSON
-  onProgress?.({ stage: "collecting", message: "Fetching JSON data..." });
-  const jsonFiles = await collectAllData(token);
-  onProgress?.({ stage: "collecting", message: `Collected ${jsonFiles.length} JSON files.` });
-
-  // 2. Collect media
-  onProgress?.({ stage: "collecting", message: "Downloading media files..." });
-  const { mediaItems, mediaMap } = await collectMedia(apiBase, onProgress);
-
-  // 3. Collect music
-  onProgress?.({ stage: "collecting", message: "Downloading music files..." });
-  const { musicData, audioFiles } = await collectMusic(apiBase, onProgress);
-
-  // 4. Build ZIP
-  onProgress?.({ stage: "collecting", message: "Creating ZIP..." });
-
-  const JSZip = (await import("jszip")).default;
-  const zip = new JSZip();
-  const folder = "sync-data";
-
-  // JSON files with URL replacements
-  for (const f of jsonFiles) {
-    const content = mediaMap.size > 0 ? replaceMediaUrls(f.content, mediaMap) : f.content;
-    zip.file(`${folder}/${f.path}`, content);
-  }
-
-  // Media files
-  for (const m of mediaItems) {
-    if (m.base64) zip.file(`${folder}/media/${m.filename}`, m.base64, { base64: true });
-  }
-
-  // Music
-  const musicJson = buildMusicJson(musicData, audioFiles, apiBase);
-  if (musicJson) {
-    zip.file(`${folder}/music.json`, JSON.stringify(musicJson, null, 2));
-  }
-  for (const af of audioFiles) {
-    zip.file(`${folder}/${af.path}`, af.content, { base64: true });
-  }
-
-  // ── Generate ZIP ──
-  onProgress?.({ stage: "collecting", message: "Compressing..." });
-  const blob = await zip.generateAsync({ type: "blob" });
-  const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-  const name = `sync-data-${timestamp}.zip`;
-
-  // ── Standalone sync.bat (double-click, auto-extracts ZIP) ──
-  // Strategy: split into 3 small commits+pushes to avoid 408 timeout
-  const batContent = [
-    '@echo off',
-    'chcp 65001 >nul',
-    'cd /d "%~dp0"',
-    '',
-    'echo [1/5] 解压数据文件...',
-    `powershell -Command "Expand-Archive -Path '${name}' -DestinationPath '.' -Force" >nul 2>nul`,
-    'cd sync-data',
-    '',
-    'echo [2/5] 初始化仓库...',
-    'git init',
-    `git remote add origin https://github.com/${siteConfig.repo}.git`,
-    'git fetch origin data --depth=1 2>nul || echo 无已有 data 分支',
-    'git checkout origin/data -- .github/ 2>nul || echo 无工作流文件需保留',
-    'git checkout origin/data -- CNAME 2>nul || echo 无 CNAME 文件',
-    'git checkout -b data',
-    '',
-    'echo [3/5] 提交 JSON 数据并推送...',
-    'git add .github/',
-    'for %%f in (*.json) do git add "%%f"',
-    'git add articles/ projects/ 2>nul',
-    'git commit -m "manual sync: json %date% %time%"',
-    'git push origin data --force',
-    'if %errorlevel% neq 0 (echo JSON 推送失败！ & pause & exit /b 1)',
-    '',
-    'echo [4/5] 提交媒体文件并推送...',
-    'if exist media\\ (git add media/ & git commit -m "manual sync: media %date% %time%" & git push origin data --force)',
-    'if %errorlevel% neq 0 (echo 媒体文件推送失败！ & pause & exit /b 1)',
-    '',
-    'echo [5/5] 提交音乐文件并推送...',
-    'if exist music\\ (git add music.json music/ 2>nul & git commit -m "manual sync: music %date% %time%" & git push origin data --force)',
-    'if %errorlevel% neq 0 (echo 音乐文件推送失败！ & pause & exit /b 1)',
-    '',
-    'echo.',
-    'echo 同步完成!',
-    'pause',
-  ].join('\r\n');
-
-  onProgress?.({ stage: "done", message: `ZIP ready: ${name}` });
-  return { blob, name, batContent };
-}
-
-function buildMusicJson(
-  musicData: unknown,
-  audioFiles: MusicFile[],
-  apiBase: string
-): unknown | null {
-  if (!musicData || !(musicData as any)?.rows?.length) return null;
-  const parsed = JSON.parse(JSON.stringify(musicData)) as { rows: any[] };
-  for (const track of parsed.rows) {
-    if (track.id == null) continue;
-    if (track.url) {
-      const audioExt = extFromFilename(track.url) || ".mp3";
-      track.url = `/data/music/${track.id}${audioExt}`;
-    }
-    if (track.pictureUrl) {
-      const ext = extFromFilename(track.pictureUrl) || ".png";
-      track.pictureUrl = `/data/music/${track.id}-cover${ext}`;
-    }
-  }
-  return parsed;
-}

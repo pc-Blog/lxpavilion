@@ -7,7 +7,7 @@ import type { MediaWithRef } from "@/lib/api/media";
 import { get } from "@/lib/api/dashboard";
 import { getArticleList } from "@/lib/api/op";
 import { siteConfig } from "@/lib/siteConfig";
-import { syncJson, syncMedia, syncMusic, generateSyncZip, type SyncProgress } from "@/lib/github-sync";
+import { syncJson, syncMedia, syncMusic, type SyncProgress } from "@/lib/github-sync";
 import { scanMediaWithRefs, remove as deleteMedia } from "@/lib/api/media";
 
 const STORAGE_KEY = "github_token";
@@ -66,7 +66,6 @@ export default function AdminDashboardPage() {
   const [jsonSync, setJsonSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [mediaSync, setMediaSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [musicSync, setMusicSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
-  const [manualState, setManualState] = useState({ generating: false, progress: null as SyncProgress | null, logs: [] as string[] });
   const [cleanupState, setCleanupState] = useState({ scanning: false, deleting: false, items: [] as MediaWithRef[], totalMedia: 0, orphanCount: 0, logs: [] as string[] });
   const [showTokenInput, setShowTokenInput] = useState(false);
 
@@ -166,50 +165,6 @@ export default function AdminDashboardPage() {
       result: res.success ? "success" : "error",
       logs: [...prev.logs, res.success ? "✓ Sync complete!" : "✗ Sync failed!"],
     }));
-  };
-
-  const handleManualSync = async () => {
-    setManualState({ generating: true, progress: null, logs: [] });
-    try {
-      const { blob, name, batContent } = await generateSyncZip((p) => {
-        setManualState((prev) => ({
-          ...prev,
-          progress: p,
-          logs: p.log ? [...prev.logs, p.log] : prev.logs,
-        }));
-      }, savedToken);
-
-      // Download ZIP
-      const zipUrl = URL.createObjectURL(blob);
-      const zipLink = document.createElement("a");
-      zipLink.href = zipUrl;
-      zipLink.download = name;
-      zipLink.click();
-      URL.revokeObjectURL(zipUrl);
-
-      // Download BAT
-      const batBlob = new Blob([batContent], { type: "text/plain;charset=utf-8" });
-      const batUrl = URL.createObjectURL(batBlob);
-      const batLink = document.createElement("a");
-      batLink.href = batUrl;
-      batLink.download = "sync.bat";
-      batLink.click();
-      URL.revokeObjectURL(batUrl);
-
-      setManualState((prev) => ({
-        ...prev,
-        generating: false,
-        logs: [...prev.logs, `✓ ${name} 已下载`],
-      }));
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Unknown error";
-      setManualState((prev) => ({
-        ...prev,
-        generating: false,
-        progress: { stage: "error", message: msg },
-        logs: [...prev.logs, `✗ ${msg}`],
-      }));
-    }
   };
 
   const handleScanOrphans = async () => {
@@ -425,26 +380,6 @@ export default function AdminDashboardPage() {
               <SyncPanel label="JSON Data" onSync={handleJsonSync} syncing={jsonSync.syncing} progress={jsonSync.progress} logs={jsonSync.logs} result={jsonSync.result} />
               <SyncPanel label="Media" onSync={handleMediaSync} syncing={mediaSync.syncing} progress={mediaSync.progress} logs={mediaSync.logs} result={mediaSync.result} />
               <SyncPanel label="Music" onSync={handleMusicSync} syncing={musicSync.syncing} progress={musicSync.progress} logs={musicSync.logs} result={musicSync.result} />
-            </div>
-
-            <div className="border-t border-slate-200 dark:border-slate-700 pt-4 mt-4">
-              <div className="flex items-center gap-3">
-                <button onClick={handleManualSync} disabled={manualState.generating}
-                  className="px-4 py-2 text-sm font-bold rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white disabled:opacity-50 transition-all"
-                >
-                  {manualState.generating ? "Generating..." : "Manual Sync"}
-                </button>
-                {manualState.progress && (
-                  <span className="text-xs text-slate-500 dark:text-slate-400 animate-pulse">{manualState.progress.message}</span>
-                )}
-              </div>
-              {manualState.logs.length > 0 && (
-                <div className="mt-2 max-h-32 overflow-y-auto bg-slate-900/80 rounded-lg p-2 text-[10px] font-mono leading-relaxed">
-                  {manualState.logs.map((line, i) => (
-                    <div key={i} className={`${line.startsWith("✓") ? "text-emerald-400" : line.startsWith("✗") ? "text-red-400" : "text-slate-300"}`}>{line}</div>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Orphan Media Cleanup */}
