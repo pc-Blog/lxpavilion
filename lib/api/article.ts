@@ -16,6 +16,9 @@ export async function getPublicList(params: PageDTO<ArticleQueryDTO>) {
       const kw = q.keyword.toLowerCase();
       filtered = filtered.filter((a) => a.title.toLowerCase().includes(kw));
     }
+    if (q?.series) {
+      filtered = filtered.filter((a) => a.series === q.series);
+    }
 
     const pageNum = params.pageNum || 1;
     const pageSize = params.pageSize || 9;
