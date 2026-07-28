@@ -50,33 +50,6 @@ function buildHeader(url?: string): string {
   ].join("\n");
 }
 
-function buildFooter(): string {
-  const lines: string[] = ["\n\n---\n"];
-
-  const links: { key: keyof typeof siteConfig; label: string }[] = [
-    { key: "cnblogs", label: "博客园" },
-    { key: "juejin", label: "掘金" },
-    { key: "csdn", label: "CSDN" },
-    { key: "github", label: "GitHub" },
-    { key: "gitee", label: "Gitee" },
-  ];
-
-  const existing = links.filter((l) => siteConfig[l.key]);
-  if (existing.length > 0) {
-    lines.push("\n🌐 欢迎关注我的其他平台：\n");
-    for (const l of existing) {
-      lines.push(`- [${l.label}](${siteConfig[l.key]})`);
-    }
-  }
-
-  const email = siteConfig.email;
-  if (email) {
-    lines.push(`\n📧 联系我：${email}`);
-  }
-
-  return lines.join("\n");
-}
-
 /** Download only the markdown content (images stay as remote references) */
 export function downloadMarkdown(params: {
   title: string;
@@ -95,7 +68,7 @@ export function downloadMarkdown(params: {
     });
   }
 
-  const blob = new Blob([buildHeader(articleUrl) + content + buildFooter()], { type: "text/markdown;charset=utf-8" });
+  const blob = new Blob([buildHeader(articleUrl) + content], { type: "text/markdown;charset=utf-8" });
   const blobUrl = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = blobUrl;
@@ -148,7 +121,7 @@ export async function downloadContentAsZip(params: {
 
   // Add markdown file with updated local paths (content + footer)
   const safeName = title.replace(/[<>:"/\\|?*]/g, "_");
-  zip.file(`${safeName}.md`, buildHeader(articleUrl) + finalContent + buildFooter());
+  zip.file(`${safeName}.md`, buildHeader(articleUrl) + finalContent);
 
   // Add images
   for (const [url, filename] of urlToFilename) {
