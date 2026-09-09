@@ -15,7 +15,6 @@ export default function ProjectPage() {
           ])),
         }}
       />
-      <h1 className="sr-only">{metadata.description}</h1>
       <ProjectList />
     </>
   );
