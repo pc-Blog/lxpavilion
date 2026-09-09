@@ -1,111 +1,13 @@
 {
-  "total": 9,
+  "total": 5,
   "rows": [
     {
-      "categoryId": 35,
-      "categoryName": "软件",
-      "coverImage": "",
-      "createTime": "2026-07-21T15:35:36.646107",
-      "demoUrl": "",
-      "githubUrl": "https://github.com/PC2005-cloud/simple-git-backup",
-      "id": 24,
-      "isPublished": 1,
-      "name": "simple-git-backup",
-      "sortOrder": 0,
-      "summary": "一键自动备份到 GitHub，大文件分包与断网续传全搞定",
-      "techs": [
-        {
-          "id": 20,
-          "name": "github1"
-        },
-        {
-          "id": 9,
-          "name": "Python"
-        }
-      ],
-      "updateTime": "2026-07-21T15:35:36.65619"
-    },
-    {
-      "categoryId": 33,
-      "categoryName": "Ai智能体",
-      "coverImage": "",
-      "createTime": "2026-07-01T14:08:52.172064",
-      "demoUrl": "https://hotspot.lxpavilion.top",
-      "githubUrl": "https://github.com/PC2005-cloud/hotspot",
-      "id": 23,
-      "isPublished": 1,
-      "name": "Hotspot",
-      "sortOrder": 0,
-      "summary": "零成本 AI 热点追踪工具，让 DeepSeek 免费版替你搜遍全网",
-      "techs": [
-        {
-          "id": 9,
-          "name": "Python"
-        }
-      ],
-      "updateTime": "2026-07-01T14:10:16.1189"
-    },
-    {
-      "categoryId": 34,
-      "categoryName": "全栈",
-      "coverImage": "",
-      "createTime": "2026-06-06T16:05:42.196862",
-      "demoUrl": "",
-      "githubUrl": "",
-      "id": 20,
-      "isPublished": 1,
-      "name": "EduMark",
-      "sortOrder": 0,
-      "summary": "基于大模型的中小学作业智能批改系统",
-      "techs": [
-        {
-          "id": 9,
-          "name": "Python"
-        },
-        {
-          "id": 13,
-          "name": "Vue3"
-        },
-        {
-          "id": 15,
-          "name": "Typrscript"
-        }
-      ],
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "categoryId": 35,
-      "categoryName": "软件",
-      "coverImage": "",
-      "createTime": "2026-05-23T20:04:40.90848",
-      "demoUrl": "",
-      "githubUrl": "",
-      "id": 19,
-      "isPublished": 1,
-      "name": "PlaneWar",
-      "sortOrder": 0,
-      "summary": "飞机大战 PlaneWar ✈️",
-      "techs": [
-        {
-          "id": 9,
-          "name": "Python"
-        }
-      ],
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "categoryId": 34,
-      "categoryName": "全栈",
-      "coverImage": "",
       "createTime": "2026-05-22T10:13:45.904614",
-      "demoUrl": "https://www.lxpavilion.top",
       "githubUrl": "https://github.com/pc-Blog",
       "id": 18,
-      "isPublished": 1,
       "name": "栏轩阁",
-      "sortOrder": 0,
       "summary": "栏轩阁是一个面向技术创作者的现代化个人博客系统，集内容管理、作品展示、在线工具于一体。前端基于 Next.js 16 + React 19 构建，以玻璃拟态设计语言提供 Live2D 看板娘、粒子特效、音乐播放器等丰富交互体验；后端由 Spring Boot 4 + PostgreSQL 驱动，支持 Docker 容器化与 GitHub Pages 静态导出双模式部署。项目内置文章/项目/图库/文学等完整内容类型与管理后台，配合 Cloudflare 流量分析与多平台数据聚合，是一套可独立运行的、功能完备的个人数字空间解决方案。",
-      "techs": [
+      "tags": [
         {
           "id": 8,
           "name": "Java"
@@ -122,18 +24,12 @@
       "updateTime": "2026-07-04T08:31:04.942538"
     },
     {
-      "categoryId": 32,
-      "categoryName": "嵌入式",
-      "coverImage": "",
       "createTime": "2026-05-21T22:16:49.247206",
-      "demoUrl": "",
       "githubUrl": "https://github.com/Guardian-Elf",
       "id": 17,
-      "isPublished": 1,
       "name": "守护精灵",
-      "sortOrder": 0,
       "summary": "Guardian-Elf（守护精灵）—— 从零搭建的物联网多传感器监测平台",
-      "techs": [
+      "tags": [
         {
           "id": 11,
           "name": "SpringBoot"
@@ -154,18 +50,12 @@
       "updateTime": "2026-06-10T14:42:38.102608"
     },
     {
-      "categoryId": 34,
-      "categoryName": "全栈",
-      "coverImage": "",
       "createTime": "2026-05-21T21:46:11.501405",
-      "demoUrl": "",
       "githubUrl": "https://github.com/OmniPavilion",
       "id": 16,
-      "isPublished": 1,
       "name": "万象阁",
-      "sortOrder": 0,
       "summary": "OmniPavilion —— 全栈个人知识管理与效率工具集",
-      "techs": [
+      "tags": [
         {
           "id": 11,
           "name": "SpringBoot"
@@ -182,18 +72,12 @@
       "updateTime": "2026-06-10T14:42:38.102608"
     },
     {
-      "categoryId": 33,
-      "categoryName": "Ai智能体",
-      "coverImage": "",
       "createTime": "2026-05-21T21:45:11.097575",
-      "demoUrl": "",
       "githubUrl": "https://github.com/medrec-sys",
       "id": 15,
-      "isPublished": 1,
       "name": "医知库 | 智疗助手",
-      "sortOrder": 0,
       "summary": "基于 Spring AI + RAG 的企业级智能客服问答系统",
-      "techs": [
+      "tags": [
         {
           "id": 8,
           "name": "Java"
@@ -214,18 +98,12 @@
       "updateTime": "2026-06-10T14:42:38.102608"
     },
     {
-      "categoryId": 28,
-      "categoryName": "微服务",
-      "coverImage": "",
       "createTime": "2026-05-21T20:38:05.708809",
-      "demoUrl": "",
       "githubUrl": "https://github.com/smart-mall",
       "id": 14,
-      "isPublished": 1,
       "name": "SmartMall",
-      "sortOrder": 0,
       "summary": "基于 Spring Cloud Alibaba 的分布式 B2C 电商全栈项目。",
-      "techs": [
+      "tags": [
         {
           "id": 8,
           "name": "Java"

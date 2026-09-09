@@ -1,0 +1,105 @@
+1:"$Sreact.fragment"
+2:I[17467,["/_next/static/chunks/0wbzejf4glo57.js","/_next/static/chunks/0-2ix~pfpr8~i.js","/_next/static/chunks/148ko75-ihlmp.js","/_next/static/chunks/10odz-6irn5el.js","/_next/static/chunks/0~r8x2txo..2b.js","/_next/static/chunks/0can3rjmlq38k.js","/_next/static/chunks/0.3n2ru56._p_.js","/_next/static/chunks/116yp~mrtmvyn.js","/_next/static/chunks/05hxwoutgi7z8.js"],"default"]
+9:I[97367,["/_next/static/chunks/0wbzejf4glo57.js","/_next/static/chunks/0-2ix~pfpr8~i.js","/_next/static/chunks/148ko75-ihlmp.js","/_next/static/chunks/10odz-6irn5el.js","/_next/static/chunks/0~r8x2txo..2b.js"],"OutletBoundary"]
+a:"$Sreact.suspense"
+4:T12bc,# Qdrant 连不上：localhost 把我带到了 IPv6，Docker 却只住在 IPv4
+
+## 背景
+
+项目是 Spring Boot 4.1.1 + Spring AI 2.0.1（Java 21），向量库用 Qdrant，跑在 Docker 里，端口映射是：
+
+- `16334:6334`：gRPC，Java 客户端走这个
+- `16333:6333`：HTTP REST，Web 控制台走这个
+
+测试里往向量库写一批文档，13 个批次全部失败，每个批次都报同一段：
+
+```
+io.grpc.StatusRuntimeException: UNAVAILABLE: io exception
+Caused by: io.grpc.netty.shaded.io.netty.channel.AbstractChannel$AnnotatedConnectException:
+Connection refused: getsockopt: localhost/[0:0:0:0:0:0:0:1]:16334
+```
+
+启动时还有一条不痛不痒但可疑的 WARN：
+
+```
+QdrantGrpcClient - Failed to obtain server version. Unable to check client-server compatibility.
+```
+
+最诡异的是：浏览器打开 `http://localhost:16333/dashboard` 一点问题没有；MySQL（`localhost:9006`）、Minio（`localhost:9090`）在应用里也一直好用。唯独 Qdrant 的 gRPC 死死地连不上。
+
+## 原因初步分析
+
+先从地址下手。配置文件（`args-dev.yaml`）里写的是：
+
+```yaml
+qdrant:
+  host: "localhost"
+  port: 16334
+```
+
+问题几乎一定出在 "localhost" 这个词上，而不是 Qdrant 没起来。用 Test-NetConnection 反复探测，结果非常分裂：
+
+```powershell
+Test-NetConnection -ComputerName 127.0.0.1 -Port 16334 -InformationLevel Quiet   # True
+Test-NetConnection -ComputerName ::1       -Port 16334 -InformationLevel Quiet   # False
+```
+
+IPv4 回环通，IPv6 回环不通。再看 localhost 到底解析成什么：
+
+```powershell
+[System.Net.Dns]::GetHostAddresses('localhost')
+# 依次返回 ::1（IPv6）和 127.0.0.1（IPv4），::1 排在最前面
+```
+
+Docker 那边：`md-com.yml` 里端口映射写的是 `"127.0.0.1:16334:6334"`，Docker Desktop 把宿主端口只发布到了 IPv4 的 127.0.0.1 上，IPv6 的 ::1 上没有任何人监听。
+
+到这里原因就清晰了：**localhost 同时解析出 ::1 和 127.0.0.1 两个地址，IPv6 排前面；客户端拿第一个地址去连 ::1:16334，而服务只住在 127.0.0.1:16334。两边各连各的，永远碰不上。**
+
+顺带一提，报错内容还随容器状态变脸：容器在跑时是 `Connection timed out`（请求被静默丢弃），容器停掉后变成 `Connection refused`（没人应答）。表现不同，根因是同一个。
+
+## 验证
+
+先确认问题不在 Qdrant 配置，而在"谁来连接"。把三个服务在两种回环上的监听情况全探了一遍：
+
+| 服务 | 端口 | 127.0.0.1 | ::1 |
+| --- | --- | --- | --- |
+| Qdrant gRPC | 16334 | 通 | 不通 |
+| Qdrant HTTP | 16333 | 通 | 不通 |
+| MySQL | 9006 | 通 | 不通 |
+| Minio | 9090 | 通 | 不通 |
+
+结论很意外也很解气：**所有 Docker 发布的端口都只绑 IPv4，无一例外。** MySQL、Minio 和 Qdrant 并没有任何区别——区别全在客户端：
+
+- 浏览器（Chrome/Edge/Firefox）实现了 Happy Eyeballs（RFC 6555）：拿到多个地址后同时/先后发起连接，::1 拒连几乎立即切到 127.0.0.1，所以控制台秒开；
+- MySQL 的 JDBC 驱动、Minio 用的 OkHttp：遍历解析出的所有地址，第一个失败就试下一个，所以应用里一直正常；
+- Java 的 gRPC（Netty）客户端：只取地址列表里的第一个（::1），失败不轮换到第二个，所以 Qdrant 必死。
+
+之前在 HikariCP 日志里能看到 MySQL 连接成功、Minio 上传成功——这些"看起来正常"其实都是客户端在帮我擦 ::1 的屁股，只是擦得无声无息。
+
+## 解决方法
+
+把开发配置里的 host 从 "localhost" 显式改成 IPv4 地址：
+
+```yaml
+qdrant:
+  host: "127.0.0.1"
+  port: 16334
+```
+
+改完重跑，启动时不再出现版本检查告警、批次不再报 Connection refused，链路就通了。Docker 部署用的 `args.yaml` 本来就写的是容器名 `md-qdrant:6334`，在 compose 网络里直连容器、不经过 localhost，保持原样即可。
+
+如果坚持用 localhost，也有 JVM 参数 `-Djava.net.preferIPv4Stack=true` 这种全局方案，但它把所有库的地址解析一起压成 IPv4，属于把问题盖住而不是修掉，本地连 Docker 端口不值得这么干。
+
+## 总结
+
+这次排查留下的印象：
+
+- "localhost 能用"不代表配置没问题，只代表你的客户端会**自动降级**。同一台机器上，浏览器、JDBC、OkHttp 都在替你兜 IPv6 的底，只有 gRPC 不兜。
+- 本地连 Docker 发布的端口，别写 localhost，直接写 `127.0.0.1`，少一层解析就少一类问题。
+- 排查"服务明明在监听却连不上"最快的一步，是分别探测 127.0.0.1 和 ::1 两个回环，再加一条 `[System.Net.Dns]::GetHostAddresses('localhost')` 看解析顺序——十分钟定位，不用猜。0:{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4\",\"item\":\"https://www.lxpavilion.top/article/211\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4\",\"headline\":\"Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4\",\"description\":\"Spring Boot + Spring AI 接入 Qdrant 向量库，gRPC 写入一直报连接失败，浏览器打开控制台却一切正常。定位发现 localhost 被解析成 IPv6 回环 ::1，而 Docker 发布的端口只监听 IPv4 的 127.0.0.1；同样的连接，浏览器、JDBC、OkHttp 都会自动降级，唯独 gRPC 不回退。把连接地址显式写成 127.0.0.1 即可解决。\",\"datePublished\":\"2026-09-09T12:16:10.806022\",\"dateCreated\":\"2026-09-09T12:16:10.806022\",\"dateModified\":\"2026-09-09T12:16:10.820097\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/783.jpeg\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4","initialContent":"$4"}]],["$L5","$L6","$L7"],"$L8"]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"_VTIDK3x5XDMgL80L0goe"}
+3:{"id":"211"}
+5:["$","script","script-0",{"src":"/_next/static/chunks/0.3n2ru56._p_.js","async":true}]
+6:["$","script","script-1",{"src":"/_next/static/chunks/116yp~mrtmvyn.js","async":true}]
+7:["$","script","script-2",{"src":"/_next/static/chunks/05hxwoutgi7z8.js","async":true}]
+8:["$","$L9",null,{"children":["$","$a",null,{"name":"Next.MetadataOutlet","children":"$@b"}]}]
+b:null
