@@ -1,7 +1,6 @@
 import api from "@/lib/axios";
 import type { PageVO, Media, PageDTO } from "@/lib/types";
 import { getPublicList as getArticleList, getPublicDetail as getArticleDetail } from "./article";
-import { getPublicList as getProjectList, getPublicDetail as getProjectDetail } from "./project";
 import { get as getAbout } from "./about";
 import { getList as getAlbumListAll, getPhotosByAlbum } from "./album";
 import { getPublishedList } from "./chatter";
@@ -55,16 +54,6 @@ export async function scanMediaWithRefs(): Promise<{
     try {
       const detail = await getArticleDetail(a.id);
       if (detail?.content) sources.push({ text: detail.content, type: "article", title: a.title, id: a.id, field: "content" });
-    } catch { /* skip */ }
-  }
-
-  // 2b. Projects
-  const projects = await getProjectList({ pageNum: 1, pageSize: 999 });
-  for (const p of projects.rows) {
-    if (p.coverImage) sources.push({ text: p.coverImage, type: "project", title: p.name, id: p.id, field: "coverImage" });
-    try {
-      const detail = await getProjectDetail(p.id);
-      if (detail?.content) sources.push({ text: detail.content, type: "project", title: p.name, id: p.id, field: "content" });
     } catch { /* skip */ }
   }
 

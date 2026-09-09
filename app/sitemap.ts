@@ -93,22 +93,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // data files not available — static routes only
   }
 
-  // Projects — /project/{id}/
-  try {
-    const raw = fs.readFileSync(path.join(dataDir, "projects.json"), "utf-8");
-    const data = JSON.parse(raw) as { rows: { id: number; createTime?: string }[] };
-    for (const project of data.rows || []) {
-      entries.push({
-        url: `${BASE_URL}/project/${project.id}/`,
-        lastModified: project.createTime ? new Date(project.createTime) : new Date(),
-        changeFrequency: "monthly",
-        priority: 0.7,
-      });
-    }
-  } catch {
-    // data files not available — static routes only
-  }
-
   // Literature — /literature/{id}/
   try {
     const raw = fs.readFileSync(path.join(dataDir, "op-articles.json"), "utf-8");

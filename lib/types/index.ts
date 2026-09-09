@@ -186,14 +186,8 @@ export interface Project {
   id?: number;
   name: string;
   summary?: string;
-  content?: string;
-  coverImage?: string;
-  categoryId: number;
-  techIds?: number[];
   githubUrl?: string;
-  demoUrl?: string;
-  sortOrder?: number;
-  isPublished?: number;
+  techIds?: number[];
   deleted?: number;
   createTime?: string;
   updateTime?: string;
@@ -202,22 +196,11 @@ export interface Project {
 export interface ProjectVO {
   id: number;
   name: string;
-  summary: string;
-  content?: string;
-  coverImage?: string;
-  categoryId: number;
-  categoryName: string;
-  techs: TechnologyVO[];
+  summary?: string;
   githubUrl?: string;
-  demoUrl?: string;
-  isPublished: number;
-  createdAt: string;
-}
-
-export interface ProjectDetailVO extends ProjectVO {
-  content: string;
-  prev: ArticleNav | null;
-  next: ArticleNav | null;
+  tags: TechnologyVO[];
+  createTime?: string;
+  updateTime?: string;
 }
 
 // ========== Comment ==========

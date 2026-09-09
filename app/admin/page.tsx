@@ -246,7 +246,7 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: "New Article", href: "/admin/article/new" },
-          { label: "New Project", href: "/admin/project/new" },
+          { label: "New Project", href: "/admin/project" },
           { label: "Upload Media", href: "/admin/media" },
           { label: "Edit About", href: "/admin/about" },
         ].map((a) => (

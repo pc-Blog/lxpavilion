@@ -9,9 +9,10 @@ interface DialogProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  size?: "sm" | "lg";
 }
 
-export default function Dialog({ open, onClose, title, children }: DialogProps) {
+export default function Dialog({ open, onClose, title, children, size = "sm" }: DialogProps) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -38,7 +39,7 @@ export default function Dialog({ open, onClose, title, children }: DialogProps) 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ ease: [0.25, 0.46, 0.45, 0.94], duration: 0.2 }}
-            className="relative glass-card !rounded-2xl p-6 w-full max-w-sm shadow-2xl"
+            className={`relative glass-card !rounded-2xl p-6 w-full shadow-2xl ${size === "lg" ? "max-w-xl" : "max-w-sm"}`}
           >
             <h2 className="text-lg font-black text-slate-900 dark:text-white mb-4">{title}</h2>
             {children}

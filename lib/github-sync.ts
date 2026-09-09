@@ -490,14 +490,6 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     "/project/public/page", PAGE
   );
   files.push({ path: "projects.json", content: JSON.stringify(projectList, null, 2) });
-  for (const p of projectList.rows as { id: number }[]) {
-    try {
-      const detail = await apiGet<unknown>(`/project/public/${p.id}`);
-      files.push({ path: `projects/${p.id}.json`, content: JSON.stringify(detail, null, 2) });
-    } catch (e) {
-      console.error(`[SYNC] Failed to fetch project #${p.id}:`, e);
-    }
-  }
 
   try {
     const media = await apiPost<unknown, unknown>("/media/page", { pageNum: 1, pageSize: 999 });
