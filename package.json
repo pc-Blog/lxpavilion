@@ -12,12 +12,12 @@
   },
   "dependencies": {
     "@vijayhardaha/next-indexnow": "^1.0.0",
-    "axios": "^1.16.1",
+    "axios": "^1.18.0",
     "framer-motion": "^12.39.0",
     "js-sha1": "^0.7.0",
     "jszip": "^3.10.1",
     "lucide-react": "^1.16.0",
-    "next": "16.2.6",
+    "next": "16.3.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
@@ -34,7 +34,7 @@
     "@types/react-dom": "^19",
     "cross-env": "^10.1.0",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
