@@ -182,11 +182,18 @@ export interface Technology {
   name: string;
 }
 
+export interface GitHubRepoInfo {
+  name: string;
+  description: string;
+  stargazersCount: number;
+  forksCount: number;
+  language: string | null;
+  pushedAt: string | null;
+}
+
 export interface Project {
   id?: number;
-  name: string;
-  summary?: string;
-  githubUrl?: string;
+  githubUrl: string;
   techIds?: number[];
   deleted?: number;
   createTime?: string;
@@ -195,9 +202,7 @@ export interface Project {
 
 export interface ProjectVO {
   id: number;
-  name: string;
-  summary?: string;
-  githubUrl?: string;
+  githubUrl: string;
   tags: TechnologyVO[];
   createTime?: string;
   updateTime?: string;

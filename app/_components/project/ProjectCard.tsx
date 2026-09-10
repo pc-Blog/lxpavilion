@@ -1,4 +1,8 @@
-import type { ProjectVO } from "@/lib/types";
+"use client";
+
+import { useState, useEffect } from "react";
+import type { GitHubRepoInfo, ProjectVO } from "@/lib/types";
+import { fetchRepoInfo, repoLabel } from "@/lib/github-repo";
 
 const ACCENTS = [
   { badge: "from-indigo-500 to-purple-500", text: "text-indigo-600 dark:text-indigo-400" },
@@ -13,9 +17,35 @@ function getAccent(id: number) {
   return ACCENTS[id % ACCENTS.length];
 }
 
+function useRepoInfo(url?: string) {
+  const [info, setInfo] = useState<GitHubRepoInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!url) {
+      setLoading(false);
+      setInfo(null);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    fetchRepoInfo(url).then((r) => {
+      if (cancelled) return;
+      setInfo(r);
+      setLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [url]);
+
+  return { info, loading };
+}
+
 export default function ProjectCard({ project }: { project: ProjectVO }) {
   const accent = getAccent(project.id);
   const href = project.githubUrl || "#";
+  const { info, loading } = useRepoInfo(project.githubUrl);
+  const fallbackLabel = repoLabel(project.githubUrl);
+  const failed = !loading && !info;
 
   return (
     <a
@@ -27,14 +57,22 @@ export default function ProjectCard({ project }: { project: ProjectVO }) {
       {/* 装饰性光晕 */}
       <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-colors duration-700" />
 
-      {/* 头部：首字徽标 + 项目名 + GitHub 图标 */}
+      {/* 头部：徽标 + 名称 + GitHub 图标 */}
       <div className="flex items-start justify-between mb-4 relative z-10">
         <div className="flex items-center gap-4 min-w-0">
-          <span className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${accent.badge} flex items-center justify-center text-white text-lg font-black shadow-md flex-shrink-0`}>
-            {project.name.charAt(0).toUpperCase()}
-          </span>
+          {loading ? (
+            <span className="w-12 h-12 rounded-2xl bg-slate-200/70 dark:bg-slate-700/50 animate-pulse flex-shrink-0" />
+          ) : (
+            <span className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${accent.badge} flex items-center justify-center text-white text-lg font-black shadow-md flex-shrink-0`}>
+              {(info?.name || fallbackLabel).charAt(0).toUpperCase()}
+            </span>
+          )}
           <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
-            {project.name}
+            {loading ? (
+              <span className="inline-block w-40 h-6 bg-slate-200/70 dark:bg-slate-700/50 animate-pulse rounded align-middle" />
+            ) : (
+              info?.name || fallbackLabel
+            )}
           </h2>
         </div>
         <svg className="w-7 h-7 text-slate-400 group-hover:text-slate-800 dark:group-hover:text-white transition-colors flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
@@ -43,9 +81,34 @@ export default function ProjectCard({ project }: { project: ProjectVO }) {
       </div>
 
       {/* 描述（等高对齐） */}
-      <p className="text-sm text-slate-700 dark:text-slate-300 font-serif leading-relaxed line-clamp-3 mb-6 relative z-10 min-h-[60px] flex-1">
-        {project.summary}
+      <p className="text-sm text-slate-700 dark:text-slate-300 font-serif leading-relaxed line-clamp-3 mb-4 relative z-10 min-h-[60px] flex-1">
+        {loading ? (
+          <span className="inline-block w-full h-4 bg-slate-200/70 dark:bg-slate-700/50 animate-pulse rounded" />
+        ) : (
+          info?.description || (failed ? fallbackLabel : "")
+        )}
       </p>
+
+      {/* 星标 / 分支（GitHub API） */}
+      {!loading && info && (
+        <div className="flex items-center gap-4 mb-4 relative z-10">
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 dark:text-slate-400">
+            <svg className="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
+            {info.stargazersCount}
+          </span>
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 dark:text-slate-400">
+            <svg className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14.5 4a2.5 2.5 0 10.56 4.91 7.05 7.05 0 014.7 6.34 2.5 2.5 0 101.57-.12A8.6 8.6 0 0015.5 4.5a2.5 2.5 0 00-1-.5zM5 6.5A2.5 2.5 0 104 11.5a8.6 8.6 0 005.66 7.65 2.5 2.5 0 10.66-4.91A7.05 7.05 0 017 9.06 2.5 2.5 0 005 6.5z" />
+            </svg>
+            {info.forksCount}
+          </span>
+          {info.language && (
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{info.language}</span>
+          )}
+        </div>
+      )}
 
       {/* 标签 */}
       {project.tags && project.tags.length > 0 && (

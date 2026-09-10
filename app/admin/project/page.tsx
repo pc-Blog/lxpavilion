@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Project, ProjectVO, Technology } from "@/lib/types";
 import { getList, remove, create, update, getTechList } from "@/lib/api/project";
+import { repoLabel } from "@/lib/github-repo";
 import Dialog from "@/app/_components/common/Dialog";
 import TagDropdown from "@/app/_components/admin/TagDropdown";
 import Tooltip from "@/app/_components/common/Tooltip";
@@ -22,8 +23,6 @@ export default function AdminProjectPage() {
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [name, setName] = useState("");
-  const [summary, setSummary] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [techIds, setTechIds] = useState<number[]>([]);
   const [techs, setTechs] = useState<Technology[]>([]);
@@ -32,7 +31,7 @@ export default function AdminProjectPage() {
 
   const refresh = useCallback(async (kw?: string, pn?: number, ps?: number) => {
     try {
-      const d = await getList({ pageNum: pn || 1, pageSize: ps || 10, query: kw ? ({ name: kw } as Project) : undefined });
+      const d = await getList({ pageNum: pn || 1, pageSize: ps || 10, query: kw ? ({ githubUrl: kw } as Project) : undefined });
       setItems(d.rows);
       setTotal(d.total);
     } catch {}
@@ -54,8 +53,6 @@ export default function AdminProjectPage() {
 
   const openAdd = () => {
     setEditingId(null);
-    setName("");
-    setSummary("");
     setGithubUrl("");
     setTechIds([]);
     setError("");
@@ -64,21 +61,18 @@ export default function AdminProjectPage() {
 
   const openEdit = (p: ProjectVO) => {
     setEditingId(p.id);
-    setName(p.name);
-    setSummary(p.summary || "");
-    setGithubUrl(p.githubUrl || "");
+    setGithubUrl(p.githubUrl);
     setTechIds((p.tags || []).map((t) => t.id));
     setError("");
     setDialogOpen(true);
   };
 
   const handleSave = async () => {
-    if (!name.trim()) { setError("项目名称不能为空"); return; }
     if (!githubUrl.trim()) { setError("GitHub 仓库地址不能为空"); return; }
     setError("");
     setSaving(true);
     try {
-      const payload: Project = { name: name.trim(), summary: summary.trim(), githubUrl: githubUrl.trim(), techIds };
+      const payload: Project = { githubUrl: githubUrl.trim(), techIds };
       if (editingId) { await update({ ...payload, id: editingId }); showSuccessToast("已更新"); }
       else { await create(payload); showSuccessToast("已创建"); }
       setDialogOpen(false);
@@ -104,7 +98,7 @@ export default function AdminProjectPage() {
         <input
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          placeholder="Search projects by name..."
+          placeholder="Search by GitHub URL..."
           className="glass-card !rounded-xl px-4 py-2.5 flex-1 text-sm outline-none bg-white/50 dark:bg-slate-800/50"
         />
         <button onClick={openAdd} className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl transition-colors">New Project</button>
@@ -115,7 +109,9 @@ export default function AdminProjectPage() {
           {items.map((p) => (
             <div key={p.id} className="glass-card px-4 py-3 flex items-center gap-4 group">
               <span className="flex-1 min-w-0">
-                <span className="block text-sm font-bold truncate">{p.name}</span>
+                <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" className="block text-sm font-bold text-indigo-500 hover:text-indigo-600 transition-colors truncate">
+                  {repoLabel(p.githubUrl)}
+                </a>
                 {p.tags && p.tags.length > 0 && (
                   <span className="flex flex-wrap gap-1 mt-1">
                     {p.tags.map((t) => (
@@ -149,18 +145,6 @@ export default function AdminProjectPage() {
         <div className="space-y-3">
           <input
             autoFocus
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name *"
-            className="w-full glass-card !rounded-xl px-4 py-2.5 text-sm outline-none bg-white/50 dark:bg-slate-800/50"
-          />
-          <input
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)}
-            placeholder="Summary"
-            className="w-full glass-card !rounded-xl px-4 py-2.5 text-sm outline-none bg-white/50 dark:bg-slate-800/50"
-          />
-          <input
             value={githubUrl}
             onChange={(e) => setGithubUrl(e.target.value)}
             placeholder="GitHub URL *"

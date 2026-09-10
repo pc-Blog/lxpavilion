@@ -52,8 +52,7 @@ export default function ProjectList() {
     const q = search.trim().toLowerCase();
     if (!q) return null;
     return (allProjects ?? []).filter((p) =>
-      p.name.toLowerCase().includes(q) ||
-      (p.summary || "").toLowerCase().includes(q) ||
+      p.githubUrl.toLowerCase().includes(q) ||
       (p.tags || []).some((t) => t.name.toLowerCase().includes(q))
     );
   }, [search, allProjects]);
@@ -78,7 +77,7 @@ export default function ProjectList() {
         <div className="relative w-full max-w-lg">
           <input
             type="text"
-            placeholder="搜索项目名称、描述或标签..."
+            placeholder="搜索 GitHub 地址或标签..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-full px-6 py-3 pl-12 text-slate-800 dark:text-white shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all placeholder-slate-400 dark:placeholder-slate-500"
