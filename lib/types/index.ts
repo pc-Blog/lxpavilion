@@ -172,16 +172,6 @@ export interface ArticleSaveRequest extends Article {
 
 // ========== Project ==========
 
-export interface TechnologyVO {
-  id: number;
-  name: string;
-}
-
-export interface Technology {
-  id?: number;
-  name: string;
-}
-
 export interface GitHubRepoInfo {
   name: string;
   description: string;
@@ -189,12 +179,16 @@ export interface GitHubRepoInfo {
   forksCount: number;
   language: string | null;
   pushedAt: string | null;
+  createdAt: string | null;
+  topics: string[];
+  license: string | null;
+  homepage: string | null;
+  archived: boolean;
 }
 
 export interface Project {
   id?: number;
   githubUrl: string;
-  techIds?: number[];
   deleted?: number;
   createTime?: string;
   updateTime?: string;
@@ -203,7 +197,6 @@ export interface Project {
 export interface ProjectVO {
   id: number;
   githubUrl: string;
-  tags: TechnologyVO[];
   createTime?: string;
   updateTime?: string;
 }

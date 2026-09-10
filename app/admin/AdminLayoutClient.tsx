@@ -14,7 +14,6 @@ import {
   Link as LinkIcon,
   Tags,
   Hash,
-  Monitor,
   HardDrive,
   Mail,
   Upload,
@@ -41,7 +40,6 @@ const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
       { label: "Projects", href: "/admin/project", icon: FolderKanban, tooltip: "项目管理" },
       { label: "Categories", href: "/admin/category", icon: Tags, tooltip: "分类管理" },
       { label: "Tags", href: "/admin/tag", icon: Hash, tooltip: "标签管理" },
-      { label: "Tech", href: "/admin/tech", icon: Monitor, tooltip: "技术栈管理" },
     ],
   },
   {

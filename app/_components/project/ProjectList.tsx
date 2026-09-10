@@ -2,62 +2,78 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { ProjectVO } from "@/lib/types";
+import type { GitHubRepoInfo, ProjectVO } from "@/lib/types";
 import { getPublicList } from "@/lib/api/project";
+import { fetchRepoInfo, fetchRepoLanguages } from "@/lib/github-repo";
 import ProjectCard from "./ProjectCard";
-import Pagination from "../common/Pagination";
 import Loading from "../common/Loading";
+
+export interface ProjectRepoInfo extends GitHubRepoInfo {
+  languages: Record<string, number> | null;
+}
 
 export default function ProjectList() {
   const [projects, setProjects] = useState<ProjectVO[]>([]);
-  const [total, setTotal] = useState(0);
-  const [pageNum, setPageNum] = useState(1);
+  const [infos, setInfos] = useState<Record<number, ProjectRepoInfo | null>>({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [allProjects, setAllProjects] = useState<ProjectVO[] | null>(null);
-  const pageSize = 9;
 
+  // 一次性加载：后端列表 + 全部仓库信息（含语言占比），全部就绪后才渲染
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true);
       try {
-        const data = await getPublicList({ pageNum, pageSize });
-        if (!cancelled) {
-          setProjects(data.rows);
-          setTotal(data.total);
-        }
+        const data = await getPublicList({ pageNum: 1, pageSize: 999 });
+        if (cancelled) return;
+        const rows = data.rows;
+        setProjects(rows);
+
+        const settled = await Promise.allSettled(
+          rows.map(async (p) => {
+            const [info, languages] = await Promise.all([
+              fetchRepoInfo(p.githubUrl),
+              fetchRepoLanguages(p.githubUrl),
+            ]);
+            return { id: p.id, info: info ? { ...info, languages } : null };
+          })
+        );
+        if (cancelled) return;
+
+        const map: Record<number, ProjectRepoInfo | null> = {};
+        rows.forEach((p, i) => {
+          const r = settled[i];
+          map[p.id] = r.status === "fulfilled" ? r.value.info : null;
+        });
+        setInfos(map);
       } catch {
         if (!cancelled) {
           setProjects([]);
-          setTotal(0);
+          setInfos({});
         }
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
     return () => { cancelled = true; };
-  }, [pageNum]);
+  }, []);
 
-  // 首次输入搜索词时拉取全量数据，客户端过滤（与 ProjectsMatrix 一致）
-  useEffect(() => {
-    if (search.trim() && allProjects === null) {
-      getPublicList({ pageNum: 1, pageSize: 999 })
-        .then((d) => setAllProjects(d.rows))
-        .catch(() => setAllProjects([]));
-    }
-  }, [search, allProjects]);
-
+  // 内存筛选：仓库名称 / 描述 / 官方 Topics / GitHub 地址
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return null;
-    return (allProjects ?? []).filter((p) =>
-      p.githubUrl.toLowerCase().includes(q) ||
-      (p.tags || []).some((t) => t.name.toLowerCase().includes(q))
-    );
-  }, [search, allProjects]);
+    if (!q) return projects;
+    return projects.filter((p) => {
+      const info = infos[p.id];
+      const haystacks = [
+        p.githubUrl,
+        info?.name,
+        info?.description,
+        ...(info?.topics || []),
+      ].filter((s): s is string => Boolean(s)).map((s) => s.toLowerCase());
+      return haystacks.some((s) => s.includes(q));
+    });
+  }, [search, projects, infos]);
 
-  const display = filtered ?? projects;
   const searching = search.trim() !== "";
 
   return (
@@ -77,7 +93,7 @@ export default function ProjectList() {
         <div className="relative w-full max-w-lg">
           <input
             type="text"
-            placeholder="搜索 GitHub 地址或标签..."
+            placeholder="搜索仓库名称、描述或标签..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-full px-6 py-3 pl-12 text-slate-800 dark:text-white shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all placeholder-slate-400 dark:placeholder-slate-500"
@@ -88,16 +104,16 @@ export default function ProjectList() {
         </div>
       </div>
 
-      {loading || (searching && allProjects === null) ? (
+      {loading ? (
         <Loading />
-      ) : display.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div className="text-center py-20 text-slate-500 dark:text-slate-400 font-serif">
           {searching ? `云端尚未建立代号为 [${search}] 的档案...` : "No projects yet"}
         </div>
       ) : (
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
           <AnimatePresence mode="popLayout">
-            {display.map((p) => (
+            {filtered.map((p) => (
               <motion.div
                 layout
                 key={p.id}
@@ -107,15 +123,11 @@ export default function ProjectList() {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className="h-full"
               >
-                <ProjectCard project={p} />
+                <ProjectCard project={p} info={infos[p.id] ?? null} />
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
-      )}
-
-      {!searching && total > pageSize && (
-        <Pagination pageNum={pageNum} pageSize={pageSize} total={total} onChange={setPageNum} />
       )}
     </div>
   );

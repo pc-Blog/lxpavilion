@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { Project, ProjectVO, Technology } from "@/lib/types";
-import { getList, remove, create, update, getTechList } from "@/lib/api/project";
+import type { Project, ProjectVO } from "@/lib/types";
+import { getList, remove, create, update } from "@/lib/api/project";
 import { repoLabel } from "@/lib/github-repo";
 import Dialog from "@/app/_components/common/Dialog";
-import TagDropdown from "@/app/_components/admin/TagDropdown";
 import Tooltip from "@/app/_components/common/Tooltip";
 import { showSuccessToast, showErrorToast } from "@/lib/toast";
 import { useConfirm } from "@/app/_components/common/ConfirmDialog";
@@ -24,8 +23,6 @@ export default function AdminProjectPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [githubUrl, setGithubUrl] = useState("");
-  const [techIds, setTechIds] = useState<number[]>([]);
-  const [techs, setTechs] = useState<Technology[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -40,10 +37,6 @@ export default function AdminProjectPage() {
 
   useEffect(() => { refresh(); }, [refresh]);
 
-  useEffect(() => {
-    getTechList().then((d) => setTechs(d)).catch(() => {});
-  }, []);
-
   // Debounced search (reset to page 1)
   useEffect(() => {
     setPageNum(1);
@@ -54,7 +47,6 @@ export default function AdminProjectPage() {
   const openAdd = () => {
     setEditingId(null);
     setGithubUrl("");
-    setTechIds([]);
     setError("");
     setDialogOpen(true);
   };
@@ -62,7 +54,6 @@ export default function AdminProjectPage() {
   const openEdit = (p: ProjectVO) => {
     setEditingId(p.id);
     setGithubUrl(p.githubUrl);
-    setTechIds((p.tags || []).map((t) => t.id));
     setError("");
     setDialogOpen(true);
   };
@@ -72,7 +63,7 @@ export default function AdminProjectPage() {
     setError("");
     setSaving(true);
     try {
-      const payload: Project = { githubUrl: githubUrl.trim(), techIds };
+      const payload: Project = { githubUrl: githubUrl.trim() };
       if (editingId) { await update({ ...payload, id: editingId }); showSuccessToast("已更新"); }
       else { await create(payload); showSuccessToast("已创建"); }
       setDialogOpen(false);
@@ -108,20 +99,9 @@ export default function AdminProjectPage() {
         <div className="flex flex-col gap-2">
           {items.map((p) => (
             <div key={p.id} className="glass-card px-4 py-3 flex items-center gap-4 group">
-              <span className="flex-1 min-w-0">
-                <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" className="block text-sm font-bold text-indigo-500 hover:text-indigo-600 transition-colors truncate">
-                  {repoLabel(p.githubUrl)}
-                </a>
-                {p.tags && p.tags.length > 0 && (
-                  <span className="flex flex-wrap gap-1 mt-1">
-                    {p.tags.map((t) => (
-                      <span key={t.id} className="px-1.5 py-0.5 text-[10px] rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 font-medium">
-                        {t.name}
-                      </span>
-                    ))}
-                  </span>
-                )}
-              </span>
+              <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-0 block text-sm font-bold text-indigo-500 hover:text-indigo-600 transition-colors truncate">
+                {repoLabel(p.githubUrl)}
+              </a>
               <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Tooltip text="Edit">
                   <button onClick={() => openEdit(p)} className="p-1 text-indigo-400 hover:text-indigo-600 transition-colors">
@@ -149,14 +129,6 @@ export default function AdminProjectPage() {
             onChange={(e) => setGithubUrl(e.target.value)}
             placeholder="GitHub URL *"
             className="w-full glass-card !rounded-xl px-4 py-2.5 text-sm outline-none bg-white/50 dark:bg-slate-800/50"
-          />
-          <TagDropdown
-            options={techs}
-            selected={techIds}
-            onChange={(v) => setTechIds(v as number[])}
-            placeholder="选择标签..."
-            renderOption={(t) => t.name}
-            getValue={(t) => t.id!}
           />
           {error && <p className="text-sm text-red-500 font-bold">{error}</p>}
         </div>
