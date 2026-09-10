@@ -60,8 +60,8 @@ async function verifyJwt(token: string, secret: string): Promise<JwtPayload | nu
 
 /* ── 工具函数 ── */
 
-function sanitize(user: { id: number; username: string; nickname?: string; avatar?: string; email?: string | null }): Record<string, unknown> {
-  return { id: user.id, username: user.username, nickname: user.nickname ?? null, avatar: user.avatar ?? null, email: user.email ?? null };
+function sanitize(user: { id: number; username: string; nickname?: string; avatar?: string; email?: string | null; github_id?: string | null }): Record<string, unknown> {
+  return { id: user.id, username: user.username, nickname: user.nickname ?? null, avatar: user.avatar ?? null, email: user.email ?? null, githubId: user.github_id ?? null };
 }
 
 /** 将 DB 蛇形字段转为驼峰（供前端消费） */
@@ -70,6 +70,7 @@ function formatUser(row: Record<string, unknown>): Record<string, unknown> {
     create_time: "createTime",
     update_time: "updateTime",
     login_time: "loginTime",
+    github_id: "githubId",
   };
   const out: Record<string, unknown> = {};
   for (const [key, val] of Object.entries(row)) {
@@ -288,8 +289,8 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
         return respond(null, "token 无效或已过期", 0, origin);
       }
       const row = await env.DB.prepare(
-        "SELECT id, username, nickname, avatar, email, create_time, update_time, login_time FROM user WHERE id = ? AND deleted = 0"
-      ).bind(Number(payload.sub)).first<{ id: number; username: string; nickname: string; avatar?: string; email?: string | null; create_time?: string; update_time?: string; login_time?: string }>();
+        "SELECT id, username, nickname, avatar, email, github_id, create_time, update_time, login_time FROM user WHERE id = ? AND deleted = 0"
+      ).bind(Number(payload.sub)).first<{ id: number; username: string; nickname: string; avatar?: string; email?: string | null; github_id?: string | null; create_time?: string; update_time?: string; login_time?: string }>();
       if (!row) {
         return respond(null, "用户不存在", 0, origin);
       }
@@ -342,8 +343,8 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       ).bind(...values).run();
 
       const row = await env.DB.prepare(
-        "SELECT id, username, nickname, avatar, email, create_time, update_time, login_time FROM user WHERE id = ? AND deleted = 0"
-      ).bind(Number(payload.sub)).first<{ id: number; username: string; nickname: string; avatar?: string; email?: string | null; create_time?: string; update_time?: string; login_time?: string }>();
+        "SELECT id, username, nickname, avatar, email, github_id, create_time, update_time, login_time FROM user WHERE id = ? AND deleted = 0"
+      ).bind(Number(payload.sub)).first<{ id: number; username: string; nickname: string; avatar?: string; email?: string | null; github_id?: string | null; create_time?: string; update_time?: string; login_time?: string }>();
 
       return respond(formatUser(row as Record<string, unknown>), "更新成功", 1, origin);
     }
