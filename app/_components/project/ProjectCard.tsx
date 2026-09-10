@@ -2,6 +2,7 @@
 
 import type { ProjectVO } from "@/lib/types";
 import { DEFAULT_LANGUAGE_COLOR, LANGUAGE_COLORS, formatRelativeTime, normalizeHomeUrl, repoLabel } from "@/lib/github-repo";
+import { Cell, Pie, PieChart, ResponsiveContainer, Sector, Tooltip } from "recharts";
 import type { ProjectRepoInfo } from "./ProjectList";
 
 const ACCENTS = [
@@ -17,42 +18,67 @@ function getAccent(id: number) {
   return ACCENTS[id % ACCENTS.length];
 }
 
-/** 语言占比条：前 4 大语言 + Other */
-function LanguageBar({ languages }: { languages: Record<string, number> }) {
+/** 环形扇形图（recharts，风格对齐分析页）：无中心文字、无图例，悬浮扇区时弹出 + Tooltip 显示语言与占比 */
+const renderActiveShape = (props: any) => {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+  return (
+    <g>
+      <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} stroke="none" opacity={0.2} />
+      <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 5} startAngle={startAngle} endAngle={endAngle} fill={fill} stroke="white" strokeWidth={2.5} />
+    </g>
+  );
+};
+
+function LangTooltip({ active, payload }: { active?: boolean; payload?: { payload: { name: string; pct: number } }[] }) {
+  if (!active || !payload || payload.length === 0) return null;
+  const item = payload[0].payload;
+  return (
+    <div className="rounded-lg bg-white/95 dark:bg-slate-800/95 backdrop-blur border border-white/40 dark:border-white/10 shadow-xl px-3 py-2 text-xs">
+      <span className="inline-flex items-center gap-1.5 font-bold text-slate-800 dark:text-white">
+        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LANGUAGE_COLORS[item.name] || DEFAULT_LANGUAGE_COLOR }} />
+        {item.name}
+      </span>
+      <span className="ml-2 font-black text-indigo-600 dark:text-indigo-400">{item.pct}%</span>
+    </div>
+  );
+}
+
+function DonutChart({ languages }: { languages: Record<string, number> }) {
   const entries = Object.entries(languages).sort((a, b) => b[1] - a[1]);
   if (entries.length === 0) return null;
   const total = entries.reduce((s, [, v]) => s + v, 0);
   if (total <= 0) return null;
+
   const top = entries.slice(0, 4);
   const topSum = top.reduce((s, [, v]) => s + v, 0);
   const other = total - topSum;
-  const segments = [...top, ...(other > 0 ? [["Other", other] as [string, number]] : [])];
-  const pct = (v: number) => (v / total) * 100;
+  const segments: [string, number][] = [...top, ...(other > 0 ? [["Other", other] as [string, number]] : [])];
+  const data = segments.map(([name, value]) => ({ name, value, pct: Math.round((value / total) * 100) }));
 
   return (
-    <div className="relative z-10 mt-auto pt-4">
-      <div className="flex h-1.5 rounded-full overflow-hidden bg-slate-200/60 dark:bg-slate-700/40">
-        {segments.map(([name, value]) => (
-          <div
-            key={name}
-            style={{
-              width: `${pct(value)}%`,
-              backgroundColor: LANGUAGE_COLORS[name] || DEFAULT_LANGUAGE_COLOR,
-            }}
-          />
-        ))}
-      </div>
-      <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
-        {segments.map(([name, value]) => (
-          <span key={name} className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-            <span
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: LANGUAGE_COLORS[name] || DEFAULT_LANGUAGE_COLOR }}
-            />
-            {name} {Math.round(pct(value))}%
-          </span>
-        ))}
-      </div>
+    <div className="w-full" style={{ height: 130 }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            innerRadius={33}
+            outerRadius={46}
+            paddingAngle={3}
+            dataKey="value"
+            isAnimationActive
+            animationDuration={600}
+            animationEasing="ease-out"
+            activeShape={renderActiveShape}
+          >
+            {data.map((d) => (
+              <Cell key={d.name} fill={LANGUAGE_COLORS[d.name] || DEFAULT_LANGUAGE_COLOR} />
+            ))}
+          </Pie>
+          <Tooltip content={<LangTooltip />} cursor={false} />
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   );
 }
@@ -105,12 +131,19 @@ export default function ProjectCard({ project, info }: { project: ProjectVO; inf
         </div>
       </div>
 
-      {/* 描述（等高对齐） */}
-      <p className="text-sm text-slate-700 dark:text-slate-300 font-serif leading-relaxed line-clamp-3 mb-4 relative z-10 min-h-[60px] flex-1">
-        {info?.description || (info === null ? "" : "")}
-      </p>
+      {/* 描述(3) + 环形扇形图(1) —— 左右 3:1 */}
+      <div className="flex items-center gap-4 relative z-10 flex-1 mb-4">
+        <p className="flex-[3] text-sm text-slate-700 dark:text-slate-300 font-serif leading-relaxed line-clamp-4 min-w-0">
+          {info?.description || ""}
+        </p>
+        {info?.languages && Object.keys(info.languages).length > 0 && (
+          <div className="flex-1 flex items-center justify-center">
+            <DonutChart languages={info.languages} />
+          </div>
+        )}
+      </div>
 
-      {/* 元信息行：star / fork / 语言 · 活跃 / 始于 / 许可证 */}
+      {/* star 等信息行 */}
       {info && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mb-4 relative z-10">
           <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 dark:text-slate-400">
@@ -154,18 +187,13 @@ export default function ProjectCard({ project, info }: { project: ProjectVO; inf
 
       {/* 官方 Topics 标签 */}
       {info && info.topics.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-2 relative z-10">
+        <div className="flex flex-wrap gap-2 relative z-10">
           {info.topics.slice(0, 8).map((topic) => (
             <span key={topic} className="text-[10px] font-bold tracking-wider uppercase text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-md border border-indigo-500/20 shadow-sm">
               {topic}
             </span>
           ))}
         </div>
-      )}
-
-      {/* 语言占比条 */}
-      {info?.languages && Object.keys(info.languages).length > 0 && (
-        <LanguageBar languages={info.languages} />
       )}
     </a>
   );
