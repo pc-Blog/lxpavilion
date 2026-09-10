@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { User } from "@/lib/types";
+import { isTokenExpired } from "@/lib/jwt-expiry";
 
 interface AuthState {
   user: User | null;
@@ -7,6 +8,7 @@ interface AuthState {
   isLoggedIn: boolean;
   hydrated: boolean;
   setAuth: (token: string, user: User) => void;
+  setToken: (token: string) => void;
   logout: () => void;
 }
 
@@ -24,6 +26,11 @@ export const useAuthStore = create<AuthState>()((set) => ({
     set({ token, user, isLoggedIn: true, hydrated: true });
   },
 
+  setToken: (token) => {
+    localStorage.setItem("token", token);
+    set({ token });
+  },
+
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem(USER_KEY);
@@ -34,7 +41,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
 // Restore from localStorage on load (sync — no flash)
 if (typeof window !== "undefined") {
   const token = localStorage.getItem("token");
-  if (token) {
+  if (token && !isTokenExpired(token)) {
     let user: User | null = null;
     try {
       const raw = localStorage.getItem(USER_KEY);
@@ -43,6 +50,9 @@ if (typeof window !== "undefined") {
 
     useAuthStore.setState({ token, user, isLoggedIn: true, hydrated: true });
   } else {
+    // token 缺失或已过期 → 不恢复登录态，并清掉残留
+    localStorage.removeItem("token");
+    localStorage.removeItem(USER_KEY);
     useAuthStore.setState({ hydrated: true });
   }
 }

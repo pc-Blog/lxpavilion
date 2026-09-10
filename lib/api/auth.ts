@@ -1,16 +1,27 @@
 import type { User } from "@/lib/types";
 import { siteConfig } from "@/lib/siteConfig";
+import { useAuthStore } from "@/stores/authStore";
+import { isTokenExpired } from "@/lib/jwt-expiry";
 
 const WORKER_API = `https://${siteConfig.workerApi}/api`;
 
 async function workerFetch(path: string, options?: RequestInit) {
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  if (token && isTokenExpired(token)) {
+    // token 已过期 → 清理登录态，视为未携带 token
+    useAuthStore.getState().logout();
+  }
+  const finalToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const res = await fetch(`${WORKER_API}${path}`, {
-    headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    headers: { "Content-Type": "application/json", ...(finalToken ? { Authorization: `Bearer ${finalToken}` } : {}) },
     ...options,
   });
   const json = await res.json();
   if (json.code !== 1) throw new Error(json.msg || "Request failed");
+  // 响应携带新 token（登录/续期场景）→ 自动落库，保持会话滑动续期
+  if (json.data && typeof json.data.token === "string") {
+    useAuthStore.getState().setToken(json.data.token);
+  }
   return json.data;
 }
 
@@ -33,7 +44,7 @@ export async function getGithubUrl(): Promise<string> {
   return (data as { url: string }).url;
 }
 
-export async function getMe(): Promise<User> {
+export async function getMe(): Promise<{ token: string; user: User }> {
   return workerFetch("/auth/me");
 }
 

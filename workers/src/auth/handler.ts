@@ -294,7 +294,9 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       if (!row) {
         return respond(null, "用户不存在", 0, origin);
       }
-      return respond(formatUser(row as Record<string, unknown>), "ok", 1, origin);
+      // 滑动续期：验证通过即签发新的 7 天 token，前端进入网页时调用本接口完成续期
+      const newToken = await signJwt({ sub: String(row.id), username: row.username }, env.JWT_SECRET);
+      return respond({ user: formatUser(row as Record<string, unknown>), token: newToken }, "ok", 1, origin);
     }
 
     // ── PUT /api/auth/profile — 更新个人资料 ──

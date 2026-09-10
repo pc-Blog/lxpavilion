@@ -18,8 +18,8 @@ export default function GitHubCallbackPage() {
 
     if (token) {
       localStorage.setItem("token", token);
-      getMe().then((user) => {
-        setAuth(token, user);
+      getMe().then(({ token: freshToken, user }) => {
+        setAuth(freshToken, user);
         router.replace("/");
       }).catch(() => {
         router.replace("/auth/login");

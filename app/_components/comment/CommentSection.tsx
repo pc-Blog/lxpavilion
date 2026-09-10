@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import type { Components } from "react-markdown";
 import { siteConfig } from "@/lib/siteConfig";
+import { isTokenExpired } from "@/lib/jwt-expiry";
 import Tooltip from "@/app/_components/common/Tooltip";
 
 const mdComponents: Components = {
@@ -140,10 +141,15 @@ function genId(): string {
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const token = localStorage.getItem("token");
+  if (token && isTokenExpired(token)) {
+    // token 已过期 → 清理登录态
+    useAuthStore.getState().logout();
+  }
   const guestSession = localStorage.getItem("guestSession");
   const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+  const finalToken = localStorage.getItem("token");
+  if (finalToken) {
+    headers["Authorization"] = `Bearer ${finalToken}`;
   } else if (guestSession) {
     headers["X-Guest-Session"] = guestSession;
   }

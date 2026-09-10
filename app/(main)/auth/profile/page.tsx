@@ -32,11 +32,11 @@ export default function ProfilePage() {
       router.push("/auth/login");
       return;
     }
-    // 刷新用户数据（获取时间字段等）
-    getMe().then((fresh) => {
-      setAuth(useAuthStore.getState().token || "", fresh);
-      setNickname(fresh.nickname || "");
-      setEmail(fresh.email || "");
+    // 刷新用户数据（获取时间字段等），响应携带续期后的新 token
+    getMe().then(({ token, user }) => {
+      setAuth(token, user);
+      setNickname(user.nickname || "");
+      setEmail(user.email || "");
     }).catch(() => {
       setNickname(user?.nickname || "");
       setEmail(user?.email || "");
