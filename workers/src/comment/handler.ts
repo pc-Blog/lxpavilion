@@ -50,6 +50,8 @@ interface EmbeddedUser {
   nickname: string;
   avatar: string;
   cleanBody: string;
+  /** 评论身份来源：user=站内登录用户标记，guest=游客标记，none=旧格式无标记 */
+  source: "user" | "guest" | "none";
 }
 
 function parseUser(body: string): EmbeddedUser {
@@ -61,6 +63,7 @@ function parseUser(body: string): EmbeddedUser {
       nickname: match[2],
       avatar: match[3],
       cleanBody: body.slice(match[0].length),
+      source: "user",
     };
   }
   // 游客: <!--guest:sessionId|nickname-->
@@ -71,9 +74,11 @@ function parseUser(body: string): EmbeddedUser {
       nickname: guestMatch[2],
       avatar: "",
       cleanBody: body.slice(guestMatch[0].length),
+      source: "guest",
     };
   }
-  return { userId: 0, nickname: "Anonymous", avatar: "", cleanBody: body };
+  // 旧格式评论（重构前或直接在 GitHub 界面发布）：无标记，回退到 GitHub author
+  return { userId: 0, nickname: "Anonymous", avatar: "", cleanBody: body, source: "none" };
 }
 
 function extractGuestSession(body: string): string | null {
@@ -556,7 +561,12 @@ function buildCommentTree(
   const toVo = (c: GqlComment): CommentVO => {
     const u = parseUser(c.body || "");
     const uv = upvotes.get(c.id) || { upvoteCount: 0, viewerHasUpvoted: false };
-    const author = { id: u.userId, nickname: u.nickname, avatar: u.avatar || "" };
+    const author =
+      u.source === "user"
+        ? { id: u.userId, nickname: u.nickname, avatar: u.avatar || "" }
+        : u.source === "guest"
+          ? { id: 0, nickname: u.nickname, avatar: "" }
+          : { id: 0, nickname: c.author.login || "Anonymous", avatar: c.author.avatarUrl || "" };
     return {
       nodeId: c.id,
       content: u.cleanBody,
