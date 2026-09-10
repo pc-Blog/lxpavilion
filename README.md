@@ -136,7 +136,7 @@ npm run lint         # ESLint 检查
 # 构建镜像
 docker build -t blog-next .
 
-# 运行容器（在后端项目里执行，同时部署前后端、PostgreSQL、Redis、MinIO、Nginx）
+# 运行容器（在后端项目里执行，同时部署前后端、PostgreSQL、MinIO、Nginx）
 docker compose -f docker-compose.yml up -d
 ```
 
@@ -205,7 +205,7 @@ wrangler deploy
 | **GitHub API** | GitHub OAuth 登录、项目卡片数据（仓库信息与语言占比）、数据同步（git blob/tree/commit 推送 `data` 分支）、部署状态查看 |
 | **GitHub Discussions（Giscus）** | 评论区与评论反应 |
 | **Resend** | 注册欢迎邮件、订阅/退订通知、RSS 与每日热点邮件群发 |
-| **Java 后端 [pc-Blog/backend](https://github.com/pc-Blog/backend)** | 全部内容数据的持久化与接口（PostgreSQL + Redis + MinIO） |
+| **Java 后端 [pc-Blog/backend](https://github.com/pc-Blog/backend)** | 全部内容数据的持久化与接口（PostgreSQL + MinIO） |
 
 > 只想**本地体验或部署博客核心功能**：可在 [`lib/siteConfig.ts`](lib/siteConfig.ts) 中把对应的 `featureXxx` 开关设为 `false`，相关模块会从前端隐藏并友好降级，无需配置对应第三方服务。
 > 想**完整复刻线上站点**：需按上文「部署」章节逐个申请并配置上表服务（Cloudflare Worker / D1、GitHub OAuth 与 Giscus、Resend、Java 后端等）。
