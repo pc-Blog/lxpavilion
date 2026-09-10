@@ -8,6 +8,27 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[Docker Desktop 与 WSL 的 bind mount 路径解析：同一条命令，两套文件系统]]></title>
+      <link>https://www.lxpavilion.top/article/214/</link>
+      <guid>https://www.lxpavilion.top/article/214/</guid>
+      <pubDate>Thu, 10 Sep 2026 14:50:35 GMT</pubDate>
+      <description><![CDATA[Docker Desktop 的 bind mount 会把绝对路径解析到哪套文件系统，取决于 docker 命令从哪执行：WSL 里指向 WSL 发行版的真实目录，Windows 里指向引擎虚拟机并自动创建空目录。本文用对照实验验证这一行为，并给出规避建议。]]></description>
+      <category>开发拾遗</category>
+      <tag>WSL</tag>
+      <tag>Docker</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[一个路径引发的悬案：AI 为什么非把「学习」写成「学習」]]></title>
+      <link>https://www.lxpavilion.top/article/213/</link>
+      <guid>https://www.lxpavilion.top/article/213/</guid>
+      <pubDate>Thu, 10 Sep 2026 14:50:31 GMT</pubDate>
+      <description><![CDATA[从给 AI 发送 Obsidian 路径被改写成日语说起，拆解中日共用汉字导致的「语言漂移」现象、背后的机制与实测数据，以及实用的规避方法。]]></description>
+      <category>杂谈</category>
+      <tag>Ai编程</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[Spring AI Qdrant 配置了 initializeSchema 却不自动建集合：build() 只是 new，建集合在 afterPropertiesSet()]]></title>
       <link>https://www.lxpavilion.top/article/212/</link>
       <guid>https://www.lxpavilion.top/article/212/</guid>
@@ -207,28 +228,6 @@
       <guid>https://www.lxpavilion.top/article/163/</guid>
       <pubDate>Wed, 05 Aug 2026 23:51:29 GMT</pubDate>
       <description><![CDATA[Rust 结构体与枚举完整教程：struct 定义与实例化、impl 方法与关联函数、元组结构体、枚举定义与带数据的变体、Option<T> 代替 null、match 与 if let 解包。从基础语法到实战模式，用可运行代码讲清楚每一处细节。]]></description>
-      <category>学习笔记</category>
-      <tag>Rust</tag>
-      <tag>JetBrains</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Rust学习笔记：所有权、借用与生命周期——Rust的核心机制]]></title>
-      <link>https://www.lxpavilion.top/article/162/</link>
-      <guid>https://www.lxpavilion.top/article/162/</guid>
-      <pubDate>Wed, 05 Aug 2026 23:29:09 GMT</pubDate>
-      <description><![CDATA[Rust 最核心的三大机制详解：所有权规则与移动语义、Copy 与 Clone 的区别、不可变借用 &T 和可变借用 &mut T 的规则、生命周期标注 'a 的基本用法。用可运行的代码理解为什么 Rust 不需要垃圾回收也能保证内存安全。]]></description>
-      <category>学习笔记</category>
-      <tag>Rust</tag>
-      <tag>JetBrains</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Rust学习笔记：控制流——if、loop、while、for与match]]></title>
-      <link>https://www.lxpavilion.top/article/161/</link>
-      <guid>https://www.lxpavilion.top/article/161/</guid>
-      <pubDate>Wed, 05 Aug 2026 23:19:25 GMT</pubDate>
-      <description><![CDATA[Rust 控制流全解：if 作为表达式赋值、loop 循环与 break 返回值、while 条件循环、for 遍历数组和 Range、match 模式匹配与穷尽性检查。每个知识点附带实测输出，适合已掌握基础语法的初学者。]]></description>
       <category>学习笔记</category>
       <tag>Rust</tag>
       <tag>JetBrains</tag>

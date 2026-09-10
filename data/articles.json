@@ -1,6 +1,50 @@
 {
-  "total": 108,
+  "total": 110,
   "rows": [
+    {
+      "categoryId": 43,
+      "categoryName": "开发拾遗",
+      "coverImage": "/data/media/784.webp",
+      "createdAt": "2026-09-10T14:50:35.86809",
+      "id": 214,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": null,
+      "summary": "Docker Desktop 的 bind mount 会把绝对路径解析到哪套文件系统，取决于 docker 命令从哪执行：WSL 里指向 WSL 发行版的真实目录，Windows 里指向引擎虚拟机并自动创建空目录。本文用对照实验验证这一行为，并给出规避建议。",
+      "tags": [
+        {
+          "id": 61,
+          "name": "WSL"
+        },
+        {
+          "id": 62,
+          "name": "Docker"
+        }
+      ],
+      "title": "Docker Desktop 与 WSL 的 bind mount 路径解析：同一条命令，两套文件系统",
+      "updateTime": "2026-09-10T16:08:35.629694",
+      "viewCount": 0
+    },
+    {
+      "categoryId": 46,
+      "categoryName": "杂谈",
+      "coverImage": "/data/media/785.png",
+      "createdAt": "2026-09-10T14:50:31.372012",
+      "id": 213,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": null,
+      "summary": "从给 AI 发送 Obsidian 路径被改写成日语说起，拆解中日共用汉字导致的「语言漂移」现象、背后的机制与实测数据，以及实用的规避方法。",
+      "tags": [
+        {
+          "id": 85,
+          "name": "Ai编程"
+        }
+      ],
+      "title": "一个路径引发的悬案：AI 为什么非把「学习」写成「学習」",
+      "updateTime": "2026-09-10T16:09:13.34471",
+      "viewCount": 0
+    },
     {
       "categoryId": 43,
       "categoryName": "开发拾遗",
@@ -2485,74 +2529,6 @@
       "title": "上手 Cloudflare D1：无服务器数据库入门与博客实战",
       "updateTime": "2026-06-27T21:53:04.420937",
       "viewCount": 5
-    },
-    {
-      "categoryId": 38,
-      "categoryName": "网站部署",
-      "coverImage": "/data/media/455.png",
-      "createdAt": "2026-06-27T21:34:21.78203",
-      "id": 43,
-      "isPinned": 0,
-      "isPublished": 1,
-      "series": null,
-      "summary": "传统爬虫发现新内容需要数天甚至数周。IndexNow 协议让你在发布、修改或删除文章的瞬间主动通知搜索引擎，收录耗时从几天压缩到几分钟。本文从需求场景出发，逐一拆解 Cloudflare Crawler Hints 一键开启、Bing IndexNow API 手动提交、Next.js 自动集成三种落地方式，并对比各自的优缺点与适用场景。",
-      "tags": [
-        {
-          "id": 25,
-          "name": "Bing"
-        },
-        {
-          "id": 26,
-          "name": "SEO"
-        },
-        {
-          "id": 28,
-          "name": "Cloudflare"
-        },
-        {
-          "id": 29,
-          "name": "域名"
-        },
-        {
-          "id": 30,
-          "name": "博客"
-        }
-      ],
-      "title": "IndexNow 实战指南：告别漫长等待，让搜索引擎秒抓你的博客更新",
-      "updateTime": "2026-06-27T21:53:12.731127",
-      "viewCount": 9
-    },
-    {
-      "categoryId": 37,
-      "categoryName": "Ai编程",
-      "coverImage": "/data/media/433.png",
-      "createdAt": "2026-06-16T20:30:12.459236",
-      "id": 42,
-      "isPinned": 0,
-      "isPublished": 1,
-      "series": null,
-      "summary": "本文基于 Spring AI 1.1.2 + Redis + DashScope 构建的生产级 RAG 项目，完整拆解了从 PDF 文档解析、父子分层分段、向量化存储，到查询扩展、多库并发检索、上下文增强、LLM 流式生成的全链路实现。涵盖 MinerU 云端文档解析、HNSW 向量索引配置、父子分层分段策略、LLM 查询扩展、多存储并发检索、文档 ID 溯源等关键技术的实战经验，以及 5 个常见踩坑与解决方案。适合正在将 RAG 从 Demo 推向生产的技术团队参考。",
-      "tags": [
-        {
-          "id": 36,
-          "name": "RAG"
-        },
-        {
-          "id": 37,
-          "name": "Spring AI"
-        },
-        {
-          "id": 38,
-          "name": "检索增强生成"
-        },
-        {
-          "id": 39,
-          "name": "Redis"
-        }
-      ],
-      "title": "Spring AI RAG 生产级实战：从 PDF 解析到精准回答的完整流水线指南",
-      "updateTime": "2026-06-16T20:33:33.84941",
-      "viewCount": 1
     }
   ]
 }

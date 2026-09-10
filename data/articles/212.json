@@ -7,7 +7,10 @@
   "id": 212,
   "isPinned": 0,
   "isPublished": 1,
-  "next": null,
+  "next": {
+    "id": 213,
+    "title": "一个路径引发的悬案：AI 为什么非把「学习」写成「学習」"
+  },
   "prev": {
     "id": 211,
     "title": "Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4"

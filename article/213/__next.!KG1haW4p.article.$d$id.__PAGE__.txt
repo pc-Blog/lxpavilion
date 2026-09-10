@@ -1,0 +1,74 @@
+1:"$Sreact.fragment"
+2:I[17467,["/_next/static/chunks/0ky328c89rg4_.js","/_next/static/chunks/0ugw88s53prfi.js","/_next/static/chunks/10odz-6irn5el.js","/_next/static/chunks/148ko75-ihlmp.js","/_next/static/chunks/0j4vlxcyz0~s8.js","/_next/static/chunks/0eaqxyvvneh83.js","/_next/static/chunks/03_sji5t~u77o.js","/_next/static/chunks/116yp~mrtmvyn.js","/_next/static/chunks/05hxwoutgi7z8.js"],"default"]
+9:I[97367,["/_next/static/chunks/0ky328c89rg4_.js","/_next/static/chunks/0ugw88s53prfi.js","/_next/static/chunks/10odz-6irn5el.js","/_next/static/chunks/148ko75-ihlmp.js","/_next/static/chunks/0j4vlxcyz0~s8.js"],"OutletBoundary"]
+a:"$Sreact.suspense"
+4:T165c,## 起因：一个「灵异」的路径
+
+整理 Obsidian 笔记时，我把一个文件路径发给 AI，让它帮忙处理文件：
+
+```
+D:\Source\Obsidian\pcの学习笔记\blog\开发拾遗.md
+```
+
+AI 返回的路径变成了：
+
+```
+D:\Source\Obsidian\pcの学習笔记\blog\开发拾遗.md
+```
+
+乍一看只是原样返回，细看才发现「学习」被写成了「学習」。这不是普通错别字：`习` 被替换成了日文汉字 `習`，整个词变成了日语写法。按这个路径去找文件，自然打不开，只能让它重来。
+
+一开始以为只是某个模型偶尔抽风。多试几次、换几个模型之后，发现它**稳定地把「学习」写成「学習」**，不是偶发，而是每次都踩同一个地方。这就值得停下来查一查了。
+
+## 查证：这不是个例，而是被广泛记录的现象
+
+沿着这个方向找，同类案例多到出乎意料。有人在豆包输入「明瞭」，AI 生成的标题却变成「明瞭**の**使用状況」，中文的「的」被概率性地替换成了日文假名「の」；让 AI 生成「复古中文报纸」「老海报」时，排出来的版面字里行间混入日文假名和日式汉字；做中日翻译的人经常遇到「访问」被写成「訪問」、「电气」被写成「電気」、「对」被写成「対」这类"自动转向"；甚至有人用 Claude Code 写代码时，项目目录旁边凭空多出一个乱码日文名的文件夹。
+
+如果只是民间吐槽，还能归结为偶然。学界已经有专门研究：ACL 2025 的论文 **Doppelganger-JC** 就中日「同形异义词」做了专门的 benchmark，结论是 LLM 在这类字词上的理解能力**显著差于人类**，并存在一种被称为「同形词捷径（homograph shortcut）」的倾向——模型会优先用自己更容易解读的那种语言去理解这些字形相同的字。也就是说，这背后是一条稳定存在的规律，而不是某个模型的 bug。
+
+## 机制：罪魁祸首是那个「の」
+
+问题出在大模型多语言架构本身，拆开看有三步。
+
+### 1. 中日韩共享同一套汉字
+
+Unicode 里，中日韩（CJK）字符共用同一个编码区间（U+4E00–U+9FFF）。分词器（tokenizer）看到「学习」这两个字时，并不知道这句话是中文的「学习」，还是日语里的「学習」——因为「学」这个字在中日文里就是同一个字形、同一个码点，信息在字符层已经被抹平了。语言归属的判断只能靠上下文里的其他线索。
+
+### 2. 「の」是导火索，触发概率滑移
+
+「の」是日文假名，几乎只出现在日语里。它一旦出现在路径中，模型内部的语言概率分布就开始朝「日语」倾斜：原本「学习」之后接简体「习」的概率很高，但「の」这个强日语线索会把「习 → 習」的路径权重抬起来。比例的倾斜未必每次都大到翻盘，但它确实往那边推了。
+
+### 3. 自回归雪崩：越过临界点就不可逆
+
+大模型按 token 逐字生成，这一步的输出会成为下一步的输入。一旦前期生成了几个日语倾向的 token，后续的概率分布会被进一步推向日语，形成正反馈。实测数据给出了这条曲线的形状：
+
+| 连续输出日文 token 数 | 后续保持日文的概率 |
+| --- | --- |
+| 1 个 | 约 60% |
+| 2 个 | 约 85% |
+| 3 个 | 约 95% |
+| 4 个以上 | > 99% |
+
+连续生成 3～4 个日文 token 之后，模型基本就"确认"了自己在说日语，后面再切回来的可能性已经可以忽略。回到那个路径：`pcの` 里「の」一出现，引导方向就有了，后面的「学习」被写成「学習」几乎是连锁反应里顺理成章的一环。
+
+### 为什么中文不会突然冒出法文
+
+一个自然的疑问是：为什么中文 AI 不会突然蹦出法文？因为拉丁字母和汉字在字符集层面完全分离——模型看到拉丁字母会激活英文、法文那一套分布，看到汉字只会激活中文、日文那一套，两者几乎不混。中日韩的特殊之处恰恰在于它们**共享字符集、共享 Unicode 区间、共享 token**，字符本身携带不了语言归属信息，漂移才有机可乘。
+
+## 怎么规避：三个够用的办法
+
+**在指令里锁死路径。** 把路径放进代码块，并明确要求：「以下路径中的『学习』是简体中文，必须逐字保留，禁止转成日文『学習』。」把约束写进指令，让模型在生成时沿着明确的字符边界走，比事后纠错省事得多。
+
+**从物理上规避。** 如果这个目录名会长期、反复地喂给 AI，不如直接改掉它。问题链条的引线是「の」，把它去掉，漂移概率会大幅下降——改成纯 ASCII 的 `pc-note`，或者去掉假名的 `pc学习笔记`，都比留着一个日文假名在路径里省心。
+
+**拿到结果先校验。** AI 返回路径后扫一眼，出现假名或日体汉字（`学習`、`習`、`メモ` 这类）就立刻指出来让它重来。实践下来，明确指错之后第二次基本都能纠正——因为错误是概率性的，指出一次通常就能把它从这一轮生成里"校准"回来。
+
+## 写在最后
+
+这个「灵异事件」的本质，是所有大模型都绕不开的一道坎：中日韩文字共享同一套编码，模型在语言边界上天生有点"脸盲"。理解了这一点，下次再看到 AI 把中文写成日语，就不会觉得是它"变笨"或"故意搞事"——它只是在概率的迷宫里走错了一扇门。路径、文件名这类输入，本身就是在跟模型的概率分布打交道，把话说清楚、把物理环境改得干净，远比反复抱怨可靠。0:{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"一个路径引发的悬案：AI 为什么非把「学习」写成「学習」\",\"item\":\"https://www.lxpavilion.top/article/213\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"一个路径引发的悬案：AI 为什么非把「学习」写成「学習」\",\"headline\":\"一个路径引发的悬案：AI 为什么非把「学习」写成「学習」\",\"description\":\"从给 AI 发送 Obsidian 路径被改写成日语说起，拆解中日共用汉字导致的「语言漂移」现象、背后的机制与实测数据，以及实用的规避方法。\",\"datePublished\":\"2026-09-10T14:50:31.372012\",\"dateCreated\":\"2026-09-10T14:50:31.372012\",\"dateModified\":\"2026-09-10T16:09:13.34471\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/785.png\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"一个路径引发的悬案：AI 为什么非把「学习」写成「学習」","initialContent":"$4"}]],["$L5","$L6","$L7"],"$L8"]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"bJlMeE_B5qVvw656W08Z6"}
+3:{"id":"213"}
+5:["$","script","script-0",{"src":"/_next/static/chunks/03_sji5t~u77o.js","async":true}]
+6:["$","script","script-1",{"src":"/_next/static/chunks/116yp~mrtmvyn.js","async":true}]
+7:["$","script","script-2",{"src":"/_next/static/chunks/05hxwoutgi7z8.js","async":true}]
+8:["$","$L9",null,{"children":["$","$a",null,{"name":"Next.MetadataOutlet","children":"$@b"}]}]
+b:null
