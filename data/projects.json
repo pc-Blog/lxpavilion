@@ -1,123 +1,17 @@
 {
-  "total": 5,
+  "total": 2,
   "rows": [
     {
-      "createTime": "2026-05-22T10:13:45.904614",
-      "githubUrl": "https://github.com/pc-Blog",
-      "id": 18,
-      "name": "栏轩阁",
-      "summary": "栏轩阁是一个面向技术创作者的现代化个人博客系统，集内容管理、作品展示、在线工具于一体。前端基于 Next.js 16 + React 19 构建，以玻璃拟态设计语言提供 Live2D 看板娘、粒子特效、音乐播放器等丰富交互体验；后端由 Spring Boot 4 + PostgreSQL 驱动，支持 Docker 容器化与 GitHub Pages 静态导出双模式部署。项目内置文章/项目/图库/文学等完整内容类型与管理后台，配合 Cloudflare 流量分析与多平台数据聚合，是一套可独立运行的、功能完备的个人数字空间解决方案。",
-      "tags": [
-        {
-          "id": 8,
-          "name": "Java"
-        },
-        {
-          "id": 11,
-          "name": "SpringBoot"
-        },
-        {
-          "id": 14,
-          "name": "Next.js"
-        }
-      ],
-      "updateTime": "2026-07-04T08:31:04.942538"
+      "createTime": "2026-09-10T10:34:30.162642",
+      "githubUrl": "https://github.com/PC2005-cloud/dsh-pet",
+      "id": 27,
+      "updateTime": "2026-09-10T10:34:30.16306"
     },
     {
-      "createTime": "2026-05-21T22:16:49.247206",
-      "githubUrl": "https://github.com/Guardian-Elf",
-      "id": 17,
-      "name": "守护精灵",
-      "summary": "Guardian-Elf（守护精灵）—— 从零搭建的物联网多传感器监测平台",
-      "tags": [
-        {
-          "id": 11,
-          "name": "SpringBoot"
-        },
-        {
-          "id": 13,
-          "name": "Vue3"
-        },
-        {
-          "id": 17,
-          "name": "Stm32"
-        },
-        {
-          "id": 18,
-          "name": "Esp32"
-        }
-      ],
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T21:46:11.501405",
-      "githubUrl": "https://github.com/OmniPavilion",
-      "id": 16,
-      "name": "万象阁",
-      "summary": "OmniPavilion —— 全栈个人知识管理与效率工具集",
-      "tags": [
-        {
-          "id": 11,
-          "name": "SpringBoot"
-        },
-        {
-          "id": 13,
-          "name": "Vue3"
-        },
-        {
-          "id": 19,
-          "name": "Kotlin"
-        }
-      ],
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T21:45:11.097575",
-      "githubUrl": "https://github.com/medrec-sys",
-      "id": 15,
-      "name": "医知库 | 智疗助手",
-      "summary": "基于 Spring AI + RAG 的企业级智能客服问答系统",
-      "tags": [
-        {
-          "id": 8,
-          "name": "Java"
-        },
-        {
-          "id": 11,
-          "name": "SpringBoot"
-        },
-        {
-          "id": 12,
-          "name": "SpringAi"
-        },
-        {
-          "id": 13,
-          "name": "Vue3"
-        }
-      ],
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T20:38:05.708809",
-      "githubUrl": "https://github.com/smart-mall",
-      "id": 14,
-      "name": "SmartMall",
-      "summary": "基于 Spring Cloud Alibaba 的分布式 B2C 电商全栈项目。",
-      "tags": [
-        {
-          "id": 8,
-          "name": "Java"
-        },
-        {
-          "id": 11,
-          "name": "SpringBoot"
-        },
-        {
-          "id": 13,
-          "name": "Vue3"
-        }
-      ],
-      "updateTime": "2026-06-10T14:42:38.102608"
+      "createTime": "2026-09-10T10:33:10.591189",
+      "githubUrl": "https://github.com/pc-Blog/lxpavilion",
+      "id": 26,
+      "updateTime": "2026-09-10T10:33:10.603988"
     }
   ]
 }
