@@ -9,7 +9,7 @@
       "id": 212,
       "isPinned": 0,
       "isPublished": 1,
-      "series": null,
+      "series": "Spring开发日志",
       "summary": "手动 new QdrantVectorStore 并配置 initializeSchema(true)，集合却不被创建，add 时永远报 collection doesn't exist。根因是初始化逻辑不在 build() 里，而在 InitializingBean 的 afterPropertiesSet() 回调中，这个回调只有 Spring 容器会调。",
       "tags": [
         {
@@ -26,7 +26,7 @@
         }
       ],
       "title": "Spring AI Qdrant 配置了 initializeSchema 却不自动建集合：build() 只是 new，建集合在 afterPropertiesSet()",
-      "updateTime": "2026-09-09T12:16:23.884731",
+      "updateTime": "2026-09-10T14:03:31.009746",
       "viewCount": 0
     },
     {
@@ -37,7 +37,7 @@
       "id": 211,
       "isPinned": 0,
       "isPublished": 1,
-      "series": null,
+      "series": "Spring开发日志",
       "summary": "Spring Boot + Spring AI 接入 Qdrant 向量库，gRPC 写入一直报连接失败，浏览器打开控制台却一切正常。定位发现 localhost 被解析成 IPv6 回环 ::1，而 Docker 发布的端口只监听 IPv4 的 127.0.0.1；同样的连接，浏览器、JDBC、OkHttp 都会自动降级，唯独 gRPC 不回退。把连接地址显式写成 127.0.0.1 即可解决。",
       "tags": [
         {
@@ -58,7 +58,7 @@
         }
       ],
       "title": "Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4",
-      "updateTime": "2026-09-09T12:16:10.820097",
+      "updateTime": "2026-09-10T14:03:47.379556",
       "viewCount": 0
     },
     {
@@ -74,7 +74,7 @@
       "tags": [],
       "title": "DSH 沙箱机制拆解：受限令牌为何会掐断 HTTPS 请求",
       "updateTime": "2026-08-18T22:45:01.801655",
-      "viewCount": 0
+      "viewCount": 7
     },
     {
       "categoryId": 37,
@@ -102,7 +102,7 @@
       ],
       "title": "DSH 记忆模块源码解析：AI 是如何长期记住项目规范的",
       "updateTime": "2026-08-18T20:02:43.472503",
-      "viewCount": 0
+      "viewCount": 3
     },
     {
       "categoryId": 37,
@@ -130,7 +130,7 @@
       ],
       "title": "DeepSeek Harness 初体验：主模型换到 opencode，联网搜索却绕不开 DeepSeek",
       "updateTime": "2026-08-15T01:49:38.388299",
-      "viewCount": 0
+      "viewCount": 8
     },
     {
       "categoryId": 37,
@@ -158,7 +158,7 @@
       ],
       "title": "DeepSeek Harness 试用发现：AI 会不会覆盖你手动改的文件？",
       "updateTime": "2026-08-15T01:49:29.820526",
-      "viewCount": 0
+      "viewCount": 3
     },
     {
       "categoryId": 37,
@@ -186,7 +186,7 @@
       ],
       "title": "DeepSeek Harness 创建 skill 指南：结构、安装、使用",
       "updateTime": "2026-08-15T01:49:21.207587",
-      "viewCount": 0
+      "viewCount": 32
     },
     {
       "categoryId": 45,
@@ -214,7 +214,7 @@
       ],
       "title": "在 DeepSeek Harness 里养一只桌面宠物：dsh-pet 插件分享",
       "updateTime": "2026-08-14T18:00:24.757357",
-      "viewCount": 3
+      "viewCount": 11
     },
     {
       "categoryId": 37,
@@ -242,7 +242,7 @@
       ],
       "title": "DeepSeek Harness 插件开发实战：从设计理念到 npm 发布",
       "updateTime": "2026-08-15T01:48:34.429941",
-      "viewCount": 0
+      "viewCount": 2
     },
     {
       "categoryId": 37,
@@ -257,7 +257,7 @@
       "tags": [],
       "title": "DeepSeek Harness 上手指南：一切皆插件的 AI 智能体框架",
       "updateTime": "2026-08-18T18:54:02.546803",
-      "viewCount": 1
+      "viewCount": 4
     },
     {
       "categoryId": 45,
@@ -281,7 +281,7 @@
       ],
       "title": "豆包开启学生认证，大学生可享 2.5 倍免费额度、专业版 38 元/月",
       "updateTime": "2026-08-12T22:41:55.209968",
-      "viewCount": 0
+      "viewCount": 8
     },
     {
       "categoryId": 44,
@@ -305,7 +305,7 @@
       ],
       "title": "Rust学习笔记：Tauri实战——用Rust + Web技术构建桌面应用",
       "updateTime": "2026-08-06T02:49:30.908483",
-      "viewCount": 0
+      "viewCount": 3
     },
     {
       "categoryId": 44,
@@ -329,7 +329,7 @@
       ],
       "title": "Rust学习笔记：Cargo与第三方依赖——Rust生态的正确打开方式",
       "updateTime": "2026-08-06T02:50:31.807956",
-      "viewCount": 1
+      "viewCount": 4
     },
     {
       "categoryId": 44,
@@ -353,7 +353,7 @@
       ],
       "title": "Rust学习笔记：模块系统——mod、use、pub与多文件项目",
       "updateTime": "2026-08-06T02:50:58.88126",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -377,7 +377,7 @@
       ],
       "title": "Rust学习笔记：泛型与Trait——写出可复用的Rust代码",
       "updateTime": "2026-08-06T02:51:10.235479",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -401,7 +401,7 @@
       ],
       "title": "Rust学习笔记：错误处理——panic!、Result、Option与?运算符",
       "updateTime": "2026-08-06T02:51:24.788092",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -425,7 +425,7 @@
       ],
       "title": "Rust学习笔记：集合类型——Vec、String与HashMap",
       "updateTime": "2026-08-06T02:51:41.97114",
-      "viewCount": 0
+      "viewCount": 2
     },
     {
       "categoryId": 44,
@@ -449,7 +449,7 @@
       ],
       "title": "Rust学习笔记：结构体与枚举——用Rust组织真正的业务数据",
       "updateTime": "2026-08-06T02:54:07.302423",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -473,7 +473,7 @@
       ],
       "title": "Rust学习笔记：所有权、借用与生命周期——Rust的核心机制",
       "updateTime": "2026-08-06T02:52:00.560008",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -497,7 +497,7 @@
       ],
       "title": "Rust学习笔记：控制流——if、loop、while、for与match",
       "updateTime": "2026-08-06T02:52:18.662839",
-      "viewCount": 0
+      "viewCount": 2
     },
     {
       "categoryId": 44,
@@ -521,7 +521,7 @@
       ],
       "title": "Rust学习笔记：变量、数据类型与函数——从let讲起的基础语法",
       "updateTime": "2026-08-06T02:52:31.893803",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -573,7 +573,7 @@
       ],
       "title": "分享一个我发现的免费 AI 资讯 API：AI HOT，无需注册、无需 Token、开箱即用",
       "updateTime": "2026-08-05T17:32:59.141087",
-      "viewCount": 0
+      "viewCount": 4
     },
     {
       "categoryId": 43,
@@ -597,7 +597,7 @@
       ],
       "title": "GitHub API 踩坑记：为什么我的 Token 只有 60/h？域名邮箱注册被标记的真相与解决方案",
       "updateTime": "2026-08-05T00:04:59.44282",
-      "viewCount": 0
+      "viewCount": 2
     },
     {
       "categoryId": 46,
@@ -621,7 +621,7 @@
       ],
       "title": "使用AI开发项目的经历和感受：关于AI 编程的碎碎念",
       "updateTime": "2026-08-03T03:24:14.061655",
-      "viewCount": 2
+      "viewCount": 5
     },
     {
       "categoryId": 44,
@@ -641,7 +641,7 @@
       ],
       "title": "Go学习笔记：HTTP请求从入门到进阶——Client、RoundTripper与流式处理实战",
       "updateTime": "2026-07-31T01:40:10.450212",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 39,
@@ -673,7 +673,7 @@
       ],
       "title": "Elasticsearch 学习笔记：集群实战（3 控制节点 + 3 数据节点部署与故障转移）",
       "updateTime": "2026-07-30T16:05:21.938866",
-      "viewCount": 2
+      "viewCount": 3
     },
     {
       "categoryId": 39,
@@ -688,7 +688,7 @@
       "tags": [],
       "title": "Elasticsearch 学习笔记：从零到实战（Docker 部署 + Spring Boot 集成）",
       "updateTime": "2026-07-30T16:04:46.457563",
-      "viewCount": 2
+      "viewCount": 3
     },
     {
       "categoryId": 44,
@@ -724,7 +724,7 @@
       ],
       "title": "Mysql学习笔记：ShardingSphere-JDBC分库分表+读写分离嵌入式实战指南",
       "updateTime": "2026-07-29T22:17:39.654836",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -756,7 +756,7 @@
       ],
       "title": "Mysql学习笔记：ShardingSphere-Proxy分库分表+读写分离从零搭建指南",
       "updateTime": "2026-07-29T22:17:51.711029",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 39,
@@ -788,7 +788,7 @@
       ],
       "title": "Neo4j 从 0 到 1：图数据库入门与 Spring Boot 实战",
       "updateTime": "2026-07-29T14:29:09.176335",
-      "viewCount": 1
+      "viewCount": 2
     },
     {
       "categoryId": 41,
@@ -816,7 +816,7 @@
       ],
       "title": "从零写出生产级 Dockerfile：核心指令 + 层缓存 + 多阶段构建，告别臃肿镜像",
       "updateTime": "2026-07-29T10:48:18.026748",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -844,7 +844,7 @@
       ],
       "title": "Nginx 学习笔记：Location 配置详解，五种修饰符与优先级规则实战",
       "updateTime": "2026-07-28T17:04:24.088882",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -883,7 +883,7 @@
       "tags": [],
       "title": "Git学习笔记：Git 底层存储设计 — blob、tree、commit、ref 如何组成一个版本控制系统",
       "updateTime": "2026-07-27T21:32:06.29921",
-      "viewCount": 2
+      "viewCount": 3
     },
     {
       "categoryId": 44,
@@ -911,7 +911,7 @@
       ],
       "title": "Git学习笔记：GitHub Git Data API 完全指南，用 Go 操控 Git 底层对象",
       "updateTime": "2026-07-27T21:32:47.383042",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -939,7 +939,7 @@
       ],
       "title": "Git学习笔记：GitHub Contents API 完全指南，用 Go 轻松管理仓库文件",
       "updateTime": "2026-07-27T21:33:27.484189",
-      "viewCount": 2
+      "viewCount": 3
     },
     {
       "categoryId": 44,
@@ -963,7 +963,7 @@
       ],
       "title": "Git学习笔记：Gitee API 从入门到实战，用 Go 打造你的代码托管自动化工作流",
       "updateTime": "2026-07-27T13:02:48.434191",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -983,7 +983,7 @@
       ],
       "title": "Go学习笔记：Wails 入门，安装、创建项目与第一个桌面窗口",
       "updateTime": "2026-07-22T10:43:10.058024",
-      "viewCount": 0
+      "viewCount": 2
     },
     {
       "categoryId": 44,
@@ -1003,7 +1003,7 @@
       ],
       "title": "Go学习笔记：错误处理——没有异常，只有 error",
       "updateTime": "2026-07-22T10:42:50.074672",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1023,7 +1023,7 @@
       ],
       "title": "Go学习笔记：并发编程，Go 的王牌特性",
       "updateTime": "2026-07-22T10:42:46.634384",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1043,7 +1043,7 @@
       ],
       "title": "Go学习笔记：包管理与项目组织——模块、导入导出与 init 执行顺序",
       "updateTime": "2026-07-22T10:42:43.681308",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1063,7 +1063,7 @@
       ],
       "title": "Go学习笔记：接口与面向接口编程——Go 最核心的设计",
       "updateTime": "2026-07-22T10:43:06.528305",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1083,7 +1083,7 @@
       ],
       "title": "Go学习笔记：函数与控制流——多返回值、for 与 if 的独特语法",
       "updateTime": "2026-07-22T10:42:57.782245",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1103,7 +1103,7 @@
       ],
       "title": "Go学习笔记：复杂数据类型——数组、切片、Map、结构体与指针",
       "updateTime": "2026-07-22T10:42:52.941695",
-      "viewCount": 0
+      "viewCount": 2
     },
     {
       "categoryId": 41,
@@ -1151,7 +1151,7 @@
       ],
       "title": "Go学习笔记：变量声明与基本类型——三种写法一次搞懂",
       "updateTime": "2026-07-22T10:41:02.433867",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1171,7 +1171,7 @@
       ],
       "title": "Go学习笔记：基本概念与项目结构——GOPATH、Go Modules 与常用命令",
       "updateTime": "2026-07-22T10:40:54.833482",
-      "viewCount": 0
+      "viewCount": 2
     },
     {
       "categoryId": 44,
@@ -1186,7 +1186,7 @@
       "tags": [],
       "title": "Nginx 学习笔记：Keepalived 高可用实战，Docker 环境搭建与故障转移测试",
       "updateTime": "2026-07-19T17:30:05.732424",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1201,7 +1201,7 @@
       "tags": [],
       "title": "Nginx 防盗链配置实战：用 referer 模块保护网站静态资源",
       "updateTime": "2026-07-19T15:48:17.900709",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1231,7 +1231,7 @@
       "tags": [],
       "title": "Nginx 学习笔记：负载均衡配置教程，从基础算法到企业级动态方案",
       "updateTime": "2026-07-19T13:32:14.106676",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1246,7 +1246,7 @@
       "tags": [],
       "title": "Nginx 学习笔记：反向代理实战，从入门到配置详解",
       "updateTime": "2026-07-19T12:44:43.33183",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1261,7 +1261,7 @@
       "tags": [],
       "title": "Nginx 学习笔记：Server 块配置详解，域名路由与多站点部署实战",
       "updateTime": "2026-07-19T10:59:24.839148",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1293,7 +1293,7 @@
       ],
       "title": "Nginx入门实战：从Docker部署到核心配置完全解析",
       "updateTime": "2026-07-19T10:42:54.73245",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 39,
@@ -1308,7 +1308,7 @@
       "tags": [],
       "title": "Qdrant 向量数据库从入门到实战：Docker 部署 + Web 控制台 + Java 客户端完整教程",
       "updateTime": "2026-07-16T19:48:58.038132",
-      "viewCount": 5
+      "viewCount": 7
     },
     {
       "categoryId": 39,
@@ -1355,7 +1355,7 @@
       "tags": [],
       "title": "Redis学习笔记：缓存必知必会 —— 穿透、击穿、雪崩、一致性，从原理到实战",
       "updateTime": "2026-07-15T23:28:22.349392",
-      "viewCount": 2
+      "viewCount": 3
     },
     {
       "categoryId": 44,
@@ -1475,7 +1475,7 @@
       ],
       "title": "Mysql学习笔记：半同步复制深度解析，原理到实战，彻底解决主从数据一致性问题",
       "updateTime": "2026-07-11T08:56:58.026614",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1527,7 +1527,7 @@
       ],
       "title": "MySQL学习笔记：Druid连接池进阶——防火墙、慢SQL日志、多数据源与生产调优",
       "updateTime": "2026-07-11T08:57:11.906902",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1555,7 +1555,7 @@
       ],
       "title": "MySQL学习笔记：Druid连接池基础教程——从入门到监控实战",
       "updateTime": "2026-07-11T08:57:22.438",
-      "viewCount": 1
+      "viewCount": 2
     },
     {
       "categoryId": 44,
@@ -1570,7 +1570,7 @@
       "tags": [],
       "title": "MySQL学习笔记：主从复制集群搭建以及原理详解",
       "updateTime": "2026-07-11T08:56:52.442658",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 41,
@@ -1606,7 +1606,7 @@
       ],
       "title": "Resend 邮件服务接入指南：免费的开发者邮件 API 使用教程",
       "updateTime": "2026-07-10T12:04:20.921973",
-      "viewCount": 5
+      "viewCount": 9
     },
     {
       "categoryId": 44,
@@ -1621,7 +1621,7 @@
       "tags": [],
       "title": "KubeSphere学习笔记：从 Gitee 拉取代码到部署到 K8s",
       "updateTime": "2026-07-29T15:02:05.868947",
-      "viewCount": 1
+      "viewCount": 2
     },
     {
       "categoryId": 44,
@@ -1689,7 +1689,7 @@
       ],
       "title": "KubeSphere学习笔记：DevOps基本使用",
       "updateTime": "2026-07-06T17:19:53.953122",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1717,7 +1717,7 @@
       ],
       "title": "Jenkins学习笔记：Docker 部署与第一个 Pipeline 任务",
       "updateTime": "2026-07-06T14:48:46.623221",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 44,
@@ -1757,7 +1757,7 @@
       ],
       "title": "KubeSphere学习笔记：部署nginx",
       "updateTime": "2026-07-06T15:02:59.668411",
-      "viewCount": 1
+      "viewCount": 3
     },
     {
       "categoryId": 45,
@@ -1772,7 +1772,7 @@
       "tags": [],
       "title": "FinalShell 自定义背景图片教程",
       "updateTime": "2026-07-05T17:26:28.731088",
-      "viewCount": 3
+      "viewCount": 5
     },
     {
       "categoryId": 39,
@@ -1844,7 +1844,7 @@
       ],
       "title": "KubeSphere学习笔记：部署mysql",
       "updateTime": "2026-07-06T15:03:07.975213",
-      "viewCount": 2
+      "viewCount": 4
     },
     {
       "categoryId": 41,
@@ -1880,7 +1880,7 @@
       ],
       "title": "KubeSphere 安装到插件管理实战：本地 K8s 搭建可视化容器平台",
       "updateTime": "2026-07-06T10:55:11.327867",
-      "viewCount": 1
+      "viewCount": 3
     },
     {
       "categoryId": 41,
@@ -1940,7 +1940,7 @@
       ],
       "title": "Windows 下 WSL2 + Docker Desktop + Ubuntu 开发环境搭建指南",
       "updateTime": "2026-07-04T08:29:34.920937",
-      "viewCount": 1
+      "viewCount": 2
     },
     {
       "categoryId": 43,
@@ -1964,7 +1964,7 @@
       ],
       "title": "别再靠猜了：给 Cloudflare Worker 加上日志，问题一眼就知道",
       "updateTime": "2026-07-02T16:48:48.139246",
-      "viewCount": 17
+      "viewCount": 20
     },
     {
       "categoryId": 43,
@@ -1988,7 +1988,7 @@
       ],
       "title": "在 MailerLite 免费计划下实现完全自定义退订与隐藏品牌广告",
       "updateTime": "2026-07-02T14:09:31.153896",
-      "viewCount": 0
+      "viewCount": 1
     },
     {
       "categoryId": 43,
@@ -2016,7 +2016,7 @@
       ],
       "title": "博文已索引但不展示：一次 Bing SEO 问题排查记录",
       "updateTime": "2026-07-01T16:56:51.086839",
-      "viewCount": 1
+      "viewCount": 2
     },
     {
       "categoryId": 42,
@@ -2048,7 +2048,7 @@
       ],
       "title": "不用花一分钱，我让博客看板娘学会了聊天 | 用 Workers AI 实现自由对话",
       "updateTime": "2026-07-01T15:18:12.092362",
-      "viewCount": 0
+      "viewCount": 2
     },
     {
       "categoryId": 37,
@@ -2076,7 +2076,7 @@
       ],
       "title": "Hotspot 技术实现全解：从零搭建自动化热点追踪系统",
       "updateTime": "2026-07-01T13:57:24.431101",
-      "viewCount": 3
+      "viewCount": 6
     },
     {
       "categoryId": 37,
@@ -2104,7 +2104,7 @@
       ],
       "title": "告别无效刷榜：免费 AI 工具，自动追踪纯技术热点生成报告",
       "updateTime": "2026-07-01T13:59:30.358941",
-      "viewCount": 5
+      "viewCount": 8
     },
     {
       "categoryId": 41,
@@ -2136,7 +2136,7 @@
       ],
       "title": "个人博客邮件订阅系统实战：MailerLite API 集成与避坑指南",
       "updateTime": "2026-07-01T12:18:03.821115",
-      "viewCount": 1
+      "viewCount": 2
     },
     {
       "categoryId": 41,
@@ -2160,7 +2160,7 @@
       ],
       "title": "为什么 TrendRadar 的社交热榜满足不了技术博客——我的热点方案选型记录",
       "updateTime": "2026-07-01T10:02:07.745102",
-      "viewCount": 2
+      "viewCount": 3
     },
     {
       "categoryId": 41,
@@ -2184,7 +2184,7 @@
       ],
       "title": "别让你的域名邮箱 \"裸奔\"！3 分钟添上专属头像",
       "updateTime": "2026-07-01T09:58:38.436744",
-      "viewCount": 9
+      "viewCount": 15
     },
     {
       "categoryId": 42,
@@ -2216,7 +2216,7 @@
       ],
       "title": "博客、API、邮箱全掌控：Cloudflare 让一个域名的价值彻底放大",
       "updateTime": "2026-07-01T15:18:37.317621",
-      "viewCount": 1
+      "viewCount": 3
     },
     {
       "categoryId": 41,
@@ -2248,7 +2248,7 @@
       ],
       "title": "免费订阅服务升级：MailerLite 完全指南（与 Buttondown 对比）",
       "updateTime": "2026-06-28T21:52:40.011553",
-      "viewCount": 4
+      "viewCount": 12
     },
     {
       "categoryId": 41,
@@ -2280,7 +2280,7 @@
       ],
       "title": "我如何用 Buttondown 从零搭建 Newsletter：一个内容创作者的订阅增长实录",
       "updateTime": "2026-06-28T21:57:28.305078",
-      "viewCount": 3
+      "viewCount": 6
     },
     {
       "categoryId": 42,
@@ -2328,7 +2328,7 @@
       ],
       "title": "选择cloudflare，给我的博客带来了什么",
       "updateTime": "2026-07-01T15:18:49.782057",
-      "viewCount": 6
+      "viewCount": 12
     },
     {
       "categoryId": 42,
@@ -2388,7 +2388,7 @@
       ],
       "title": "使用 Giscus 为博客搭建评论系统：从入门到放弃",
       "updateTime": "2026-06-28T09:34:25.527012",
-      "viewCount": 2
+      "viewCount": 3
     },
     {
       "categoryId": 40,
@@ -2424,7 +2424,7 @@
       ],
       "title": "为我的博客自建评论系统，摆脱 Giscus 局限",
       "updateTime": "2026-06-27T22:01:52.468013",
-      "viewCount": 6
+      "viewCount": 8
     },
     {
       "categoryId": 40,
@@ -2452,7 +2452,7 @@
       ],
       "title": "为博客搭建 GitHub 登录系统，打通 OAuth 完整流程",
       "updateTime": "2026-06-27T21:52:54.510434",
-      "viewCount": 4
+      "viewCount": 9
     },
     {
       "categoryId": 39,
@@ -2484,7 +2484,7 @@
       ],
       "title": "上手 Cloudflare D1：无服务器数据库入门与博客实战",
       "updateTime": "2026-06-27T21:53:04.420937",
-      "viewCount": 3
+      "viewCount": 5
     },
     {
       "categoryId": 38,
@@ -2520,7 +2520,7 @@
       ],
       "title": "IndexNow 实战指南：告别漫长等待，让搜索引擎秒抓你的博客更新",
       "updateTime": "2026-06-27T21:53:12.731127",
-      "viewCount": 7
+      "viewCount": 9
     },
     {
       "categoryId": 37,

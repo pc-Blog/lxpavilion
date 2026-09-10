@@ -1,5 +1,11 @@
 [
   {
+    "series": "Spring开发日志",
+    "count": 2,
+    "coverImage": "/data/media/783.jpeg",
+    "summary": "手动 new QdrantVectorStore 并配置 initializeSchema(true)，集合却不被创建，add 时永远报 collection doesn't exist。根因是初始化逻辑不在 build() 里，而在 InitializingBean 的 afterPropertiesSet() 回调中，这个回调只有 Spring 容器会调。"
+  },
+  {
     "series": "DeepSeek Harness 体验",
     "count": 7,
     "coverImage": "/data/media/779.png",

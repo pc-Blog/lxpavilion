@@ -15,7 +15,7 @@
     "id": 210,
     "title": "DSH 沙箱机制拆解：受限令牌为何会掐断 HTTPS 请求"
   },
-  "series": null,
+  "series": "Spring开发日志",
   "summary": "Spring Boot + Spring AI 接入 Qdrant 向量库，gRPC 写入一直报连接失败，浏览器打开控制台却一切正常。定位发现 localhost 被解析成 IPv6 回环 ::1，而 Docker 发布的端口只监听 IPv4 的 127.0.0.1；同样的连接，浏览器、JDBC、OkHttp 都会自动降级，唯独 gRPC 不回退。把连接地址显式写成 127.0.0.1 即可解决。",
   "tags": [
     {
@@ -36,5 +36,5 @@
     }
   ],
   "title": "Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4",
-  "updateTime": "2026-09-09T12:16:10.820097"
+  "updateTime": "2026-09-10T14:03:47.379556"
 }
