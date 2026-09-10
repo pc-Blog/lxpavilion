@@ -46,7 +46,7 @@ export const siteConfig = {
   hotspot: "hotspot.lxpavilion.top",
 
   /** 仓库信息 */
-  repo: "pc-Blog/next",
+  repo: "pc-Blog/lxpavilion",
   repoId: "R_kgDOSk99gw",
   /** Giscus 评论分类 */
   giscusCategory: "Announcements",
