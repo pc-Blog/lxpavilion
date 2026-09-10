@@ -408,7 +408,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       ).bind(Number(payload.sub)).first<{ username: string; email?: string }>();
 
       await env.DB.prepare(
-        "DELETE FROM user WHERE id = ?"
+        "UPDATE user SET deleted = 1, update_time = datetime('now') WHERE id = ?"
       ).bind(Number(payload.sub)).run();
 
       if (user) {
