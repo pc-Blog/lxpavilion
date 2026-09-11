@@ -9,7 +9,7 @@
   "isPublished": 1,
   "next": {
     "id": 211,
-    "title": "Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4"
+    "title": "Qdrant 连接失败排查记：localhost 为什么把我带到了 IPv6"
   },
   "prev": {
     "id": 209,

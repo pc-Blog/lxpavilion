@@ -18,32 +18,32 @@
       <author>ppc</author>
     </item>
     <item>
-      <title><![CDATA[Docker Desktop 与 WSL 的 bind mount 路径解析：同一条命令，两套文件系统]]></title>
+      <title><![CDATA[Docker + WSL 挂载踩坑记：同一条命令，为什么挂到了两套文件系统]]></title>
       <link>https://www.lxpavilion.top/article/214/</link>
       <guid>https://www.lxpavilion.top/article/214/</guid>
       <pubDate>Thu, 10 Sep 2026 14:50:35 GMT</pubDate>
-      <description><![CDATA[Docker Desktop 的 bind mount 会把绝对路径解析到哪套文件系统，取决于 docker 命令从哪执行：WSL 里指向 WSL 发行版的真实目录，Windows 里指向引擎虚拟机并自动创建空目录。本文用对照实验验证这一行为，并给出规避建议。]]></description>
+      <description><![CDATA[一套在 WSL 里稳定跑了很久的 docker compose，某次从 Windows PowerShell 执行 up 之后三个容器同时故障：nginx 报 not a directory、postgres 重建了空库、api 连不上数据库。这篇复盘整个排查过程，用一个最小对照实验定位到根因——bind mount 挂到哪套文件系统，只取决于 docker 命令从哪一端执行，并给出可落地的规避办法。]]></description>
       <category>开发拾遗</category>
       <tag>WSL</tag>
       <tag>Docker</tag>
       <author>ppc</author>
     </item>
     <item>
-      <title><![CDATA[一个路径引发的悬案：AI 为什么非把「学习」写成「学習」]]></title>
+      <title><![CDATA[AI 汉字漂移实录：它为什么总把「学习」写成日语「学習」]]></title>
       <link>https://www.lxpavilion.top/article/213/</link>
       <guid>https://www.lxpavilion.top/article/213/</guid>
       <pubDate>Thu, 10 Sep 2026 14:50:31 GMT</pubDate>
-      <description><![CDATA[从给 AI 发送 Obsidian 路径被改写成日语说起，拆解中日共用汉字导致的「语言漂移」现象、背后的机制与实测数据，以及实用的规避方法。]]></description>
+      <description><![CDATA[把一个笔记路径发给 AI，它稳定地把「学习」写成日语「学習」，换几个模型都复现。这篇从这条路径查起，讲清中日共用同一套汉字编码、假名「の」如何触发语言概率倾斜、再被自回归逐字放大的完整机制，最后给出三个能直接上手的规避办法。]]></description>
       <category>杂谈</category>
       <tag>Ai编程</tag>
       <author>ppc</author>
     </item>
     <item>
-      <title><![CDATA[Spring AI Qdrant 配置了 initializeSchema 却不自动建集合：build() 只是 new，建集合在 afterPropertiesSet()]]></title>
+      <title><![CDATA[Spring AI 踩坑记：配了 initializeSchema 为什么不建集合]]></title>
       <link>https://www.lxpavilion.top/article/212/</link>
       <guid>https://www.lxpavilion.top/article/212/</guid>
       <pubDate>Wed, 09 Sep 2026 12:16:23 GMT</pubDate>
-      <description><![CDATA[手动 new QdrantVectorStore 并配置 initializeSchema(true)，集合却不被创建，add 时永远报 collection doesn't exist。根因是初始化逻辑不在 build() 里，而在 InitializingBean 的 afterPropertiesSet() 回调中，这个回调只有 Spring 容器会调。]]></description>
+      <description><![CDATA[手动 new 一个 QdrantVectorStore 并配置 initializeSchema(true)，集合却始终建不出来，写入时报 collection doesn't exist。这篇顺着源码找到根因：建集合的逻辑不在 build() 里，而在只有 Spring 容器才会调用的 afterPropertiesSet() 回调上，并给出三种修法。]]></description>
       <category>开发拾遗</category>
       <tag>Spring AI</tag>
       <tag>Qdrant</tag>
@@ -51,11 +51,11 @@
       <author>ppc</author>
     </item>
     <item>
-      <title><![CDATA[Qdrant 连接失败排查：localhost 解析到 ::1，而 Docker 只绑了 IPv4]]></title>
+      <title><![CDATA[Qdrant 连接失败排查记：localhost 为什么把我带到了 IPv6]]></title>
       <link>https://www.lxpavilion.top/article/211/</link>
       <guid>https://www.lxpavilion.top/article/211/</guid>
       <pubDate>Wed, 09 Sep 2026 12:16:10 GMT</pubDate>
-      <description><![CDATA[Spring Boot + Spring AI 接入 Qdrant 向量库，gRPC 写入一直报连接失败，浏览器打开控制台却一切正常。定位发现 localhost 被解析成 IPv6 回环 ::1，而 Docker 发布的端口只监听 IPv4 的 127.0.0.1；同样的连接，浏览器、JDBC、OkHttp 都会自动降级，唯独 gRPC 不回退。把连接地址显式写成 127.0.0.1 即可解决。]]></description>
+      <description><![CDATA[Spring Boot 项目往 Qdrant 写数据，gRPC 一直报连接失败，浏览器打开控制台却一切正常。这篇记录排查过程：localhost 被解析到了 IPv6 回环 ::1，而 Docker 只把端口发布在 IPv4 上；浏览器、JDBC、OkHttp 都会自动降级，唯独 gRPC 不会。改一行配置就能解决。]]></description>
       <category>开发拾遗</category>
       <tag>Spring AI</tag>
       <tag>Docker</tag>

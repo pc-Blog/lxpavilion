@@ -10,7 +10,7 @@
   "next": null,
   "prev": {
     "id": 214,
-    "title": "Docker Desktop 与 WSL 的 bind mount 路径解析：同一条命令，两套文件系统"
+    "title": "Docker + WSL 挂载踩坑记：同一条命令，为什么挂到了两套文件系统"
   },
   "series": "DeepSeek Harness 体验",
   "summary": "DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。",
