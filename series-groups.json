@@ -9,7 +9,7 @@
     "series": "Spring开发日志",
     "count": 2,
     "coverImage": "/data/media/783.jpeg",
-    "summary": "手动 new QdrantVectorStore 并配置 initializeSchema(true)，集合却不被创建，add 时永远报 collection doesn't exist。根因是初始化逻辑不在 build() 里，而在 InitializingBean 的 afterPropertiesSet() 回调中，这个回调只有 Spring 容器会调。"
+    "summary": "手动 new 一个 QdrantVectorStore 并配置 initializeSchema(true)，集合却始终建不出来，写入时报 collection doesn't exist。这篇顺着源码找到根因：建集合的逻辑不在 build() 里，而在只有 Spring 容器才会调用的 afterPropertiesSet() 回调上，并给出三种修法。"
   },
   {
     "series": "Rust学习笔记",
