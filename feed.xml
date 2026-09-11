@@ -8,6 +8,16 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度]]></title>
+      <link>https://www.lxpavilion.top/article/215/</link>
+      <guid>https://www.lxpavilion.top/article/215/</guid>
+      <pubDate>Fri, 11 Sep 2026 21:16:06 GMT</pubDate>
+      <description><![CDATA[DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。]]></description>
+      <category>Ai编程</category>
+      
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[Docker Desktop 与 WSL 的 bind mount 路径解析：同一条命令，两套文件系统]]></title>
       <link>https://www.lxpavilion.top/article/214/</link>
       <guid>https://www.lxpavilion.top/article/214/</guid>
@@ -217,17 +227,6 @@
       <guid>https://www.lxpavilion.top/article/164/</guid>
       <pubDate>Thu, 06 Aug 2026 00:07:42 GMT</pubDate>
       <description><![CDATA[Rust 三大集合类型详解：Vec 动态数组的增删改查与遍历、String 的拼接与 format! 宏、HashMap 键值对操作与 entry 模式。从小数据到真实业务，掌握 Rust 最常用的数据结构。]]></description>
-      <category>学习笔记</category>
-      <tag>Rust</tag>
-      <tag>JetBrains</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Rust学习笔记：结构体与枚举——用Rust组织真正的业务数据]]></title>
-      <link>https://www.lxpavilion.top/article/163/</link>
-      <guid>https://www.lxpavilion.top/article/163/</guid>
-      <pubDate>Wed, 05 Aug 2026 23:51:29 GMT</pubDate>
-      <description><![CDATA[Rust 结构体与枚举完整教程：struct 定义与实例化、impl 方法与关联函数、元组结构体、枚举定义与带数据的变体、Option<T> 代替 null、match 与 if let 解包。从基础语法到实战模式，用可运行代码讲清楚每一处细节。]]></description>
       <category>学习笔记</category>
       <tag>Rust</tag>
       <tag>JetBrains</tag>

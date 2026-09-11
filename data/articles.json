@@ -1,6 +1,21 @@
 {
-  "total": 110,
+  "total": 111,
   "rows": [
+    {
+      "categoryId": 37,
+      "categoryName": "Ai编程",
+      "coverImage": "/data/media/779.png",
+      "createdAt": "2026-09-11T21:16:06.659734",
+      "id": 215,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "DeepSeek Harness 体验",
+      "summary": "DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。",
+      "tags": [],
+      "title": "DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度",
+      "updateTime": "2026-09-11T21:18:21.320959",
+      "viewCount": 0
+    },
     {
       "categoryId": 43,
       "categoryName": "开发拾遗",
@@ -2497,38 +2512,6 @@
       "title": "为博客搭建 GitHub 登录系统，打通 OAuth 完整流程",
       "updateTime": "2026-06-27T21:52:54.510434",
       "viewCount": 9
-    },
-    {
-      "categoryId": 39,
-      "categoryName": "数据库",
-      "coverImage": "/data/media/454.png",
-      "createdAt": "2026-06-27T21:43:08.753466",
-      "id": 44,
-      "isPinned": 0,
-      "isPublished": 1,
-      "series": null,
-      "summary": "博客想加登录、评论、浏览量统计，却一直卡在“没有数据库”？Cloudflare D1 提供了免费的无服务器 SQLite 数据库，边缘节点毫秒级响应，免费额度足够个人博客挥霍。本文从建库、建表到登录接口实战，手把手带你搞定博客的后端基础设施。",
-      "tags": [
-        {
-          "id": 41,
-          "name": "D1"
-        },
-        {
-          "id": 47,
-          "name": "Worker"
-        },
-        {
-          "id": 28,
-          "name": "Cloudflare"
-        },
-        {
-          "id": 30,
-          "name": "博客"
-        }
-      ],
-      "title": "上手 Cloudflare D1：无服务器数据库入门与博客实战",
-      "updateTime": "2026-06-27T21:53:04.420937",
-      "viewCount": 5
     }
   ]
 }

@@ -1,15 +1,15 @@
 [
   {
+    "series": "DeepSeek Harness 体验",
+    "count": 8,
+    "coverImage": "/data/media/779.png",
+    "summary": "DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。"
+  },
+  {
     "series": "Spring开发日志",
     "count": 2,
     "coverImage": "/data/media/783.jpeg",
     "summary": "手动 new QdrantVectorStore 并配置 initializeSchema(true)，集合却不被创建，add 时永远报 collection doesn't exist。根因是初始化逻辑不在 build() 里，而在 InitializingBean 的 afterPropertiesSet() 回调中，这个回调只有 Spring 容器会调。"
-  },
-  {
-    "series": "DeepSeek Harness 体验",
-    "count": 7,
-    "coverImage": "/data/media/779.png",
-    "summary": "拆解 DeepSeek Harness(DSH) 的三层沙箱架构和三种权限模式，并用一次真实排查说明：沙箱并不隔离网络——是 Windows 受限令牌让 Schannel 取不到 TLS 凭据，才导致所有 HTTPS 请求在受限模式下失败。"
   },
   {
     "series": "Rust学习笔记",

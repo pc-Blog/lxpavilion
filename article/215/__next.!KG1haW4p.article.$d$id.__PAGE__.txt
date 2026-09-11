@@ -1,342 +1,150 @@
 1:"$Sreact.fragment"
 2:I[17467,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/0xrzn2mdpvkvi.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
-4:T25fa,
-## 概述
+4:T2ad1,## 概述
 
-[Cloudflare D1](https://developers.cloudflare.com/d1/) 是 Cloudflare 推出的**无服务器 SQLite 数据库**，基于 SQLite 构建，天然与 Cloudflare Workers 集成。它让你在边缘节点直接读写关系型数据，无需管理服务器，无需操心连接池，按需付费。
+DSH（DeepSeek Harness）本身不产模型，它只是个 agent 框架，模型能力来自你给它挂的 provider。官方自带的模型有限，社区则把各家 AI 编程工具的订阅做成了插件，有的额度很便宜，有的干脆有免费额度。这篇讲三个能白嫖或极低价用上的：Command Code Go、WorkBuddy、Trae。
 
-### 核心特性
+它们都不是官方插件，都是 MIT 许可的社区项目，实现路子也不太一样。Command Code Go 走的是复刻官方 CLI 私有网关，WorkBuddy 和 Trae 则是复用本机已经登录的桌面客户端。共同点是装完之后，模型会直接出现在 DSH 的模型选择器里，而流式输出、工具调用、会话这些都还是 DSH 自己的。
 
-- **SQLite 兼容**：标准 SQL 语法，零学习成本
-- **边缘读取**：数据在全球节点缓存，读请求毫秒级响应
-- **按需付费**：无闲置费用，只有读写操作收费
-- **与 Workers 深度集成**：通过 `env.DB` 直接调用，无需 HTTP 请求
-- **内置备份与回滚**：自动备份，支持时间点恢复
+## 仓库概述
 
-### 免费额度
+三个仓库和它们各自接的东西：
 
-| 项目 | 额度 |
-|------|------|
-| 数据库数量 | 50,000 个 |
-| 每个数据库大小 | 500 MB |
-| 读行数 | 50 亿行/月 |
-| 写行数 | 1 亿行/月 |
-| 存储 | 5 GB（超出 $0.001/GB/月） |
+| 插件 | 仓库 | 接的是什么 |
+| --- | --- | --- |
+| Command Code Go | github.com/jiesou/dsh-commandcode-go-provider | 复刻官方 CLI 私有网关 /alpha/generate |
+| WorkBuddy | github.com/corrinehu/dsh-workbuddy-connect | 复用 WorkBuddy 桌面 App 登录态 |
+| Trae | github.com/dingminhua/dsh-connect-trae | 复用 Trae 中国区客户端登录态 |
 
-对于个人博客来说，这个免费额度绰绰有余。
+论活跃度，WorkBuddy 那个是主力，56 个 star、npm 月下载约 1800；另外两个小众一些，Trae 6 个 star、Command Code Go 13 个，月下载分别在 1000 和 1300 左右。三个都在持续更新，最近一次发版都挤在 9 月 10 号前后。
 
----
+下面按平台分开讲怎么装、怎么配、以及会踩到哪些坑。
 
-## 需求分析
+## Command Code Go
 
-为什么我的博客需要 D1？因为几个我想要的功能都需要数据库支撑：
+### 为什么它最划算
 
-1. **登录/注册** — 用户管理与评论者身份识别
-2. **文章浏览数** — 记录每篇文章的 PV
-3. **聊天室** — 实时消息存储
-4. **评论功能** — 文章评论持久化
+Command Code 的订阅从低到高分四档：Go、GOAT、Pro、Max。Go 是 1 美元一个月，给 10 美元额度的 credits，官方估算约 15000 次请求。模型覆盖 44 个，除开源系（Kimi、DeepSeek、GLM、MiniMax、Qwen）之外还包含几个 premium 例外，比如 GPT-5.6 Luna、Grok 4.5、Muse Spark 1.2/1.3、Qwen Max 与 Plus。再叠上平台的 deal，额度还能翻倍，MiniMax M3 是 2 倍、MiMo V2.5 Pro 接近 5 倍，1 美元跑出 20 到 50 美元的实际用量是能做到的。
 
-没有数据库之前，这些数据只能靠前端 LocalStorage 或远端 JSON 文件模拟，既不安全也无法跨设备同步。D1 提供了轻量级关系型数据库的能力，正好填补这个空缺。
+### 但它不能像 GOAT/Pro 那样直接用
 
-下面以**登录功能**为例，演示 D1 从创建到使用到接入的完整流程。
+Command Code 有两套接入面。一套是标准的 Provider API，OpenAI 兼容端点，任何 agent harness 都能直接接；另一套是官方 CLI 自己走的私有网关 /alpha/generate。Provider API 只对 GOAT 及以上开放，Go 套餐去调会返回 403 upgrade_required，额度只在私有网关上放行。换句话说，Go 的模型你只能用官方的 cmd CLI 跑。
 
----
+这就是插件存在的理由。它把 CLI 的线协议复刻进了 DSH：认证用的还是你在 Studio 里生成的那个 API key（形如 user_xxxx，跟 cmd login 写进 auth.json 的是同一个），插件把它当 Bearer token，再照抄 CLI 的请求头，等于"以 CLI 的身份"把 Go 的额度用起来。插件本身没有破解任何额度，只是换了个客户端。
 
-## 一、创建 D1 数据库
+### 安装与配置
 
-进入 Cloudflare Dashboard → **Storage & Databases** → **D1 SQLite Database**，点击 **Create**。
+安装：
 
-![创建数据库](/data/media/434.png)
-
-填写数据库名称（例如 `blog-database`），创建成功后你会得到一个 **database_id**：
-
-```
-c7e2f4b1-9937-4c7f-acd6-46aea0cb0504
+```sh
+dsh plugin --profile web add @jiesou/dsh-commandcode-go-provider
 ```
 
-![数据库详情](/data/media/439.png)
+拿 key 的路径是登录 commandcode.ai，侧边栏进 Studio，点 API Keys，再点 Generate API key，把生成的 key 复制出来。写进凭据文件：
 
-> **记住这个 ID**，后面两种操作方式都会用到它。
-
----
-
-## 二、搭建用户表
-
-在写代码之前，先设计好表结构。以用户表为例，完整的建表语句如下：
-
-```sql
-CREATE TABLE IF NOT EXISTS users (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    username      TEXT    NOT NULL UNIQUE,
-    email         TEXT    UNIQUE NOT NULL,
-    password_hash TEXT    NOT NULL,
-    avatar_url    TEXT    DEFAULT '',
-    bio           TEXT    DEFAULT '',
-    role          TEXT    DEFAULT 'user' CHECK(role IN ('user', 'admin')),
-    created_at    TEXT    DEFAULT (datetime('now')),
-    updated_at    TEXT    DEFAULT (datetime('now'))
-);
+```sh
+echo 'COMMANDCODE_API_KEY: "user_xxxx"' >> ~/.dsh/.credentials.yaml
 ```
 
-**字段说明：**
+重启 dsh，模型选择器里就有 Command Code Go 这一项了。模型目录不需要手配，插件启动时会从 /provider/v1/models 拉实时列表，再按官方 CLI catalog 的 Min plan 列筛出 Go and above 的模型，顺带把每个模型支持的推理档位合并进来。挂载时上游不可达也不会把插件拖垮，目录暂时是空的而已。
 
-| 字段 | 说明 |
-|------|------|
-| id | 自增主键 |
-| username | 用户名，唯一 |
-| email | 邮箱，唯一，可用于登录 |
-| password_hash | 密码哈希值（绝不存明文） |
-| avatar_url | 头像链接 |
-| bio | 个人简介 |
-| role | 角色：user 普通用户 / admin 管理员 |
-| created_at | 注册时间 |
-| updated_at | 更新时间 |
+### 注意事项
 
----
+作者在 package.json 里声明了兼容范围：DSH 要 >=0.1.2-alpha.3 且 <0.2.0，Node 是 ^22.19.0 或 >=24.0.0，profile 支持 web 和 headless。他还做了逐版本实测，0.1.5-alpha.1、0.1.5-alpha.2、0.1.5-rc.1 三档的安装、启动、卸载都通过，核心正好在这条线上的话可以放心。
 
-## 三、方式一：REST API 操作（Python）
+配置项都是可选的，默认就能跑：apiKeyEnv 默认读 COMMANDCODE_API_KEY，baseURL 默认 https://api.commandcode.ai，maxTokens 默认 64000，defaultContextWindow 默认 100 万。要同时挂多个账号的话用 accounts 字典，每个 key 会变成一个独立的 provider 路由，各持各的 key，在模型选择器里各占一项，改了设置下个请求就生效，不用重启。
 
-如果你博客后端是 Python（Django、Flask 等），可以通过 D1 的 REST API 直接操作数据库。
+有一点得说清楚：它走的是未公开接口，Command Code 那边协议一改，插件随时可能失效。
 
-### 1. 获取 Account ID
+## WorkBuddy
 
-进入 Cloudflare Dashboard 首页，点击右侧右上角的三点菜单 → **复制 Account ID**。
+WorkBuddy 是腾讯的 AI 编程工具，好处是有免费额度，也有倍率为 0 的免费模型，模型名后面还会跟促销徽章，限时免费、夜间折扣都会标出来。接进 DSH 用的是 dsh-workbuddy-connect。
 
-![Account ID](/data/media/436.png)
+### 前提
 
-### 2. 创建 API Token
+电脑上装了 WorkBuddy 桌面 App 并且已经登录。插件复用的是 App 的登录态，你在 App 里切换账号，插件会跟着走。它不需要你填任何 API Key。
 
-进入 **My Profile** → **API Tokens** → **Create Token**，选择 **Edit Cloudflare Workers** 模板，权限至少包含 **D1: Edit**。
+### 安装
 
-### 3. 操作演示
-
-```python
-import requests
-
-ACCOUNT_ID = "你的Account ID"
-DATABASE_ID = "你的database_id"
-API_TOKEN = "你的API Token"
-
-url = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/d1/database/{DATABASE_ID}/query"
-headers = {
-    "Authorization": f"Bearer {API_TOKEN}",
-    "Content-Type": "application/json"
-}
-
-# 创建表
-sql = """
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL
-)
-"""
-res = requests.post(url, headers=headers, json={"sql": sql})
-print(res.json()["success"])  # True 即创建成功
-
-# 插入数据（使用 ? 占位符防 SQL 注入）
-sql = "INSERT INTO users (name, email) VALUES (?, ?)"
-params = ["Alice", "alice@example.com"]
-res = requests.post(url, headers=headers, json={"sql": sql, "params": params})
-print(res.json()["success"])
-
-# 查询数据
-sql = "SELECT * FROM users WHERE email = ?"
-params = ["alice@example.com"]
-res = requests.post(url, headers=headers, json={"sql": sql, "params": params})
-data = res.json()
-if data["success"]:
-    print(data["result"][0]["results"])
+```sh
+dsh plugin --profile web add dsh-workbuddy-connect
 ```
 
-### 4. 验证
+装完重启 dsh。
 
-在 Dashboard 的 D1 页面，可以直观看到数据：
+### 版本必须对应
 
-![Overview 页面](/data/media/437.png)
+这一步最要紧。插件和 DSH 核心的版本是一一对应的，混用会让 DSH 直接起不来：
 
-也可以点 **Console** 直接运行 SQL 查看结果：
+| 插件版本 | 要求的 DSH 核心 |
+| --- | --- |
+| 0.3.2 及以上 | 0.1.5-rc.1 及以上 |
+| 0.3.0 – 0.3.1 | 0.1.2-rc.1 |
+| 0.2.6 | 0.1.1-rc.2 |
 
-![Console 页面](/data/media/440.png)
+先跑 `dsh --version` 确认自己的核心版本，再决定装哪个。我这边核心是 0.1.5-rc.1，对应 0.3.2 及以上，直接装最新版就行。要是核心停在 0.1.2-rc.1，就得钉在 0.3.1，装最新版反而会挂。桌面版 DSH 有自己的节奏，App 内置核心跟进之前，用 0.3.1 更稳。
 
----
+### 在设置里看信息
 
-## 四、方式二：Worker 绑定操作（推荐）
+**设置 → 插件 → DSH WorkBuddy Connect** 那张卡片里能看账号、令牌有效期、剩余积分和模型优惠，展开后分状态、上下文、明细三个标签。推理档位如果上游没有明确声明，可以在卡片里手动检测，不过检测会发少量请求，可能消耗积分，不检测的话走上游默认档位。模型选择列表里每个模型名后面还会跟积分倍率，比如 `GLM-5.2 · x0.79`，挑的时候一眼能看出贵贱。
 
-### 为什么推荐？
+![image.png](/data/media/786.png)
 
-1. **零网络延迟**：`env.DB` 是 Worker 内部绑定，不走 HTTP
-2. **无需管理 API Token**：绑定由 Cloudflare 证书自动处理，零泄露风险
-3. **原生 TypeScript 支持**：`prepare().bind()` 天然防 SQL 注入
-4. **与 Pages Functions 集成**：博客和 API 可同域部署
+命令行也能查状态，会输出登录账号、令牌过期时间和剩余积分：
 
-### 1. wrangler.jsonc 配置
-
-```jsonc
-{
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "blog-database",
-      "database_id": "c7e2f4b1-9937-4c7f-acd6-46aea0cb0504"
-    }
-  ]
-}
+```sh
+dsh plugin --profile web exec dsh-workbuddy-connect status
 ```
 
-> `binding` 名称（这里是 `DB`）后面通过 `env.DB` 访问。
+令牌过期是自动刷新的，不用手动管。
 
-### 2. Worker 操作演示
+## Trae
 
-```ts
-export default {
-  async fetch(request: Request, env: { DB: D1Database }): Promise<Response> {
-    try {
-      // 创建表
-      await env.DB.exec(
-        "CREATE TABLE IF NOT EXISTS posts (" +
-        "  id INTEGER PRIMARY KEY AUTOINCREMENT," +
-        "  title TEXT," +
-        "  views INTEGER DEFAULT 0," +
-        "  created_at TEXT DEFAULT (datetime('now'))" +
-        ")"
-      );
+Trae 是字节的 AI IDE，中国区账号同样有免费额度。接进 DSH 用的是 dsh-connect-trae。
 
-      // 插入数据（参数化查询）
-      await env.DB
-        .prepare("INSERT INTO posts (title) VALUES (?)")
-        .bind("我的第一篇博客")
-        .run();
+### 前提与安装
 
-      // 查询数据
-      const { results } = await env.DB
-        .prepare("SELECT * FROM posts ORDER BY id DESC LIMIT 10")
-        .all();
+前提和上一个一样，电脑上装了 Trae 中国区客户端并且已经登录，插件读的是 `%APPDATA%\Trae CN` 下的登录凭据，不用填 Key。
 
-      return new Response(JSON.stringify({ code: 1, data: results }), {
-        headers: { "content-type": "application/json" },
-      });
-
-    } catch (e: any) {
-      return new Response(JSON.stringify({ code: 0, error: e.message }), {
-        headers: { "content-type": "application/json" },
-      });
-    }
-  },
-};
+```sh
+dsh plugin --profile web add dsh-connect-trae
 ```
 
-### 3. D1 常用操作速查
+1.4.0 这个版本要求核心 >=0.1.5-0，核心是 0.1.5-rc.1 的话正好匹配。它的工作方式是把 Trae 的模型注册成 DSH 的 trae provider，工具调用由 Trae 产出，但 bash、read、write 这些工具是 DSH 在本地执行的，所以正常的 agent 循环没被破坏。
 
-```ts
-// 单条查询 - 返回第一行
-const user = await DB.prepare("SELECT * FROM users WHERE id = ?").bind(1).first();
+### 在设置里看信息
 
-// 多条查询 - 返回所有行
-const { results } = await DB.prepare("SELECT * FROM users").all();
+![image.png](/data/media/787.png)
 
-// 写入 - 返回执行结果
-const { success, meta } = await DB
-  .prepare("INSERT INTO users (name, email) VALUES (?, ?)")
-  .bind("Bob", "bob@example.com")
-  .run();
+### 模型列表报错怎么办
 
-// 批量写入
-const insert = DB.prepare("INSERT INTO users (name, email) VALUES (?, ?)");
-await DB.batch([
-  insert.bind("Alice", "alice@example.com"),
-  insert.bind("Bob", "bob@example.com"),
-]);
-```
+如果模型选择器里一个 Trae 模型都没有，或者看到类似 `adapter returned invalid context metadata for provider "trae" model "xxx"` 的报错，这是插件的已知问题，不是你装错了。
 
----
+原因是这样：插件内置了一份兜底模型表，但这份表里只有 id 和 name，没有 contextWindow。当 settings.yaml 里还没有 `trae:` 这一段时（全新安装，或者从没在卡片里点过保存），插件会用这份兜底表覆盖掉刚从 Trae 拉到的真实目录，于是每个模型的 contextWindow 都成了 undefined。DSH 内核要求 contextWindow 必须是正整数，校验不过就直接让整个 trae provider 的目录解析失败——表现出来就是模型全部加载不出来，但设置卡片照常显示登录和积分，因为那是走另一条只读接口的。
 
-## 五、实战：用 D1 写一个登录接口
+解法很简单：在插件设置里点一次「从 Trae 刷新」，再点「保存」。保存会把带 contextWindow 的模型目录写进 settings.yaml 的 `trae.lastCatalog`，模型立刻就回来了，这个文件是热重载的，不需要重启 DSH。所以那段配置生成之后别删，清空设置会复发。
 
-回到最开始的需求，用 Worker + D1 实现登录其实只需要三个核心步骤：
+## 原理篇
 
-### 1. 建表（sessions 表）
+三个插件的实现路子不同，但都建立在同一个前提上：DSH 的模型接入是可插拔的。插件只要注册一条 provider 路由、实现 DSH 的 LLM 抽象，模型就能出现在选择器里，后面的 agent 循环、工具、权限都还是 DSH 自己的。
 
-```sql
-CREATE TABLE IF NOT EXISTS sessions (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id     INTEGER NOT NULL,
-  token       TEXT    NOT NULL UNIQUE,
-  expires_at  TEXT    NOT NULL,
-  created_at  TEXT    DEFAULT (datetime('now')),
-  FOREIGN KEY (user_id) REFERENCES users(id)
-);
-```
+Command Code Go 那条路是逆向。Go 套餐被挡在 Provider API 外面，它只能复刻官方 CLI 的 HTTP 线协议。请求头得带 x-command-code-version，钉在一个已知可用的 CLI 版本上，网关靠这个头判断兼容性，还有 x-cli-environment 之类的头。请求体也不是标准的 model 加 messages，而是 CLI 自己的信封格式，分 config、memory、taste、skills、permissionMode、params 几段。响应不是 SSE，是逐行的 JSON，每行一个事件。插件做的事就是把这些事件翻译成 DSH 的 StreamChunk：文本增量、推理增量、工具调用、用量、结束。
 
-### 2. 登录逻辑（仅展示核心 D1 操作）
+WorkBuddy 和 Trae 走的是另一条路，复用本机客户端的登录态。以 Trae 为例，链路是 DSH 的 PiAiAdapter 先连到一个本机的 loopback 转发器，这个转发器用随机端口加进程内随机 secret，真实 token 不出本机，也不交给 pi-ai；转发器再连 Trae 的 llm_utils_chat 接口，把 Trae 返回的 function_call 转成 OpenAI 格式的 tool_calls，最后由 DSH 在本地执行工具、把结果回传。模型只负责决定调什么工具，工具的实际执行权始终在 DSH 手里，沙箱和权限控制都还在。
 
-```ts
-// 注册：将用户数据写入 D1
-await DB
-  .prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)")
-  .bind(username, email, hashedPassword)
-  .run();
+之所以都要绕这么一圈，是因为这些平台根本没开放标准 API。额度要么绑在客户端登录态上，要么只在私有网关上放行，插件的本质就是以官方客户端的身份把请求发出去。
 
-// 登录：从 D1 查询用户
-const user = await DB
-  .prepare("SELECT * FROM users WHERE username = ? OR email = ?")
-  .bind(login, login)
-  .first();
-
-// 验证通过后，向 D1 写入 session token
-await DB
-  .prepare("INSERT INTO sessions (user_id, token, expires_at) VALUES (?, ?, ?)")
-  .bind(user.id, token, expiresAt)
-  .run();
-
-// 鉴权：从 D1 校验 token
-const session = await DB
-  .prepare(`
-    SELECT u.id, u.username, u.email, u.role
-    FROM sessions s JOIN users u ON u.id = s.user_id
-    WHERE s.token = ? AND s.expires_at > datetime('now')
-  `)
-  .bind(token)
-  .first();
-```
-
-本质上就是在 D1 里读写三条 SQL 语句——注册一条 INSERT、登录一条 SELECT + 一条 INSERT、鉴权一条 JOIN 查询。这就是 D1 的典型用法。
-
-### 3. 小技巧：用 Workflow 定时清理过期 session
-
-```ts
-// 在 Worker 中添加定时任务，每天清理一次过期 session
-async function cleanExpiredSessions(DB: D1Database) {
-  const { meta } = await DB
-    .prepare("DELETE FROM sessions WHERE expires_at <= datetime('now')")
-    .run();
-  console.log(`清理了 ${meta.changes} 条过期 session`);
-}
-```
-
----
+这也意味着风险。三者都是非官方项目，依赖的是未公开、没有稳定契约的接口，上游一改版本或者动一下协议就可能失效。用不用、怎么用，条款上的判断得自己来。
 
 ## 总结
 
-D1 解决了博客对**关系型数据库**的需求，而 Workers 绑定让它用起来像本地变量一样简单：
+这三个插件覆盖了三种来源。Command Code Go 是付费但极便宜的，1 美元换 10 美元额度，叠上 deal 还能翻倍；WorkBuddy 和 Trae 靠的是本机客户端的免费额度和免费模型。共同点是装完之后模型直接出现在 DSH 里，额度池互不干扰，可以按模型倍率挑便宜的用。
 
-- **建库**：Dashboard 点两下即可
-- **建表**：标准 SQL，无需学习新语法
-- **读写**：REST API 适合外部服务，Worker 绑定零延迟
-- **扩展**：登录 → 文章浏览数 → 评论 → 聊天室，一个 D1 搞定所有
-
-### 相关文档
-
-- [D1 API 文档](https://developers.cloudflare.com/api/resources/d1)
-- [D1 Worker API 文档](https://developers.cloudflare.com/d1/worker-api/d1-database/)
-- [Workers 文档](https://developers.cloudflare.com/workers/)
-
-
-
+装的时候记住三件事：一是先确认 DSH 核心版本，再挑对应的插件版本，错配会让 DSH 起不来；二是只有 Command Code Go 需要手动配 Key，另外两个靠本机登录态，装之前确认客户端已经登录；三是 Trae 那个记得在卡片里刷新加保存一次，生成的 settings.yaml 配置段别删。
 b:X
 10:X
 10:C
-0:{"buildId":"a5uDKIXCE_7EnTlmgCeou","data":[{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"上手 Cloudflare D1：无服务器数据库入门与博客实战\",\"item\":\"https://www.lxpavilion.top/article/44\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"上手 Cloudflare D1：无服务器数据库入门与博客实战\",\"headline\":\"上手 Cloudflare D1：无服务器数据库入门与博客实战\",\"description\":\"博客想加登录、评论、浏览量统计，却一直卡在“没有数据库”？Cloudflare D1 提供了免费的无服务器 SQLite 数据库，边缘节点毫秒级响应，免费额度足够个人博客挥霍。本文从建库、建表到登录接口实战，手把手带你搞定博客的后端基础设施。\",\"datePublished\":\"2026-06-27T21:43:08.753466\",\"dateCreated\":\"2026-06-27T21:43:08.753466\",\"dateModified\":\"2026-06-27T21:53:04.420937\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/454.png\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"上手 Cloudflare D1：无服务器数据库入门与博客实战","initialContent":"$4"}]],["$L5","$L6","$L7","$L8"],"$L9"]}],"isPartial":"$@a","staleTime":"$b","varyParams":null},{"rsc":"$Lc","isPartial":"$@d","staleTime":"$b","varyParams":null},{"rsc":"$Le","isPartial":"$@f","staleTime":"$b","varyParams":"$10"},{"rsc":"$L11","isPartial":"$@12","staleTime":"$b","varyParams":"$10"},{"rsc":"$L13","isPartial":"$@14","staleTime":"$b","varyParams":null},{"rsc":"$L15","isPartial":"$@16","staleTime":"$b","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@17","rootVaryParams":null,"needsRuntimeRequest":"$@18"}
+0:{"buildId":"4OZSwWzAYlUgGTeWSI2QE","data":[{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度\",\"item\":\"https://www.lxpavilion.top/article/215\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度\",\"headline\":\"DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度\",\"description\":\"DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。\",\"datePublished\":\"2026-09-11T21:16:06.659734\",\"dateCreated\":\"2026-09-11T21:16:06.659734\",\"dateModified\":\"2026-09-11T21:18:21.320959\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/779.png\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度","initialContent":"$4"}]],["$L5","$L6","$L7","$L8"],"$L9"]}],"isPartial":"$@a","staleTime":"$b","varyParams":null},{"rsc":"$Lc","isPartial":"$@d","staleTime":"$b","varyParams":null},{"rsc":"$Le","isPartial":"$@f","staleTime":"$b","varyParams":"$10"},{"rsc":"$L11","isPartial":"$@12","staleTime":"$b","varyParams":"$10"},{"rsc":"$L13","isPartial":"$@14","staleTime":"$b","varyParams":null},{"rsc":"$L15","isPartial":"$@16","staleTime":"$b","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@17","rootVaryParams":null,"needsRuntimeRequest":"$@18"}
 19:I[97367,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
 1a:"$Sreact.suspense"
 1c:I[97367,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
@@ -359,13 +167,13 @@ b:X
 32:I[8123,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
 :HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
 :HL["/_next/static/chunks/0q2lrihnv8n5f.css","style"]
-3:{"id":"44"}
+3:{"id":"215"}
 5:["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true}]
 6:["$","script","script-1",{"src":"/_next/static/chunks/0xrzn2mdpvkvi.js","async":true}]
 7:["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true}]
 8:["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true}]
 9:["$","$L19",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@1b"}]}]
-c:["$","$1","h",{"children":[null,["$","$L1c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L1d",null,{"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"上手 Cloudflare D1：无服务器数据库入门与博客实战 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"博客想加登录、评论、浏览量统计，却一直卡在“没有数据库”？Cloudflare D1 提供了免费的无服务器 SQLite 数据库，边缘节点毫秒级响应，免费额度足够个人博客挥霍。本文从建库、建表到登录接口实战，手把手带你搞定博客的后端基础设施。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/44/"}],["$","meta","5",{"property":"og:title","content":"上手 Cloudflare D1：无服务器数据库入门与博客实战 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"博客想加登录、评论、浏览量统计，却一直卡在“没有数据库”？Cloudflare D1 提供了免费的无服务器 SQLite 数据库，边缘节点毫秒级响应，免费额度足够个人博客挥霍。本文从建库、建表到登录接口实战，手把手带你搞定博客的后端基础设施。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/454.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","15",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+c:["$","$1","h",{"children":[null,["$","$L1c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L1d",null,{"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/215/"}],["$","meta","5",{"property":"og:title","content":"DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/779.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","15",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
 e:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
 11:["$","$L21",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L22"]}],"$L23","$L24","$L25"]}]]}],[],null],"children":"$L26"}]
 13:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/109z71992pbyo.js","async":true}]],[["$","$L27",null,{}],["$","$L28",null,{"children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L29",null,{"children":["$","$L20",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
