@@ -1,9 +1,9 @@
 [
   {
     "series": "DeepSeek Harness 体验",
-    "count": 8,
+    "count": 9,
     "coverImage": "/data/media/779.png",
-    "summary": "DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。"
+    "summary": "DeepSeek Harness 的 Command Code 插件不止一个，功能差得挺远。这篇讲我最后选的那个（@mars-sea/dsh-commandcode-provider）：它把实时模型目录、联网搜索、多账户轮换和用量面板收进同一个包，Go 套餐也能用。附带安装配置步骤，以及双传输和搜索端点的原理拆解。"
   },
   {
     "series": "Spring开发日志",

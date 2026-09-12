@@ -1,6 +1,30 @@
 {
-  "total": 111,
+  "total": 112,
   "rows": [
+    {
+      "categoryId": 37,
+      "categoryName": "Ai编程",
+      "coverImage": "/data/media/779.png",
+      "createdAt": "2026-09-12T12:27:58.015473",
+      "id": 216,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "DeepSeek Harness 体验",
+      "summary": "DeepSeek Harness 的 Command Code 插件不止一个，功能差得挺远。这篇讲我最后选的那个（@mars-sea/dsh-commandcode-provider）：它把实时模型目录、联网搜索、多账户轮换和用量面板收进同一个包，Go 套餐也能用。附带安装配置步骤，以及双传输和搜索端点的原理拆解。",
+      "tags": [
+        {
+          "id": 85,
+          "name": "Ai编程"
+        },
+        {
+          "id": 88,
+          "name": "DSH"
+        }
+      ],
+      "title": "DSH 接入 Command Code Go 插件：模型、联网搜索与多账户轮换一次到位",
+      "updateTime": "2026-09-12T13:04:28.572299",
+      "viewCount": 0
+    },
     {
       "categoryId": 37,
       "categoryName": "Ai编程",
@@ -2484,34 +2508,6 @@
       "title": "为我的博客自建评论系统，摆脱 Giscus 局限",
       "updateTime": "2026-06-27T22:01:52.468013",
       "viewCount": 8
-    },
-    {
-      "categoryId": 40,
-      "categoryName": "后端",
-      "coverImage": "/data/media/453.png",
-      "createdAt": "2026-06-27T21:45:35.477096",
-      "id": 45,
-      "isPinned": 0,
-      "isPublished": 1,
-      "series": null,
-      "summary": "为博客搭建统一的登录系统，用 GitHub OAuth 实现 GitHub 一键登录和账号密码登录，衔接自建评论系统",
-      "tags": [
-        {
-          "id": 48,
-          "name": "OAuth"
-        },
-        {
-          "id": 27,
-          "name": "Github"
-        },
-        {
-          "id": 30,
-          "name": "博客"
-        }
-      ],
-      "title": "为博客搭建 GitHub 登录系统，打通 OAuth 完整流程",
-      "updateTime": "2026-06-27T21:52:54.510434",
-      "viewCount": 9
     }
   ]
 }
