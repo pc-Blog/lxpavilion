@@ -8,6 +8,17 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[DSH 接入 Command Code Go 插件：模型、联网搜索与多账户轮换一次到位]]></title>
+      <link>https://www.lxpavilion.top/article/216/</link>
+      <guid>https://www.lxpavilion.top/article/216/</guid>
+      <pubDate>Sat, 12 Sep 2026 12:27:58 GMT</pubDate>
+      <description><![CDATA[DeepSeek Harness 的 Command Code 插件不止一个，功能差得挺远。这篇讲我最后选的那个（@mars-sea/dsh-commandcode-provider）：它把实时模型目录、联网搜索、多账户轮换和用量面板收进同一个包，Go 套餐也能用。附带安装配置步骤，以及双传输和搜索端点的原理拆解。]]></description>
+      <category>Ai编程</category>
+      <tag>Ai编程</tag>
+      <tag>DSH</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度]]></title>
       <link>https://www.lxpavilion.top/article/215/</link>
       <guid>https://www.lxpavilion.top/article/215/</guid>
@@ -216,17 +227,6 @@
       <guid>https://www.lxpavilion.top/article/165/</guid>
       <pubDate>Thu, 06 Aug 2026 00:14:26 GMT</pubDate>
       <description><![CDATA[Rust 错误处理全景：panic! 不可恢复错误、Result<T,E> 可恢复错误的 match/unwrap/expect 处理、? 运算符传播错误的简洁写法、Option 与 Result 互转。从此告别 try-catch，拥抱编译期强制处理的错误哲学。]]></description>
-      <category>学习笔记</category>
-      <tag>Rust</tag>
-      <tag>JetBrains</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Rust学习笔记：集合类型——Vec、String与HashMap]]></title>
-      <link>https://www.lxpavilion.top/article/164/</link>
-      <guid>https://www.lxpavilion.top/article/164/</guid>
-      <pubDate>Thu, 06 Aug 2026 00:07:42 GMT</pubDate>
-      <description><![CDATA[Rust 三大集合类型详解：Vec 动态数组的增删改查与遍历、String 的拼接与 format! 宏、HashMap 键值对操作与 entry 模式。从小数据到真实业务，掌握 Rust 最常用的数据结构。]]></description>
       <category>学习笔记</category>
       <tag>Rust</tag>
       <tag>JetBrains</tag>
