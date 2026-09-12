@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { getFullList, getCategoryTree } from "@/lib/api/bookmark";
+import { downloadEdgeBookmarks } from "@/lib/export-bookmarks";
 import type { Bookmark, BookmarkCategory } from "@/lib/types";
 import { useTheme } from "@/app/_components/layout/ThemeProvider";
 import Tooltip from "@/app/_components/common/Tooltip";
@@ -119,6 +120,18 @@ export default function BookmarksClient() {
               </svg>
               </button>
               </Tooltip>
+            <Tooltip text="导出 Edge 书签（可直接导入浏览器）">
+            <button
+              onClick={() => downloadEdgeBookmarks(categories, bookmarks)}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-indigo-100/50 dark:hover:bg-indigo-500/20 hover:text-indigo-500 dark:hover:text-indigo-400 transition-all"
+            >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <circle cx="12" cy="12" r="9" />
+              <path d="M3 12h18" />
+              <path d="M12 3c2.4 2.7 3.75 5.8 3.75 9s-1.35 6.3-3.75 9c-2.4-2.7-3.75-5.8-3.75-9S9.6 5.7 12 3z" />
+            </svg>
+            </button>
+            </Tooltip>
             <Tooltip text="切换深色/浅色主题">
             <button
               onClick={toggleTheme}
