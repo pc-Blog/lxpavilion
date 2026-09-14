@@ -3,8 +3,8 @@
 import { useState, useEffect, use, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { OpArticle, OpTag } from "@/lib/types";
-import { getArticleList } from "@/lib/api/op";
+import type { Literature, LiteratureCategory } from "@/lib/types";
+import { getCategories, getList } from "@/lib/api/literature";
 import BackButton from "@/app/_components/article/BackButton";
 import CommentSection from "@/app/_components/comment/CommentSection";
 import { tagIconMap } from "@/app/_components/literature/tag-icons";
@@ -57,80 +57,66 @@ function CopyButton({ title, content }: { title: string; content: string }) {
 
 export default function LiteratureDetailPage(props: { params: Promise<{ id: string }>; articleTitle?: string; initialContent?: string }) {
   const { id } = use(props.params);
-  const [item, setItem] = useState<OpArticle | null>(null);
+  const [item, setItem] = useState<Literature | null>(null);
+  const [all, setAll] = useState<Literature[]>([]);
+  const [categories, setCategories] = useState<LiteratureCategory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [allTags, setAllTags] = useState<OpTag[]>([]);
 
   useEffect(() => {
     (async () => {
       setLoading(true);
       try {
-        const data = await getArticleList();
-        setAllTags(data.rows);
+        const [list, cats] = await Promise.all([getList(), getCategories()]);
+        setAll(list.rows);
+        setCategories(cats);
         const numId = Number(id);
-        const found = data.rows
-          .flatMap((t) => t.articles)
-          .find((a) => a.id === numId || a.title === id);
-        setItem(found || null);
+        setItem(list.rows.find((a) => a.id === numId || String(a.id) === id) ?? null);
       } catch {
         setItem(null);
-        setAllTags([]);
+        setAll([]);
+        setCategories([]);
       } finally {
         setLoading(false);
       }
     })();
   }, [id]);
 
+  const categoryName = useMemo(() => {
+    if (!item?.categoryId) return "";
+    return categories.find((c) => c.id === item.categoryId)?.name ?? "";
+  }, [categories, item]);
+
   // 分享文学内容给看板娘
   useEffect(() => {
     if (item) {
-      const names = allTags.filter((t) => item.tagIds.includes(t.id)).map((t) => t.name);
       useContentStore.getState().setContent({
         type: "literature",
         title: item.title,
         summary: "",
-        categoryName: names[0] || "",
-        tags: names,
+        categoryName,
+        tags: categoryName ? [categoryName] : [],
         content: item.content || "",
       });
     }
     return () => { useContentStore.getState().clearContent(); };
-  }, [item, allTags]);
+  }, [item, categoryName]);
 
-  const tagNames = useMemo(() => {
-    if (!item) return [];
-    return allTags
-      .filter((t) => item.tagIds.includes(t.id))
-      .map((t) => t.name);
-  }, [allTags, item]);
-
+  /**
+   * 相关文章：同一分类内按写作日期降序取前后各 3 篇。
+   * 迁到平铺数据后不再需要「从 tagIds 里找主分类」，直接用 categoryId。
+   */
   const relatedArticles = useMemo(() => {
-    if (!item || allTags.length === 0) return [];
-    // 取主要分类
-    const primaryTag = allTags.find((t) => t.id === item.tagIds[0]);
-    if (!primaryTag) return [];
-    // 按 writtenAt 降序排列
-    const sorted = [...primaryTag.articles].sort(
-      (a, b) => new Date(b.writtenAt || 0).getTime() - new Date(a.writtenAt || 0).getTime()
-    );
-    const idx = sorted.findIndex((a) => a.id === item.id);
-    if (idx === -1) return [];
-    // 从当前位置向两侧扩展，取前 3 + 后 3
-    const result: OpArticle[] = [];
-    let left = idx - 1;
-    let right = idx + 1;
-    while (result.length < 6 && (left >= 0 || right < sorted.length)) {
-      if (left >= 0) {
-        result.push(sorted[left]);
-        left--;
-      }
-      if (right < sorted.length && result.length < 6) {
-        result.push(sorted[right]);
-        right++;
-      }
-    }
-    return result;
-  }, [allTags, item]);
+    if (!item) return [];
+    const sameCategory = all
+      .filter((a) => a.categoryId != null && a.categoryId === item.categoryId && a.id !== item.id)
+      .sort((a, b) => {
+        const da = a.writtenAt ?? "";
+        const db = b.writtenAt ?? "";
+        if (da !== db) return db.localeCompare(da);
+        return b.id - a.id;
+      });
+    return sameCategory.slice(0, 6);
+  }, [all, item]);
 
   const [spotXY, setSpotXY] = useState({ x: 50, y: 50 });
   const handleSpotMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -161,22 +147,21 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
             {item?.title || props.articleTitle}
           </h1>
 
-          {item?.writtenAt && (
-            <div className="flex items-center gap-2 mt-3">
-              <p className="text-sm text-slate-400">
-                {new Date(item.writtenAt).toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
-              </p>
+          {(item?.writtenAt || displayContent) && (
+            <div className="flex items-center gap-2 mt-3 flex-wrap">
+              {item?.writtenAt && (
+                <p className="text-sm text-slate-400">
+                  {new Date(item.writtenAt).toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
+                </p>
+              )}
+              {item?.weather && <span className="text-sm text-slate-400">· {item.weather}</span>}
               <CopyButton title={item?.title || props.articleTitle || ""} content={displayContent} />
             </div>
           )}
 
-          {tagNames.length > 0 && (
+          {categoryName && (
             <div className="flex flex-wrap gap-2 mt-3">
-              {tagNames.map((name) => (
-                <span key={name} className="text-xs text-pink-500 dark:text-pink-400 font-medium">
-                  #{name}
-                </span>
-              ))}
+              <span className="text-xs text-pink-500 dark:text-pink-400 font-medium">#{categoryName}</span>
             </div>
           )}
         </header>
@@ -213,8 +198,7 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
           <div className="mt-12">
             <h2 className="text-lg font-bold text-slate-700 dark:text-slate-300 mb-4 flex items-center gap-2">
             {(() => {
-              const primaryTag = tagNames[0];
-              const info = primaryTag ? tagIconMap[primaryTag] : undefined;
+              const info = categoryName ? tagIconMap[categoryName] : undefined;
               if (info) {
                 const { Icon, color } = info;
                 return <Icon className={`w-6 h-6 ${color}`} strokeWidth={1.5} />;

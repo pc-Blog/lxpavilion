@@ -7,7 +7,7 @@ import { assetUrl } from "@/lib/asset-url";
 import type { DashboardVO } from "@/lib/types";
 import { get } from "@/lib/api/dashboard";
 import { get as getAbout } from "@/lib/api/about";
-import { getArticleList } from "@/lib/api/op";
+import { getCount as getLiteratureCount } from "@/lib/api/literature";
 import { getPublishedList as getFriendLinks } from "@/lib/api/friend-link";
 import { getPublishedList as getChatters } from "@/lib/api/chatter";
 import ThemeToggleBlock from "@/app/_components/common/ThemeToggle";
@@ -47,10 +47,7 @@ export default function Home() {
     }).catch(() => { });
     getAbout().then(about => { loadConfig(about); setConfigReady(true); }).catch(() => { });
     if (siteConfig.featureLiterature) {
-      getArticleList().then(d => {
-        const total = d.rows.reduce((sum, t) => sum + t.articles.length, 0);
-        setLiteratureCount(total);
-      }).catch(() => { });
+      getLiteratureCount().then(setLiteratureCount).catch(() => { });
     }
     getFriendLinks().then(list => {
       setFriendCount(Array.isArray(list) ? list.length : (list as { rows?: unknown[] })?.rows?.length ?? null);

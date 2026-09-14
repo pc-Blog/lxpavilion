@@ -326,20 +326,27 @@ export interface Bookmark {
   updateTime?: string;
 }
 
-// ========== Op (Tomcat proxy) ==========
+// ========== Literature（文学作品，本地库） ==========
 
-export interface OpArticle {
+export interface Literature {
   id: number;
   title: string;
-  content?: string;
-  writtenAt?: string;
-  tagIds: number[];
+  /** 正文（纯文本，保留原始换行） */
+  content: string;
+  categoryId?: number | null;
+  writtenAt?: string | null;
+  weather?: string | null;
+  isPublished?: number;
+  createTime?: string;
+  updateTime?: string;
 }
 
-export interface OpTag {
+/** 文学分类（t_category 中 type='LITERATURE' 的记录） */
+export interface LiteratureCategory {
   id: number;
   name: string;
-  articles: OpArticle[];
+  type: "LITERATURE";
+  sortOrder?: number;
 }
 
 // ========== Chatter / Moments ==========

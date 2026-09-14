@@ -543,18 +543,26 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     console.error("[SYNC] Failed to fetch bookmarks:", e);
   }
 
-  // Op / Literature data
+  // Literature（平铺列表，含完整正文）
   try {
-    const opArticles = await apiPost<unknown, unknown>("/op/article", {});
-    files.push({ path: "op-articles.json", content: JSON.stringify(opArticles, null, 2) });
+    const literature = await apiPost<unknown, unknown>("/literature/public/list", {});
+    files.push({ path: "literature.json", content: JSON.stringify(literature, null, 2) });
   } catch (e) {
-    console.error("[SYNC] Failed to fetch op-articles:", e);
+    console.error("[SYNC] Failed to fetch literature:", e);
+  }
+
+  // 文学分类（供前端映射 categoryId -> 分类名）
+  try {
+    const literatureCategories = await apiGet<unknown>("/literature/public/categories");
+    files.push({ path: "literatureCategories.json", content: JSON.stringify(literatureCategories, null, 2) });
+  } catch (e) {
+    console.error("[SYNC] Failed to fetch literature categories:", e);
   }
 
   files.push({
     path: "index.json",
     content: JSON.stringify(
-      ["dashboard", "about", "articles", "projects", "categories", "tags", "timeline", "skills", "media", "comments", "music", "op-articles", "albums", "friendLinks", "chatters", "bookmarks", "bookmarkCategories"],
+      ["dashboard", "about", "articles", "projects", "categories", "tags", "timeline", "skills", "media", "comments", "music", "literature", "literatureCategories", "albums", "friendLinks", "chatters", "bookmarks", "bookmarkCategories"],
       null, 2
     ),
   });

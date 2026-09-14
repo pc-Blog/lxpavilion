@@ -95,18 +95,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Literature — /literature/{id}/
   try {
-    const raw = fs.readFileSync(path.join(dataDir, "op-articles.json"), "utf-8");
-    const data = JSON.parse(raw) as { rows: { articles: { id: number; writtenAt?: string }[] }[] };
-    for (const tag of data.rows || []) {
-      for (const article of tag.articles || []) {
-        if (article.id == null) continue;
-        entries.push({
-          url: `${BASE_URL}/literature/${article.id}/`,
-          lastModified: article.writtenAt ? new Date(article.writtenAt) : new Date(),
-          changeFrequency: "monthly",
-          priority: 0.6,
-        });
-      }
+    const raw = fs.readFileSync(path.join(dataDir, "literature.json"), "utf-8");
+    const data = JSON.parse(raw) as { rows: { id: number; writtenAt?: string }[] };
+    for (const article of data.rows || []) {
+      if (article.id == null) continue;
+      entries.push({
+        url: `${BASE_URL}/literature/${article.id}/`,
+        lastModified: article.writtenAt ? new Date(article.writtenAt) : new Date(),
+        changeFrequency: "monthly",
+        priority: 0.6,
+      });
     }
   } catch {
     // data files not available — static routes only

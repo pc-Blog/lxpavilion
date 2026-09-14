@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { DashboardVO } from "@/lib/types";
 import type { MediaWithRef } from "@/lib/api/media";
 import { get } from "@/lib/api/dashboard";
-import { getArticleList } from "@/lib/api/op";
+import { getCount as getLiteratureCount } from "@/lib/api/literature";
 import { siteConfig } from "@/lib/siteConfig";
 import { syncJson, syncMedia, syncMusic, type SyncProgress } from "@/lib/github-sync";
 import { scanMediaWithRefs, remove as deleteMedia } from "@/lib/api/media";
@@ -71,10 +71,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     get().then(setDash).catch(() => { });
-    getArticleList().then(d => {
-      const total = d.rows.reduce((sum, t) => sum + t.articles.length, 0);
-      setLiteratureCount(total);
-    }).catch(() => { });
+    getLiteratureCount().then(setLiteratureCount).catch(() => { });
     fetch(`https://${siteConfig.workerApi}/api/comment/stats`)
       .then(r => r.json())
       .then(json => { if (json.code === 1) setWorkerCommentCount(json.data.totalComments); })

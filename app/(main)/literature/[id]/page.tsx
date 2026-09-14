@@ -5,31 +5,35 @@ import LiteratureDetailClient from "./LiteratureDetailClient";
 import { OG_TITLE_SUFFIX, defaultOgImage, breadcrumbSchema, jsonLdSchema, SITE_URL } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
 
-function findLiterature(id: string) {
+/** 静态导出时由 github-sync 写入的平铺数据文件 */
+const DATA_FILE = path.join(process.cwd(), "public", "data", "literature.json");
+
+interface StaticLiterature {
+  id: number;
+  title: string;
+  content?: string;
+  writtenAt?: string;
+}
+
+function readStaticList(): StaticLiterature[] {
   try {
-    const p = path.join(process.cwd(), "public", "data", "op-articles.json");
-    const raw = fs.readFileSync(p, "utf-8");
-    const data = JSON.parse(raw) as { rows: { articles: { id: number; title: string; content?: string; writtenAt?: string }[] }[] };
-    for (const tag of data.rows || []) {
-      const found = tag.articles?.find((a) => String(a.id) === id);
-      if (found) return found;
-    }
-  } catch { /* skip */ }
-  return null;
+    if (!fs.existsSync(DATA_FILE)) return [];
+    const raw = fs.readFileSync(DATA_FILE, "utf-8");
+    const data = JSON.parse(raw) as { rows?: StaticLiterature[] };
+    return data.rows ?? [];
+  } catch {
+    return [];
+  }
+}
+
+function findLiterature(id: string): StaticLiterature | null {
+  return readStaticList().find((a) => String(a.id) === id) ?? null;
 }
 
 export function generateStaticParams() {
-  const p = path.join(process.cwd(), "public", "data", "op-articles.json");
-  if (!fs.existsSync(p)) return [];
-  const raw = fs.readFileSync(p, "utf-8");
-  const data = JSON.parse(raw) as { rows: { articles: { id: number }[] }[] };
-  const ids: number[] = [];
-  for (const tag of data.rows || []) {
-    for (const a of tag.articles || []) {
-      if (a.id != null) ids.push(a.id);
-    }
-  }
-  return ids.map((id) => ({ id: String(id) }));
+  return readStaticList()
+    .filter((a) => a.id != null)
+    .map((a) => ({ id: String(a.id) }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
