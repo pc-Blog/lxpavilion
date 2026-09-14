@@ -31,9 +31,16 @@ function findLiterature(id: string): StaticLiterature | null {
 }
 
 export function generateStaticParams() {
-  return readStaticList()
+  const ids = readStaticList()
     .filter((a) => a.id != null)
     .map((a) => ({ id: String(a.id) }));
+  // Next 16.3+ 在 output: export 下禁止返回空数组（PR #95969）：
+  // 静态导出时若 public/data/literature.json 不存在（例如 CI 尚未同步数据分支），
+  // 生成一个占位 id 使构建通过；动态模式维持原行为。
+  if (ids.length === 0 && process.env.STATIC_EXPORT === "true") {
+    return [{ id: "0" }];
+  }
+  return ids;
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {

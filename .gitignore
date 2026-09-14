@@ -32,6 +32,8 @@ yarn-error.log*
 
 # generated data backup (managed via data branch)
 /data/
+# CI 在 build:static 前把 data 分支内容注入此处生成，不应提交
+/public/data/
 
 # wrangler cache
 .wrangler
