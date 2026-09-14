@@ -1,6 +1,87 @@
 {
-  "total": 18,
+  "total": 19,
   "rows": [
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 64,
+      "name": "百艺精工",
+      "sortOrder": 8,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 63,
+      "name": "赋",
+      "sortOrder": 7,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 62,
+      "name": "文散",
+      "sortOrder": 6,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 61,
+      "name": "散文",
+      "sortOrder": 5,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 60,
+      "name": "文言",
+      "sortOrder": 4,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 59,
+      "name": "辞",
+      "sortOrder": 3,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 58,
+      "name": "词",
+      "sortOrder": 2,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 57,
+      "name": "诗",
+      "sortOrder": 1,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
+    {
+      "createTime": "2026-09-14T08:15:44.999408",
+      "deleted": 0,
+      "id": 56,
+      "name": "社会科学",
+      "sortOrder": 0,
+      "type": "LITERATURE",
+      "updateTime": null
+    },
     {
       "createTime": "2026-08-03T03:19:34.044594",
       "deleted": 0,
@@ -89,78 +170,6 @@
       "name": "Ai编程",
       "sortOrder": 0,
       "type": "ARTICLE",
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-23T20:04:01.276871",
-      "deleted": 0,
-      "id": 35,
-      "name": "软件",
-      "sortOrder": 0,
-      "type": "PROJECT",
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T21:45:47.119937",
-      "deleted": 0,
-      "id": 34,
-      "name": "全栈",
-      "sortOrder": 0,
-      "type": "PROJECT",
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T21:44:21.504439",
-      "deleted": 0,
-      "id": 33,
-      "name": "Ai智能体",
-      "sortOrder": 0,
-      "type": "PROJECT",
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T20:35:16.924037",
-      "deleted": 0,
-      "id": 32,
-      "name": "嵌入式",
-      "sortOrder": 0,
-      "type": "PROJECT",
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T20:35:12.740931",
-      "deleted": 0,
-      "id": 31,
-      "name": "爬虫",
-      "sortOrder": 0,
-      "type": "PROJECT",
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T20:35:00.960416",
-      "deleted": 0,
-      "id": 30,
-      "name": "前端",
-      "sortOrder": 0,
-      "type": "PROJECT",
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T20:34:57.393881",
-      "deleted": 0,
-      "id": 29,
-      "name": "后端",
-      "sortOrder": 0,
-      "type": "PROJECT",
-      "updateTime": "2026-06-10T14:42:38.102608"
-    },
-    {
-      "createTime": "2026-05-21T20:34:43.362697",
-      "deleted": 0,
-      "id": 28,
-      "name": "微服务",
-      "sortOrder": 0,
-      "type": "PROJECT",
       "updateTime": "2026-06-10T14:42:38.102608"
     }
   ]

@@ -1,0 +1,83 @@
+[
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 56,
+    "name": "社会科学",
+    "sortOrder": 0,
+    "type": "LITERATURE",
+    "updateTime": null
+  },
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 57,
+    "name": "诗",
+    "sortOrder": 1,
+    "type": "LITERATURE",
+    "updateTime": null
+  },
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 58,
+    "name": "词",
+    "sortOrder": 2,
+    "type": "LITERATURE",
+    "updateTime": null
+  },
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 59,
+    "name": "辞",
+    "sortOrder": 3,
+    "type": "LITERATURE",
+    "updateTime": null
+  },
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 60,
+    "name": "文言",
+    "sortOrder": 4,
+    "type": "LITERATURE",
+    "updateTime": null
+  },
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 61,
+    "name": "散文",
+    "sortOrder": 5,
+    "type": "LITERATURE",
+    "updateTime": null
+  },
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 62,
+    "name": "文散",
+    "sortOrder": 6,
+    "type": "LITERATURE",
+    "updateTime": null
+  },
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 63,
+    "name": "赋",
+    "sortOrder": 7,
+    "type": "LITERATURE",
+    "updateTime": null
+  },
+  {
+    "createTime": "2026-09-14T08:15:44.999408",
+    "deleted": 0,
+    "id": 64,
+    "name": "百艺精工",
+    "sortOrder": 8,
+    "type": "LITERATURE",
+    "updateTime": null
+  }
+]
