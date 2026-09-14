@@ -75,7 +75,7 @@ export interface TagBrief {
 
 // ========== Category ==========
 
-export type CategoryType = "ARTICLE" | "PROJECT" | "LITERATURE";
+export type CategoryType = "ARTICLE" | "LITERATURE";
 
 export interface Category {
   id?: number;

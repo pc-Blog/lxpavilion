@@ -17,7 +17,6 @@ interface TypeOption {
 
 const typeOptions: TypeOption[] = [
   { value: "ARTICLE", label: "ARTICLE" },
-  { value: "PROJECT", label: "PROJECT" },
   { value: "LITERATURE", label: "LITERATURE" },
 ];
 
