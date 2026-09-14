@@ -159,9 +159,16 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
             </div>
           )}
 
-          {categoryName && (
-            <div className="flex flex-wrap gap-2 mt-3">
-              <span className="text-xs text-pink-500 dark:text-pink-400 font-medium">#{categoryName}</span>
+          {(categoryName || item?.isPublished === 0) && (
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              {item?.isPublished === 0 && (
+                <span className="text-xs px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-bold">
+                  未发布（仅本地可见）
+                </span>
+              )}
+              {categoryName && (
+                <span className="text-xs text-pink-500 dark:text-pink-400 font-medium">#{categoryName}</span>
+              )}
             </div>
           )}
         </header>

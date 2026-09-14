@@ -39,8 +39,13 @@ export default function LiteratureCard({ item, categoryName }: LiteratureCardPro
           {date && <> · {date}</>}
         </p>
 
-        {(categoryName || item.weather) && (
+        {(categoryName || item.weather || item.isPublished === 0) && (
           <p className="text-right text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 flex items-center justify-end gap-1.5">
+            {item.isPublished === 0 && (
+              <span className="px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-bold">
+                未发布
+              </span>
+            )}
             {categoryName && (
               <span className="px-1.5 py-0.5 rounded bg-indigo-50/70 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400">
                 {categoryName}

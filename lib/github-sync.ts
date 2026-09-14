@@ -543,10 +543,17 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     console.error("[SYNC] Failed to fetch bookmarks:", e);
   }
 
-  // Literature（平铺列表，含完整正文）
+  // Literature：取全部作品，但只把**已发布**的写入 data 分支。
+  // data 分支是公开的，隐藏作品（草稿）的正文不得进入线上静态数据。
   try {
-    const literature = await apiPost<unknown, unknown>("/literature/public/list", {});
-    files.push({ path: "literature.json", content: JSON.stringify(literature, null, 2) });
+    const all = await apiPost<{ total: number; rows: { isPublished?: number }[] }, unknown>(
+      "/literature/admin/page", { pageNum: 1, pageSize: 1000 }
+    );
+    const publishedRows = (all.rows || []).filter((a) => a.isPublished === 1);
+    files.push({
+      path: "literature.json",
+      content: JSON.stringify({ total: publishedRows.length, rows: publishedRows }, null, 2),
+    });
   } catch (e) {
     console.error("[SYNC] Failed to fetch literature:", e);
   }
