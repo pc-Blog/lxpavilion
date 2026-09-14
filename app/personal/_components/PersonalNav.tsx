@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { label: "仪表盘", href: "/personal", icon: "📖" },
   { label: "提交记录", href: "/personal/commits", icon: "📊" },
   { label: "学习历程", href: "/personal/timeline", icon: "🛠️" },
+  { label: "日记", href: "/personal/diary", icon: "📔" },
 ];
 
 export default function PersonalNav() {

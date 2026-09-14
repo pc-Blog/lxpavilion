@@ -394,6 +394,50 @@ export interface OpMusic {
   pictureUrl: string;
 }
 
+// ========== Diary（日记，仅本地） ==========
+
+/** 单条活动条目 */
+export interface DiaryActivity {
+  id?: number;
+  activity: string;
+  /** 分类枚举值：1=学习 2=工作 3=生活 4=运动 5=娱乐 6=社交 */
+  category: number;
+  /** 小分类名称，可空 */
+  subcategory?: string | null;
+}
+
+/** 一天 === 一篇日记 */
+export interface Diary {
+  id?: number;
+  /** 记录日期，格式 YYYY-MM-DD */
+  recordDate: string;
+  /** 天气枚举值：1=晴 2=多云 3=阴 4=小雨 5=大雨 9=中雨 6=雪 7=雾 8=雷 */
+  weather: number;
+  createTime?: string;
+  updateTime?: string;
+  /** 当天的活动条目 */
+  logs: DiaryActivity[];
+}
+
+/** 写入请求：新建带 recordDate，更新带 id（日期不可修改） */
+export interface DiaryRequest {
+  id?: number;
+  recordDate?: string;
+  weather: number;
+  logs: { activity: string; category: number; subcategory?: string | null }[];
+}
+
+/** 统计 */
+export interface DiaryStats {
+  total: number;
+  /** [["2025-06-20", 3], ...]，按日期升序 */
+  dailyCount: [string, number][];
+  /** 分类ID -> 条目数（JSON 对象键为字符串） */
+  categoryCount: Record<string, number>;
+  /** 分类ID -> (小分类名称 -> 条目数) */
+  subcategoryCount: Record<string, Record<string, number>>;
+}
+
 // ========== Email (Worker API) ==========
 
 export interface Email {
