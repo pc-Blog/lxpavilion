@@ -1,0 +1,170 @@
+1:"$Sreact.fragment"
+2:I[17467,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/0xrzn2mdpvkvi.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+4:T19ad,## 现象
+
+点开 设置 → 网络和 Internet → 数据使用量，页面转圈，然后白屏无响应，得用任务管理器结束"设置"进程才能关掉。同一台机器上别的设置页都正常，只有这一页必卡，而且是**越用越卡**：一开始只是慢几秒，后来直接打不开。
+
+## 原因分析
+
+### 第一个环：手机热点每次都在换"身份"
+
+排查是从**为什么会有这么多网络**开始的。我导出了注册表里 Windows 记住的所有网络：
+
+```powershell
+reg export "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles" ...
+```
+
+结果这一项就是 1097 个。其中绝大多数名字都叫 `Redmi K70 969` —— 也就是那台手机的热点。
+
+问题出在 Windows 判断"是不是同一个网络"的方式。它不只看 SSID，而是看 **SSID + 网关 MAC + DNS 后缀**这一组特征。而 Android 的热点默认开着 MAC 随机化，每开一次热点，网关 MAC 就换一个。SSID 永远叫 `Redmi K70 969`，身份却每次都不同。
+
+我把 969 个 Redmi 档案的网关 MAC 提取出来去重：**940 个不同的 MAC**，其中 99.7% 是本地管理位置 1 的随机化地址。另一组 `NCUWLAN` 也是 50 个档案对 33 个 MAC。
+
+证据在 Signature 那一侧，Windows 用 SSID 和 MAC 分别建签名，两边的数量对得上：
+
+| 位置 | 项数 |
+|---|---|
+| `NetworkList\Profiles` | 1097 |
+| `NetworkList\Signatures\Unmanaged` | 1097 |
+
+**每连一次热点，Windows 就认成一个从没见过的新网络，老老实实新建一份配置档案。**
+
+### 第二个环：档案把 SRUM 数据库撑爆了
+
+这才是真正压死页面的东西。数据使用量页面读的不是网络档案，是 **SRUM**，库文件在：
+
+```
+C:\Windows\System32\sru\SRUDB.dat
+```
+
+它是一个 ESE（Extensible Storage Engine）数据库，也就是 Exchange 和 AD 用的那套嵌入式引擎。表名是 GUID，不是人能读的名字。我用 Python 直接解析了这张库（native P/Invoke 调 Jet API 读的，官方那套托管封装在这个库上读不动），网络用量表对应的是这个 GUID：
+
+```
+{973F5D5C-1D90-4944-BE8E-24B94231A174}
+```
+
+里面的关键字段是 `AppId`、`UserId`、`L2ProfileId`、`BytesSent`、`BytesRecvd`。**`L2ProfileId` 就是网络档案的 ID** —— 每个档案每应用每小时一行。
+
+打开库之后数字很难看：
+
+```
+SRUDB.dat = 161.31 MB
+网络用量表 = 99,601 行
+涉及 AppId ≈ 40,000 个
+```
+
+还有一张 `SruDbIdMapTable`，把 `AppId` 反查成进程路径或服务名。约 4 万个 AppId 挤在这张表里，而它本身也占空间。
+
+### 第三个环：卡死是乘法，不是加法
+
+这一点是排查里最关键的判断。数据使用量页面要做的事是：遍历网络用量表 → 按应用聚合 → 对每个 AppId 去 `SruDbIdMapTable` 查一次名字 → 排序 → 渲染。档案数决定了聚合的维度，AppId 数决定了查名字的次数，**两件事是乘在一起的**。
+
+1097 个档案 × 4 万 AppId 量级的映射表，再压在一个 161 MB 的 ESE 库上，单次查询要几十秒。设置页那个列表是 UI 线程现算现排的，等不到结果就转圈、假死。
+
+我在外面用程序读这个库时，复现过一模一样的症状 —— 同样的操作，库小的时候秒回，库涨到这个体积就卡住不动。所以这不是设置应用的 bug，是它**老老实实在算一个被撑大了两个数量级的查询**。
+
+顺带说一句，同一个根因还干过另一件更贵的事：每个"新网络"都被当成**全新的、非计量的 WiFi**，Windows 判断"这是计量网络，先别下载"的依据每次都重置，后台更新被反复重新放行。我核对过 `DefaultMediaCost` 下的 `WiFi` 是 `1`（非计量）。这一条跟卡死是两个症状、一个病根，但本文只讲卡死，流量的事另说。
+
+## 解决
+
+思路很直接：**档案和库，各断一个环。** 先把输入源清掉，再把已经膨胀的库重建。
+
+### 一、备份
+
+动注册表之前先整键导出。这里踩了个小坑，PowerShell 直接调 `reg export` 会因为参数顺序报错，得走 `cmd /c`：
+
+```powershell
+cmd /c "reg export \"HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\" \"$backup\" /y"
+```
+
+导出文件 2280.1 KB，留着随时能还原。
+
+### 二、清掉僵尸档案（1097 → 67）
+
+生成删除清单时保留了当前在用的那个档案和系统自带的保留项，其余按签名配对删除：
+
+| 项 | 清理前 | 清理后 |
+|---|---|---|
+| `NetworkList\Profiles` | 1097 | 67 |
+| `NetworkList\Signatures\Unmanaged` | 1097 | 69 |
+
+1030 个档案全部删除成功，零失败。
+
+删的时候有个容易白干的点：注册表路径前缀写 `Microsoft.PowerShell.Core\Registry::` 会一个都删不掉，得写成 `Registry::HKEY_LOCAL_MACHINE\...`。我第一次就是这么空跑了一遍，清完还是 1097。
+
+### 三、重建 SRUM（161.31 MB → 1.1 MB）
+
+`SRUDB.dat` 被 DPS 服务占着，普通复制打不开，得用 VSS 快照把它捞出来：
+
+```powershell
+esentutl /y C:\Windows\System32\sru\SRUDB.dat /vss /d <目标路径>
+```
+
+重建前先把整个 `C:\Windows\System32\sru` 目录备份走（14 个文件，162 MB），旧的 `SRUDB.dat` 归档为 `*.old_20260913_183842`，后来挪出了 C 盘。重建后库里只剩约 1.1 MB，按小时继续写。
+
+中间有个插曲：清理时停 `ndu` 服务，内核驱动卡在 `STOP_PENDING` 下不来了，`sc start` 报 1056、`sc control` 报 1052。这种状态没法在运行时救，重启即可 —— `ndu` 是 AUTO_START，重启后确认 `STATE : 4 RUNNING`。
+
+### 四、结果
+
+重启之后设置页打开恢复正常，秒开。网络功能也复验过，HTTPS 请求正常返回 200，重启后 `Redmi K70` 那个档案被重新建了一份，不带数字后缀。
+
+### 五、这一步不做，几个月后复发
+
+上面两步是把已经烂掉的东西清掉，但**产生垃圾的机制还在**。只要手机热点继续随机化 MAC，Windows 就会继续把每次连接当成新网络，档案会重新长回来，SRUDB 也会重新膨胀。所以真正的收尾是关掉随机化：
+
+**手机端**（根源）：设置 → 便携式热点 → 关掉"使用随机 MAC"/"随机化 MAC 地址"。网关 MAC 固定之后，Windows 永远认这一个网络，不再新建档案。
+
+**电脑端**（兜底）：把 `DefaultMediaCost` 下的 `WiFi` 改成 `2`（计量），这样即使档案重建，Windows 也不会再把新网络当成"随便下"的非计量网络。
+b:X
+10:X
+10:C
+0:{"buildId":"SVh8JExerq3817168rcS9","data":[{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Windows 数据使用量页面卡死：1097 个热点档案和 161 MB 的 SRUM 库\",\"item\":\"https://www.lxpavilion.top/article/217\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Windows 数据使用量页面卡死：1097 个热点档案和 161 MB 的 SRUM 库\",\"headline\":\"Windows 数据使用量页面卡死：1097 个热点档案和 161 MB 的 SRUM 库\",\"description\":\"设置里的\\\"数据使用量\\\"页面从慢几秒到彻底白屏，排查后发现是手机热点每次连接都随机化网关 MAC，Windows 把它当新网络反复建档案，累计 1097 个，每个档案又在 SRUM 里按应用生成记录，把数据库撑到 161 MB、99601 行，页面查询量随档案数乘 AppId 数暴涨。清掉 1030 个僵尸档案并重建 SRUM 后恢复秒开。\",\"datePublished\":\"2026-09-14T10:16:50.664665\",\"dateCreated\":\"2026-09-14T10:16:50.664665\",\"dateModified\":\"2026-09-14T10:16:50.667191\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/819.webp\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"Windows 数据使用量页面卡死：1097 个热点档案和 161 MB 的 SRUM 库","initialContent":"$4"}]],["$L5","$L6","$L7","$L8"],"$L9"]}],"isPartial":"$@a","staleTime":"$b","varyParams":null},{"rsc":"$Lc","isPartial":"$@d","staleTime":"$b","varyParams":null},{"rsc":"$Le","isPartial":"$@f","staleTime":"$b","varyParams":"$10"},{"rsc":"$L11","isPartial":"$@12","staleTime":"$b","varyParams":"$10"},{"rsc":"$L13","isPartial":"$@14","staleTime":"$b","varyParams":null},{"rsc":"$L15","isPartial":"$@16","staleTime":"$b","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@17","rootVaryParams":null,"needsRuntimeRequest":"$@18"}
+19:I[97367,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+1a:"$Sreact.suspense"
+1c:I[97367,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+1d:I[97367,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+1e:I[27201,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+1f:I[39756,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+20:I[37457,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+21:I[39756,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+27:I[18233,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js"],"default"]
+28:I[34858,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js"],"default"]
+29:I[23191,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+2a:I[26908,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+2b:I[54774,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2c:I[79617,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2d:I[22464,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2e:I[3799,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2f:I[56499,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+30:I[61421,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+31:I[6521,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+32:I[8123,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/2zypyrfxfz5yx.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/0q2lrihnv8n5f.css","style"]
+3:{"id":"217"}
+5:["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true}]
+6:["$","script","script-1",{"src":"/_next/static/chunks/0xrzn2mdpvkvi.js","async":true}]
+7:["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true}]
+8:["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true}]
+9:["$","$L19",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@1b"}]}]
+c:["$","$1","h",{"children":[null,["$","$L1c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L1d",null,{"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Windows 数据使用量页面卡死：1097 个热点档案和 161 MB 的 SRUM 库 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"设置里的\"数据使用量\"页面从慢几秒到彻底白屏，排查后发现是手机热点每次连接都随机化网关 MAC，Windows 把它当新网络反复建档案，累计 1097 个，每个档案又在 SRUM 里按应用生成记录，把数据库撑到 161 MB、99601 行，页面查询量随档案数乘 AppId 数暴涨。清掉 1030 个僵尸档案并重建 SRUM 后恢复秒开。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/217/"}],["$","meta","5",{"property":"og:title","content":"Windows 数据使用量页面卡死：1097 个热点档案和 161 MB 的 SRUM 库 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"设置里的\"数据使用量\"页面从慢几秒到彻底白屏，排查后发现是手机热点每次连接都随机化网关 MAC，Windows 把它当新网络反复建档案，累计 1097 个，每个档案又在 SRUM 里按应用生成记录，把数据库撑到 161 MB、99601 行，页面查询量随档案数乘 AppId 数暴涨。清掉 1030 个僵尸档案并重建 SRUM 后恢复秒开。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/819.webp"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","15",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+e:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+11:["$","$L21",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L22"]}],"$L23","$L24","$L25"]}]]}],[],null],"children":"$L26"}]
+13:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/109z71992pbyo.js","async":true}]],[["$","$L27",null,{}],["$","$L28",null,{"children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L29",null,{"children":["$","$L20",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+15:["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/0q2lrihnv8n5f.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/2v2_x9y2lqexy.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/2zypyrfxfz5yx.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2a",null,{"children":[["$","$L2b",null,{}],["$","$L2c",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L2d",null,{}],["$","$L2e",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L2f",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L30",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","$L31",null,{}],["$","$L32",null,{}]]}],["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]]}]}]]}]]}]
+1b:null
+22:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+23:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+24:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+25:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+26:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+18:true
+b:300
+b:C
+17:0
+d:"$undefined"
+f:"$undefined"
+14:"$undefined"
+12:"$undefined"
+16:"$undefined"
+a:"$undefined"

@@ -1,425 +1,344 @@
 [
   {
-    "createTime": "2026-07-20T14:14:22.075343",
+    "createTime": "2026-09-12T14:49:26.162032",
     "deleted": 0,
-    "id": 1,
+    "id": 21,
     "name": "编程开发",
     "parentId": null,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:49:26.16728"
   },
   {
-    "createTime": "2026-07-20T14:14:22.08003",
+    "createTime": "2026-09-12T14:50:01.713354",
     "deleted": 0,
-    "id": 101,
-    "name": "IDE/编辑器",
-    "parentId": 1,
+    "id": 30,
+    "name": "IDE 与编辑器",
+    "parentId": 21,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:16.521236"
   },
   {
-    "createTime": "2026-07-20T14:14:22.088031",
+    "createTime": "2026-09-12T14:50:02.30871",
     "deleted": 0,
-    "id": 104,
-    "name": "编程语言",
-    "parentId": 2,
+    "id": 35,
+    "name": "AI 对话与资讯",
+    "parentId": 22,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:16.938035"
   },
   {
-    "createTime": "2026-07-20T14:14:22.093636",
+    "createTime": "2026-09-12T14:50:02.555325",
     "deleted": 0,
-    "id": 106,
-    "name": "AI对话",
-    "parentId": 3,
-    "sortOrder": 1,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.098514",
-    "deleted": 0,
-    "id": 108,
-    "name": "容器/虚拟化",
-    "parentId": 4,
-    "sortOrder": 1,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.105641",
-    "deleted": 0,
-    "id": 111,
+    "id": 37,
     "name": "数据库客户端",
-    "parentId": 5,
+    "parentId": 23,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:17.037079"
   },
   {
-    "createTime": "2026-07-20T14:14:22.108492",
+    "createTime": "2026-09-12T14:50:02.93165",
     "deleted": 0,
-    "id": 112,
-    "name": "API管理",
-    "parentId": 6,
+    "id": 40,
+    "name": "容器与虚拟化",
+    "parentId": 24,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:17.210336"
   },
   {
-    "createTime": "2026-07-20T14:14:22.111226",
+    "createTime": "2026-09-12T14:50:03.267073",
     "deleted": 0,
-    "id": 113,
-    "name": "性能测试",
-    "parentId": 7,
+    "id": 43,
+    "name": "单片机与开发板",
+    "parentId": 25,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:17.40469"
   },
   {
-    "createTime": "2026-07-20T14:14:22.114939",
+    "createTime": "2026-09-12T14:50:03.648968",
     "deleted": 0,
-    "id": 115,
-    "name": "MCU工具",
-    "parentId": 8,
+    "id": 46,
+    "name": "截图与录屏",
+    "parentId": 26,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:17.569196"
   },
   {
-    "createTime": "2026-07-20T14:14:22.120515",
+    "createTime": "2026-09-12T14:50:03.978705",
     "deleted": 0,
-    "id": 119,
-    "name": "截图录屏",
-    "parentId": 9,
+    "id": 49,
+    "name": "压缩与下载",
+    "parentId": 27,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:17.712634"
   },
   {
-    "createTime": "2026-07-20T14:14:22.12605",
+    "createTime": "2026-09-12T14:50:04.383677",
     "deleted": 0,
-    "id": 123,
-    "name": "压缩解压",
-    "parentId": 10,
+    "id": 51,
+    "name": "文档与笔记",
+    "parentId": 28,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:17.793664"
   },
   {
-    "createTime": "2026-07-20T14:14:22.133635",
+    "createTime": "2026-09-12T14:50:04.863426",
     "deleted": 0,
-    "id": 128,
-    "name": "笔记知识",
-    "parentId": 11,
-    "sortOrder": 1,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.139157",
-    "deleted": 0,
-    "id": 132,
+    "id": 53,
     "name": "游戏平台",
-    "parentId": 12,
+    "parentId": 29,
     "sortOrder": 1,
-    "updateTime": null
+    "updateTime": "2026-09-12T14:50:17.898758"
   },
   {
-    "createTime": "2026-07-20T14:14:22.08585",
+    "createTime": "2026-09-12T14:49:26.35747",
     "deleted": 0,
-    "id": 2,
-    "name": "语言与运行时",
-    "parentId": null,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.082051",
-    "deleted": 0,
-    "id": 102,
-    "name": "AI编程助手",
-    "parentId": 1,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.089773",
-    "deleted": 0,
-    "id": 105,
-    "name": "环境管理",
-    "parentId": 2,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.095304",
-    "deleted": 0,
-    "id": 107,
-    "name": "AI平台/代理",
-    "parentId": 3,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.100132",
-    "deleted": 0,
-    "id": 109,
-    "name": "远程连接",
-    "parentId": 4,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.112823",
-    "deleted": 0,
-    "id": 114,
-    "name": "JVM监控",
-    "parentId": 7,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.116348",
-    "deleted": 0,
-    "id": 116,
-    "name": "PCB设计",
-    "parentId": 8,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.121455",
-    "deleted": 0,
-    "id": 120,
-    "name": "视频下载",
-    "parentId": 9,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.127062",
-    "deleted": 0,
-    "id": 124,
-    "name": "下载管理",
-    "parentId": 10,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.134922",
-    "deleted": 0,
-    "id": 129,
-    "name": "PPT制作",
-    "parentId": 11,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.140747",
-    "deleted": 0,
-    "id": 133,
-    "name": "游戏工具",
-    "parentId": 12,
-    "sortOrder": 2,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.09146",
-    "deleted": 0,
-    "id": 3,
+    "id": 22,
     "name": "AI 工具",
     "parentId": null,
-    "sortOrder": 3,
-    "updateTime": null
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:49:26.357511"
   },
   {
-    "createTime": "2026-07-20T14:14:22.083998",
+    "createTime": "2026-09-12T14:50:01.829488",
     "deleted": 0,
-    "id": 103,
-    "name": "版本控制",
-    "parentId": 1,
-    "sortOrder": 3,
-    "updateTime": null
+    "id": 31,
+    "name": "AI 编程助手",
+    "parentId": 21,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:16.65296"
   },
   {
-    "createTime": "2026-07-20T14:14:22.101616",
+    "createTime": "2026-09-12T14:50:02.424206",
     "deleted": 0,
-    "id": 110,
-    "name": "网络服务",
-    "parentId": 4,
-    "sortOrder": 3,
-    "updateTime": null
+    "id": 36,
+    "name": "AI 平台与部署",
+    "parentId": 22,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:16.986618"
   },
   {
-    "createTime": "2026-07-20T14:14:22.117325",
+    "createTime": "2026-09-12T14:50:02.651586",
     "deleted": 0,
-    "id": 117,
-    "name": "开发平台",
-    "parentId": 8,
-    "sortOrder": 3,
-    "updateTime": null
+    "id": 38,
+    "name": "API 工具",
+    "parentId": 23,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:17.093183"
   },
   {
-    "createTime": "2026-07-20T14:14:22.122371",
+    "createTime": "2026-09-12T14:50:03.060143",
     "deleted": 0,
-    "id": 121,
-    "name": "音频处理",
-    "parentId": 9,
-    "sortOrder": 3,
-    "updateTime": null
+    "id": 41,
+    "name": "远程连接与控制",
+    "parentId": 24,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:17.260042"
   },
   {
-    "createTime": "2026-07-20T14:14:22.128561",
+    "createTime": "2026-09-12T14:50:03.418505",
     "deleted": 0,
-    "id": 125,
-    "name": "格式转换",
-    "parentId": 10,
-    "sortOrder": 3,
-    "updateTime": null
+    "id": 44,
+    "name": "芯片厂商工具",
+    "parentId": 25,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:17.468559"
   },
   {
-    "createTime": "2026-07-20T14:14:22.136221",
+    "createTime": "2026-09-12T14:50:03.749922",
     "deleted": 0,
-    "id": 130,
-    "name": "翻译工具",
-    "parentId": 11,
-    "sortOrder": 3,
-    "updateTime": null
+    "id": 47,
+    "name": "视频下载",
+    "parentId": 26,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:17.630625"
   },
   {
-    "createTime": "2026-07-20T14:14:22.141734",
+    "createTime": "2026-09-12T14:50:04.147474",
     "deleted": 0,
-    "id": 134,
-    "name": "游戏加速",
-    "parentId": 12,
-    "sortOrder": 3,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.096877",
-    "deleted": 0,
-    "id": 4,
-    "name": "运维部署",
-    "parentId": null,
-    "sortOrder": 4,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.118354",
-    "deleted": 0,
-    "id": 118,
-    "name": "3D设计",
-    "parentId": 8,
-    "sortOrder": 4,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.123352",
-    "deleted": 0,
-    "id": 122,
-    "name": "手机工具",
-    "parentId": 9,
-    "sortOrder": 4,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.129749",
-    "deleted": 0,
-    "id": 126,
+    "id": 50,
     "name": "图片处理",
-    "parentId": 10,
-    "sortOrder": 4,
-    "updateTime": null
+    "parentId": 27,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:17.752322"
   },
   {
-    "createTime": "2026-07-20T14:14:22.13726",
+    "createTime": "2026-09-12T14:50:04.583327",
     "deleted": 0,
-    "id": 131,
-    "name": "在线工具",
-    "parentId": 11,
-    "sortOrder": 4,
-    "updateTime": null
+    "id": 52,
+    "name": "翻译与转换",
+    "parentId": 28,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:17.84185"
   },
   {
-    "createTime": "2026-07-20T14:14:22.258793",
+    "createTime": "2026-09-12T14:50:05.026549",
     "deleted": 0,
-    "id": 135,
-    "name": "游戏引擎",
-    "parentId": 1,
-    "sortOrder": 4,
-    "updateTime": null
+    "id": 54,
+    "name": "启动器与编辑器",
+    "parentId": 29,
+    "sortOrder": 2,
+    "updateTime": "2026-09-12T14:50:17.941537"
   },
   {
-    "createTime": "2026-07-20T14:14:22.104032",
+    "createTime": "2026-09-12T14:49:26.421932",
     "deleted": 0,
-    "id": 5,
-    "name": "数据库",
+    "id": 23,
+    "name": "后端开发",
     "parentId": null,
-    "sortOrder": 5,
-    "updateTime": null
+    "sortOrder": 3,
+    "updateTime": "2026-09-12T14:49:26.42198"
   },
   {
-    "createTime": "2026-07-20T14:14:22.130979",
+    "createTime": "2026-09-12T14:50:01.935002",
     "deleted": 0,
-    "id": 127,
-    "name": "文件代理加速",
-    "parentId": 10,
-    "sortOrder": 5,
-    "updateTime": null
+    "id": 32,
+    "name": "代码托管与版本控制",
+    "parentId": 21,
+    "sortOrder": 3,
+    "updateTime": "2026-09-12T14:50:16.715361"
   },
   {
-    "createTime": "2026-07-20T14:14:22.107118",
+    "createTime": "2026-09-12T14:50:02.775117",
     "deleted": 0,
-    "id": 6,
-    "name": "API 开发",
-    "parentId": null,
-    "sortOrder": 6,
-    "updateTime": null
-  },
-  {
-    "createTime": "2026-07-20T14:14:22.109768",
-    "deleted": 0,
-    "id": 7,
+    "id": 39,
     "name": "测试与监控",
-    "parentId": null,
-    "sortOrder": 7,
-    "updateTime": null
+    "parentId": 23,
+    "sortOrder": 3,
+    "updateTime": "2026-09-12T14:50:17.162334"
   },
   {
-    "createTime": "2026-07-20T14:14:22.113919",
+    "createTime": "2026-09-12T14:50:03.16185",
     "deleted": 0,
-    "id": 8,
+    "id": 42,
+    "name": "域名与站点服务",
+    "parentId": 24,
+    "sortOrder": 3,
+    "updateTime": "2026-09-12T14:50:17.328871"
+  },
+  {
+    "createTime": "2026-09-12T14:50:03.525935",
+    "deleted": 0,
+    "id": 45,
+    "name": "电路与结构设计",
+    "parentId": 25,
+    "sortOrder": 3,
+    "updateTime": "2026-09-12T14:50:17.51009"
+  },
+  {
+    "createTime": "2026-09-12T14:50:03.853263",
+    "deleted": 0,
+    "id": 48,
+    "name": "音频与音乐",
+    "parentId": 26,
+    "sortOrder": 3,
+    "updateTime": "2026-09-12T14:50:17.668477"
+  },
+  {
+    "createTime": "2026-09-12T14:50:05.176597",
+    "deleted": 0,
+    "id": 55,
+    "name": "游戏加速",
+    "parentId": 29,
+    "sortOrder": 3,
+    "updateTime": "2026-09-12T14:50:17.986959"
+  },
+  {
+    "createTime": "2026-09-12T14:49:26.482285",
+    "deleted": 0,
+    "id": 24,
+    "name": "运维与部署",
+    "parentId": null,
+    "sortOrder": 4,
+    "updateTime": "2026-09-12T14:49:26.482365"
+  },
+  {
+    "createTime": "2026-09-12T14:50:02.08192",
+    "deleted": 0,
+    "id": 33,
+    "name": "语言与运行时",
+    "parentId": 21,
+    "sortOrder": 4,
+    "updateTime": "2026-09-12T14:50:16.76395"
+  },
+  {
+    "createTime": "2026-09-12T15:30:17.291493",
+    "deleted": 0,
+    "id": 57,
+    "name": "系统工具",
+    "parentId": 24,
+    "sortOrder": 4,
+    "updateTime": "2026-09-12T15:30:17.291531"
+  },
+  {
+    "createTime": "2026-09-12T15:30:17.376052",
+    "deleted": 0,
+    "id": 58,
+    "name": "视频剪辑",
+    "parentId": 26,
+    "sortOrder": 4,
+    "updateTime": "2026-09-12T15:30:17.376089"
+  },
+  {
+    "createTime": "2026-09-12T14:49:26.54298",
+    "deleted": 0,
+    "id": 25,
     "name": "嵌入式与硬件",
     "parentId": null,
-    "sortOrder": 8,
-    "updateTime": null
+    "sortOrder": 5,
+    "updateTime": "2026-09-12T14:49:26.543021"
   },
   {
-    "createTime": "2026-07-20T14:14:22.119478",
+    "createTime": "2026-09-12T14:50:02.19806",
     "deleted": 0,
-    "id": 9,
+    "id": 34,
+    "name": "环境与包管理",
+    "parentId": 21,
+    "sortOrder": 5,
+    "updateTime": "2026-09-12T14:50:16.866105"
+  },
+  {
+    "createTime": "2026-09-12T14:49:26.585771",
+    "deleted": 0,
+    "id": 26,
     "name": "媒体工具",
     "parentId": null,
-    "sortOrder": 9,
-    "updateTime": null
+    "sortOrder": 6,
+    "updateTime": "2026-09-12T14:49:26.585802"
   },
   {
-    "createTime": "2026-07-20T14:14:22.12509",
+    "createTime": "2026-09-12T15:30:17.121074",
     "deleted": 0,
-    "id": 10,
+    "id": 56,
+    "name": "游戏引擎",
+    "parentId": 21,
+    "sortOrder": 6,
+    "updateTime": "2026-09-12T15:30:17.127682"
+  },
+  {
+    "createTime": "2026-09-12T14:49:26.643179",
+    "deleted": 0,
+    "id": 27,
     "name": "文件处理",
     "parentId": null,
-    "sortOrder": 10,
-    "updateTime": null
+    "sortOrder": 7,
+    "updateTime": "2026-09-12T14:49:26.643228"
   },
   {
-    "createTime": "2026-07-20T14:14:22.132599",
+    "createTime": "2026-09-12T14:49:26.685662",
     "deleted": 0,
-    "id": 11,
+    "id": 28,
     "name": "办公效率",
     "parentId": null,
-    "sortOrder": 11,
-    "updateTime": null
+    "sortOrder": 8,
+    "updateTime": "2026-09-12T14:49:26.686373"
   },
   {
-    "createTime": "2026-07-20T14:14:22.138167",
+    "createTime": "2026-09-12T14:49:26.748932",
     "deleted": 0,
-    "id": 12,
+    "id": 29,
     "name": "游戏娱乐",
     "parentId": null,
-    "sortOrder": 12,
-    "updateTime": null
+    "sortOrder": 9,
+    "updateTime": "2026-09-12T14:49:26.748965"
   }
 ]
