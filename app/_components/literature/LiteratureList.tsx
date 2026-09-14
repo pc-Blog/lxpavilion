@@ -82,7 +82,7 @@ export default function LiteratureList() {
       const da = a.writtenAt ?? "";
       const db = b.writtenAt ?? "";
       if (da !== db) return db.localeCompare(da);
-      return b.id - a.id;
+      return (b.id ?? 0) - (a.id ?? 0);
     });
     const years = new Map<number, Map<number, Literature[]>>();
     for (const item of sorted) {

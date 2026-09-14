@@ -113,7 +113,7 @@ export default function LiteratureDetailPage(props: { params: Promise<{ id: stri
         const da = a.writtenAt ?? "";
         const db = b.writtenAt ?? "";
         if (da !== db) return db.localeCompare(da);
-        return b.id - a.id;
+        return (b.id ?? 0) - (a.id ?? 0);
       });
     return sameCategory.slice(0, 6);
   }, [all, item]);

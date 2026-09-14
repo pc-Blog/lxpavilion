@@ -329,7 +329,7 @@ export interface Bookmark {
 // ========== Literature（文学作品，本地库） ==========
 
 export interface Literature {
-  id: number;
+  id?: number;
   title: string;
   /** 正文（纯文本，保留原始换行） */
   content: string;

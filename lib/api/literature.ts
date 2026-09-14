@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import type { Literature, LiteratureCategory, PageVO } from "@/lib/types";
+import type { Literature, LiteratureCategory, PageVO, PageDTO } from "@/lib/types";
 import { detectMode, ensureData } from "@/lib/static-data";
 
 /**
@@ -41,4 +41,56 @@ export async function getDetail(id: number) {
     return data.rows.find((a) => a.id === id) ?? null;
   }
   return api.get<Literature, Literature>(`/literature/public/${id}`);
+}
+
+// ==================== 管理端 ====================
+
+export interface LiteratureQuery {
+  title?: string;
+  categoryId?: number;
+  isPublished?: number;
+  startDate?: string;
+  endDate?: string;
+}
+
+/** 分页查询（含隐藏作品） */
+export async function getAdminList(
+  keyword?: string,
+  pageNum = 1,
+  pageSize = 20,
+  categoryId?: number,
+) {
+  const query: LiteratureQuery = {};
+  if (keyword) query.title = keyword;
+  if (categoryId != null) query.categoryId = categoryId;
+  return api.post<PageVO<Literature>, PageVO<Literature>>("/literature/admin/page", {
+    pageNum,
+    pageSize,
+    query: Object.keys(query).length > 0 ? query : undefined,
+  } satisfies PageDTO<LiteratureQuery>);
+}
+
+/** 单篇详情（含隐藏作品） */
+export async function getAdminDetail(id: number) {
+  return api.get<Literature, Literature>(`/literature/admin/${id}`);
+}
+
+export async function create(data: Literature) {
+  return api.post("/literature/admin", data);
+}
+
+export async function update(data: Literature) {
+  return api.put("/literature/admin", data);
+}
+
+export async function remove(id: number) {
+  return api.delete(`/literature/admin/${id}`);
+}
+
+export async function publish(id: number) {
+  return api.put(`/literature/admin/${id}/publish`);
+}
+
+export async function unpublish(id: number) {
+  return api.put(`/literature/admin/${id}/unpublish`);
 }

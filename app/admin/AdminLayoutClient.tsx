@@ -22,6 +22,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Bookmark,
+  BookOpen,
 } from "lucide-react";
 
 type NavItem = { label: string; href: string; icon: React.ComponentType<{ size?: number; className?: string }>; tooltip: string };
@@ -37,6 +38,7 @@ const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
     group: "内容管理",
     items: [
       { label: "Articles", href: "/admin/article", icon: FileText, tooltip: "文章管理" },
+      { label: "Literature", href: "/admin/literature", icon: BookOpen, tooltip: "文学作品管理" },
       { label: "Projects", href: "/admin/project", icon: FolderKanban, tooltip: "项目管理" },
       { label: "Categories", href: "/admin/category", icon: Tags, tooltip: "分类管理" },
       { label: "Tags", href: "/admin/tag", icon: Hash, tooltip: "标签管理" },
