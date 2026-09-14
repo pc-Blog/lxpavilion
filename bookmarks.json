@@ -1,6 +1,240 @@
 [
   {
-    "categoryId": 131,
+    "categoryId": 33,
+    "createTime": "2026-09-12T15:31:29.868968",
+    "deleted": 0,
+    "description": "Rust 编程语言官方入门指南，含安装与基础语法",
+    "icon": "https://rust-lang.org/static/images/favicon.svg",
+    "id": 96,
+    "isPin": 0,
+    "name": "Rust",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.742742",
+    "url": "https://rust-lang.org/learn/get-started/"
+  },
+  {
+    "categoryId": 51,
+    "createTime": "2026-09-12T15:31:29.803101",
+    "deleted": 0,
+    "description": "TeX 排版系统的完整发行版，含 LaTeX 及常用宏包",
+    "icon": "https://tug.org/favicon.ico",
+    "id": 95,
+    "isPin": 0,
+    "name": "TeX Live",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.695015",
+    "url": "https://tug.org/texlive/"
+  },
+  {
+    "categoryId": 33,
+    "createTime": "2026-09-12T15:31:29.747712",
+    "deleted": 0,
+    "description": "Spring 官方 AI 开发框架，用于在 Java 应用中集成大模型",
+    "icon": "https://docs.spring.io/spring-ai/reference/_/img/favicon.ico",
+    "id": 94,
+    "isPin": 0,
+    "name": "Spring AI",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.648149",
+    "url": "https://docs.spring.io/spring-ai/reference/getting-started.html"
+  },
+  {
+    "categoryId": 51,
+    "createTime": "2026-09-12T15:31:29.696491",
+    "deleted": 0,
+    "description": "全球最大的免费电子书库，提供海量图书检索与下载",
+    "icon": "https://favicon.im/fra101.ru",
+    "id": 93,
+    "isPin": 0,
+    "name": "Z-Library",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.550648",
+    "url": "https://zh.fra101.ru/"
+  },
+  {
+    "categoryId": 36,
+    "createTime": "2026-09-12T15:31:29.617879",
+    "deleted": 0,
+    "description": "智谱 AI 大模型开放平台，提供 GLM 系列模型 API",
+    "icon": "https://bigmodel.cn/static/images/favicon.png",
+    "id": 92,
+    "isPin": 0,
+    "name": "智谱 BigModel",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.503373",
+    "url": "https://bigmodel.cn/"
+  },
+  {
+    "categoryId": 31,
+    "createTime": "2026-09-12T15:31:29.554901",
+    "deleted": 0,
+    "description": "智谱 GLM 官方出品的 AI 编程代理工具",
+    "icon": "https://zcode.z.ai/favicon-192x192.png?v=20260707-transparent",
+    "id": 91,
+    "isPin": 0,
+    "name": "ZCode",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.44626",
+    "url": "https://zcode.z.ai/cn"
+  },
+  {
+    "categoryId": 56,
+    "createTime": "2026-09-12T15:31:29.492796",
+    "deleted": 0,
+    "description": "Epic 出品的实时 3D 创作引擎，用于游戏与影视制作",
+    "icon": "https://favicon.im/unrealengine.com",
+    "id": 90,
+    "isPin": 0,
+    "name": "Unreal Engine",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.382772",
+    "url": "https://www.unrealengine.com/"
+  },
+  {
+    "categoryId": 31,
+    "createTime": "2026-09-12T15:31:29.426093",
+    "deleted": 0,
+    "description": "面向开源模型的 AI 编程智能体，支持 50+ 模型",
+    "icon": "https://commandcode.ai/favicon.ico",
+    "id": 89,
+    "isPin": 0,
+    "name": "Command Code",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.32113",
+    "url": "https://commandcode.ai/studio"
+  },
+  {
+    "categoryId": 58,
+    "createTime": "2026-09-12T15:31:29.357651",
+    "deleted": 0,
+    "description": "字节跳动出品的视频剪辑软件，内置 AI 创作与模板",
+    "icon": "https://lf3-s.vlabstatic.com/obj/vilab-static/ies/ulike/web/resource/fe_official/assets/imgs/lv/favicon.ico",
+    "id": 88,
+    "isPin": 0,
+    "name": "剪映",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.25678",
+    "url": "https://www.capcut.cn/"
+  },
+  {
+    "categoryId": 58,
+    "createTime": "2026-09-12T15:31:29.303473",
+    "deleted": 0,
+    "description": "哔哩哔哩出品的视频剪辑工具，支持录屏与一键投稿",
+    "icon": "https://static.hdslb.com/images/favicon.ico",
+    "id": 87,
+    "isPin": 0,
+    "name": "必剪",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.209964",
+    "url": "https://bcut.bilibili.cn/"
+  },
+  {
+    "categoryId": 31,
+    "createTime": "2026-09-12T15:31:29.253737",
+    "deleted": 0,
+    "description": "开源 AI 编程代理，可在终端中辅助完成编码任务",
+    "icon": "https://opencode.ai/apple-touch-icon-v3.png",
+    "id": 86,
+    "isPin": 0,
+    "name": "OpenCode",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.164405",
+    "url": "https://opencode.ai/"
+  },
+  {
+    "categoryId": 34,
+    "createTime": "2026-09-12T15:31:29.197737",
+    "deleted": 0,
+    "description": "Node.js 官方包管理仓库，全球最大的 JavaScript 依赖库",
+    "icon": "https://favicon.im/npmjs.com",
+    "id": 85,
+    "isPin": 0,
+    "name": "npm",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.11378",
+    "url": "https://www.npmjs.com/"
+  },
+  {
+    "categoryId": 36,
+    "createTime": "2026-09-12T15:31:29.146258",
+    "deleted": 0,
+    "description": "国产大模型厂商官网，提供文本、语音与视频生成模型",
+    "icon": "https://www.minimaxi.com/favicon.ico",
+    "id": 84,
+    "isPin": 0,
+    "name": "MiniMax",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.065681",
+    "url": "https://www.minimaxi.com/"
+  },
+  {
+    "categoryId": 42,
+    "createTime": "2026-09-12T15:31:29.103718",
+    "deleted": 0,
+    "description": "作者的个人技术博客与作品集站点",
+    "icon": "https://www.lxpavilion.top/favicon.ico?favicon.2ccqz20796-4p.ico",
+    "id": 83,
+    "isPin": 0,
+    "name": "栏轩阁",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:08.017403",
+    "url": "https://www.lxpavilion.top/"
+  },
+  {
+    "categoryId": 36,
+    "createTime": "2026-09-12T15:31:29.06488",
+    "deleted": 0,
+    "description": "阿里云大模型服务平台，提供模型调用与应用构建能力",
+    "icon": "https://img.alicdn.com/tfs/TB1_ZXuNcfpK1RjSZFOXXa6nFXa-32-32.ico",
+    "id": 82,
+    "isPin": 0,
+    "name": "阿里云百炼",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:07.969509",
+    "url": "https://www.aliyun.com/product/bailian"
+  },
+  {
+    "categoryId": 42,
+    "createTime": "2026-09-12T15:31:29.026111",
+    "deleted": 0,
+    "description": "阿里云旗下域名注册与查询平台，支持域名购买与续费",
+    "icon": "https://img.alicdn.com/tfs/TB1_ZXuNcfpK1RjSZFOXXa6nFXa-32-32.ico",
+    "id": 81,
+    "isPin": 0,
+    "name": "阿里云万网",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:07.923618",
+    "url": "https://wanwang.aliyun.com/domain"
+  },
+  {
+    "categoryId": 57,
+    "createTime": "2026-09-12T15:31:28.964271",
+    "deleted": 0,
+    "description": "微软官方的 Windows 系统清理与安全防护工具",
+    "icon": "https://pcmanager.microsoft.com/assets/favicon.ico",
+    "id": 80,
+    "isPin": 0,
+    "name": "微软电脑管家",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:07.864495",
+    "url": "https://pcmanager.microsoft.com/zh-cn"
+  },
+  {
+    "categoryId": 58,
+    "createTime": "2026-09-12T15:31:28.901273",
+    "deleted": 0,
+    "description": "剪映出品的 AI 故事创作工具，辅助生成剧情与文案",
+    "icon": "https://p26-piu.byteimg.com/tos-cn-i-8jisjyls3a/6c764ca8350d46218d462fe23ea42072~tplv-8jisjyls3a-3:0:0:q75.png",
+    "id": 79,
+    "isPin": 0,
+    "name": "小云雀AI",
+    "sortOrder": 0,
+    "updateTime": "2026-09-12T15:40:07.738091",
+    "url": "https://xyq.jianying.com/"
+  },
+  {
+    "categoryId": 35,
     "createTime": "2026-08-05T00:27:19.077235",
     "deleted": 0,
     "description": "AI 行业动态聚合 · 每日精选与 AI 日报",
@@ -9,11 +243,11 @@
     "isPin": 0,
     "name": "AI HOT",
     "sortOrder": 0,
-    "updateTime": "2026-08-05T00:27:19.093927",
+    "updateTime": "2026-09-12T14:50:28.503333",
     "url": "https://aihot.virxact.com"
   },
   {
-    "categoryId": 102,
+    "categoryId": 31,
     "createTime": "2026-08-05T00:20:22.13959",
     "deleted": 0,
     "description": "研发编程助手",
@@ -22,11 +256,11 @@
     "isPin": 0,
     "name": "Qoder CN",
     "sortOrder": 0,
-    "updateTime": "2026-08-05T00:20:22.139795",
+    "updateTime": "2026-09-12T14:50:28.572551",
     "url": "https://qoder.com.cn/"
   },
   {
-    "categoryId": 102,
+    "categoryId": 31,
     "createTime": "2026-08-05T00:08:34.531884",
     "deleted": 0,
     "description": "腾讯云代码助手 CodeBuddy - AI 时代的智能编程伙伴",
@@ -35,11 +269,11 @@
     "isPin": 0,
     "name": "CodeBuddy",
     "sortOrder": 0,
-    "updateTime": "2026-08-05T00:17:23.186415",
+    "updateTime": "2026-09-12T14:50:28.646439",
     "url": "https://www.codebuddy.cn"
   },
   {
-    "categoryId": 134,
+    "categoryId": 55,
     "createTime": "2026-07-21T06:31:06.601842",
     "deleted": 0,
     "description": "Watt Toolkit（原名 Steam++）是一个开源跨平台的多功能游戏工具箱，主要用于为 Steam 等游戏平台提供网络加速，并集成了账号切换、库存管理、本地令牌等丰富的辅助功能",
@@ -48,11 +282,11 @@
     "isPin": 1,
     "name": "Watt Toolkit",
     "sortOrder": 0,
-    "updateTime": "2026-07-21T06:31:06.601976",
+    "updateTime": "2026-09-12T14:50:28.699826",
     "url": "https://steampp.net/"
   },
   {
-    "categoryId": 102,
+    "categoryId": 31,
     "createTime": "2026-07-21T06:25:17.636557",
     "deleted": 0,
     "description": "OpenAI 官方推出的轻量级终端编程助手，可本地运行并直接与你的代码库交互",
@@ -61,24 +295,24 @@
     "isPin": 1,
     "name": "Codex CLI",
     "sortOrder": 0,
-    "updateTime": "2026-07-21T06:25:17.649238",
+    "updateTime": "2026-09-12T14:50:28.745036",
     "url": "https://github.com/openai/codex"
   },
   {
-    "categoryId": 101,
+    "categoryId": 30,
     "createTime": "2026-07-20T14:07:57.781782",
     "deleted": 0,
     "description": "微软出品的集成开发环境(IDE)，支持多语言软件开发与调试",
-    "icon": "https://visualstudio.microsoft.com/wp-content/uploads/2017/02/Microsoft-favicon.png",
+    "icon": "https://visualstudio.microsoft.com/wp-content/themes/Avada-Child-Theme/assets/img/favicon/favicon-192.png",
     "id": 21,
     "isPin": 0,
     "name": "Visual Studio",
     "sortOrder": 1,
-    "updateTime": null,
+    "updateTime": "2026-09-12T16:49:02.199368",
     "url": "https://visualstudio.microsoft.com/zh-hans/"
   },
   {
-    "categoryId": 120,
+    "categoryId": 47,
     "createTime": "2026-07-20T13:50:02.661699",
     "deleted": 0,
     "description": "B站视频无水印下载，支持4K/1080P高清画质及弹幕导出",
@@ -87,11 +321,11 @@
     "isPin": 1,
     "name": "Bibz Video",
     "sortOrder": 1,
-    "updateTime": "2026-07-20T15:48:00.266545",
+    "updateTime": "2026-09-12T14:50:28.828015",
     "url": "https://bibz.me/video-extractor"
   },
   {
-    "categoryId": 101,
+    "categoryId": 30,
     "createTime": "2026-07-20T14:07:57.788031",
     "deleted": 0,
     "description": "微软推出的免费开源轻量级代码编辑器，插件生态丰富",
@@ -100,11 +334,11 @@
     "isPin": 0,
     "name": "VS Code",
     "sortOrder": 2,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:28.871079",
     "url": "https://code.visualstudio.com/"
   },
   {
-    "categoryId": 120,
+    "categoryId": 49,
     "createTime": "2026-07-20T13:50:03.156967",
     "deleted": 0,
     "description": "百度网盘高速下载解析服务，加速下载网盘文件",
@@ -113,11 +347,11 @@
     "isPin": 1,
     "name": "Kdown",
     "sortOrder": 2,
-    "updateTime": "2026-07-20T15:48:01.049125",
+    "updateTime": "2026-09-12T14:50:28.91498",
     "url": "https://kdown.moiu.cn/"
   },
   {
-    "categoryId": 102,
+    "categoryId": 31,
     "createTime": "2026-07-20T14:07:57.789994",
     "deleted": 0,
     "description": "基于VS Code的AI智能编程IDE，内置智能体辅助开发",
@@ -126,11 +360,11 @@
     "isPin": 0,
     "name": "Cursor",
     "sortOrder": 3,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:28.963691",
     "url": "https://cursor.com/cn"
   },
   {
-    "categoryId": 127,
+    "categoryId": 49,
     "createTime": "2026-07-20T13:50:03.639682",
     "deleted": 0,
     "description": "GitHub文件、Releases、归档代理加速下载",
@@ -139,11 +373,11 @@
     "isPin": 1,
     "name": "遐客",
     "sortOrder": 3,
-    "updateTime": "2026-07-20T15:48:01.45721",
+    "updateTime": "2026-09-12T14:50:29.027558",
     "url": "https://xiake.pro/"
   },
   {
-    "categoryId": 102,
+    "categoryId": 31,
     "createTime": "2026-07-20T14:07:57.791942",
     "deleted": 0,
     "description": "字节跳动推出的AI原生编程IDE，覆盖编码到部署全流程",
@@ -152,11 +386,11 @@
     "isPin": 0,
     "name": "Trae",
     "sortOrder": 4,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.083206",
     "url": "https://www.trae.cn/"
   },
   {
-    "categoryId": 125,
+    "categoryId": 52,
     "createTime": "2026-07-20T13:50:04.110256",
     "deleted": 0,
     "description": "免费在线将Word、Excel等文档批量转换为PDF",
@@ -165,11 +399,11 @@
     "isPin": 1,
     "name": "CDKM",
     "sortOrder": 4,
-    "updateTime": "2026-07-20T15:48:01.886141",
+    "updateTime": "2026-09-12T14:50:29.152178",
     "url": "https://cdkm.com/cn/doc-to-pdf"
   },
   {
-    "categoryId": 101,
+    "categoryId": 30,
     "createTime": "2026-07-20T14:07:57.794124",
     "deleted": 0,
     "description": "JetBrains出品的多款专业IDE及开发工具合集",
@@ -178,11 +412,11 @@
     "isPin": 0,
     "name": "Jetbrain 全家桶",
     "sortOrder": 5,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.220296",
     "url": "https://www.jetbrains.com/zh-cn/"
   },
   {
-    "categoryId": 125,
+    "categoryId": 52,
     "createTime": "2026-07-20T13:50:04.618971",
     "deleted": 0,
     "description": "免费在线Markdown转Word文档转换器",
@@ -191,11 +425,11 @@
     "isPin": 1,
     "name": "MD转Word",
     "sortOrder": 5,
-    "updateTime": "2026-07-20T15:48:02.296083",
+    "updateTime": "2026-09-12T14:50:29.290058",
     "url": "https://markdowntoword.io/zh"
   },
   {
-    "categoryId": 135,
+    "categoryId": 56,
     "createTime": "2026-07-20T14:07:57.797261",
     "deleted": 0,
     "description": "Unity官方项目管理工具，管理编辑器版本与项目",
@@ -204,11 +438,11 @@
     "isPin": 0,
     "name": "Unity Hub",
     "sortOrder": 6,
-    "updateTime": null,
+    "updateTime": "2026-09-12T15:31:28.667701",
     "url": "https://unity.cn/"
   },
   {
-    "categoryId": 131,
+    "categoryId": 51,
     "createTime": "2026-07-20T13:50:05.062879",
     "deleted": 0,
     "description": "免费在线简历制作工具",
@@ -217,11 +451,11 @@
     "isPin": 1,
     "name": "老鱼简历",
     "sortOrder": 6,
-    "updateTime": "2026-07-20T15:48:02.731753",
+    "updateTime": "2026-09-12T14:50:29.407643",
     "url": "https://www.laoyujianli.com/"
   },
   {
-    "categoryId": 101,
+    "categoryId": 30,
     "createTime": "2026-07-20T14:07:57.799841",
     "deleted": 0,
     "description": "华为鸿蒙应用开发IDE，支持鸿蒙应用设计调试与模拟",
@@ -230,11 +464,11 @@
     "isPin": 0,
     "name": "DevEco Studio",
     "sortOrder": 7,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.469948",
     "url": "https://developer.huawei.com/consumer/cn/deveco-studio/"
   },
   {
-    "categoryId": 108,
+    "categoryId": 40,
     "createTime": "2026-07-20T14:07:57.801715",
     "deleted": 0,
     "description": "企业级虚拟化平台，在一台物理机上运行多台虚拟机",
@@ -243,11 +477,11 @@
     "isPin": 0,
     "name": "VMware",
     "sortOrder": 8,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.516457",
     "url": "https://www.vmware.com/"
   },
   {
-    "categoryId": 109,
+    "categoryId": 41,
     "createTime": "2026-07-20T14:07:57.804114",
     "deleted": 0,
     "description": "国产免费SSH客户端，集成远程终端连接与文件传输管理",
@@ -256,11 +490,11 @@
     "isPin": 0,
     "name": "FinalShell",
     "sortOrder": 9,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.558805",
     "url": "https://www.hostbuf.com/"
   },
   {
-    "categoryId": 108,
+    "categoryId": 40,
     "createTime": "2026-07-20T14:07:57.806114",
     "deleted": 0,
     "description": "容器化桌面管理工具，简化容器构建运行与部署流程",
@@ -269,11 +503,11 @@
     "isPin": 0,
     "name": "Docker Desktop",
     "sortOrder": 10,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.618615",
     "url": "https://www.docker.com/products/docker-desktop/"
   },
   {
-    "categoryId": 103,
+    "categoryId": 32,
     "createTime": "2026-07-20T15:49:20.213695",
     "deleted": 0,
     "description": "全球最大的代码托管平台",
@@ -282,11 +516,11 @@
     "isPin": 0,
     "name": "GitHub",
     "sortOrder": 10,
-    "updateTime": "2026-07-20T15:49:20.213736",
+    "updateTime": "2026-09-12T14:50:29.678551",
     "url": "https://github.com/"
   },
   {
-    "categoryId": 111,
+    "categoryId": 37,
     "createTime": "2026-07-20T14:07:57.8083",
     "deleted": 0,
     "description": "开源跨平台的Redis可视化管理客户端工具",
@@ -295,11 +529,11 @@
     "isPin": 0,
     "name": "Another Redis Desktop Manager",
     "sortOrder": 11,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.72853",
     "url": "https://goanother.com/cn/"
   },
   {
-    "categoryId": 103,
+    "categoryId": 32,
     "createTime": "2026-07-20T15:48:42.71663",
     "deleted": 0,
     "description": "开源中国代码托管平台",
@@ -308,11 +542,11 @@
     "isPin": 0,
     "name": "Gitee",
     "sortOrder": 11,
-    "updateTime": "2026-07-20T15:48:42.717418",
+    "updateTime": "2026-09-12T14:50:29.769892",
     "url": "https://gitee.com/"
   },
   {
-    "categoryId": 112,
+    "categoryId": 38,
     "createTime": "2026-07-20T14:07:57.810558",
     "deleted": 0,
     "description": "API设计、开发、测试一体化协作平台，替代多款工具",
@@ -321,11 +555,11 @@
     "isPin": 0,
     "name": "ApiFox",
     "sortOrder": 12,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.826288",
     "url": "https://apifox.com/"
   },
   {
-    "categoryId": 107,
+    "categoryId": 36,
     "createTime": "2026-07-20T15:48:44.301563",
     "deleted": 0,
     "description": "DeepSeek API 用量管理与开发平台",
@@ -334,11 +568,11 @@
     "isPin": 1,
     "name": "DeepSeek 开放平台",
     "sortOrder": 12,
-    "updateTime": "2026-07-20T15:48:44.301666",
+    "updateTime": "2026-09-12T14:50:29.887588",
     "url": "https://platform.deepseek.com/usage"
   },
   {
-    "categoryId": 113,
+    "categoryId": 39,
     "createTime": "2026-07-20T14:07:57.812711",
     "deleted": 0,
     "description": "开源Java负载测试工具，用于性能测试与压力测试",
@@ -347,11 +581,11 @@
     "isPin": 0,
     "name": "Apache JMeter",
     "sortOrder": 13,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:29.964379",
     "url": "https://jmeter.apache.org/"
   },
   {
-    "categoryId": 110,
+    "categoryId": 38,
     "createTime": "2026-07-20T15:48:44.703428",
     "deleted": 0,
     "description": "邮件发送服务，开发者友好的邮件 API",
@@ -360,11 +594,11 @@
     "isPin": 0,
     "name": "Resend",
     "sortOrder": 13,
-    "updateTime": "2026-07-20T15:48:44.703714",
+    "updateTime": "2026-09-12T14:50:30.008837",
     "url": "https://resend.com/emails"
   },
   {
-    "categoryId": 114,
+    "categoryId": 39,
     "createTime": "2026-07-20T14:07:57.815059",
     "deleted": 0,
     "description": "Java性能监控、分析和故障处理的可视化工具，集成多款JDK命令行工具",
@@ -373,11 +607,11 @@
     "isPin": 0,
     "name": "VisualVM",
     "sortOrder": 14,
-    "updateTime": "2026-07-21T09:25:54.025207",
+    "updateTime": "2026-09-12T14:50:30.053749",
     "url": "https://visualvm.github.io/"
   },
   {
-    "categoryId": 131,
+    "categoryId": 42,
     "createTime": "2026-07-20T15:48:45.095164",
     "deleted": 0,
     "description": "互联网公共头像服务，Gravatar 国内替代",
@@ -386,11 +620,11 @@
     "isPin": 0,
     "name": "Cravatar",
     "sortOrder": 14,
-    "updateTime": "2026-07-20T15:48:45.095212",
+    "updateTime": "2026-09-12T14:50:30.110431",
     "url": "https://cn.cravatar.com/"
   },
   {
-    "categoryId": 102,
+    "categoryId": 31,
     "createTime": "2026-07-20T14:07:57.817032",
     "deleted": 0,
     "description": "OpenAI推出的AI编程智能体，支持多智能体协作编码与自动化开发",
@@ -399,11 +633,11 @@
     "isPin": 0,
     "name": "Codex | OpenAI",
     "sortOrder": 15,
-    "updateTime": "2026-07-21T09:17:51.514658",
+    "updateTime": "2026-09-12T14:50:30.152499",
     "url": "https://openai.com/zh-Hans-CN/codex/"
   },
   {
-    "categoryId": 110,
+    "categoryId": 42,
     "createTime": "2026-07-20T15:48:45.497595",
     "deleted": 0,
     "description": "Cloudflare 控制台，CDN/域名/DNS 管理",
@@ -412,11 +646,11 @@
     "isPin": 1,
     "name": "Cloudflare",
     "sortOrder": 15,
-    "updateTime": "2026-07-20T15:48:45.497645",
+    "updateTime": "2026-09-12T14:50:30.221115",
     "url": "https://dash.cloudflare.com"
   },
   {
-    "categoryId": 107,
+    "categoryId": 36,
     "createTime": "2026-07-20T15:48:45.931685",
     "deleted": 0,
     "description": "本地运行大语言模型的工具",
@@ -425,11 +659,11 @@
     "isPin": 0,
     "name": "Ollama",
     "sortOrder": 16,
-    "updateTime": "2026-07-20T15:48:45.931848",
+    "updateTime": "2026-09-12T14:50:30.287845",
     "url": "https://ollama.com/"
   },
   {
-    "categoryId": 107,
+    "categoryId": 36,
     "createTime": "2026-07-20T14:07:57.821221",
     "deleted": 0,
     "description": "AI CLI工具配置管理软件，可一键切换API供应商和模型配置",
@@ -438,11 +672,11 @@
     "isPin": 1,
     "name": "cc-switch",
     "sortOrder": 17,
-    "updateTime": "2026-07-21T07:08:28.297196",
+    "updateTime": "2026-09-12T14:50:30.361978",
     "url": "https://ccswitch.io/zh/"
   },
   {
-    "categoryId": 110,
+    "categoryId": 42,
     "createTime": "2026-07-20T15:48:46.333335",
     "deleted": 0,
     "description": "Bing 站长工具，网站收录与 SEO",
@@ -451,11 +685,11 @@
     "isPin": 0,
     "name": "Bing Webmaster",
     "sortOrder": 17,
-    "updateTime": "2026-07-20T15:48:46.333383",
+    "updateTime": "2026-09-12T14:50:30.406817",
     "url": "https://www.bing.com/webmasters"
   },
   {
-    "categoryId": 111,
+    "categoryId": 37,
     "createTime": "2026-07-20T14:07:57.823149",
     "deleted": 0,
     "description": "轻量级跨平台数据库管理工具，支持60多种数据库的查询和管理",
@@ -464,11 +698,11 @@
     "isPin": 0,
     "name": "DBX",
     "sortOrder": 18,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:30.480906",
     "url": "https://dbxio.com/cn"
   },
   {
-    "categoryId": 106,
+    "categoryId": 35,
     "createTime": "2026-07-20T15:48:46.744602",
     "deleted": 0,
     "description": "DeepSeek AI 对话助手",
@@ -477,11 +711,11 @@
     "isPin": 0,
     "name": "DeepSeek Chat",
     "sortOrder": 18,
-    "updateTime": "2026-07-20T15:48:46.744873",
+    "updateTime": "2026-09-12T14:50:30.593427",
     "url": "https://chat.deepseek.com/"
   },
   {
-    "categoryId": 130,
+    "categoryId": 52,
     "createTime": "2026-07-20T14:07:57.824607",
     "deleted": 0,
     "description": "免费开源的即开即用翻译工具，支持划词翻译、截图翻译和OCR识别",
@@ -490,11 +724,11 @@
     "isPin": 0,
     "name": "STranslate",
     "sortOrder": 19,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:30.652179",
     "url": "https://stranslate.zggsong.com/"
   },
   {
-    "categoryId": 106,
+    "categoryId": 35,
     "createTime": "2026-07-20T15:48:47.176427",
     "deleted": 0,
     "description": "字节跳动旗下 AI 智能助手",
@@ -503,11 +737,11 @@
     "isPin": 0,
     "name": "豆包",
     "sortOrder": 19,
-    "updateTime": "2026-07-20T15:48:47.176481",
+    "updateTime": "2026-09-12T14:50:30.701122",
     "url": "https://www.doubao.com/chat"
   },
   {
-    "categoryId": 119,
+    "categoryId": 46,
     "createTime": "2026-07-20T14:07:57.826095",
     "deleted": 0,
     "description": "高画质屏幕录制软件，支持游戏录制、设备录制和4K视频输出",
@@ -516,11 +750,11 @@
     "isPin": 0,
     "name": "Bandicam",
     "sortOrder": 20,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:30.76858",
     "url": "https://www.bandicam.cn/"
   },
   {
-    "categoryId": 126,
+    "categoryId": 50,
     "createTime": "2026-07-20T15:48:47.602752",
     "deleted": 0,
     "description": "免费在线图片压缩工具",
@@ -529,11 +763,11 @@
     "isPin": 0,
     "name": "docsmall",
     "sortOrder": 20,
-    "updateTime": "2026-07-20T15:48:47.602827",
+    "updateTime": "2026-09-12T14:50:30.840286",
     "url": "https://docsmall.com/image-compress"
   },
   {
-    "categoryId": 120,
+    "categoryId": 47,
     "createTime": "2026-07-20T14:07:57.828473",
     "deleted": 0,
     "description": "B站视频下载工具，支持批量下载视频、弹幕和多种清晰度画质",
@@ -542,11 +776,11 @@
     "isPin": 0,
     "name": "JiJiDownForWPF",
     "sortOrder": 21,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:30.88735",
     "url": "https://client.sabe.cc/zh-tw/"
   },
   {
-    "categoryId": 126,
+    "categoryId": 50,
     "createTime": "2026-07-20T15:48:48.08441",
     "deleted": 0,
     "description": "在线抠图工具，AI自动去除背景",
@@ -555,11 +789,11 @@
     "isPin": 0,
     "name": "remove.bg",
     "sortOrder": 21,
-    "updateTime": "2026-07-20T15:48:48.084456",
+    "updateTime": "2026-09-12T14:50:30.935373",
     "url": "https://www.remove.bg/zh"
   },
   {
-    "categoryId": 122,
+    "categoryId": 41,
     "createTime": "2026-07-20T14:07:57.831161",
     "deleted": 0,
     "description": "图形化安卓手机投屏与控制工具，支持有线和无线连接、多设备管理",
@@ -568,11 +802,11 @@
     "isPin": 0,
     "name": "escrcpy_1.24.2Portable",
     "sortOrder": 22,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:30.980081",
     "url": "https://viarotel.eu.org/zhHans/"
   },
   {
-    "categoryId": 109,
+    "categoryId": 41,
     "createTime": "2026-07-20T14:07:57.833972",
     "deleted": 0,
     "description": "图形化内网穿透工具，可将内网服务安全暴露到公网实现远程访问",
@@ -581,11 +815,11 @@
     "isPin": 0,
     "name": "SakuraFrp启动器",
     "sortOrder": 23,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.061818",
     "url": "https://www.natfrp.com/"
   },
   {
-    "categoryId": 119,
+    "categoryId": 46,
     "createTime": "2026-07-20T14:07:57.836113",
     "deleted": 0,
     "description": "功能强大的截图贴图工具，支持长截图、屏幕录制和离线OCR识别",
@@ -594,11 +828,11 @@
     "isPin": 0,
     "name": "PixPin",
     "sortOrder": 24,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.130722",
     "url": "https://pixpin.cn/"
   },
   {
-    "categoryId": 120,
+    "categoryId": 47,
     "createTime": "2026-07-20T14:07:57.838107",
     "deleted": 0,
     "description": "哔哩哔哩视频解析下载工具，支持8K画质、Hi-Res音频和批量下载",
@@ -607,11 +841,11 @@
     "isPin": 0,
     "name": "bilidown",
     "sortOrder": 25,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.210856",
     "url": "https://github.com/iuroc/bilidown"
   },
   {
-    "categoryId": 124,
+    "categoryId": 49,
     "createTime": "2026-07-20T14:07:57.840188",
     "deleted": 0,
     "description": "高速下载管理器，通过多线程分段技术大幅提升文件下载速度",
@@ -620,11 +854,11 @@
     "isPin": 0,
     "name": "Internet Download",
     "sortOrder": 26,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.286823",
     "url": "https://www.internetdownloadmanager.com/"
   },
   {
-    "categoryId": 123,
+    "categoryId": 57,
     "createTime": "2026-07-20T14:07:57.842194",
     "deleted": 0,
     "description": "免费开源的高压缩率文件压缩与解压缩工具",
@@ -633,11 +867,11 @@
     "isPin": 0,
     "name": "7-zip",
     "sortOrder": 27,
-    "updateTime": null,
+    "updateTime": "2026-09-12T15:31:28.771201",
     "url": "https://www.7-zip.org/"
   },
   {
-    "categoryId": 128,
+    "categoryId": 51,
     "createTime": "2026-07-20T14:07:57.844063",
     "deleted": 0,
     "description": "基于本地Markdown的双向链接笔记与知识管理软件",
@@ -646,11 +880,11 @@
     "isPin": 0,
     "name": "Obsidian",
     "sortOrder": 28,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.44696",
     "url": "https://obsidian.md/"
   },
   {
-    "categoryId": 129,
+    "categoryId": 51,
     "createTime": "2026-07-20T14:07:57.845627",
     "deleted": 0,
     "description": "PPT设计辅助插件，提供AI生成、海量模板和一键美化功能",
@@ -659,24 +893,24 @@
     "isPin": 0,
     "name": "iSlide",
     "sortOrder": 29,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.508844",
     "url": "https://www.islide.cc/"
   },
   {
-    "categoryId": 121,
+    "categoryId": 48,
     "createTime": "2026-07-20T14:07:57.847753",
     "deleted": 0,
     "description": "AI配音与语音合成软件，支持多情绪语态的音色生成",
-    "icon": "https://www.dubbingx.com/favicon.ico",
+    "icon": "https://favicon.im/dubbingx.com",
     "id": 50,
     "isPin": 0,
     "name": "DubbingX",
     "sortOrder": 30,
-    "updateTime": "2026-07-21T09:24:07.16793",
+    "updateTime": "2026-09-12T16:49:02.082654",
     "url": "https://www.dubbingx.com/"
   },
   {
-    "categoryId": 103,
+    "categoryId": 32,
     "createTime": "2026-07-20T14:07:57.84966",
     "deleted": 0,
     "description": "分布式版本控制系统，用于代码管理与团队协作开发",
@@ -685,11 +919,11 @@
     "isPin": 0,
     "name": "Git",
     "sortOrder": 31,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.628599",
     "url": "https://git-scm.com/"
   },
   {
-    "categoryId": 105,
+    "categoryId": 34,
     "createTime": "2026-07-20T14:07:57.851275",
     "deleted": 0,
     "description": "Python/R数据科学及AI开发平台，集成包管理和虚拟环境功能",
@@ -698,11 +932,11 @@
     "isPin": 0,
     "name": "Anaconda",
     "sortOrder": 32,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.689398",
     "url": "https://www.anaconda.com/"
   },
   {
-    "categoryId": 105,
+    "categoryId": 34,
     "createTime": "2026-07-20T14:07:57.85288",
     "deleted": 0,
     "description": "Node.js版本管理工具，支持多版本安装与快速切换",
@@ -711,11 +945,11 @@
     "isPin": 0,
     "name": "nvm",
     "sortOrder": 33,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.745815",
     "url": "https://github.com/nvm-sh/nvm"
   },
   {
-    "categoryId": 105,
+    "categoryId": 34,
     "createTime": "2026-07-20T14:07:57.855012",
     "deleted": 0,
     "description": "软件开发包管理器，用于管理多版本JDK等JVM工具",
@@ -724,11 +958,11 @@
     "isPin": 0,
     "name": "SDKMAN",
     "sortOrder": 34,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.825752",
     "url": "https://sdkman.io/"
   },
   {
-    "categoryId": 104,
+    "categoryId": 33,
     "createTime": "2026-07-20T14:07:57.856795",
     "deleted": 0,
     "description": "跨平台的面向对象编程语言及运行时环境",
@@ -737,11 +971,11 @@
     "isPin": 0,
     "name": "java",
     "sortOrder": 35,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.904982",
     "url": "https://www.java.com/zh-CN/"
   },
   {
-    "categoryId": 105,
+    "categoryId": 34,
     "createTime": "2026-07-20T14:07:57.861542",
     "deleted": 0,
     "description": "基于Rust的超高速Python包与项目管理统一工具",
@@ -750,11 +984,11 @@
     "isPin": 0,
     "name": "uv",
     "sortOrder": 36,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:31.981469",
     "url": "https://astral.sh/"
   },
   {
-    "categoryId": 104,
+    "categoryId": 33,
     "createTime": "2026-07-20T14:07:57.863186",
     "deleted": 0,
     "description": "简洁易学的通用高级编程语言，生态丰富应用广泛",
@@ -763,11 +997,11 @@
     "isPin": 0,
     "name": "python",
     "sortOrder": 37,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.035876",
     "url": "https://www.python.org/"
   },
   {
-    "categoryId": 104,
+    "categoryId": 33,
     "createTime": "2026-07-20T14:07:57.864747",
     "deleted": 0,
     "description": "基于Chrome V8引擎的JavaScript服务端运行时环境",
@@ -776,11 +1010,11 @@
     "isPin": 0,
     "name": "node",
     "sortOrder": 38,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.090079",
     "url": "https://nodejs.org/zh-cn"
   },
   {
-    "categoryId": 115,
+    "categoryId": 43,
     "createTime": "2026-07-20T14:07:57.866782",
     "deleted": 0,
     "description": "STC单片机下载烧录工具，集成串口调试与计算器",
@@ -789,11 +1023,11 @@
     "isPin": 0,
     "name": "STC-ISP-v6.96",
     "sortOrder": 39,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.16821",
     "url": "https://www.stcmicro.com/cn/rjxz.html"
   },
   {
-    "categoryId": 115,
+    "categoryId": 44,
     "createTime": "2026-07-20T14:07:57.868394",
     "deleted": 0,
     "description": "STM32微控制器图形化配置及初始化代码生成工具",
@@ -802,11 +1036,11 @@
     "isPin": 0,
     "name": "STM32CubeMX",
     "sortOrder": 40,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.245284",
     "url": "https://www.st.com.cn/zh/development-tools/stm32cubemx.html"
   },
   {
-    "categoryId": 115,
+    "categoryId": 44,
     "createTime": "2026-07-20T14:07:57.86995",
     "deleted": 0,
     "description": "ST官方STM32芯片编程烧录工具，支持多接口固件烧录与调试。",
@@ -815,11 +1049,11 @@
     "isPin": 0,
     "name": "STM32CubeProgrammer",
     "sortOrder": 41,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.315073",
     "url": "https://www.st.com.cn/content/st_com/zh/stm32cubeprogrammer.html"
   },
   {
-    "categoryId": 116,
+    "categoryId": 45,
     "createTime": "2026-07-20T14:07:57.871508",
     "deleted": 0,
     "description": "国产在线PCB设计工具，集成原理图绘制与电路板设计。",
@@ -828,11 +1062,11 @@
     "isPin": 0,
     "name": "嘉立创",
     "sortOrder": 42,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.369083",
     "url": "https://lceda.cn/"
   },
   {
-    "categoryId": 115,
+    "categoryId": 43,
     "createTime": "2026-07-20T14:07:57.873383",
     "deleted": 0,
     "description": "ARM/51单片机集成开发环境，支持编译调试与仿真。",
@@ -841,11 +1075,11 @@
     "isPin": 0,
     "name": "KeiluVision5",
     "sortOrder": 43,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.424139",
     "url": "https://www.keil.com/"
   },
   {
-    "categoryId": 115,
+    "categoryId": 43,
     "createTime": "2026-07-20T14:07:57.875196",
     "deleted": 0,
     "description": "开源电子原型平台开发环境，简化嵌入式编程开发流程。",
@@ -854,24 +1088,24 @@
     "isPin": 0,
     "name": "Arduino IDE",
     "sortOrder": 44,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.483628",
     "url": "https://www.arduino.cc/"
   },
   {
-    "categoryId": 118,
+    "categoryId": 45,
     "createTime": "2026-07-20T14:07:57.876716",
     "deleted": 0,
     "description": "专业三维CAD设计软件，用于机械设计与工程制图。",
-    "icon": "https://www.solidworks.com/favicon.ico",
+    "icon": "https://www.solidworks.com/themes/custom/sw-digital/favicon.ico",
     "id": 65,
     "isPin": 0,
     "name": "SOLIDWORKS2024",
     "sortOrder": 45,
-    "updateTime": null,
+    "updateTime": "2026-09-12T16:49:02.216981",
     "url": "https://www.solidworks.com/"
   },
   {
-    "categoryId": 117,
+    "categoryId": 43,
     "createTime": "2026-07-20T14:07:57.87826",
     "deleted": 0,
     "description": "开源嵌入式开发平台，支持多架构多框架的快速开发。",
@@ -880,11 +1114,11 @@
     "isPin": 0,
     "name": "platformio",
     "sortOrder": 46,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.607295",
     "url": "https://platformio.org/"
   },
   {
-    "categoryId": 132,
+    "categoryId": 53,
     "createTime": "2026-07-20T14:07:57.879558",
     "deleted": 0,
     "description": "Windows经典小游戏合集，含扫雷纸牌等怀旧游戏。",
@@ -893,11 +1127,11 @@
     "isPin": 0,
     "name": "Windows game",
     "sortOrder": 47,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.666992",
     "url": "https://win7games.com.cn/"
   },
   {
-    "categoryId": 132,
+    "categoryId": 53,
     "createTime": "2026-07-20T14:07:57.880978",
     "deleted": 0,
     "description": "全球最大数字游戏发行平台，集购买游玩社交于一体。",
@@ -906,11 +1140,11 @@
     "isPin": 0,
     "name": "steam",
     "sortOrder": 48,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.762337",
     "url": "https://store.steampowered.com/"
   },
   {
-    "categoryId": 134,
+    "categoryId": 55,
     "createTime": "2026-07-20T14:07:57.882517",
     "deleted": 0,
     "description": "网易出品专业游戏网络加速工具，有效降低游戏延迟。",
@@ -919,11 +1153,11 @@
     "isPin": 0,
     "name": "UU加速器",
     "sortOrder": 49,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.842354",
     "url": "https://uu.163.com/download/"
   },
   {
-    "categoryId": 133,
+    "categoryId": 54,
     "createTime": "2026-07-20T14:07:57.884045",
     "deleted": 0,
     "description": "我的世界Java版第三方启动器，支持多版本与模组管理。",
@@ -932,11 +1166,11 @@
     "isPin": 0,
     "name": "PCL2",
     "sortOrder": 50,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:32.904007",
     "url": "https://github.com/Meloong-Git/PCL"
   },
   {
-    "categoryId": 133,
+    "categoryId": 54,
     "createTime": "2026-07-20T14:07:57.887341",
     "deleted": 0,
     "description": "我的世界基岩版第三方启动器，支持多版本自由切换。",
@@ -945,11 +1179,11 @@
     "isPin": 0,
     "name": "BedrockLauncher",
     "sortOrder": 51,
-    "updateTime": "2026-07-21T09:24:25.726265",
+    "updateTime": "2026-09-12T14:50:32.981364",
     "url": "https://bedrocklauncher.github.io/"
   },
   {
-    "categoryId": 121,
+    "categoryId": 48,
     "createTime": "2026-07-20T14:07:57.889138",
     "deleted": 0,
     "description": "免费电脑钢琴模拟软件，支持键盘演奏与音乐学习。",
@@ -958,11 +1192,11 @@
     "isPin": 0,
     "name": "Everyone Piano",
     "sortOrder": 52,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:33.065071",
     "url": "https://www.everyonepiano.cn/"
   },
   {
-    "categoryId": 133,
+    "categoryId": 54,
     "createTime": "2026-07-20T14:07:57.891485",
     "deleted": 0,
     "description": "泰拉瑞亚开源地图编辑器，支持世界编辑与建筑创作。",
@@ -971,7 +1205,7 @@
     "isPin": 0,
     "name": "TEdit",
     "sortOrder": 53,
-    "updateTime": null,
+    "updateTime": "2026-09-12T14:50:33.140928",
     "url": "https://docs.tedit.dev/"
   }
 ]
