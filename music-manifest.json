@@ -48,5 +48,55 @@
     "id": 1252,
     "ext": ".ogg",
     "coverExt": ".png"
+  },
+  {
+    "id": 1450,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 1444,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 324,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 1412,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 1042,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 1417,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 459,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 1380,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 1391,
+    "ext": ".mp3",
+    "coverExt": ".png"
+  },
+  {
+    "id": 1421,
+    "ext": ".mp3",
+    "coverExt": ".png"
   }
 ]
