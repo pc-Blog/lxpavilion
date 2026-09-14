@@ -1,15 +1,27 @@
 import api from "@/lib/axios";
-import type { PageVO, Category, PageDTO } from "@/lib/types";
+import type { PageVO, Category, CategoryType, PageDTO } from "@/lib/types";
 import { detectMode, ensureData } from "@/lib/static-data";
 
-export async function getList(keyword?: string, pageNum = 1, pageSize = 100) {
+export async function getList(
+  keyword?: string,
+  pageNum = 1,
+  pageSize = 100,
+  type?: CategoryType,
+) {
   if ((await detectMode()) === "static") {
-    return (await ensureData<PageVO<Category>>("categories")) ?? { rows: [], total: 0 };
+    // 静态模式下 categories.json 含全部类型，在客户端按 type 过滤
+    const data = (await ensureData<PageVO<Category>>("categories")) ?? { rows: [], total: 0 };
+    if (!type) return data;
+    const rows = data.rows.filter((c) => c.type === type);
+    return { rows, total: rows.length };
   }
+  const query: Partial<Category> = {};
+  if (keyword) query.name = keyword;
+  if (type) query.type = type;
   return api.post<PageVO<Category>, PageVO<Category>>("/category/page", {
     pageNum,
     pageSize,
-    query: keyword ? ({ name: keyword } as Category) : undefined,
+    query: Object.keys(query).length > 0 ? (query as Category) : undefined,
   } satisfies PageDTO<Category>);
 }
 

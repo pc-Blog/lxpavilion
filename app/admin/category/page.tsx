@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { Category } from "@/lib/types";
+import type { Category, CategoryType } from "@/lib/types";
 import { getList, create, update, remove } from "@/lib/api/category";
 import Tooltip from "@/app/_components/common/Tooltip";
 import Dialog from "@/app/_components/common/Dialog";
@@ -10,9 +10,15 @@ import { useConfirm } from "@/app/_components/common/ConfirmDialog";
 import Pagination from "@/app/_components/common/Pagination";
 import SelectDropdown from "@/app/_components/admin/SelectDropdown";
 
-const typeOptions = [
+interface TypeOption {
+  value: CategoryType;
+  label: string;
+}
+
+const typeOptions: TypeOption[] = [
   { value: "ARTICLE", label: "ARTICLE" },
   { value: "PROJECT", label: "PROJECT" },
+  { value: "LITERATURE", label: "LITERATURE" },
 ];
 
 export default function AdminCategoryPage() {
@@ -20,6 +26,7 @@ export default function AdminCategoryPage() {
   const [items, setItems] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState("");
+  const [typeFilter, setTypeFilter] = useState<CategoryType>("ARTICLE");
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -28,26 +35,34 @@ export default function AdminCategoryPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [name, setName] = useState("");
-  const [type, setType] = useState<Category["type"]>("ARTICLE");
+  const [type, setType] = useState<CategoryType>("ARTICLE");
 
-  const refresh = useCallback(async (kw?: string, pn?: number, ps?: number) => {
-    try { const d = await getList(kw || undefined, pn, ps); setItems(d.rows); setTotal(d.total); } catch {}
+  const refresh = useCallback(async (
+    kw?: string,
+    pn?: number,
+    ps?: number,
+    tp?: CategoryType,
+  ) => {
+    try {
+      const d = await getList(kw || undefined, pn, ps, tp);
+      setItems(d.rows);
+      setTotal(d.total);
+    } catch {}
     finally { setLoading(false); }
   }, []);
 
-  useEffect(() => { refresh(); }, [refresh]);
-
-  // Debounced search (reset to page 1)
+  // 首次加载与关键字防抖共用同一 effect（挂载时即触发一次），
+  // 避免额外的初始请求 effect 在挂载时同步 setState。
   useEffect(() => {
-    setPageNum(1);
-    const timer = setTimeout(() => refresh(keyword || undefined, 1, pageSize), 300);
+    const timer = setTimeout(() => refresh(keyword || undefined, 1, pageSize, typeFilter), 300);
     return () => clearTimeout(timer);
-  }, [keyword, refresh, pageSize]);
+  }, [keyword, refresh, pageSize, typeFilter]);
 
   const openAdd = () => {
     setEditingId(null);
     setName("");
-    setType("ARTICLE");
+    // 默认沿用当前筛选的类型，减少手动切换
+    setType(typeFilter);
     setDialogOpen(true);
   };
 
@@ -63,13 +78,13 @@ export default function AdminCategoryPage() {
     if (editingId) { await update({ id: editingId, name: name.trim(), type }); showSuccessToast("Updated"); }
     else { await create({ name: name.trim(), type }); showSuccessToast("Created"); }
     setDialogOpen(false);
-    refresh(keyword || undefined, pageNum, pageSize);
+    refresh(keyword || undefined, pageNum, pageSize, typeFilter);
   };
 
   const handleDelete = async (id: number) => {
     const ok = await confirm("Delete?"); if (!ok) return;
     await remove(id); showSuccessToast("Deleted");
-    refresh(keyword || undefined, pageNum, pageSize);
+    refresh(keyword || undefined, pageNum, pageSize, typeFilter);
   };
 
   if (loading) return <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mt-10" />;
@@ -78,11 +93,28 @@ export default function AdminCategoryPage() {
     <div className="flex flex-col flex-1 min-h-0">
       <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-6">Categories</h1>
 
+      {/* Type filter */}
+      <div className="flex items-center gap-2 mb-4">
+        {typeOptions.map((o) => (
+          <button
+            key={o.value}
+            onClick={() => { setTypeFilter(o.value); setPageNum(1); }}
+            className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+              typeFilter === o.value
+                ? "bg-indigo-500 text-white"
+                : "bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/40 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:bg-white/60 dark:hover:bg-slate-800/60"
+            }`}
+          >
+            {o.value}
+          </button>
+        ))}
+      </div>
+
       {/* Search + Add */}
       <div className="flex gap-3 mb-6">
         <input
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={(e) => { setKeyword(e.target.value); setPageNum(1); }}
           placeholder="Search categories..."
           className="glass-card !rounded-xl px-4 py-2.5 flex-1 text-sm outline-none bg-white/50 dark:bg-slate-800/50"
         />
@@ -93,7 +125,11 @@ export default function AdminCategoryPage() {
 
       {/* Category list */}
       <div className="flex-1 overflow-auto flex flex-col gap-2">
-        {items.map((c) => (
+        {items.length === 0 ? (
+          <div className="glass-card !rounded-2xl p-8 text-center text-sm text-slate-400 dark:text-slate-500">
+            No categories
+          </div>
+        ) : items.map((c) => (
           <div key={c.id} className="glass-card px-4 py-3 flex items-center gap-4 group">
             <span className="text-xs px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 font-mono">{c.type}</span>
             <span className="flex-1 text-sm font-bold">{c.name}</span>
@@ -113,7 +149,7 @@ export default function AdminCategoryPage() {
         ))}
       </div>
 
-      <Pagination total={total} pageNum={pageNum} pageSize={pageSize} onChange={(pn) => { setPageNum(pn); refresh(keyword || undefined, pn, pageSize); }} onPageSizeChange={(ps) => { setPageSize(ps); setPageNum(1); refresh(keyword || undefined, 1, ps); }} />
+      <Pagination total={total} pageNum={pageNum} pageSize={pageSize} onChange={(pn) => { setPageNum(pn); refresh(keyword || undefined, pn, pageSize, typeFilter); }} onPageSizeChange={(ps) => { setPageSize(ps); setPageNum(1); refresh(keyword || undefined, 1, ps, typeFilter); }} />
 
       {/* Dialog */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title={editingId ? "Edit Category" : "Add Category"}>
@@ -128,7 +164,7 @@ export default function AdminCategoryPage() {
         <SelectDropdown
           options={typeOptions}
           value={type}
-          onChange={(v) => setType(v as Category["type"])}
+          onChange={(v) => setType(v as CategoryType)}
           placeholder="Select type"
           renderOption={(o) => o.label}
           getValue={(o) => o.value}

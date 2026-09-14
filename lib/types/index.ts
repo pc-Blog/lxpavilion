@@ -75,10 +75,12 @@ export interface TagBrief {
 
 // ========== Category ==========
 
+export type CategoryType = "ARTICLE" | "PROJECT" | "LITERATURE";
+
 export interface Category {
   id?: number;
   name: string;
-  type: "ARTICLE" | "PROJECT";
+  type: CategoryType;
   sortOrder?: number;
   deleted?: number;
   createTime?: string;
