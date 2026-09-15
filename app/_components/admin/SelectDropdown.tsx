@@ -14,10 +14,12 @@ interface SelectDropdownProps<T> {
   disabled?: boolean;
   direction?: "down" | "up" | "auto";
   searchable?: boolean;
+  /** "md"：表单尺寸（默认，admin 表单用）；"sm"：工具栏紧凑尺寸，与 DatePicker 对齐 */
+  size?: "md" | "sm";
 }
 
 export default function SelectDropdown<T>({
-  options, value, onChange, placeholder, renderOption, getValue, disabled, direction = "auto", searchable,
+  options, value, onChange, placeholder, renderOption, getValue, disabled, direction = "auto", searchable, size = "md",
 }: SelectDropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
@@ -85,10 +87,13 @@ export default function SelectDropdown<T>({
         type="button"
         disabled={disabled}
         onClick={toggle}
-        className="w-full glass-card !rounded-xl px-4 py-2.5 text-sm outline-none bg-white/50 dark:bg-slate-800/50 flex items-center justify-between gap-2 disabled:opacity-50"
+        className={`glass-card w-full outline-none bg-white/50 dark:bg-slate-800/50 flex items-center justify-between gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+          size === "sm" ? "!rounded-lg h-8 px-2.5 text-xs" : "!rounded-xl px-4 py-2.5 text-sm"
+        }`}
       >
-        <span className={selectedOption ? "text-slate-700 dark:text-slate-200" : "text-slate-400"}>{selectedOption ? renderOption(selectedOption) : placeholder}</span>
-        <svg className={`w-4 h-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+        {/* truncate 只给工具栏紧凑档：表单档保持原样，免得把 Pagination 那种窄容器里的文字截成省略号 */}
+        <span className={`${size === "sm" ? "truncate" : ""} ${selectedOption ? "text-slate-700 dark:text-slate-200" : "text-slate-400"}`}>{selectedOption ? renderOption(selectedOption) : placeholder}</span>
+        <svg className={`w-4 h-4 shrink-0 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
       </button>
 
       {/* 使用 Portal 渲染到 body：逃脱层叠上下文 & overflow 裁剪 */}

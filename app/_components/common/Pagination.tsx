@@ -67,7 +67,8 @@ export default function Pagination({ total, pageNum, pageSize, onChange, onPageS
       </div>
 
       {onPageSizeChange ? (
-        <div className="w-28">
+        <div className="w-36">
+          {/* w-28 时「10 / page」加箭头放不下会溢出，w-36 让文案完整显示 */}
           <SelectDropdown
             options={[10, 20, 50]}
             value={pageSize}
