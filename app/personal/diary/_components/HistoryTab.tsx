@@ -58,10 +58,37 @@ export default function HistoryTab({ diaries }: { diaries: Diary[] }) {
     }
   };
 
+  /**
+   * 筛选组合的指纹。
+   *
+   * 与 DiaryTab 同理：时间线块的 key 稳定，筛选只移除部分块，保留下来的
+   * React 会复用节点、动画不重播。挂上指纹后筛选一变就整体重挂载。
+   */
+  const filterKey = `${selectedYear ?? "-"}|${selectedMonth ?? "-"}`;
+
   return (
     <>
+      {/* 筛选条 / 月份行 / 时间线块的动效。keyframes 内联注入，与 DiaryTab、StatsTab 一致 */}
+      <style>{`
+        @keyframes historyBarIn {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes chipIn {
+          from { opacity: 0; transform: translateY(-6px) scale(0.94); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes blockIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .history-bar-in, .chip-in, .chip-stagger, .history-block { animation: none; }
+        }
+      `}</style>
+
       {/* ── 筛选条 ── */}
-      <div className="mb-6 space-y-2.5 rounded-2xl border border-white/40 bg-white/40 p-3 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-800/50">
+      <div className="history-bar-in mb-6 space-y-2.5 rounded-2xl border border-white/40 bg-white/40 p-3 shadow-lg backdrop-blur-md [animation:historyBarIn_0.3s_ease-out] dark:border-white/10 dark:bg-slate-800/50">
         <div className="flex flex-wrap items-center gap-2">
           <span className="w-8 shrink-0 text-[11px] font-bold text-slate-400">年份</span>
           <div className="flex flex-wrap gap-1.5">
@@ -70,7 +97,7 @@ export default function HistoryTab({ diaries }: { diaries: Diary[] }) {
                 key={y}
                 type="button"
                 onClick={() => toggleYear(y)}
-                className={`rounded-lg border px-2.5 py-1 text-xs transition-all ${
+                className={`chip-in rounded-lg border px-2.5 py-1 text-xs transition-all [animation:chipIn_0.26s_cubic-bezier(0.22,1,0.36,1)] ${
                   selectedYear === y
                     ? "border-indigo-400 bg-indigo-500 text-white"
                     : "border-slate-200 bg-white/60 text-slate-600 hover:border-slate-300 dark:border-slate-600 dark:bg-slate-700/40 dark:text-slate-300"
@@ -86,15 +113,16 @@ export default function HistoryTab({ diaries }: { diaries: Diary[] }) {
         </div>
 
         {selectedYear !== null && months.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2">
+          <div key={`months-${selectedYear}`} className="flex flex-wrap items-center gap-2">
             <span className="w-8 shrink-0 text-[11px] font-bold text-slate-400">月份</span>
             <div className="flex flex-wrap gap-1.5">
-              {months.map((m) => (
+              {months.map((m, idx) => (
                 <button
                   key={m}
                   type="button"
                   onClick={() => setSelectedMonth(selectedMonth === m ? null : m)}
-                  className={`rounded-lg border px-2.5 py-1 text-xs transition-all ${
+                  style={{ animationDelay: `${idx * 24}ms` }}
+                  className={`chip-stagger rounded-lg border px-2.5 py-1 text-xs transition-all [animation:chipIn_0.26s_cubic-bezier(0.22,1,0.36,1)_both] ${
                     selectedMonth === m
                       ? "border-indigo-400 bg-indigo-500 text-white"
                       : "border-slate-200 bg-white/60 text-slate-600 hover:border-slate-300 dark:border-slate-600 dark:bg-slate-700/40 dark:text-slate-300"
@@ -110,16 +138,17 @@ export default function HistoryTab({ diaries }: { diaries: Diary[] }) {
 
       {/* ── 时间线 ── */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/40 bg-white/40 py-20 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-800/50">
+        <div className="history-block flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/40 bg-white/40 py-20 shadow-lg backdrop-blur-md [animation:blockIn_0.3s_cubic-bezier(0.22,1,0.36,1)_both] dark:border-white/10 dark:bg-slate-800/50">
           <ClipboardList size={40} className="text-slate-300 dark:text-slate-600" />
           <p className="text-sm font-bold text-slate-500 dark:text-slate-400">暂无日志</p>
         </div>
       ) : (
         <div className="space-y-4">
-          {filtered.map((d) => (
+          {filtered.map((d, idx) => (
             <div
-              key={d.id ?? d.recordDate}
-              className="overflow-hidden rounded-2xl border border-white/40 bg-white/40 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-800/50"
+              key={`${filterKey}:${d.id ?? d.recordDate}`}
+              style={{ animationDelay: `${Math.min(idx * 18, 280)}ms` }}
+              className="history-block overflow-hidden rounded-2xl border border-white/40 bg-white/40 shadow-lg backdrop-blur-md [animation:blockIn_0.34s_cubic-bezier(0.22,1,0.36,1)_both] dark:border-white/10 dark:bg-slate-800/50"
             >
               {/* 日期头 */}
               <div className="flex items-center justify-between gap-2 border-b border-slate-200/60 bg-slate-100/50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-700/20">

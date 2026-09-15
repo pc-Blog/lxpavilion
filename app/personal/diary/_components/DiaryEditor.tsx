@@ -4,6 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import type { Diary, DiaryRequest } from "@/lib/types";
 import { create, remove, update } from "@/lib/api/diary";
+import { showSuccessToast } from "@/lib/toast";
+import { useConfirm } from "@/app/_components/common/ConfirmDialog";
+import DatePicker from "@/app/_components/admin/DatePicker";
 import SubcategoryPicker from "./SubcategoryPicker";
 import { WeatherIcon } from "./WeatherIcon";
 import {
@@ -46,6 +49,8 @@ export default function DiaryEditor({
   onSaved: () => void;
 }) {
   const isEdit = !!diary?.id;
+  /** 删除确认走项目公共 ConfirmDialog（替代原先的原生 window.confirm） */
+  const { confirm, ConfirmDialog } = useConfirm();
   const [recordDate, setRecordDate] = useState(diary?.recordDate ?? todayString());
   const [weather, setWeather] = useState(diary?.weather ?? 1);
   const [rows, setRows] = useState<DraftActivity[]>(
@@ -103,6 +108,7 @@ export default function DiaryEditor({
       } else {
         await create({ ...payload, recordDate });
       }
+      showSuccessToast("已保存");
       onSaved();
     } catch {
       // 错误提示由 axios 拦截器统一弹出
@@ -113,10 +119,11 @@ export default function DiaryEditor({
 
   const handleDeleteDay = async () => {
     if (!isEdit) return;
-    if (!window.confirm("确定要删除这一天的所有日志吗？此操作不可恢复。")) return;
+    if (!(await confirm("确定要删除这一天的所有日志吗？此操作不可恢复。"))) return;
     setDeleting(true);
     try {
       await remove(diary!.id!);
+      showSuccessToast("删除成功");
       onSaved();
     } catch {
       /* 拦截器已提示 */
@@ -129,8 +136,8 @@ export default function DiaryEditor({
     setRows((prev) => [...prev, { activity: "", category: 1, subcategory: undefined }]);
   };
 
-  const handleDeleteRow = (index: number) => {
-    if (!window.confirm("确定要删除这条日志吗？")) return;
+  const handleDeleteRow = async (index: number) => {
+    if (!(await confirm("确定要删除这条日志吗？"))) return;
     setRows((prev) => prev.filter((_, i) => i !== index));
     setEditingIndex(null);
   };
@@ -140,15 +147,20 @@ export default function DiaryEditor({
   return (
     <>
       <div
-        className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 backdrop-blur-sm sm:items-center"
+        className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm sm:items-center"
         onClick={(e) => {
           if (e.target === e.currentTarget && !busy) onClose();
         }}
       >
-        {/* 源项目 el-dialog width="80%" */}
-        <div className="my-8 w-full max-w-3xl rounded-2xl border border-white/40 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/95">
+        {/*
+          源项目 el-dialog width="80%"。
+          玻璃外观对齐公共 Dialog.tsx 的 glass-card token，但**不直接挂 glass-card 类**：
+          该类自带 `:hover { transform: scale(1.02) }` + 1.5s 过渡，套在整个弹窗上会导致
+          鼠标在表单里一动整个弹窗就缩放漂移。
+        */}
+        <div className="my-8 w-full max-w-3xl rounded-3xl border border-white/40 bg-white/40 shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-slate-800/50">
           {/* ── 头部：日期 + 「+ 日志」/「删除」── */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/70 px-5 py-3.5 dark:border-slate-700">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
             <span className="text-sm font-black text-slate-800 dark:text-white">{title}</span>
             <div className="flex items-center gap-2">
               <button
@@ -184,18 +196,18 @@ export default function DiaryEditor({
 
           {/* ── 内容：源 log-detail-content，padding 16px ── */}
           <div className="p-4">
-            {/* 日期（新建时可改；源里日期由卡片决定，此处保留新建时选择能力） */}
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <input
-                type="date"
-                value={recordDate}
-                max={todayString()}
-                disabled={isEdit || busy}
-                onChange={(e) => setRecordDate(e.target.value)}
-                className="h-8 rounded-lg border border-slate-200 bg-white/80 px-2.5 text-xs text-slate-700 outline-none focus:border-indigo-400 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-200"
-              />
-              {isEdit && <span className="text-[10px] text-slate-400">日期不可修改</span>}
-            </div>
+            {/* 只在新建时出现：编辑态的日期已在标题上，且不可修改，控件是冗余的 */}
+            {!isEdit && (
+              <div className="mb-2">
+                <DatePicker
+                  value={recordDate}
+                  onChange={setRecordDate}
+                  disabled={busy}
+                  placeholder="选择日期"
+                  mode="calendar"
+                />
+              </div>
+            )}
 
             {/* 天气：源用 el-tag 展示，这里点击可切换（新档位 9=中雨） */}
             <div className="relative">
@@ -277,9 +289,12 @@ export default function DiaryEditor({
                       type="button"
                       disabled={busy}
                       onClick={() => setEditingIndex(index)}
-                      className="min-h-8 flex-1 rounded-lg px-1 py-1.5 text-left text-[13px] leading-relaxed text-slate-700 transition-colors hover:bg-slate-100/70 dark:text-slate-200 dark:hover:bg-slate-600/30"
+                      className="min-h-8 min-w-0 flex-1 cursor-text py-1.5 text-left text-[13px] leading-[1.6] text-slate-700 outline-none focus-visible:ring-1 focus-visible:ring-indigo-400/60 dark:text-slate-200"
                     >
-                      {row.activity || (
+                      {/* 对齐源 .activity-text：flex:1 + padding 6px 0，无任何 box 样式，直接融进弹窗背景 */}
+                      {row.activity ? (
+                        <span className="break-words">{row.activity}</span>
+                      ) : (
                         <span className="text-slate-400 dark:text-slate-500">点击填写内容…</span>
                       )}
                     </button>
@@ -327,7 +342,7 @@ export default function DiaryEditor({
           </div>
 
           {/* ── 底部：显式保存 / 取消（不照抄源「关窗即存」）── */}
-          <div className="flex items-center justify-end gap-2 border-t border-slate-200/70 px-5 py-3.5 dark:border-slate-700">
+          <div className="flex items-center justify-end gap-2 px-5 py-3.5">
             <button
               type="button"
               onClick={onClose}
@@ -352,12 +367,12 @@ export default function DiaryEditor({
       {/* ── 分类选择弹窗（源 categoryDialog：width 60%，分类按钮网格）── */}
       {categoryPickerFor !== null && (
         <div
-          className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
           onClick={(e) => {
             if (e.target === e.currentTarget) setCategoryPickerFor(null);
           }}
         >
-          <div className="w-full max-w-md rounded-2xl border border-white/40 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/95">
+          <div className="w-full max-w-md rounded-3xl border border-white/40 bg-white/40 shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-slate-800/50">
             <div className="border-b border-slate-200/70 px-5 py-3.5 text-center text-sm font-black text-slate-800 dark:border-slate-700 dark:text-white">
               选择分类
             </div>
@@ -380,6 +395,9 @@ export default function DiaryEditor({
           </div>
         </div>
       )}
+
+      {/* ── 删除确认弹窗（项目公共 useConfirm，玻璃卡片风格）── */}
+      {ConfirmDialog}
     </>
   );
 }

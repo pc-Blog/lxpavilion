@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { CalendarDays, Plus } from "lucide-react";
 import type { Diary } from "@/lib/types";
+import DatePicker from "@/app/_components/admin/DatePicker";
+import SelectDropdown from "@/app/_components/admin/SelectDropdown";
 import DiaryEditor from "./DiaryEditor";
 import { WeatherIcon } from "./WeatherIcon";
 import { CATEGORY_OPTIONS, categoryColor, categoryLabel, dayOfMonth } from "./constants";
@@ -15,6 +17,12 @@ const MONTHS_CN = [
 
 /** 分类筛选的哨兵值：0 表示不筛选 */
 const ALL_CATEGORY = 0;
+
+/** 分类下拉的选项：0 排在最前，其余复用 constants 的 CATEGORY_OPTIONS */
+const CATEGORY_FILTER_OPTIONS: number[] = [
+  ALL_CATEGORY,
+  ...CATEGORY_OPTIONS.map((o) => o.value),
+];
 
 /**
  * 日记 tab —— 年月分组的日历卡片网格
@@ -34,19 +42,43 @@ export default function DiaryTab({
 }) {
   const [categoryFilter, setCategoryFilter] = useState<number>(ALL_CATEGORY);
   const [monthFilter, setMonthFilter] = useState<string>("");
+  /** 小分类筛选；空串 = 不筛选。仅在选中具体分类时可用 */
+  const [subcategoryFilter, setSubcategoryFilter] = useState<string>("");
   /** null = 关闭；{ diary: null } = 新建；{ diary } = 编辑 */
   const [editing, setEditing] = useState<{ diary: Diary | null } | null>(null);
+
+  /**
+   * 小分类选项：直接从 diaries 内存去重。
+   *
+   * 不用 /diary/subcategories 接口——全量数据本来就在手上了，再打一次请求是多余的
+   * （该接口后端也只是从同一批活动条目里 SELECT DISTINCT）。
+   * 空串选项代表「不筛选小分类」，0 条小分类时列表为空，下拉自然只显示占位文案。
+   */
+  const subOptions = useMemo(() => {
+    if (categoryFilter === ALL_CATEGORY) return [];
+    const set = new Set<string>();
+    for (const d of diaries) {
+      for (const l of d.logs ?? []) {
+        if (l.category === categoryFilter && l.subcategory) set.add(l.subcategory);
+      }
+    }
+    return ["", ...[...set].sort((a, b) => a.localeCompare(b))];
+  }, [diaries, categoryFilter]);
 
   /** 应用筛选后的数据 */
   const filtered = useMemo(() => {
     return diaries.filter((d) => {
       if (monthFilter && !d.recordDate.startsWith(monthFilter)) return false;
       if (categoryFilter !== ALL_CATEGORY) {
-        return d.logs?.some((l) => l.category === categoryFilter) ?? false;
+        return d.logs?.some((l) => {
+          if (l.category !== categoryFilter) return false;
+          if (subcategoryFilter && l.subcategory !== subcategoryFilter) return false;
+          return true;
+        }) ?? false;
       }
       return true;
     });
-  }, [diaries, categoryFilter, monthFilter]);
+  }, [diaries, categoryFilter, monthFilter, subcategoryFilter]);
 
   /** 年 → 月 → 日记，年与月均降序 */
   const grouped = useMemo(() => {
@@ -72,36 +104,86 @@ export default function DiaryTab({
     [grouped],
   );
 
+  /**
+   * 筛选组合的指纹。
+   *
+   * 把卡片的 key 前缀挂上它，筛选一变 key 就变 → 卡片重新挂载 → CSS 动画重播。
+   * 不能只靠 key={d.id}：筛选只是移除部分卡片，保留下来的那些 React 会复用节点，
+   * 动画不会重新触发；结果就是「消失的卡片有动画、留下的没有」。
+   */
+  const filterKey = `${monthFilter}|${categoryFilter}|${subcategoryFilter}`;
+
   return (
     <>
-      {/* ── 筛选条 ── */}
-      <div className="mb-6 flex flex-wrap items-center gap-2.5 rounded-2xl border border-white/40 bg-white/40 p-3 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-800/50">
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(Number(e.target.value))}
-          className="h-8 rounded-lg border border-slate-200 bg-white/70 px-2 text-xs text-slate-700 outline-none dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-200"
-        >
-          <option value={ALL_CATEGORY}>全部分类</option>
-          {CATEGORY_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
+      {/* 筛选条入场 + 小分类下拉出现的过渡动效。keyframes 内联注入，与 StatsTab 一致 */}
+      <style>{`
+        @keyframes filterBarIn {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes filterChipIn {
+          from { opacity: 0; transform: translateY(-6px) scale(0.94); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes cardIn {
+          from { opacity: 0; transform: translateY(10px) scale(0.9); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .filter-bar-in, .filter-chip-in, .diary-card { animation: none; }
+        }
+      `}</style>
 
-        <input
-          type="month"
+      {/* ── 筛选条 ── */}
+      <div className="filter-bar-in mb-6 flex flex-wrap items-center gap-2.5 rounded-2xl border border-white/40 bg-white/40 p-3 shadow-lg backdrop-blur-md [animation:filterBarIn_0.3s_ease-out] dark:border-white/10 dark:bg-slate-800/50">
+        {/* 分类筛选：用项目公共 SelectDropdown，替掉原生 <select>
+            根节点是 flex-1，这里按 Pagination.tsx 的既有用法用固定宽度的 div 约束 */}
+        <div className="w-[124px]">
+          <SelectDropdown
+            options={CATEGORY_FILTER_OPTIONS}
+            value={categoryFilter}
+            onChange={(v) => {
+              setCategoryFilter(Number(v));
+              // 小分类是按分类查的，换分类必须清掉，否则会筛出空结果
+              setSubcategoryFilter("");
+            }}
+            placeholder="全部分类"
+            renderOption={(v) => (v === ALL_CATEGORY ? "全部分类" : categoryLabel(v))}
+            getValue={(v) => v}
+            size="sm"
+          />
+        </div>
+
+        {/* 小分类筛选：选项由 diaries 内存去重得到，只有选中具体分类时才有意义 */}
+        {categoryFilter !== ALL_CATEGORY && (
+          <div className="filter-chip-in w-[124px] [animation:filterChipIn_0.26s_cubic-bezier(0.22,1,0.36,1)]">
+            <SelectDropdown
+              options={subOptions}
+              value={subcategoryFilter}
+              onChange={(v) => setSubcategoryFilter(String(v))}
+              placeholder="小分类"
+              renderOption={(v) => v || "小分类"}
+              getValue={(v) => v}
+              size="sm"
+            />
+          </div>
+        )}
+
+        {/* 月份筛选：用项目公共 DatePicker 的年月模式，替掉原生 input[type=month] */}
+        <DatePicker
           value={monthFilter}
-          onChange={(e) => setMonthFilter(e.target.value)}
-          className="h-8 rounded-lg border border-slate-200 bg-white/70 px-2 text-xs text-slate-700 outline-none dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-200"
+          onChange={setMonthFilter}
+          placeholder="全部月份"
+          mode="month"
         />
 
-        {(categoryFilter !== ALL_CATEGORY || monthFilter) && (
+        {(categoryFilter !== ALL_CATEGORY || monthFilter || subcategoryFilter) && (
           <button
             type="button"
             onClick={() => {
               setCategoryFilter(ALL_CATEGORY);
               setMonthFilter("");
+              setSubcategoryFilter("");
             }}
             className="h-8 rounded-lg px-2 text-xs text-slate-400 transition-colors hover:text-indigo-500"
           >
@@ -125,7 +207,7 @@ export default function DiaryTab({
 
       {/* ── 日历网格 ── */}
       {years.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/40 bg-white/40 py-20 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-800/50">
+        <div className="diary-card flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/40 bg-white/40 py-20 shadow-lg backdrop-blur-md [animation:cardIn_0.3s_cubic-bezier(0.22,1,0.36,1)_both] dark:border-white/10 dark:bg-slate-800/50">
           <CalendarDays size={40} className="text-slate-300 dark:text-slate-600" />
           <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
             {diaries.length === 0 ? "暂无日志记录" : "当前筛选下没有记录"}
@@ -161,18 +243,20 @@ export default function DiaryTab({
                       </h3>
                       {/* 卡片尺寸/交互对齐源 LogCard：88×88、margin 8px、圆角 8px、hover 上移 2px */}
                       <div className="flex flex-wrap">
-                        {months.get(month)!.map((d) => (
+                        {months.get(month)!.map((d, idx) => (
                           <button
-                            key={d.id ?? d.recordDate}
+                            key={`${filterKey}:${d.id ?? d.recordDate}`}
                             type="button"
                             onClick={() => setEditing({ diary: d })}
                             title={`${d.recordDate} · ${d.logs?.length ?? 0} 条`}
-                            className="group relative m-2 flex h-[88px] w-[88px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-slate-200/70 bg-white/85 shadow-[0_2px_4px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] backdrop-blur-[2px] transition-all duration-300 [transition-timing-function:cubic-bezier(0.25,0.8,0.25,1)] hover:-translate-y-0.5 hover:bg-white/95 hover:shadow-[0_4px_8px_rgba(0,0,0,0.12),0_2px_4px_rgba(0,0,0,0.08)] dark:border-slate-700/60 dark:bg-slate-800/80 dark:hover:bg-slate-800"
+                            style={{ animationDelay: `${Math.min(idx * 14, 220)}ms` }}
+                            className="diary-card group relative m-2 flex h-[88px] w-[88px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-slate-200/70 bg-white/85 shadow-[0_2px_4px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] backdrop-blur-[2px] transition-all duration-300 [animation:cardIn_0.36s_cubic-bezier(0.22,1,0.36,1)_both] [transition-timing-function:cubic-bezier(0.25,0.8,0.25,1)] hover:-translate-y-0.5 hover:bg-white/95 hover:shadow-[0_4px_8px_rgba(0,0,0,0.12),0_2px_4px_rgba(0,0,0,0.08)] dark:border-slate-700/60 dark:bg-slate-800/80 dark:hover:bg-slate-800"
                           >
                             <span className="mb-1 font-[Georgia,serif] text-[28px] font-semibold leading-none text-slate-700 [text-shadow:0_1px_1px_rgba(0,0,0,0.05)] dark:text-slate-200">
                               {dayOfMonth(d.recordDate)}
                             </span>
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/70 shadow-[0_1px_2px_rgba(0,0,0,0.1)] dark:bg-slate-700/70">
+                            {/* 源项目这里是 .weather-icon-container：白圆底 + 阴影；按需求去掉背景，只留图标 */}
+                            <span className="flex h-8 w-8 items-center justify-center">
                               <WeatherIcon
                                 weather={d.weather}
                                 size={18}
