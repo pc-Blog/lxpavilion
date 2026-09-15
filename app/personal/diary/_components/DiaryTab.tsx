@@ -6,7 +6,7 @@ import { CalendarDays, Plus } from "lucide-react";
 import type { Diary } from "@/lib/types";
 import DiaryEditor from "./DiaryEditor";
 import { WeatherIcon } from "./WeatherIcon";
-import { CATEGORY_OPTIONS, categoryLabel, dayOfMonth } from "./constants";
+import { CATEGORY_OPTIONS, categoryColor, categoryLabel, dayOfMonth } from "./constants";
 
 const MONTHS_CN = [
   "一月", "二月", "三月", "四月", "五月", "六月",
@@ -159,25 +159,28 @@ export default function DiaryTab({
                           {months.get(month)!.length} 天
                         </span>
                       </h3>
-                      <div className="flex flex-wrap gap-3 sm:ml-4">
+                      {/* 卡片尺寸/交互对齐源 LogCard：88×88、margin 8px、圆角 8px、hover 上移 2px */}
+                      <div className="flex flex-wrap">
                         {months.get(month)!.map((d) => (
                           <button
                             key={d.id ?? d.recordDate}
                             type="button"
                             onClick={() => setEditing({ diary: d })}
                             title={`${d.recordDate} · ${d.logs?.length ?? 0} 条`}
-                            className="relative flex h-[74px] w-[74px] flex-col items-center justify-center gap-0.5 rounded-xl border border-white/50 bg-white/50 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-lg dark:border-white/10 dark:bg-slate-800/50 dark:hover:border-indigo-500/50"
+                            className="group relative m-2 flex h-[88px] w-[88px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-slate-200/70 bg-white/85 shadow-[0_2px_4px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] backdrop-blur-[2px] transition-all duration-300 [transition-timing-function:cubic-bezier(0.25,0.8,0.25,1)] hover:-translate-y-0.5 hover:bg-white/95 hover:shadow-[0_4px_8px_rgba(0,0,0,0.12),0_2px_4px_rgba(0,0,0,0.08)] dark:border-slate-700/60 dark:bg-slate-800/80 dark:hover:bg-slate-800"
                           >
-                            <span className="text-lg font-black leading-none text-slate-700 dark:text-slate-200">
+                            <span className="mb-1 font-[Georgia,serif] text-[28px] font-semibold leading-none text-slate-700 [text-shadow:0_1px_1px_rgba(0,0,0,0.05)] dark:text-slate-200">
                               {dayOfMonth(d.recordDate)}
                             </span>
-                            <WeatherIcon
-                              weather={d.weather}
-                              size={15}
-                              className="text-slate-400 dark:text-slate-500"
-                            />
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/70 shadow-[0_1px_2px_rgba(0,0,0,0.1)] dark:bg-slate-700/70">
+                              <WeatherIcon
+                                weather={d.weather}
+                                size={18}
+                                className="text-slate-500 transition-transform duration-300 group-hover:scale-[1.15] dark:text-slate-300"
+                              />
+                            </span>
                             {(d.logs?.length ?? 0) > 0 && (
-                              <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-indigo-500 px-1 text-[9px] font-bold text-white">
+                              <span className="absolute -right-[3px] -top-[3px] flex h-[18px] w-[18px] items-center justify-center rounded-full bg-indigo-400 text-[10px] font-semibold leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
                                 {d.logs.length}
                               </span>
                             )}
@@ -188,7 +191,7 @@ export default function DiaryTab({
                                   backgroundColor: d.logs?.some(
                                     (l) => l.category === categoryFilter,
                                   )
-                                    ? "#6366f1"
+                                    ? categoryColor(categoryFilter)
                                     : "transparent",
                                 }}
                                 aria-label={categoryLabel(categoryFilter)}

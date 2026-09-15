@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, Loader2, Plus, Trash2, X } from "lucide-react";
+import { Check, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import type { Diary, DiaryRequest } from "@/lib/types";
 import { create, remove, update } from "@/lib/api/diary";
 import SubcategoryPicker from "./SubcategoryPicker";
@@ -10,8 +10,10 @@ import {
   CATEGORY_OPTIONS,
   WEATHER_OPTIONS,
   categoryColor,
+  categoryLabel,
   formatDiaryDate,
   todayString,
+  weatherLabel,
 } from "./constants";
 
 interface DraftActivity {
@@ -23,10 +25,15 @@ interface DraftActivity {
 /**
  * 日记编辑对话框
  *
- * 对应源项目 LogCard.vue 的详情弹窗，但改了两处：
- *   1. 新建走「填完活动再提交」（方案乙），不会产生没有活动的空天；
- *   2. 显式「保存 / 取消」，不照抄源项目「关窗即存」的行为
- *      （源那个 watch(dialogVisible) 在点取消时同样会 PUT）。
+ * 布局对齐源项目 LogCard.vue 的详情弹窗：
+ *   - 头部：完整日期 + 「+ 日志」/「删除」（删除整天，二次确认）
+ *   - 内容：天气 tag → 条目列表
+ *   - 条目行：分类 tag（点击弹出分类选择框）→ 小分类 → 正文 → × 删除 / ✏️ 编辑
+ *   - 分类选择框：独立的二级弹窗，分类按钮网格
+ *
+ * 与源的两处刻意差异（均为明确决定）：
+ *   1. 新建走「填完活动再提交」，不产生没有活动的空天；
+ *   2. 底部为显式「保存 / 取消」，不照抄源 watch(dialogVisible) 的「关窗即存」。
  */
 export default function DiaryEditor({
   /** 传 null 表示新建；传 Diary 表示编辑 */
@@ -52,9 +59,14 @@ export default function DiaryEditor({
   );
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
   /** 当前正在内联编辑的行号 */
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const editInputRef = useRef<HTMLTextAreaElement>(null);
+
+  /** 分类选择弹窗：记录正在改哪一行 */
+  const [categoryPickerFor, setCategoryPickerFor] = useState<number | null>(null);
+  const [weatherPickerOpen, setWeatherPickerOpen] = useState(false);
 
   useEffect(() => {
     if (editingIndex !== null) editInputRef.current?.focus();
@@ -113,141 +125,136 @@ export default function DiaryEditor({
     }
   };
 
+  const handleAddRow = () => {
+    setRows((prev) => [...prev, { activity: "", category: 1, subcategory: undefined }]);
+  };
+
+  const handleDeleteRow = (index: number) => {
+    if (!window.confirm("确定要删除这条日志吗？")) return;
+    setRows((prev) => prev.filter((_, i) => i !== index));
+    setEditingIndex(null);
+  };
+
   const busy = saving || deleting;
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 backdrop-blur-sm sm:items-center"
-      onClick={(e) => {
-        if (e.target === e.currentTarget && !busy) onClose();
-      }}
-    >
-      <div className="my-8 w-full max-w-2xl rounded-2xl border border-white/40 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/95">
-        {/* ── 头部 ── */}
-        <div className="flex items-center justify-between gap-3 border-b border-slate-200/70 px-5 py-3.5 dark:border-slate-700">
-          <h3 className="text-sm font-black text-slate-800 dark:text-white">{title}</h3>
-          <div className="flex items-center gap-2">
-            {isEdit && (
+    <>
+      <div
+        className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 backdrop-blur-sm sm:items-center"
+        onClick={(e) => {
+          if (e.target === e.currentTarget && !busy) onClose();
+        }}
+      >
+        {/* 源项目 el-dialog width="80%" */}
+        <div className="my-8 w-full max-w-3xl rounded-2xl border border-white/40 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/95">
+          {/* ── 头部：日期 + 「+ 日志」/「删除」── */}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/70 px-5 py-3.5 dark:border-slate-700">
+            <span className="text-sm font-black text-slate-800 dark:text-white">{title}</span>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={handleDeleteDay}
+                onClick={handleAddRow}
                 disabled={busy}
-                className="flex items-center gap-1 rounded-full bg-rose-50 px-3 py-1.5 text-xs font-bold text-rose-600 transition-colors hover:bg-rose-100 disabled:opacity-50 dark:bg-rose-900/20 dark:text-rose-400 dark:hover:bg-rose-900/30"
-              >
-                {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
-                删除
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={busy}
-              className="rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50 dark:hover:bg-slate-700"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        </div>
-
-        {/* ── 表单 ── */}
-        <div className="space-y-4 px-5 py-4">
-          {/* 日期 */}
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="w-10 shrink-0 text-xs font-bold text-slate-500 dark:text-slate-400">日期</span>
-            <input
-              type="date"
-              value={recordDate}
-              max={todayString()}
-              disabled={isEdit || busy}
-              onChange={(e) => setRecordDate(e.target.value)}
-              className="h-8 rounded-lg border border-slate-200 bg-white/80 px-2.5 text-xs text-slate-700 outline-none focus:border-indigo-400 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-200 dark:disabled:bg-slate-700/30"
-            />
-            {isEdit && (
-              <span className="text-[10px] text-slate-400">日期不可修改</span>
-            )}
-          </div>
-
-          {/* 天气 */}
-          <div className="flex flex-wrap items-start gap-3">
-            <span className="mt-1 w-10 shrink-0 text-xs font-bold text-slate-500 dark:text-slate-400">天气</span>
-            <div className="flex flex-wrap gap-1.5">
-              {WEATHER_OPTIONS.map((o) => (
-                <button
-                  key={o.value}
-                  type="button"
-                  disabled={busy}
-                  onClick={() => setWeather(o.value)}
-                  className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-all disabled:opacity-50 ${
-                    weather === o.value
-                      ? "border-indigo-400 bg-indigo-50 font-bold text-indigo-600 dark:border-indigo-500 dark:bg-indigo-900/30 dark:text-indigo-300"
-                      : "border-slate-200 bg-white/60 text-slate-600 hover:border-slate-300 dark:border-slate-600 dark:bg-slate-700/40 dark:text-slate-300"
-                  }`}
-                >
-                  <WeatherIcon weather={o.value} size={13} />
-                  {o.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 活动条目 */}
-          <div>
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                活动条目
-                <span className="ml-1.5 font-normal text-slate-400">
-                  {validRows.length} 条
-                </span>
-              </span>
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() =>
-                  setRows((prev) => [
-                    ...prev,
-                    { activity: "", category: 1, subcategory: undefined },
-                  ])
-                }
-                className="flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-600 transition-colors hover:bg-indigo-100 disabled:opacity-50 dark:bg-indigo-900/20 dark:text-indigo-400"
+                className="flex items-center gap-1 rounded-full bg-indigo-500 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-indigo-600 disabled:opacity-50"
               >
                 <Plus size={13} />
-                添加一行
+                日志
+              </button>
+              {isEdit && (
+                <button
+                  type="button"
+                  onClick={handleDeleteDay}
+                  disabled={busy}
+                  className="flex items-center gap-1 rounded-full bg-rose-500 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-rose-600 disabled:opacity-50"
+                >
+                  {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                  删除
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={busy}
+                className="rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50 dark:hover:bg-slate-700"
+              >
+                <X size={16} />
               </button>
             </div>
+          </div>
 
-            <div className="space-y-1.5">
+          {/* ── 内容：源 log-detail-content，padding 16px ── */}
+          <div className="p-4">
+            {/* 日期（新建时可改；源里日期由卡片决定，此处保留新建时选择能力） */}
+            <div className="mb-2 flex flex-wrap items-center gap-2">
+              <input
+                type="date"
+                value={recordDate}
+                max={todayString()}
+                disabled={isEdit || busy}
+                onChange={(e) => setRecordDate(e.target.value)}
+                className="h-8 rounded-lg border border-slate-200 bg-white/80 px-2.5 text-xs text-slate-700 outline-none focus:border-indigo-400 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-200"
+              />
+              {isEdit && <span className="text-[10px] text-slate-400">日期不可修改</span>}
+            </div>
+
+            {/* 天气：源用 el-tag 展示，这里点击可切换（新档位 9=中雨） */}
+            <div className="relative">
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => setWeatherPickerOpen((v) => !v)}
+                className="inline-flex items-center gap-1.5 rounded-md bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-200 disabled:opacity-50 dark:bg-slate-700/60 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                <WeatherIcon weather={weather} size={14} />
+                {weatherLabel(weather)}
+              </button>
+              {weatherPickerOpen && (
+                <div className="absolute left-0 top-[calc(100%+6px)] z-20 flex max-w-[320px] flex-wrap gap-1.5 rounded-xl border border-slate-200 bg-white p-2 shadow-xl dark:border-slate-600 dark:bg-slate-800">
+                  {WEATHER_OPTIONS.map((o) => (
+                    <button
+                      key={o.value}
+                      type="button"
+                      onClick={() => {
+                        setWeather(o.value);
+                        setWeatherPickerOpen(false);
+                      }}
+                      className={`flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] transition-all ${
+                        weather === o.value
+                          ? "border-indigo-400 bg-indigo-50 font-bold text-indigo-600 dark:border-indigo-500 dark:bg-indigo-900/30 dark:text-indigo-300"
+                          : "border-slate-200 text-slate-600 hover:border-slate-300 dark:border-slate-600 dark:text-slate-300"
+                      }`}
+                    >
+                      <WeatherIcon weather={o.value} size={12} />
+                      {o.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* ── 条目列表：源 log-entries（gap 16 / margin-top 20）── */}
+            <div className="mt-5 flex flex-col gap-4">
               {rows.map((row, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-1.5 rounded-xl border border-slate-200/70 bg-white/50 px-2 py-1.5 dark:border-slate-700 dark:bg-slate-700/20"
-                >
-                  <span className="w-4 shrink-0 text-center text-[10px] font-bold text-slate-300 dark:text-slate-600">
-                    {index + 1}
-                  </span>
-
-                  {/* 分类选择 */}
-                  <select
-                    value={row.category}
+                <div key={index} className="flex items-start gap-3 max-sm:flex-col">
+                  {/* 分类 tag：源 category-tag（min-width 80 / height 32），点击弹出分类选择 */}
+                  <button
+                    type="button"
                     disabled={busy}
-                    onChange={(e) => patchRow(index, { category: Number(e.target.value) })}
+                    onClick={() => setCategoryPickerFor(index)}
                     style={{ backgroundColor: categoryColor(row.category) }}
-                    className="h-8 w-[76px] shrink-0 rounded-lg px-1.5 text-xs font-bold text-white outline-none disabled:opacity-60"
+                    className="mt-0.5 inline-flex h-8 min-w-20 shrink-0 items-center justify-center rounded px-2 text-xs font-bold text-white transition-all duration-200 hover:scale-105 hover:shadow-md disabled:opacity-60 max-sm:mt-0 max-sm:self-start"
+                    title="点击更换分类"
                   >
-                    {CATEGORY_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value} className="bg-white text-slate-700">
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
+                    {categoryLabel(row.category)}
+                  </button>
 
-                  {/* 小分类 */}
                   <SubcategoryPicker
                     value={row.subcategory}
                     category={row.category}
                     onChange={(v) => patchRow(index, { subcategory: v })}
                   />
 
-                  {/* 正文：非编辑态是文本，点击进入内联编辑 */}
+                  {/* 正文：非编辑态为文本，编辑态为输入框（源 activity-text / edit-input） */}
                   {editingIndex === index ? (
                     <textarea
                       ref={editInputRef}
@@ -263,14 +270,14 @@ export default function DiaryEditor({
                           setEditingIndex(null);
                         }
                       }}
-                      className="min-h-8 flex-1 resize-y rounded-lg border border-indigo-300 bg-white px-2 py-1 text-xs text-slate-700 outline-none dark:border-indigo-500/60 dark:bg-slate-900/50 dark:text-slate-100"
+                      className="min-h-8 flex-1 resize-y rounded-lg border border-indigo-300 bg-white px-2 py-1.5 text-xs text-slate-700 outline-none dark:border-indigo-500/60 dark:bg-slate-900/50 dark:text-slate-100"
                     />
                   ) : (
                     <button
                       type="button"
                       disabled={busy}
                       onClick={() => setEditingIndex(index)}
-                      className="min-h-8 flex-1 rounded-lg px-2 py-1 text-left text-xs text-slate-700 transition-colors hover:bg-slate-100/70 dark:text-slate-200 dark:hover:bg-slate-600/30"
+                      className="min-h-8 flex-1 rounded-lg px-1 py-1.5 text-left text-[13px] leading-relaxed text-slate-700 transition-colors hover:bg-slate-100/70 dark:text-slate-200 dark:hover:bg-slate-600/30"
                     >
                       {row.activity || (
                         <span className="text-slate-400 dark:text-slate-500">点击填写内容…</span>
@@ -278,67 +285,101 @@ export default function DiaryEditor({
                     </button>
                   )}
 
-                  {/* 行内操作：确认 / 删除 */}
-                  {editingIndex === index ? (
-                    <button
-                      type="button"
-                      onClick={() => setEditingIndex(null)}
-                      className="shrink-0 rounded-full p-1 text-emerald-500 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                      title="完成"
-                    >
-                      <Check size={14} />
-                    </button>
-                  ) : (
+                  {/* 行内操作：源为「× 删除」+「✏️ 编辑」两个按钮 */}
+                  <div className="flex shrink-0 items-center gap-1">
                     <button
                       type="button"
                       disabled={busy}
-                      onClick={() => {
-                        if (rows.length === 1) {
-                          patchRow(index, { activity: "", subcategory: undefined });
-                          return;
-                        }
-                        setRows((prev) => prev.filter((_, i) => i !== index));
-                        setEditingIndex(null);
-                      }}
-                      className="shrink-0 rounded-full p-1 text-slate-300 transition-colors hover:bg-rose-50 hover:text-rose-500 disabled:opacity-50 dark:text-slate-600 dark:hover:bg-rose-900/20"
-                      title="删除这一条"
+                      onClick={() => handleDeleteRow(index)}
+                      title="删除这条"
+                      className="rounded p-1 text-slate-400 transition-colors hover:text-rose-500 disabled:opacity-50"
                     >
-                      <Trash2 size={14} />
+                      <X size={15} />
                     </button>
-                  )}
+                    {editingIndex === index ? (
+                      <button
+                        type="button"
+                        onClick={() => setEditingIndex(null)}
+                        title="完成编辑"
+                        className="rounded p-1 text-indigo-500 transition-colors hover:text-indigo-600"
+                      >
+                        <Check size={15} />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => setEditingIndex(index)}
+                        title="编辑这条"
+                        className="rounded p-1 text-slate-400 transition-colors hover:text-slate-600 disabled:opacity-50 dark:hover:text-slate-200"
+                      >
+                        <Pencil size={15} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
-            </div>
 
-            {rows.length === 0 && (
-              <p className="py-6 text-center text-xs text-slate-400">
-                还没有条目，点「添加一行」开始记录
-              </p>
-            )}
+              {rows.length === 0 && (
+                <p className="py-8 text-center text-xs text-slate-400">这一天没有记录日志</p>
+              )}
+            </div>
+          </div>
+
+          {/* ── 底部：显式保存 / 取消（不照抄源「关窗即存」）── */}
+          <div className="flex items-center justify-end gap-2 border-t border-slate-200/70 px-5 py-3.5 dark:border-slate-700">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={busy}
+              className="rounded-full px-4 py-1.5 text-xs font-bold text-slate-500 transition-colors hover:bg-slate-100 disabled:opacity-50 dark:text-slate-400 dark:hover:bg-slate-700"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={busy || validRows.length === 0}
+              className="flex items-center gap-1.5 rounded-full bg-indigo-500 px-4 py-1.5 text-xs font-bold text-white transition-colors hover:bg-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {saving && <Loader2 size={13} className="animate-spin" />}
+              保存
+            </button>
           </div>
         </div>
-
-        {/* ── 底部按钮 ── */}
-        <div className="flex items-center justify-end gap-2 border-t border-slate-200/70 px-5 py-3.5 dark:border-slate-700">
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={busy}
-            className="rounded-full px-4 py-1.5 text-xs font-bold text-slate-500 transition-colors hover:bg-slate-100 disabled:opacity-50 dark:text-slate-400 dark:hover:bg-slate-700"
-          >
-            取消
-          </button>
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={busy || validRows.length === 0}
-            className="flex items-center gap-1.5 rounded-full bg-indigo-500 px-4 py-1.5 text-xs font-bold text-white transition-colors hover:bg-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {saving && <Loader2 size={13} className="animate-spin" />}
-            保存
-          </button>
-        </div>
       </div>
-    </div>
+
+      {/* ── 分类选择弹窗（源 categoryDialog：width 60%，分类按钮网格）── */}
+      {categoryPickerFor !== null && (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setCategoryPickerFor(null);
+          }}
+        >
+          <div className="w-full max-w-md rounded-2xl border border-white/40 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/95">
+            <div className="border-b border-slate-200/70 px-5 py-3.5 text-center text-sm font-black text-slate-800 dark:border-slate-700 dark:text-white">
+              选择分类
+            </div>
+            <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3">
+              {CATEGORY_OPTIONS.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => {
+                    patchRow(categoryPickerFor, { category: o.value });
+                    setCategoryPickerFor(null);
+                  }}
+                  style={{ backgroundColor: categoryColor(o.value) }}
+                  className="rounded-lg px-3 py-3 text-sm font-bold text-white transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

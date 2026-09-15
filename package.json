@@ -13,6 +13,7 @@
   "dependencies": {
     "@vijayhardaha/next-indexnow": "^1.0.0",
     "axios": "^1.18.0",
+    "echarts": "^6.1.0",
     "framer-motion": "^12.39.0",
     "js-sha1": "^0.7.0",
     "jszip": "^3.10.1",
