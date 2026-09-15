@@ -15,7 +15,8 @@ import {
   YAxis,
 } from "recharts";
 import type { DiaryStats } from "@/lib/types";
-import { categoryLabel } from "./constants";
+import HoverTip from "@/app/_components/common/Tooltip";
+import { categoryLabel, formatDiaryDate } from "./constants";
 
 /**
  * 色板与 app/(main)/analytics/AnalyticsClient.tsx 的 PIE_COLORS 保持一致，
@@ -74,152 +75,259 @@ const renderBarShape = (props: unknown) => {
   );
 };
 
-/**
- * 日历热力图（ECharts）
- *
- * 源项目 views/stats 用的就是 ECharts 的 calendar + heatmap + visualMap，
- * recharts 没有日历热力图组件，所以这一张图单独用 echarts 实现，配置照搬源：
- *   - calendar.range 取数据首尾日期，形成连续整幅日历
- *   - visualMap 连续色阶，max = max(每日条数, 3)
- *   - cellSize ['auto', 16]、splitLine 分隔月份、dayLabel.nameMap = 'zh'
- *
- * echarts 体积较大，用动态 import 按需加载，且只在客户端执行。
- */
-function CalendarHeatmap({ dailyCount, isDark }: { dailyCount: [string, number][]; isDark: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const chartRef = useRef<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const optionRef = useRef<any>(null);
+/** 单元格几何：必须与下面的内联宽高/gap 完全一致，否则月标签会漂移 */
+const CELL = 10;
+const GAP = 2;
+const ROWS = 7;
+/** 星期列宽 + 列间距，月标签行需要同样偏移 */
+const LABEL_W = 18;
+const MIN_WEEKS = 12;
+const MAX_WEEKS = 80;
+const WEEK_LABELS = ["一", "", "三", "", "五", "", "日"];
 
-  // 依数据与主题构建配置
-  useEffect(() => {
-    if (dailyCount.length === 0) return;
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const fmtDate = (d: Date) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 
-    const dates = dailyCount.map((d) => String(d[0])).sort();
-    const start = dates[0];
-    const end = dates[dates.length - 1];
-    const maxCount = Math.max(...dailyCount.map((d) => Number(d[1])), 3);
+/** 取某天所在周的周一（热力图列以周一为起点） */
+function weekStart(d: Date): Date {
+  const t = new Date(d);
+  const dow = (t.getDay() + 6) % 7;
+  t.setDate(t.getDate() - dow);
+  t.setHours(0, 0, 0, 0);
+  return t;
+}
 
-    // ── 配色改用博客自己的色系（indigo/slate），不再沿用源项目的暖米色 vintage 主题 ──
-    // 浅色：与 DiaryTab 卡片的分档一致（slate-200 → indigo-500）
-    // 深色：深底上改用深色系，末档用 indigo-400 保证对比度
-    const levelColors = isDark
-      ? ["rgba(51,65,85,0.35)", "#3730a3", "#4f46e5", "#818cf8"]
-      : ["#e2e8f0", "#c7d2fe", "#818cf8", "#6366f1"];
-    const accent = isDark ? "#818cf8" : "#6366f1";
-    const cellBorder = isDark ? "#334155" : "#e2e8f0";
-    const emptyCell = isDark ? "rgba(51,65,85,0.35)" : "#e2e8f0";
-    const labelColor = isDark ? "#94a3b8" : "#64748b";
-
-    // 连续色阶：由 levelColors 逐段插值，让 visualMap 与卡片分档同色系
-    const lerpColor = (from: string, to: string, t: number) => {
-      const parse = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-      const [r1, g1, b1] = parse(from);
-      const [r2, g2, b2] = parse(to);
-      const mix = (a: number, b: number) => Math.round(a + (b - a) * t);
-      return `rgb(${mix(r1, r2)}, ${mix(g1, g2)}, ${mix(b1, b2)})`;
-    };
-    const gradient = Array.from({ length: 16 }, (_, i) => {
-      const pos = (i / 15) * (levelColors.length - 1);
-      const lo = Math.min(Math.floor(pos), levelColors.length - 2);
-      return lerpColor(levelColors[lo], levelColors[lo + 1], pos - lo);
-    });
-
-    optionRef.current = {
-      animationDuration: 800,
-      animationEasing: "elasticOut",
-      tooltip: {
-        trigger: "item",
-        backgroundColor: isDark ? "rgba(30,41,59,0.95)" : "rgba(255,255,255,0.95)",
-        borderColor: isDark ? "transparent" : "rgba(148,163,184,0.3)",
-        borderWidth: 1,
-        borderRadius: 8,
-        padding: [8, 12],
-        textStyle: { color: isDark ? "#fff" : "#1e293b", fontSize: 12 },
-        formatter: (p: { value: [string, number] }) =>
-          `<strong>${p.value[0]}</strong><br/>${p.value[1]} 条日志`,
-      },
-      visualMap: {
-        min: 0,
-        max: maxCount,
-        calculable: false,
-        orient: "horizontal",
-        left: "center",
-        bottom: 0,
-        itemWidth: 14,
-        itemHeight: 130,
-        inRange: { color: gradient },
-        textStyle: { color: labelColor, fontSize: 10 },
-      },
-      calendar: {
-        left: 20,
-        right: 20,
-        top: 30,
-        bottom: 55,
-        range: [start, end],
-        cellSize: ["auto", 16],
-        splitLine: { lineStyle: { color: cellBorder, width: 1 } },
-        itemStyle: {
-          borderWidth: 1,
-          borderColor: cellBorder,
-          color: emptyCell,
-          borderRadius: 4,
-        },
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 8,
-            shadowColor: "rgba(99,102,241,0.35)",
-            borderColor: accent,
-          },
-        },
-        dayLabel: { color: labelColor, fontSize: 10, nameMap: "zh" },
-        monthLabel: { color: labelColor, fontSize: 11 },
-      },
-      series: [
-        {
-          type: "heatmap",
-          coordinateSystem: "calendar",
-          data: dailyCount.map(([date, count]) => [String(date), Number(count)]),
-          blur: { itemStyle: { opacity: 0.5 } },
-        },
-      ],
-    };
-
-    // 图表若已就绪，立即下发（echarts 异步加载完成后无依赖变化，不会自动重跑本 effect）
-    chartRef.current?.setOption(optionRef.current, true);
-  }, [dailyCount, isDark]);
-
-  // 初始化 + 尺寸自适应 + 卸载销毁
-  useEffect(() => {
-    let disposed = false;
-    let onResize: (() => void) | null = null;
-    import("echarts").then((echarts) => {
-      if (disposed || !ref.current) return;
-      const chart = echarts.init(ref.current);
-      chartRef.current = chart;
-      if (optionRef.current) chart.setOption(optionRef.current, true);
-      onResize = () => chart.resize();
-      window.addEventListener("resize", onResize);
-    });
-    return () => {
-      disposed = true;
-      if (onResize) window.removeEventListener("resize", onResize);
-      chartRef.current?.dispose();
-      chartRef.current = null;
-    };
-  }, []);
-
-  return <div ref={ref} style={{ width: "100%", height: 230 }} />;
+/** 由容器可用宽度反推能放下的周数，避免溢出把最近一列裁掉 */
+function calcWeeks(available: number): number {
+  if (available <= 0) return 26;
+  const n = Math.floor((available - LABEL_W + GAP) / (CELL + GAP));
+  return Math.max(MIN_WEEKS, Math.min(MAX_WEEKS, n));
 }
 
 /**
- * 统计 tab —— 对应源项目 views/stats
+ * 五档色阶：全部由一个 accent 色派生（同色系递进）。
+ * 空档与 1 档必须肉眼可分——若只差透明度会导致「有记录」和「没记录」看起来一样。
+ */
+const HEAT = {
+  light: {
+    empty: "rgba(99,102,241,0.09)",
+    levels: [
+      "rgba(99,102,241,0.09)",
+      "rgba(99,102,241,0.28)",
+      "rgba(99,102,241,0.50)",
+      "rgba(99,102,241,0.74)",
+      "#6366f1",
+    ],
+    border: "rgba(148,163,184,0.35)",
+    accent: "#6366f1",
+    label: "#94a3b8",
+  },
+  dark: {
+    empty: "rgba(129,140,248,0.14)",
+    levels: [
+      "rgba(129,140,248,0.14)",
+      "rgba(129,140,248,0.34)",
+      "rgba(129,140,248,0.56)",
+      "rgba(129,140,248,0.78)",
+      "#818cf8",
+    ],
+    border: "rgba(148,163,184,0.28)",
+    accent: "#818cf8",
+    label: "#94a3b8",
+  },
+};
+
+/** 条目数 → 档位 0-4 */
+function heatLevel(count: number): number {
+  if (!count) return 0;
+  if (count <= 1) return 1;
+  if (count <= 2) return 2;
+  if (count <= 4) return 3;
+  return 4;
+}
+
+/**
+ * 打卡式热力图（手写，无图表库依赖）
  *
- * 区块顺序与源一致：日历热力图 → 分类环形图 → 小分类条形图。
+ * 参考 Kakuki 的 CheckinCard：GitHub 贡献图形态，列 = 周、每列 7 天、格子 10×10。
+ * 与源 OmniPavilion 的 ECharts calendar 是两种形态，此处按需求改为本形态并去掉 echarts。
+ *
+ * 列数按容器宽度自适应（ResizeObserver），网格锚定「数据最后一天所在周」向左推，
+ * 保证最近一天始终可见、且不会横向溢出。
+ */
+function CalendarHeatmap({ dailyCount, isDark }: { dailyCount: [string, number][]; isDark: boolean }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [weeks, setWeeks] = useState(26);
+  const theme = isDark ? HEAT.dark : HEAT.light;
+
+  const countMap = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const [d, c] of dailyCount) m.set(String(d), Number(c));
+    return m;
+  }, [dailyCount]);
+
+  /** 网格终点：数据最后一天所在周的周一（无数据则用今天） */
+  const lastWeekMonday = useMemo(() => {
+    const last = dailyCount.length ? String(dailyCount[dailyCount.length - 1][0]) : fmtDate(new Date());
+    const [y, m, d] = last.split("-").map(Number);
+    return weekStart(new Date(y, m - 1, d));
+  }, [dailyCount]);
+
+  const startDay = useMemo(() => {
+    const s = new Date(lastWeekMonday);
+    s.setDate(s.getDate() - (weeks - 1) * ROWS);
+    return s;
+  }, [lastWeekMonday, weeks]);
+
+  /** 列 → 7 天 */
+  const grid = useMemo(() => {
+    const cols: { key: string; day: number }[][] = [];
+    for (let w = 0; w < weeks; w += 1) {
+      const col: { key: string; day: number }[] = [];
+      for (let d = 0; d < ROWS; d += 1) {
+        const date = new Date(startDay);
+        date.setDate(startDay.getDate() + w * ROWS + d);
+        col.push({ key: fmtDate(date), day: date.getDate() });
+      }
+      cols.push(col);
+    }
+    return cols;
+  }, [startDay, weeks]);
+
+  /** 月标签：按周所属月份分组（取该周周四判定），宽度按覆盖周数折算 */
+  const monthSpans = useMemo(() => {
+    const spans: { m: number; w: number }[] = [];
+    for (let w = 0; w < weeks; w += 1) {
+      const date = new Date(startDay);
+      date.setDate(startDay.getDate() + w * ROWS + 3);
+      const m = date.getMonth();
+      const last = spans[spans.length - 1];
+      if (last && last.m === m) last.w += 1;
+      else spans.push({ m, w: 1 });
+    }
+    return spans;
+  }, [startDay, weeks]);
+
+  // 容器宽度 → 周数
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.clientWidth;
+      if (w > 0) setWeeks(calcWeeks(w));
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", measure);
+      return () => window.removeEventListener("resize", measure);
+    }
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div className="relative">
+      {/* ── 头部：范围 + 图例（对应 checkin-heat-head）── */}
+      <div className="mb-2.5 flex items-center justify-between">
+        <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+          记录热力图
+          <span className="ml-2 font-normal text-slate-400">
+            {dailyCount[0]?.[0] ?? ""} ~ {dailyCount[dailyCount.length - 1]?.[0] ?? ""}
+          </span>
+        </span>
+        <div className="flex items-center gap-1 text-[10px] text-slate-400">
+          <span>少</span>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <i
+              key={i}
+              className="block h-2.5 w-2.5 rounded-[3px]"
+              style={{
+                background: theme.levels[i],
+                border: i === 0 ? `1px solid ${theme.border}` : "1px solid transparent",
+              }}
+            />
+          ))}
+          <span>多</span>
+        </div>
+      </div>
+
+      {/* ── 网格 ──
+          不套 overflow-x-auto：列数由容器宽度反推（calcWeeks），设计上就不会溢出；
+          去掉它才能复用项目的 absolute 定位 Tooltip（否则提示框会被滚动容器裁掉）。 */}
+      <div ref={wrapRef}>
+        <div>
+          {/* 月标签行：偏移与星期列一致，宽度按覆盖周数算，否则会漂移 */}
+          <div className="mb-1 flex" style={{ marginLeft: LABEL_W, gap: GAP }}>
+            {monthSpans.map((s, i) => (
+              <span
+                key={i}
+                className="flex-none whitespace-nowrap text-[10px] text-slate-400"
+                style={{ width: s.w * CELL + (s.w - 1) * GAP }}
+              >
+                {s.m + 1}月
+              </span>
+            ))}
+          </div>
+
+          <div className="flex" style={{ gap: GAP }}>
+            {/* 星期列：只显示一/三/五/日，与源一致 */}
+            <div className="flex-none" style={{ width: 12, marginRight: 4, gap: GAP }}>
+              {WEEK_LABELS.map((l, i) => (
+                <span
+                  key={i}
+                  className="block text-right text-[9px] text-slate-400"
+                  style={{ height: CELL, lineHeight: `${CELL}px` }}
+                >
+                  {l}
+                </span>
+              ))}
+            </div>
+
+            {grid.map((col, wi) => (
+              <div key={wi} className="flex flex-none flex-col" style={{ gap: GAP }}>
+                {col.map((cell) => {
+                  const count = countMap.get(cell.key) ?? 0;
+                  const lv = heatLevel(count);
+                  const bg = lv === 0 ? theme.empty : theme.levels[lv];
+                  return (
+                    // 复用项目公共 Tooltip（glass-card 样式，absolute 定位）。
+                    // 它的外层是 inline-flex 的 span，必须显式给尺寸，否则 flex 列里的
+                    // 10px 几何会被撑开、月标签随之漂移。
+                    <HoverTip
+                      key={cell.key}
+                      text={`${formatDiaryDate(cell.key)}${count ? ` · ${count} 条` : " · 无记录"}`}
+                    >
+                      <span
+                        className="box-border block rounded-[3px] transition-transform duration-150 hover:scale-[1.35]"
+                        style={{
+                          width: CELL,
+                          height: CELL,
+                          background: bg,
+                          border: lv === 0 ? `1px solid ${theme.border}` : "1px solid transparent",
+                          outline: cell.key === fmtDate(new Date()) ? `2px solid ${theme.accent}` : undefined,
+                          outlineOffset: 1,
+                        }}
+                      />
+                    </HoverTip>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 统计 tab
+ *
+ * 区块顺序与源项目 views/stats 一致：日历热力图 → 分类环形图 → 小分类条形图。
  * 环形图与条形图用项目已装的 recharts，写法与配色对齐
  * app/(main)/analytics/AnalyticsClient.tsx（activeShape / 渐变柱 / 主题感知 Tooltip）；
- * 日历热力图用 echarts，配置照搬源项目。
+ * 热力图改为手写 GitHub 贡献图形态（无图表库依赖），见上方 CalendarHeatmap。
  */
 export default function StatsTab({ stats }: { stats: DiaryStats | null }) {
   const isDark = useDarkMode();
