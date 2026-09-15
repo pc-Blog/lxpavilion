@@ -134,7 +134,7 @@ export default function AdminTimelinePage() {
           <DatePicker
             value={eventDate}
             onChange={setEventDate}
-            placeholder="Select date"
+            placeholder="选择日期"
           />
         </div>
         <div className="flex justify-end gap-3">
