@@ -10,9 +10,11 @@ import Loading from "../common/Loading";
 interface Props {
   series: string;
   onBack: () => void;
+  /** 浏览数映射，由 ArticleList 全量拉取后传入，避免重复请求 */
+  viewMap: Record<number, number>;
 }
 
-export default function SeriesArticleList({ series, onBack }: Props) {
+export default function SeriesArticleList({ series, onBack, viewMap }: Props) {
   const [articles, setArticles] = useState<ArticleVO[]>([]);
   const [total, setTotal] = useState(0);
   const [pageNum, setPageNum] = useState(1);
@@ -82,7 +84,7 @@ export default function SeriesArticleList({ series, onBack }: Props) {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((a) => (
-              <ArticleCard key={a.id} article={a} />
+              <ArticleCard key={a.id} article={a} viewCount={viewMap[a.id]} />
             ))}
           </div>
           <Pagination pageNum={pageNum} pageSize={pageSize} total={total} onChange={setPageNum} />

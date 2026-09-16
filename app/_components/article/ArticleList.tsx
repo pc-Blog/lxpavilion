@@ -76,6 +76,7 @@ export default function ArticleList({ categoryId, tagId, keyword }: Props) {
       <SeriesArticleList
         series={activeSeries}
         onBack={() => setActiveSeries(null)}
+        viewMap={viewMap}
       />
     );
   }
