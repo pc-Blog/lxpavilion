@@ -19,6 +19,9 @@ export const siteConfig = {
     "/bg/10.jpg"
   ],
 
+  /** 歌手默认封面：t_singer.picture_url 为空时回落，相对 public/ */
+  defaultSingerCover: "/music/default-singer.png",
+
   /** 社交链接 */
   github: "github.com/PC2005-cloud",
   email: "mail@lxpavilion.top",
