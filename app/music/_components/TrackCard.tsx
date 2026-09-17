@@ -47,7 +47,7 @@ export default function TrackCard({ music, isLive, onEdit, onToggleFavorite }: P
   };
 
   return (
-    <div className={`mt-song-item flex items-center justify-between px-4 py-3 my-1.5${isPlayingThis ? " is-playing" : ""}`}>
+    <div className={`mt-song-item flex items-center justify-between px-4 py-3${isPlayingThis ? " is-playing" : ""}`}>
       {/* 四段信息列 */}
       <div className="flex items-center flex-1 min-w-0 gap-4">
         <span className="mt-song-title w-[30%] min-w-[150px] font-medium truncate transition-all duration-300"

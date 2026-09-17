@@ -550,6 +550,37 @@ body:has(.music-theme) {
     0 2px 8px rgba(0, 0, 0, 0.1),
     inset 0 0 6px rgba(120, 230, 255, 0.05);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /*
+   * 卡片间距。
+   *
+   * 源项目的间隔由两处声明叠加在同一个元素上（Vue 会把 class 合并到组件根节点）：
+   *   SongCard.vue  .song-item       { margin: 6px 0; }
+   *   SongList.vue  .song-card-item  { margin-bottom: 8px; }
+   * 后者在样式表中靠后，margin-bottom 生效为 8px；相邻兄弟的下/上外边距
+   * 会合并（取较大者），因此卡片之间的实际间隔 = 8px。
+   */
+  margin: 6px 0 8px;
+}
+
+/* 源 .song-card-item:last-child { margin-bottom: 0 } —— 末条不留尾距 */
+.mt-song-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 滚动容器内边距（源 .song-list-scroller: padding 8px，窄屏 6px） */
+.mt-song-list {
+  padding: 8px;
+}
+
+/* 源 SongList.vue 在窄屏把卡片间距收到 6px */
+@media (max-width: 768px) {
+  .mt-song-item {
+    margin: 6px 0;
+  }
+
+  .mt-song-list {
+    padding: 6px;
+  }
 }
 
 .mt-song-item:hover {

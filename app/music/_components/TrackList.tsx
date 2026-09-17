@@ -11,12 +11,17 @@ interface Props {
   onToggleFavorite: (m: Music) => void;
 }
 
-/** 曲目滚动列表，对应源项目 views/song/com/SongList.vue */
+/**
+ * 曲目滚动列表，对应源项目 views/song/com/SongList.vue。
+ *
+ * 间距完全交给 .mt-song-item（源项目在 CSS 里控制，桌面 8px / 窄屏 6px），
+ * 这里只用 .mt-song-list 提供 padding（桌面 8px、窄屏 6px）。
+ */
 export default function TrackList({ rows, loading, isLive, onEdit, onToggleFavorite }: Props) {
   return (
     <div className="overflow-hidden rounded-lg" style={{ maxHeight: "60%" }}>
       <div
-        className="h-full overflow-y-auto p-2"
+        className="mt-song-list h-full overflow-y-auto"
         style={{ scrollbarWidth: "thin", scrollbarColor: "transparent transparent" }}
       >
         {rows.map((m) => (
