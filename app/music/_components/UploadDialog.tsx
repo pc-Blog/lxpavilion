@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { X } from "lucide-react";
-import Dialog, { ghostBtnStyle, inputStyle, labelStyle, primaryBtnStyle } from "./Dialog";
+import Dialog from "./Dialog";
+import { Close } from "./icons";
 import * as musicApi from "@/lib/api/music";
 import type { Singer, MusicCategory } from "@/lib/types";
 
@@ -80,14 +80,10 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
       onClose={onClose}
       footer={
         <>
-          <button onClick={onClose} style={ghostBtnStyle}>
+          <button onClick={onClose} className="mt-btn">
             取消
           </button>
-          <button
-            onClick={submit}
-            disabled={busy}
-            style={{ ...primaryBtnStyle, opacity: busy ? 0.6 : 1 }}
-          >
+          <button onClick={submit} disabled={busy} className="mt-btn mt-btn-primary">
             {busy ? "上传中..." : "上传"}
           </button>
         </>
@@ -95,13 +91,13 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <span style={labelStyle}>歌手</span>
+          <span className="mt-label">歌手</span>
           <select
             value={singerId ?? ""}
             onChange={(e) =>
               setSingerId(e.target.value === "" ? null : Number(e.target.value))
             }
-            style={inputStyle}
+            className="mt-select flex-1"
           >
             <option value="">请选择歌手</option>
             {singers.map((s) => (
@@ -113,13 +109,13 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
         </div>
 
         <div className="flex items-center gap-3">
-          <span style={labelStyle}>分类</span>
+          <span className="mt-label">分类</span>
           <select
             value={categoryId ?? ""}
             onChange={(e) =>
               setCategoryId(e.target.value === "" ? null : Number(e.target.value))
             }
-            style={inputStyle}
+            className="mt-select flex-1"
           >
             <option value="">请选择分类</option>
             {categories.map((c) => (
@@ -131,7 +127,7 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
         </div>
 
         <div className="flex items-center gap-3">
-          <span style={labelStyle}>音乐文件</span>
+          <span className="mt-label">音乐文件</span>
           <input
             ref={inputRef}
             type="file"
@@ -143,30 +139,16 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
               e.target.value = "";
             }}
           />
-          <button onClick={() => inputRef.current?.click()} style={primaryBtnStyle}>
+          <button onClick={() => inputRef.current?.click()} className="mt-btn mt-btn-primary">
             选择文件
           </button>
-          <span className="text-xs" style={{ color: "rgba(160,180,200,0.7)" }}>
-            支持批量上传音频文件
-          </span>
+          <span className="mt-hint">支持批量上传音频文件</span>
         </div>
 
         {files.length > 0 && (
-          <div
-            className="rounded overflow-hidden"
-            style={{
-              border: "0.5px solid rgba(120,230,255,0.2)",
-              backgroundColor: "rgba(65,65,75,0.6)",
-            }}
-          >
-            <div
-              className="flex px-3 py-2 text-xs font-medium"
-              style={{
-                backgroundColor: "rgba(70,70,80,0.7)",
-                color: "rgba(180,220,255,0.9)",
-                borderBottom: "0.5px solid rgba(120,230,255,0.15)",
-              }}
-            >
+          <div className="mt-table">
+            {/* 文件列表表头 */}
+            <div className="mt-table-head flex px-3 py-2 text-xs">
               <span className="flex-1">文件名</span>
               <span className="w-20 text-right">大小</span>
               <span className="w-10 text-center">操作</span>
@@ -175,8 +157,7 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
               {files.map((f, i) => (
                 <div
                   key={`${f.name}-${i}`}
-                  className="flex items-center px-3 py-2 text-xs"
-                  style={{ borderBottom: "0.5px solid rgba(120,230,255,0.08)" }}
+                  className="mt-table-row flex items-center px-3 py-2 text-xs"
                 >
                   <span
                     className="flex-1 truncate pr-3"
@@ -194,9 +175,11 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
                   <span className="w-10 flex justify-center">
                     <button
                       onClick={() => setFiles((prev) => prev.filter((_, j) => j !== i))}
-                      style={{ color: "rgba(255,120,120,0.9)" }}
+                      className="mt-btn mt-btn-danger"
+                      style={{ padding: 3 }}
+                      aria-label="移除"
                     >
-                      <X size={14} />
+                      <Close size={12} />
                     </button>
                   </span>
                 </div>
@@ -215,11 +198,7 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
           </div>
         )}
 
-        {error && (
-          <div className="text-xs" style={{ color: "rgba(255,120,120,0.9)" }}>
-            {error}
-          </div>
-        )}
+        {error && <div className="mt-error">{error}</div>}
       </div>
     </Dialog>
   );

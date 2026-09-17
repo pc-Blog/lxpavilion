@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Pencil } from "lucide-react";
-import Dialog, { ghostBtnStyle, inputStyle, primaryBtnStyle } from "./Dialog";
+import Dialog from "./Dialog";
+import { Edit } from "./icons";
 import * as categoryApi from "@/lib/api/music-category";
 import type { MusicCategory } from "@/lib/types";
 
@@ -93,7 +93,7 @@ export default function CategoryManagerDialog({ onClose }: Props) {
       onClose={onClose}
       width={640}
       footer={
-        <button onClick={onClose} style={ghostBtnStyle}>
+        <button onClick={onClose} className="mt-btn">
           关闭
         </button>
       }
@@ -101,37 +101,27 @@ export default function CategoryManagerDialog({ onClose }: Props) {
       {editing ? (
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <span className="text-sm w-[70px]" style={{ color: "rgba(200,220,240,0.9)" }}>
-              分类名称
-            </span>
+            <span className="mt-label">分类名称</span>
             <input
               value={editing.name}
               onChange={(e) => setEditing({ ...editing, name: e.target.value })}
-              style={inputStyle}
+              className="mt-input flex-1"
             />
           </div>
           <div className="flex justify-end gap-3">
-            <button onClick={() => setEditing(null)} style={ghostBtnStyle}>
+            <button onClick={() => setEditing(null)} className="mt-btn">
               取消
             </button>
-            <button onClick={handleSaveEdit} style={primaryBtnStyle}>
+            <button onClick={handleSaveEdit} className="mt-btn mt-btn-primary">
               保存
             </button>
           </div>
+          {error && <div className="mt-error">{error}</div>}
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <div
-            className="rounded overflow-hidden"
-            style={{ border: "0.5px solid rgba(120,230,255,0.15)" }}
-          >
-            <div
-              className="flex px-3 py-2 text-xs font-medium"
-              style={{
-                backgroundColor: "rgba(70,70,80,0.7)",
-                color: "rgba(180,220,255,0.9)",
-              }}
-            >
+          <div className="mt-table">
+            <div className="mt-table-head flex px-3 py-2 text-xs">
               <span className="w-12">ID</span>
               <span className="flex-1">分类名称</span>
               <span className="w-32 text-center">操作</span>
@@ -140,8 +130,7 @@ export default function CategoryManagerDialog({ onClose }: Props) {
               {rows.map((c) => (
                 <div
                   key={c.id}
-                  className="flex items-center px-3 py-2 text-xs"
-                  style={{ borderTop: "0.5px solid rgba(120,230,255,0.08)" }}
+                  className="mt-table-row flex items-center px-3 py-2 text-xs"
                 >
                   <span className="w-12" style={{ color: "rgba(160,180,200,0.7)" }}>
                     {c.id}
@@ -149,28 +138,18 @@ export default function CategoryManagerDialog({ onClose }: Props) {
                   <span className="flex-1" style={{ color: "rgba(220,230,240,0.9)" }}>
                     {c.name}
                   </span>
-                  <span className="w-32 flex justify-center gap-3">
-                    <button
-                      onClick={() => setEditing(c)}
-                      className="flex items-center gap-1"
-                      style={{ color: "rgba(120,200,255,0.9)" }}
-                    >
-                      <Pencil size={12} /> 编辑
+                  <span className="w-32 flex justify-center gap-2">
+                    <button onClick={() => setEditing(c)} className="mt-btn">
+                      <Edit size={12} /> 编辑
                     </button>
-                    <button
-                      onClick={() => handleDelete(c)}
-                      style={{ color: "rgba(255,120,120,0.9)" }}
-                    >
+                    <button onClick={() => handleDelete(c)} className="mt-btn mt-btn-danger">
                       删除
                     </button>
                   </span>
                 </div>
               ))}
               {!loading && rows.length === 0 && (
-                <div
-                  className="py-8 text-center text-xs"
-                  style={{ color: "rgba(160,180,200,0.7)" }}
-                >
+                <div className="mt-table-empty py-8 text-center text-xs">
                   暂无分类数据
                 </div>
               )}
@@ -181,19 +160,17 @@ export default function CategoryManagerDialog({ onClose }: Props) {
             <button
               onClick={() => setPageNum((p) => Math.max(1, p - 1))}
               disabled={pageNum <= 1}
-              className="text-xs disabled:opacity-30"
-              style={{ color: "rgba(180,200,220,0.9)" }}
+              className="mt-page-nav"
             >
               上一页
             </button>
-            <span className="text-xs" style={{ color: "rgba(180,200,220,0.7)" }}>
+            <span className="mt-pagination-total" style={{ margin: 0 }}>
               {pageNum} / {pageCount}（共 {total} 个）
             </span>
             <button
               onClick={() => setPageNum((p) => Math.min(pageCount, p + 1))}
               disabled={pageNum >= pageCount}
-              className="text-xs disabled:opacity-30"
-              style={{ color: "rgba(180,200,220,0.9)" }}
+              className="mt-page-nav"
             >
               下一页
             </button>
@@ -203,26 +180,20 @@ export default function CategoryManagerDialog({ onClose }: Props) {
             className="flex items-center gap-3 pt-4"
             style={{ borderTop: "0.5px solid rgba(120,230,255,0.15)" }}
           >
-            <span className="text-sm w-[70px]" style={{ color: "rgba(200,220,240,0.9)" }}>
-              分类名称
-            </span>
+            <span className="mt-label">分类名称</span>
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
               placeholder="请输入分类名称"
-              style={inputStyle}
+              className="mt-input flex-1"
             />
-            <button onClick={handleAdd} style={primaryBtnStyle}>
+            <button onClick={handleAdd} className="mt-btn mt-btn-primary">
               添加
             </button>
           </div>
 
-          {error && (
-            <div className="text-xs" style={{ color: "rgba(255,120,120,0.9)" }}>
-              {error}
-            </div>
-          )}
+          {error && <div className="mt-error">{error}</div>}
         </div>
       )}
     </Dialog>

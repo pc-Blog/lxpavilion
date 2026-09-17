@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Play, Pause, Search, Plus, Star, StarOff, LocateFixed } from "lucide-react";
 import { assetUrl } from "@/lib/asset-url";
 import { siteConfig } from "@/lib/siteConfig";
 import { useAudioPlayer } from "@/lib/useAudioPlayer";
+import { VideoPlay, VideoPause, Search, Plus, Star, StarFilled, Location } from "./icons";
 import type { MusicCategory } from "@/lib/types";
 
 interface Props {
@@ -25,9 +25,12 @@ interface Props {
 /**
  * 曲目区头部。
  *
- * <p>复刻源项目 {@code views/song/com/SongHead.vue}：大封面 + 歌手名 / 歌名 +
- * 播放键 + 搜索 + 分类下拉 + 收藏筛选 + 添加歌曲。
+ * <p>复刻源项目 {@code views/song/com/SongHead.vue}：120px 大封面 + 歌手名 /
+ * 歌名 + 圆形播放键 + 搜索框 + 分类下拉 + 收藏筛选 + 添加歌曲。
  * 源项目的「批量删除」已按要求整体移除。</p>
+ *
+ * <p>样式取自源文件：封面圆角 12px 带霓虹描边与悬浮放大；
+ * 播放键 44×44 圆形；输入框/下拉用 {@code .mt-input}/{@code .mt-select}。</p>
  */
 export default function TrackHeader({
   currentMusicId,
@@ -53,15 +56,8 @@ export default function TrackHeader({
 
   return (
     <div className="flex items-end gap-5 p-4" style={{ height: 140 }}>
-      {/* 大封面 */}
-      <div
-        className="flex-shrink-0 w-[120px] h-[120px] rounded-xl overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
-        style={{
-          border: "0.5px solid rgba(120,230,255,0.2)",
-          boxShadow:
-            "0 4px 12px rgba(0,0,0,0.2), 0 0 8px rgba(120,230,255,0.2)",
-        }}
-      >
+      {/* 大封面：120×120，圆角 12px（源 .song-cover） */}
+      <div className="mt-cover flex-shrink-0 w-[120px] h-[120px] rounded-xl">
         <img
           src={assetUrl(currentTrack?.singerPictureUrl || siteConfig.defaultSingerCover)}
           alt=""
@@ -70,7 +66,7 @@ export default function TrackHeader({
       </div>
 
       <div className="flex flex-col justify-between h-full flex-grow min-w-0">
-        {/* 歌手名 + 歌名 */}
+        {/* 歌手名 + 定位按钮 + 歌名（源 .artist-info） */}
         <div className="mb-auto">
           <h1
             className="flex items-center gap-2 m-0 text-2xl font-bold leading-tight"
@@ -84,14 +80,10 @@ export default function TrackHeader({
               onClick={() => currentMusicId && onLocate(currentMusicId)}
               disabled={!currentMusicId}
               title="定位歌曲"
-              className="flex items-center justify-center w-7 h-7 rounded-full transition-all duration-200 disabled:opacity-40"
-              style={{
-                backgroundColor: "rgba(65,65,75,0.7)",
-                border: "0.5px solid rgba(120,230,255,0.2)",
-                color: "rgba(180,220,255,0.9)",
-              }}
+              className="mt-btn mt-btn-info mt-btn-circle"
+              style={{ width: 28, height: 28, padding: 0, fontSize: 15 }}
             >
-              <LocateFixed size={15} />
+              <Location size={15} />
             </button>
           </h1>
           <h2
@@ -102,53 +94,41 @@ export default function TrackHeader({
           </h2>
         </div>
 
-        {/* 操作按钮组 */}
+        {/* 操作按钮组（源 .action-buttons） */}
         <div className="flex items-center flex-wrap gap-3 pt-2.5">
+          {/* 播放键：44×44 圆形 */}
           <button
             onClick={toggle}
-            className="flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
-            style={{
-              backgroundColor: isPlaying
-                ? "rgba(60,180,120,0.85)"
-                : "rgba(70,130,255,0.85)",
-              color: "#fff",
-              boxShadow: "0 4px 16px rgba(70,130,255,0.4)",
-            }}
+            className={`mt-btn mt-btn-circle ${
+              isPlaying ? "mt-btn-success" : "mt-btn-primary"
+            }`}
+            style={{ width: 44, height: 44 }}
           >
-            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+            {isPlaying ? <VideoPause size={20} /> : <VideoPlay size={20} />}
           </button>
 
+          {/* 搜索框 */}
           <div className="relative flex-1 min-w-[100px] max-w-[500px]">
             <Search
-              size={15}
-              className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ color: "rgba(120,230,255,0.7)" }}
+              size={16}
+              className="mt-input-icon absolute left-3 top-1/2 -translate-y-1/2"
             />
             <input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               placeholder="搜索歌曲..."
-              className="w-full h-10 pl-9 pr-3 rounded-md text-sm outline-none transition-all duration-200"
-              style={{
-                backgroundColor: "rgba(65,65,75,0.7)",
-                border: "1px solid rgba(120,230,255,0.2)",
-                color: "rgba(220,230,240,0.9)",
-                boxShadow: "0 0 8px rgba(120,230,255,0.1)",
-              }}
+              className="mt-input w-full"
+              style={{ paddingLeft: 34 }}
             />
           </div>
 
+          {/* 分类下拉 */}
           <select
             value={categoryId ?? ""}
             onChange={(e) =>
               onCategoryChange(e.target.value === "" ? null : Number(e.target.value))
             }
-            className="h-10 px-2 rounded-md text-sm outline-none w-[100px]"
-            style={{
-              backgroundColor: "rgba(65,65,75,0.7)",
-              border: "1px solid rgba(120,230,255,0.2)",
-              color: "rgba(220,230,240,0.9)",
-            }}
+            className="mt-select w-[100px]"
           >
             <option value="">分类</option>
             {categories.map((c) => (
@@ -158,18 +138,13 @@ export default function TrackHeader({
             ))}
           </select>
 
+          {/* 收藏筛选：源项目用 Star / StarFilled 切换 */}
           <button
             onClick={onToggleFavoriteFilter}
-            className="flex items-center gap-1.5 h-10 px-4 rounded-md text-sm transition-all duration-200"
-            style={{
-              backgroundColor: onlyFavorite
-                ? "rgba(220,80,80,0.75)"
-                : "rgba(70,70,80,0.6)",
-              border: "1px solid rgba(120,230,255,0.2)",
-              color: "rgba(220,230,240,0.9)",
-            }}
+            className={`mt-btn ${onlyFavorite ? "mt-btn-danger" : ""}`}
+            style={{ height: 35 }}
           >
-            {onlyFavorite ? <Star size={15} /> : <StarOff size={15} />}
+            {onlyFavorite ? <StarFilled size={15} /> : <Star size={15} />}
             <span>收藏</span>
           </button>
 
@@ -177,12 +152,8 @@ export default function TrackHeader({
           {isLive && (
             <button
               onClick={onAdd}
-              className="flex items-center gap-1.5 h-10 px-4 rounded-md text-sm transition-all duration-200 hover:-translate-y-px"
-              style={{
-                backgroundColor: "rgba(70,165,255,0.8)",
-                border: "1px solid rgba(120,230,255,0.3)",
-                color: "#fff",
-              }}
+              className="mt-btn mt-btn-primary"
+              style={{ height: 35 }}
             >
               <Plus size={15} />
               <span>添加歌曲</span>

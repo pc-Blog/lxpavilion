@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Dialog, { ghostBtnStyle, inputStyle, labelStyle, primaryBtnStyle } from "./Dialog";
+import Dialog from "./Dialog";
 import * as musicApi from "@/lib/api/music";
 import type { Music, Singer, MusicCategory } from "@/lib/types";
 
@@ -19,8 +19,7 @@ interface Props {
  * <p>复刻源项目 {@code SongCard.vue} 的「编辑歌曲信息」对话框：歌曲名称、
  * 歌手、分类可改，播放次数只读。</p>
  *
- * <p>与源项目的差异：源项目的删除按钮放在编辑弹窗内，此处保留；
- * 但后端不接受 fileUrl / duration / playCount 的修改，因此只提交业务字段。</p>
+ * <p>后端不接受 fileUrl / duration / playCount 的修改，因此只提交业务字段。</p>
  */
 export default function EditTrackDialog({
   music,
@@ -75,24 +74,13 @@ export default function EditTrackDialog({
         <>
           {confirmDelete ? (
             <>
-              <span
-                className="mr-auto text-xs self-center"
-                style={{ color: "rgba(255,150,150,0.9)" }}
-              >
+              <span className="mt-confirm-text self-center mr-auto">
                 确定要删除该歌曲吗？
               </span>
-              <button onClick={() => setConfirmDelete(false)} style={ghostBtnStyle}>
+              <button onClick={() => setConfirmDelete(false)} className="mt-btn">
                 取消
               </button>
-              <button
-                onClick={doDelete}
-                disabled={busy}
-                style={{
-                  ...primaryBtnStyle,
-                  backgroundColor: "rgba(200,80,80,0.85)",
-                  borderColor: "rgba(255,120,120,0.4)",
-                }}
-              >
+              <button onClick={doDelete} disabled={busy} className="mt-btn mt-btn-danger">
                 确定删除
               </button>
             </>
@@ -100,24 +88,14 @@ export default function EditTrackDialog({
             <>
               <button
                 onClick={() => setConfirmDelete(true)}
-                className="mr-auto"
-                style={{
-                  ...ghostBtnStyle,
-                  backgroundColor: "rgba(180,70,70,0.6)",
-                  borderColor: "rgba(255,120,120,0.3)",
-                  color: "rgba(255,200,200,0.95)",
-                }}
+                className="mt-btn mt-btn-danger mr-auto"
               >
                 删除
               </button>
-              <button onClick={onClose} style={ghostBtnStyle}>
+              <button onClick={onClose} className="mt-btn">
                 取消
               </button>
-              <button
-                onClick={submit}
-                disabled={busy}
-                style={{ ...primaryBtnStyle, opacity: busy ? 0.6 : 1 }}
-              >
+              <button onClick={submit} disabled={busy} className="mt-btn mt-btn-primary">
                 {busy ? "保存中..." : "确认"}
               </button>
             </>
@@ -127,22 +105,22 @@ export default function EditTrackDialog({
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <span style={labelStyle}>歌曲名称</span>
+          <span className="mt-label">歌曲名称</span>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={inputStyle}
+            className="mt-input flex-1"
           />
         </div>
 
         <div className="flex items-center gap-3">
-          <span style={labelStyle}>歌手</span>
+          <span className="mt-label">歌手</span>
           <select
             value={singerId ?? ""}
             onChange={(e) =>
               setSingerId(e.target.value === "" ? null : Number(e.target.value))
             }
-            style={inputStyle}
+            className="mt-select flex-1"
           >
             <option value="">请选择歌手</option>
             {singers.map((s) => (
@@ -154,13 +132,13 @@ export default function EditTrackDialog({
         </div>
 
         <div className="flex items-center gap-3">
-          <span style={labelStyle}>分类</span>
+          <span className="mt-label">分类</span>
           <select
             value={categoryId ?? ""}
             onChange={(e) =>
               setCategoryId(e.target.value === "" ? null : Number(e.target.value))
             }
-            style={inputStyle}
+            className="mt-select flex-1"
           >
             <option value="">请选择分类</option>
             {categories.map((c) => (
@@ -172,17 +150,13 @@ export default function EditTrackDialog({
         </div>
 
         <div className="flex items-center gap-3">
-          <span style={labelStyle}>播放次数</span>
+          <span className="mt-label">播放次数</span>
           <span className="text-sm" style={{ color: "rgba(180,200,220,0.8)" }}>
             {music.playCount ?? 0}
           </span>
         </div>
 
-        {error && (
-          <div className="text-xs" style={{ color: "rgba(255,120,120,0.9)" }}>
-            {error}
-          </div>
-        )}
+        {error && <div className="mt-error">{error}</div>}
       </div>
     </Dialog>
   );

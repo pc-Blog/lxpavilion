@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CaretLeft, CaretRight } from "./icons";
 
 interface Props {
   pageNum: number;
@@ -15,8 +14,12 @@ interface Props {
 /**
  * 分页条。
  *
- * <p>复刻源项目 {@code views/song/com/SongPagination.vue}，含响应式精简：
- * 窄屏只留「上一页 / 下一页」，宽屏展示页码与每页条数。</p>
+ * <p>复刻源项目 {@code views/song/com/SongPagination.vue} 的
+ * {@code layout="total, sizes, prev, pager, next, jumper"}，
+ * 并在窄屏精简为「上一页 / 页码 / 下一页」（源项目在 &lt;768px 时的处理）。</p>
+ *
+ * <p>样式取自 {@code index.scss} 的 {@code .el-pagination} 段：32px 高按钮、
+ * 悬浮上移 1px 并加文字辉光、active 态外发光 + 内高光。</p>
  */
 export default function MusicPagination({
   pageNum,
@@ -27,14 +30,7 @@ export default function MusicPagination({
   onPageSizeChange,
 }: Props) {
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
-  const [compact, setCompact] = useState(false);
-
-  useEffect(() => {
-    const check = () => setCompact(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  const compact = typeof window !== "undefined" && window.innerWidth < 768;
 
   // 当前页附近的页码
   const pages: number[] = [];
@@ -42,66 +38,42 @@ export default function MusicPagination({
   for (let i = start; i < start + 5 && i <= pageCount; i++) pages.push(i);
 
   return (
-    <div className="flex items-center justify-center gap-3 mt-5 py-1">
-      {!compact && (
-        <span className="text-xs" style={{ color: "rgba(180,200,220,0.7)" }}>
-          共 {total} 首
-        </span>
-      )}
+    <div className="mt-pagination flex items-center justify-center gap-1 mt-5">
+      <span className="mt-pagination-total">共 {total} 首</span>
 
-      {!compact && (
-        <select
-          value={pageSize}
-          onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="h-8 px-2 rounded text-xs outline-none"
-          style={{
-            backgroundColor: "rgba(65,65,75,0.7)",
-            border: "1px solid rgba(120,230,255,0.2)",
-            color: "rgba(220,230,240,0.9)",
-          }}
-        >
-          {pageSizeOptions.map((s) => (
-            <option key={s} value={s}>
-              {s} 首/页
-            </option>
-          ))}
-        </select>
-      )}
+      <select
+        value={pageSize}
+        onChange={(e) => onPageSizeChange(Number(e.target.value))}
+        className="mt-pagination-sizes"
+      >
+        {pageSizeOptions.map((s) => (
+          <option key={s} value={s}>
+            {s} 首/页
+          </option>
+        ))}
+      </select>
 
       <button
         onClick={() => onPageChange(Math.max(1, pageNum - 1))}
         disabled={pageNum <= 1}
-        className="flex items-center justify-center w-8 h-8 rounded transition-all duration-200 disabled:opacity-30"
-        style={{
-          backgroundColor: "rgba(65,65,75,0.7)",
-          border: "1px solid rgba(120,230,255,0.2)",
-          color: "rgba(220,230,240,0.9)",
-        }}
+        className="mt-page-nav flex items-center justify-center"
+        aria-label="上一页"
       >
-        <ChevronLeft size={14} />
+        <CaretLeft size={14} />
       </button>
 
-      {!compact &&
-        pages.map((p) => (
-          <button
-            key={p}
-            onClick={() => onPageChange(p)}
-            className="w-8 h-8 rounded text-xs transition-all duration-200"
-            style={{
-              backgroundColor:
-                p === pageNum ? "rgba(70,165,255,0.5)" : "rgba(65,65,75,0.7)",
-              border: `1px solid ${
-                p === pageNum ? "rgba(120,230,255,0.5)" : "rgba(120,230,255,0.2)"
-              }`,
-              color: p === pageNum ? "#fff" : "rgba(220,230,240,0.9)",
-            }}
-          >
-            {p}
-          </button>
-        ))}
+      {pages.map((p) => (
+        <button
+          key={p}
+          onClick={() => onPageChange(p)}
+          className={`mt-page-btn${p === pageNum ? " active" : ""}`}
+        >
+          {p}
+        </button>
+      ))}
 
       {compact && (
-        <span className="text-xs" style={{ color: "rgba(180,200,220,0.8)" }}>
+        <span className="mt-pagination-total" style={{ margin: "0 6px" }}>
           {pageNum} / {pageCount}
         </span>
       )}
@@ -109,14 +81,10 @@ export default function MusicPagination({
       <button
         onClick={() => onPageChange(Math.min(pageCount, pageNum + 1))}
         disabled={pageNum >= pageCount}
-        className="flex items-center justify-center w-8 h-8 rounded transition-all duration-200 disabled:opacity-30"
-        style={{
-          backgroundColor: "rgba(65,65,75,0.7)",
-          border: "1px solid rgba(120,230,255,0.2)",
-          color: "rgba(220,230,240,0.9)",
-        }}
+        className="mt-page-nav flex items-center justify-center"
+        aria-label="下一页"
       >
-        <ChevronRight size={14} />
+        <CaretRight size={14} />
       </button>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { assetUrl } from "@/lib/asset-url";
 import { siteConfig } from "@/lib/siteConfig";
+import { Picture } from "./icons";
 import type { Singer } from "@/lib/types";
 
 interface Props {
@@ -19,6 +20,9 @@ interface Props {
  *
  * <p>复刻源项目 {@code views/singerSide/}：点击歌手即按 {@code singerId} 过滤曲目，
  * 高亮当前选中项。源项目的「设置」按钮已移除（其检查文件接口在后端不存在）。</p>
+ *
+ * <p>样式取自 {@code SingerSideList.vue} 与 {@code SingerSideCard.vue}：
+ * 列表头带下分隔线、头像 30×30 圆角 10%、选中态左侧 3px 霓虹竖条。</p>
  */
 export default function SingerSidebar({
   singers,
@@ -30,7 +34,7 @@ export default function SingerSidebar({
 }: Props) {
   return (
     <div className="flex flex-col h-full p-3">
-      {/* 列表头部 */}
+      {/* 列表头部（源 .list-header） */}
       <div
         className="flex justify-between items-center mb-4 pb-2"
         style={{ borderBottom: "1px solid rgba(120,230,255,0.15)" }}
@@ -49,7 +53,7 @@ export default function SingerSidebar({
         </span>
       </div>
 
-      {/* 歌手列表 */}
+      {/* 列表（源 el-scrollbar） */}
       <div className="flex-1 overflow-y-auto pr-1">
         <SideRow
           label="全部"
@@ -73,37 +77,24 @@ export default function SingerSidebar({
           className="flex flex-col gap-2 pt-3 mt-2"
           style={{ borderTop: "1px solid rgba(120,230,255,0.15)" }}
         >
-          <button onClick={onManageSingers} className="aside-manager-btn">
+          <button onClick={onManageSingers} className="mt-btn">
             管理歌手
           </button>
-          <button onClick={onManageCategories} className="aside-manager-btn">
+          <button onClick={onManageCategories} className="mt-btn">
             管理分类
           </button>
         </div>
       )}
-
-      <style jsx>{`
-        .aside-manager-btn {
-          padding: 8px 12px;
-          border-radius: 6px;
-          font-size: 13px;
-          color: rgba(220, 230, 240, 0.9);
-          background-color: rgba(65, 65, 75, 0.6);
-          border: 0.5px solid rgba(120, 230, 255, 0.2);
-          backdrop-filter: blur(8px);
-          transition: all 0.25s ease;
-        }
-        .aside-manager-btn:hover {
-          background-color: rgba(120, 230, 255, 0.18);
-          border-color: rgba(120, 230, 255, 0.35);
-          color: rgba(120, 230, 255, 1);
-          transform: translateY(-1px);
-        }
-      `}</style>
     </div>
   );
 }
 
+/**
+ * 单个歌手条目（源 SingerSideCard.vue）。
+ *
+ * <p>选中态：背景 rgba(70,165,255,0.25) + 左侧 3px 霓虹竖条 + 内外双层辉光；
+ * 悬浮态：右移 4px，名字变霓虹色。</p>
+ */
 function SideRow({
   label,
   pictureUrl,
@@ -118,36 +109,43 @@ function SideRow({
   return (
     <button
       onClick={onClick}
-      className="flex items-center w-full px-1.5 py-0.5 mb-2.5 rounded-lg transition-all duration-300"
+      className={`mt-side-item flex items-center w-full px-1.5 py-0.5 mb-2.5 text-left${
+        active ? " active" : ""
+      }`}
       style={{
         backgroundColor: active ? "rgba(70,165,255,0.25)" : "transparent",
         borderLeft: active
           ? "3px solid rgba(120,230,255,0.6)"
           : "3px solid transparent",
-        boxShadow: active
-          ? "0 0 15px rgba(70,165,255,0.25), inset 0 0 10px rgba(120,230,255,0.15)"
-          : "none",
       }}
     >
+      {/* 头像 30×30，源 .singer-image-container */}
       <span
-        className="flex-shrink-0 w-[30px] h-[30px] mr-4 rounded-[10%] overflow-hidden"
-        style={{
-          border: "0.5px solid rgba(120,230,255,0.2)",
-          boxShadow:
-            "0 0 8px rgba(120,230,255,0.1), inset 0 0 6px rgba(120,230,255,0.05)",
-          backgroundColor: "rgba(45,45,55,0.5)",
-        }}
+        className="mt-avatar flex-shrink-0 w-[30px] h-[30px] mr-4 rounded-[10%] overflow-hidden"
+        style={{ backgroundColor: "rgba(45,45,55,0.5)" }}
       >
         <img
           src={assetUrl(pictureUrl || siteConfig.defaultSingerCover)}
           alt=""
           className="w-full h-full object-cover"
+          onError={(e) => {
+            // 兜底再兜底：默认图也加载失败时，退化为图标占位
+            e.currentTarget.style.display = "none";
+            e.currentTarget.nextElementSibling?.classList.remove("hidden");
+          }}
         />
+        <span
+          className="hidden w-full h-full items-center justify-center"
+          style={{ color: "rgba(120,230,255,0.5)" }}
+        >
+          <Picture size={16} />
+        </span>
       </span>
+
       <span
-        className="flex-1 min-w-0 text-left text-base font-medium truncate transition-all duration-300"
+        className="mt-side-name flex-1 min-w-0 text-base font-medium truncate"
         style={{
-          color: active ? "rgba(120,230,255,0.95)" : "rgba(220,230,240,0.9)",
+          color: active ? "rgba(120,230,255,0.9)" : "rgba(220,230,240,0.9)",
           textShadow: active ? "0 0 6px rgba(120,230,255,0.35)" : "none",
         }}
       >

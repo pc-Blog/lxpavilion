@@ -135,18 +135,9 @@ export default function MusicClient() {
             />
           </div>
 
-          {/* 内容区 */}
+          {/* 内容区：源 song/index.vue 的 .song-container（0.15 透明 + blur(18px)） */}
           <div className="flex-1 p-5 overflow-y-auto box-border">
-            <div
-              className="flex flex-col h-full p-5 rounded-lg transition-all duration-300"
-              style={{
-                background: "rgba(45,45,55,0.15)",
-                backdropFilter: "blur(18px)",
-                border: "0.5px solid rgba(120,230,255,0.15)",
-                boxShadow:
-                  "0 0 10px rgba(120,230,255,0.1), inset 0 0 10px rgba(120,230,255,0.1)",
-              }}
-            >
+            <div className="mt-song-container flex flex-col h-full p-5">
               <TrackHeader
                 currentMusicId={currentMusicId}
                 isLive={isLive}

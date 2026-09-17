@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import "./music-theme.css";
 
 /**
  * 音乐模块的独立外壳。
@@ -28,7 +29,7 @@ import type { ReactNode } from "react";
  */
 export default function MusicLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="relative isolate" style={{ zIndex: 0 }}>
+    <div className="music-theme relative isolate" style={{ zIndex: 0 }}>
       {/* 遮住博客的图片轮播背景，让 canvas 独占视野 */}
       <div
         aria-hidden
