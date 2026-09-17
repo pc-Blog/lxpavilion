@@ -354,10 +354,28 @@ body:has(.music-theme) {
 
 /* ============================================================
    分页
-   （源 .el-pagination 霓虹磨砂风格）
+   （源 .el-pagination 霓虹磨砂风格；文案为源项目未引入 Element Plus
+    locale 时的默认英文：Total {total} / {size}/page / Go to）
    ============================================================ */
 
+/* 源 .pagination-container */
+.mt-pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 5px 0;
+  border-radius: 4px;
+  width: 100%;
+  min-width: 300px;
+}
+
+/* 源 .el-pagination（含 :deep 的 height: 40px） */
 .mt-pagination {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 14px;
+  height: 40px;
   background-color: rgba(55, 55, 65, 0.5);
   -webkit-backdrop-filter: blur(12px) brightness(0.95);
   backdrop-filter: blur(12px) brightness(0.95);
@@ -370,28 +388,44 @@ body:has(.music-theme) {
   transition: all 0.3s ease;
 }
 
+/* 源 .el-pager */
+.mt-pager {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 源 .el-pager li */
 .mt-page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   min-width: 32px;
   height: 32px;
   line-height: 32px;
+  padding: 0 4px;
   margin: 0 4px;
+  font-size: 14px;
   background: transparent;
   color: rgba(220, 230, 240, 0.9);
   border: var(--border-smoothness) solid rgba(120, 230, 255, 0.2);
   border-radius: 4px;
+  user-select: none;
   transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
   cursor: pointer;
-  font-size: 13px;
 }
 
-.mt-page-btn:hover:not(:disabled) {
+.mt-page-btn:hover {
   background-color: rgba(120, 230, 255, 0.2);
   color: white;
   text-shadow: 0 0 8px rgba(120, 230, 255, 0.4);
   transform: translateY(-1px);
 }
 
-.mt-page-btn.active {
+.mt-page-btn.is-active {
   background-color: rgba(70, 165, 255, 0.35);
   border-color: rgba(120, 230, 255, 0.5);
   color: white;
@@ -401,15 +435,17 @@ body:has(.music-theme) {
     inset 0 0 6px rgba(255, 255, 255, 0.25);
 }
 
-.mt-page-btn:disabled {
-  opacity: 0.5;
-  background-color: rgba(60, 60, 70, 0.4);
-  border-color: rgba(100, 100, 120, 0.15);
-  cursor: not-allowed;
+/* 源 .el-pagination > .is-first */
+.mt-pagination > .is-first {
+  margin-left: 0 !important;
 }
 
-/* 上一页/下一页 */
+/* 上一页/下一页（源 .btn-prev / .btn-next） */
 .mt-page-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   background: rgba(65, 65, 75, 0.6);
   color: rgba(200, 220, 240, 0.9);
   border: var(--border-smoothness) solid rgba(120, 230, 255, 0.2);
@@ -417,8 +453,14 @@ body:has(.music-theme) {
   padding: 0 12px;
   min-width: 32px;
   height: 32px;
+  font-size: 14px;
   transition: all 0.25s ease;
   cursor: pointer;
+}
+
+/* 源 .el-pagination .btn-prev { margin-left: 16px } */
+.mt-page-nav.btn-prev {
+  margin-left: 16px;
 }
 
 .mt-page-nav:hover:not(:disabled) {
@@ -435,36 +477,121 @@ body:has(.music-theme) {
   cursor: not-allowed;
 }
 
-/* 总条数文字 */
+/* 总条数文字（源 .el-pagination__total） */
 .mt-pagination-total {
   color: rgba(180, 200, 220, 0.85);
   font-size: 13px;
+  margin-left: 16px;
   margin-right: 15px;
 }
 
-/* 每页条数选择器 */
+/* 每页条数选择器容器（源 .el-pagination__sizes） */
 .mt-pagination-sizes {
   margin: 0 15px 0 0;
-  background-color: rgba(70, 70, 80, 0.7);
-  border: var(--border-smoothness) solid rgba(120, 230, 255, 0.3);
+}
+
+/* 选择器本体（源 .el-select 宽 128px + .el-select__wrapper 外观） */
+.mt-pagination-select {
+  width: 128px;
+  min-height: 35px;
+  height: 35px;
+  padding: 0 12px;
+  background-color: rgba(75, 75, 85, 0.65);
+  border: var(--border-smoothness) solid rgba(120, 230, 255, 0.25);
   border-radius: 4px;
-  color: rgba(240, 240, 255, 0.95);
-  box-shadow:
-    0 0 8px rgba(120, 230, 255, 0.12),
-    inset 0 0 6px rgba(120, 230, 255, 0.08);
-  padding: 0 10px;
-  height: 32px;
-  font-size: 12px;
+  color: #e3dcdc;
+  font-size: 14px;
   outline: none;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.mt-pagination-sizes:hover {
+.mt-pagination-select:hover {
   border-color: rgba(120, 230, 255, 0.4);
+}
+
+.mt-pagination-select:focus {
+  border-color: rgba(120, 230, 255, 0.4);
+  background-color: rgba(80, 80, 90, 0.7);
   box-shadow:
-    0 0 12px rgba(120, 230, 255, 0.18),
-    inset 0 0 8px rgba(120, 230, 255, 0.12);
+    0 0 0 1px rgba(120, 230, 255, 0.3),
+    inset 0 0 8px rgba(120, 230, 255, 0.1);
+}
+
+.mt-pagination-select option {
+  background-color: rgba(60, 60, 70, 0.95);
+  color: rgba(220, 230, 240, 0.9);
+}
+
+/* 跳页（源 .el-pagination__jump） */
+.mt-pagination-jump {
+  display: flex;
+  align-items: center;
+  color: rgba(180, 200, 220, 0.9);
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.mt-pagination-goto {
+  margin-right: 8px;
+}
+
+.mt-pagination-classifier {
+  margin-left: 8px;
+}
+
+/* 跳页输入框外壳（源 .el-pagination__jump .el-input：60px、margin 0 8px） */
+.mt-pagination-editor {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 60px;
+  height: 32px;
+  margin: 0 8px;
+  padding: 1px 11px;
+  background-color: rgba(70, 70, 80, 0.7);
+  border: var(--border-smoothness) solid rgba(120, 230, 255, 0.25);
+  border-radius: 4px;
+  box-shadow:
+    0 0 6px rgba(120, 230, 255, 0.1),
+    inset 0 0 4px rgba(120, 230, 255, 0.05);
+  transition: all 0.25s ease;
+}
+
+.mt-pagination-editor:hover {
+  border-color: rgba(120, 230, 255, 0.35);
+  box-shadow:
+    0 0 8px rgba(120, 230, 255, 0.15),
+    inset 0 0 6px rgba(120, 230, 255, 0.1);
+}
+
+.mt-pagination-editor:focus-within {
+  border-color: rgba(120, 230, 255, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(120, 230, 255, 0.3),
+    inset 0 0 8px rgba(120, 230, 255, 0.15);
+}
+
+/* 跳页输入框（源 .el-pagination__editor .el-input__inner） */
+.mt-pagination-editor-inner {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: rgba(240, 240, 255, 0.95);
+  font-size: 14px;
+  text-align: center;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.mt-pagination-editor-inner::-webkit-outer-spin-button,
+.mt-pagination-editor-inner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* ============================================================
