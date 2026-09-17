@@ -3,14 +3,28 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { DashboardVO } from "@/lib/types";
-import type { MediaWithRef } from "@/lib/api/media";
+import type { MediaScanItem } from "@/lib/api/media";
 import { get } from "@/lib/api/dashboard";
 import { getCount as getLiteratureCount } from "@/lib/api/literature";
 import { siteConfig } from "@/lib/siteConfig";
 import { syncJson, syncMedia, syncMusic, type SyncProgress } from "@/lib/github-sync";
-import { scanMediaWithRefs, remove as deleteMedia } from "@/lib/api/media";
+import { scanMediaWithRefs, batchRemove } from "@/lib/api/media";
+import Pagination from "@/app/_components/common/Pagination";
 
 const STORAGE_KEY = "github_token";
+
+/** 引用来源类型 → 图标，与后端 MediaRefResolver 的 type 取值一一对应 */
+const REF_ICON: Record<string, string> = {
+  article: "📄",
+  project: "🚀",
+  about: "ℹ️",
+  album: "🖼️",
+  chatter: "💬",
+  music: "🎵",
+  singer: "🎤",
+  user: "👤",
+  friendLink: "🔗",
+};
 
 interface SyncState {
   syncing: boolean;
@@ -66,7 +80,9 @@ export default function AdminDashboardPage() {
   const [jsonSync, setJsonSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [mediaSync, setMediaSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [musicSync, setMusicSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
-  const [cleanupState, setCleanupState] = useState({ scanning: false, deleting: false, items: [] as MediaWithRef[], totalMedia: 0, orphanCount: 0, logs: [] as string[] });
+  const [cleanupState, setCleanupState] = useState({ scanning: false, deleting: false, items: [] as MediaScanItem[], totalMedia: 0, orphanCount: 0, logs: [] as string[] });
+  const [cleanupPage, setCleanupPage] = useState(1);
+  const [cleanupPageSize, setCleanupPageSize] = useState(10);
   const [showTokenInput, setShowTokenInput] = useState(false);
 
   useEffect(() => {
@@ -166,13 +182,13 @@ export default function AdminDashboardPage() {
 
   const handleScanOrphans = async () => {
     setCleanupState((prev) => ({ ...prev, scanning: true, logs: ["Scanning for orphan media..."], items: [], totalMedia: 0, orphanCount: 0 }));
+    setCleanupPage(1);
     try {
       const { items, totalMedia, orphanCount } = await scanMediaWithRefs();
-      const sorted = [...items].sort((a, b) => (a.refs.length === 0 ? -1 : 0) - (b.refs.length === 0 ? -1 : 0));
       setCleanupState((prev) => ({
         ...prev,
         scanning: false,
-        items: sorted,
+        items,
         totalMedia,
         orphanCount,
         logs: [
@@ -189,20 +205,29 @@ export default function AdminDashboardPage() {
 
   const handleDeleteOrphans = async () => {
     const orphans = cleanupState.items.filter((i) => i.refs.length === 0);
-    setCleanupState((prev) => ({ ...prev, deleting: true, logs: [...prev.logs, `Deleting ${orphans.length} orphans...`] }));
-    let ok = 0, fail = 0;
-    for (const item of orphans) {
-      const m = item.media;
-      try {
-        await deleteMedia(m.id!);
-        ok++;
-        setCleanupState((prev) => ({ ...prev, logs: [...prev.logs, `✓ Deleted #${m.id} ${m.originalFilename || m.fileUrl}`] }));
-      } catch {
-        fail++;
-        setCleanupState((prev) => ({ ...prev, logs: [...prev.logs, `✗ Failed #${m.id}`] }));
-      }
+    const ids = orphans.map((i) => i.id).filter((id): id is number => id != null);
+    if (ids.length === 0) return;
+    setCleanupState((prev) => ({ ...prev, deleting: true, logs: [...prev.logs, `Deleting ${ids.length} orphans...`] }));
+    try {
+      const { success, errors } = await batchRemove(ids);
+      const fail = errors?.length ?? 0;
+      setCleanupPage(1);
+      setCleanupState((prev) => ({
+        ...prev,
+        deleting: false,
+        items: [],
+        totalMedia: 0,
+        orphanCount: 0,
+        logs: [
+          ...prev.logs,
+          ...(errors || []).slice(0, 20).map((e) => `✗ ${e}`),
+          success > 0 ? `✓ Done: ${success} deleted, ${fail} failed` : "✗ Nothing deleted",
+        ],
+      }));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      setCleanupState((prev) => ({ ...prev, deleting: false, logs: [...prev.logs, `✗ ${msg}`] }));
     }
-    setCleanupState((prev) => ({ ...prev, deleting: false, items: [], totalMedia: 0, orphanCount: 0, logs: [...prev.logs, ok > 0 ? `✓ Done: ${ok} deleted, ${fail} failed` : "✗ Nothing deleted"] }));
   };
 
   // Mask token for display
@@ -410,8 +435,8 @@ export default function AdminDashboardPage() {
                   {/* Media list */}
                   {cleanupState.items.length > 0 && (
                     <div className="max-h-80 overflow-y-auto space-y-1.5">
-                      {cleanupState.items.map((item) => {
-                        const m = item.media;
+                      {cleanupState.items.slice((cleanupPage - 1) * cleanupPageSize, cleanupPage * cleanupPageSize).map((item) => {
+                        const m = item;
                         const isOrphan = item.refs.length === 0;
                         return (
                           <div key={m.id} className="flex items-start gap-3 p-2 rounded-lg bg-slate-900/60 text-[11px]">
@@ -435,7 +460,7 @@ export default function AdminDashboardPage() {
                                 ) : (
                                   item.refs.map((ref, ri) => (
                                     <span key={ri} className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-medium">
-                                      {ref.type === "article" ? "📄" : ref.type === "project" ? "🚀" : "ℹ️"} {ref.title}
+                                      {REF_ICON[ref.type] || "ℹ️"} {ref.title}
                                       {ref.field === "coverImage" ? " (cover)" : ""}
                                     </span>
                                   ))
@@ -446,6 +471,16 @@ export default function AdminDashboardPage() {
                         );
                       })}
                     </div>
+                  )}
+
+                  {cleanupState.items.length > 0 && (
+                    <Pagination
+                      total={cleanupState.items.length}
+                      pageNum={cleanupPage}
+                      pageSize={cleanupPageSize}
+                      onChange={setCleanupPage}
+                      onPageSizeChange={(ps) => { setCleanupPageSize(ps); setCleanupPage(1); }}
+                    />
                   )}
 
                   {/* Log console */}
