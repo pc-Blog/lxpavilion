@@ -7,7 +7,7 @@ import type { MediaScanItem } from "@/lib/api/media";
 import { get } from "@/lib/api/dashboard";
 import { getCount as getLiteratureCount } from "@/lib/api/literature";
 import { siteConfig } from "@/lib/siteConfig";
-import { syncJson, syncMedia, syncMusic, type SyncProgress } from "@/lib/github-sync";
+import { syncJson, syncMedia, type SyncProgress } from "@/lib/github-sync";
 import { scanMediaWithRefs, batchRemove } from "@/lib/api/media";
 import Pagination from "@/app/_components/common/Pagination";
 
@@ -96,7 +96,6 @@ export default function AdminDashboardPage() {
   const [showAdminTokenInput, setShowAdminTokenInput] = useState(false);
   const [jsonSync, setJsonSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [mediaSync, setMediaSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
-  const [musicSync, setMusicSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [mediaSyncLimit, setMediaSyncLimit] = useState(100);
   const [cleanupState, setCleanupState] = useState({ scanning: false, deleting: false, items: [] as MediaScanItem[], totalMedia: 0, orphanCount: 0, logs: [] as string[] });
   const [cleanupPage, setCleanupPage] = useState(1);
@@ -173,24 +172,6 @@ export default function AdminDashboardPage() {
       }));
     }, mediaSyncLimit);
     setMediaSync((prev) => ({
-      ...prev,
-      syncing: false,
-      result: res.success ? "success" : "error",
-      logs: [...prev.logs, res.success ? "✓ Sync complete!" : "✗ Sync failed!"],
-    }));
-  };
-
-  const handleMusicSync = async () => {
-    if (!savedToken) return;
-    setMusicSync({ syncing: true, progress: null, logs: [], result: null });
-    const res = await syncMusic(savedToken, (p) => {
-      setMusicSync((prev) => ({
-        ...prev,
-        progress: p,
-        logs: p.log ? [...prev.logs, p.log] : prev.logs,
-      }));
-    });
-    setMusicSync((prev) => ({
       ...prev,
       syncing: false,
       result: res.success ? "success" : "error",
@@ -419,7 +400,6 @@ export default function AdminDashboardPage() {
             <div className="flex flex-col gap-4 mt-2">
               <SyncPanel label="JSON Data" onSync={handleJsonSync} syncing={jsonSync.syncing} progress={jsonSync.progress} logs={jsonSync.logs} result={jsonSync.result} />
               <SyncPanel label="Media" onSync={handleMediaSync} syncing={mediaSync.syncing} progress={mediaSync.progress} logs={mediaSync.logs} result={mediaSync.result} limit={mediaSyncLimit} onLimitChange={setMediaSyncLimit} />
-              <SyncPanel label="Music" onSync={handleMusicSync} syncing={musicSync.syncing} progress={musicSync.progress} logs={musicSync.logs} result={musicSync.result} />
             </div>
 
             {/* Orphan Media Cleanup */}

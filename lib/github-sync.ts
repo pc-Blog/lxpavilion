@@ -1,6 +1,6 @@
 "use client";
 
-import type { Media, OpMusic } from "@/lib/types";
+import type { Media } from "@/lib/types";
 import { siteConfig } from "./siteConfig";
 import { sha1 as jsSha1 } from "js-sha1";
 
@@ -103,11 +103,13 @@ async function fetchImageAsBase64(url: string): Promise<{ base64: string; mime: 
   return { base64, mime: blob.type, sizeMb };
 }
 
-function mimeToExt(mime?: string): string {
-  if (!mime) return ".bin";
-  // image/jpeg → .jpeg, image/svg+xml → .svg
-  const subtype = mime.split("/")[1] || "";
-  return "." + subtype.split("+")[0];
+/** 浅拷贝并剔除指定字段（用于剥离每次都变的动态字段，避免 SHA 比对永远判定为变更） */
+function omitKey<T extends Record<string, unknown>>(obj: T, key: string): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (k !== key) out[k] = v;
+  }
+  return out;
 }
 
 function extFromFilename(name?: string): string {
@@ -171,11 +173,9 @@ async function collectMedia(
   limit = 100
 ): Promise<{
   mediaItems: MediaItem[];
-  mediaMap: Map<number, { newPath: string; originalUrl: string }>;
   deletedIds: number[];
 }> {
   const mediaItems: MediaItem[] = [];
-  const mediaMap = new Map<number, { newPath: string; originalUrl: string }>();
   const deletedIds: number[] = [];
 
   let mediaRows: Media[] = [];
@@ -191,7 +191,7 @@ async function collectMedia(
     mediaRows = body.data?.rows || [];
   } catch (e) {
     console.error("[SYNC] Failed to fetch media from API:", e);
-    return { mediaItems, mediaMap, deletedIds };
+    return { mediaItems, deletedIds };
   }
 
   // 检测已删除的文件
@@ -232,7 +232,6 @@ async function collectMedia(
           const ext = extFromFilename(media.fileUrl) || ".bin";
           const filename = `${media.id}${ext}`;
           mediaItems.push({ id: media.id, filename, base64, updateTime: media.updateTime });
-          mediaMap.set(media.id, { newPath: `/data/media/${filename}`, originalUrl: media.fileUrl });
         } catch (e) {
           console.error(`[SYNC] Failed to download media #${media.id}: ${media.fileUrl}`, e);
         }
@@ -253,142 +252,27 @@ async function collectMedia(
     }
   }
 
-  return { mediaItems, mediaMap, deletedIds };
-}
-
-// ── Music sync ──────────────────────────────────────────────
-
-interface MusicFile {
-  path: string;
-  content: string;
-  originalUrl: string;
-  newPath: string;
-}
-
-interface MusicManifestEntry {
-  id: number;
-  ext?: string;      // ".mp3", ".ogg", etc.
-  coverExt?: string; // ".png", ".jpg", etc.
-}
-
-async function getExistingMusicManifest(token: string): Promise<Map<number, MusicManifestEntry>> {
-  const result = new Map<number, MusicManifestEntry>();
-  try {
-    const data: any = await gh(`${GH_API}/repos/${OWNER}/${REPO}/contents/music-manifest.json?ref=${BRANCH}`, token);
-    const content = (data.content as string).replace(/\n/g, '');
-    const list = JSON.parse(base64DecodeUtf8(content)) as MusicManifestEntry[];
-    for (const item of list) {
-      if (item.id != null) result.set(item.id, item);
-    }
-  } catch (e: any) {
-    if (!e?.message?.includes("404")) {
-      console.error("[SYNC] Failed to read manifest:", e);
-    }
-    /* 404 = first sync, no manifest yet */
-  }
-  return result;
-}
-
-async function collectMusic(
-  apiBase: string,
-  onProgress?: ProgressCb,
-  existingManifest?: Map<number, MusicManifestEntry>
-): Promise<{ musicData: unknown; audioFiles: MusicFile[]; deletedIds: number[] }> {
-  const res = await fetch(`${apiBase}/op/music/page`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ pageNum: 1, pageSize: 999 }),
-  });
-  const body = await res.json() as { code: number; data?: { total: number; rows: OpMusic[] } };
-  const rows = body.data?.rows || [];
-
-  // 检测已删除的曲目
-  const deletedIds: number[] = [];
-  if (existingManifest && existingManifest.size > 0) {
-    const apiIds = new Set<number>();
-    for (const t of rows) { if (t.id != null) apiIds.add(t.id); }
-    for (const [id] of existingManifest) {
-      if (!apiIds.has(id)) deletedIds.push(id);
-    }
-  }
-
-  // 只下载新增的曲目，按文件大小从小到大排
-  let toDownload = rows.filter((t) => {
-    if (t.id == null) return false;
-    if (!existingManifest) return true;
-    return !existingManifest.has(t.id);
-  });
-
-  // 用 HEAD 请求获取文件大小
-  if (toDownload.length > 0) {
-    const sizes = await Promise.all(toDownload.map(async (t) => {
-      try {
-        const url = t.url?.startsWith("http") ? t.url : `${apiBase}${t.url}`;
-        const resp = await fetch(url, { method: "HEAD" });
-        return { id: t.id, size: Number(resp.headers.get("Content-Length") || 0) };
-      } catch (e) { console.error("[SYNC] HEAD request failed for track size:", t.id, t.url, e); return { id: t.id, size: 0 }; }
-    }));
-    const sizeMap = new Map(sizes.map((s) => [s.id, s.size]));
-    toDownload.sort((a, b) => (sizeMap.get(a.id) || 0) - (sizeMap.get(b.id) || 0));
-    toDownload = toDownload.slice(0, 10); // 取最小的 10 首
-  }
-
-  if (toDownload.length === 0) {
-    return { musicData: body.data, audioFiles: [], deletedIds };
-  }
-
-  onProgress?.({ stage: "collecting", message: `Found ${rows.length} tracks, new: ${toDownload.length}. Downloading...` });
-
-  let dlCount = 0;
-  const audioFiles: MusicFile[] = [];
-
-  for (const track of toDownload) {
-    if (track.id == null) continue;
-    dlCount++;
-    const trackNum = dlCount;
-
-    if (track.url) {
-      try {
-        const url = track.url.startsWith("http") ? track.url : `${apiBase}${track.url}`;
-        const { base64, sizeMb } = await fetchImageAsBase64(url);
-        const audioExt = extFromFilename(track.url) || ".mp3";
-        audioFiles.push({
-          path: `music/${track.id}${audioExt}`,
-          content: base64,
-          originalUrl: track.url,
-          newPath: `/data/music/${track.id}${audioExt}`,
-        });
-        onProgress?.({ stage: "collecting", message: "Downloading music...", log: `[audio #${trackNum}] ${track.title} (${sizeMb} MB)` });
-      } catch (e) {
-        console.error(`[SYNC] Failed to download audio #${track.id} ${track.title}:`, e);
-      }
-    }
-
-    if (track.pictureUrl) {
-      try {
-        const url = track.pictureUrl.startsWith("http") ? track.pictureUrl : `${apiBase}${track.pictureUrl}`;
-        const { base64, mime } = await fetchImageAsBase64(url);
-        const ext = mimeToExt(mime) || ".png";
-        const sizeKb = Math.round(base64.length * 3 / 4 / 1024);
-        audioFiles.push({
-          path: `music/${track.id}-cover${ext}`,
-          content: base64,
-          originalUrl: track.pictureUrl,
-          newPath: `/data/music/${track.id}-cover${ext}`,
-        });
-        onProgress?.({ stage: "collecting", message: "Downloading music...", log: `[cover #${trackNum}] ${track.title} (${sizeKb} KB)` });
-      } catch (e) {
-        console.error(`[SYNC] Failed to download cover #${track.id} ${track.title}:`, e);
-      }
-    }
-  }
-
-  return { musicData: body.data, audioFiles, deletedIds };
+  return { mediaItems, deletedIds };
 }
 
 // Collect data from Java backend
-async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promise<{ path: string; content: string }[]> {
+async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promise<{
+  files: { path: string; content: string }[];
+  failedPaths: Set<string>;
+}> {
   const base = `http://${siteConfig.backUrl}/api`;
+
+  /**
+   * 采集失败、但路径可能已存在于 data 分支的文件。
+   *
+   * 这些路径不能进入 syncJson 的删除判定：拉取失败不等于数据被删除，
+   * 否则一次网络抖动就会把线上文件删掉。syncJson 会显式跳过它们。
+   */
+  const failedPaths = new Set<string>();
+  function markFailed(path: string, e: unknown) {
+    console.error(`[SYNC] Failed to fetch ${path}:`, e);
+    failedPaths.add(path);
+  }
 
   async function apiGet<T>(ep: string): Promise<T> {
     const res = await fetch(`${base}${ep}`);
@@ -410,7 +294,10 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     return json.data as T;
   }
 
-  const PAGE = { pageNum: 1, pageSize: 100 };
+  // 一次取全：pageSize 过小会静默截断列表，而详情文件是跟着列表生成的，
+  // 被截掉的文章不仅不会同步，其已有的 articles/{id}.json 还会被删除逻辑
+  // 判定为「已删除」而从 data 分支移除。
+  const PAGE = { pageNum: 1, pageSize: 1000000 };
   const files: { path: string; content: string }[] = [];
 
   const dash = await apiGet<Record<string, any>>("/dashboard");
@@ -453,14 +340,19 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
   const articleList = await apiPost<{ total: number; rows: { id: number }[] }, unknown>(
     "/article/public/page", PAGE
   );
-  files.push({ path: "articles.json", content: JSON.stringify(articleList, null, 2) });
+  // 剥离动态 viewCount：它每次访问都在变，带上会导致每次同步都判定为变更而全量重传
+  const articleListStripped = {
+    ...articleList,
+    rows: (articleList.rows as Record<string, unknown>[]).map((row) => omitKey(row, "viewCount")),
+  };
+  files.push({ path: "articles.json", content: JSON.stringify(articleListStripped, null, 2) });
   for (const a of articleList.rows as { id: number }[]) {
     try {
-      const detail = await apiGet<Record<string, any>>(`/article/public/${a.id}`);
-      const { viewCount, ...rest } = detail; // 剥离动态 viewCount，避免每次同步都判定为变更
-      files.push({ path: `articles/${a.id}.json`, content: JSON.stringify(rest, null, 2) });
+      const detail = await apiGet<Record<string, unknown>>(`/article/public/${a.id}`);
+      // 剥离动态 viewCount，避免每次同步都判定为变更
+      files.push({ path: `articles/${a.id}.json`, content: JSON.stringify(omitKey(detail, "viewCount"), null, 2) });
     } catch (e) {
-      console.error(`[SYNC] Failed to fetch article #${a.id}:`, e);
+      markFailed(`articles/${a.id}.json`, e);
     }
   }
 
@@ -500,7 +392,35 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     const media = await apiPost<unknown, unknown>("/media/page", { pageNum: 1, pageSize: 1000000 });
     files.push({ path: "media.json", content: JSON.stringify(media, null, 2) });
   } catch (e) {
-    console.error("[SYNC] Failed to fetch media.json:", e);
+    markFailed("media.json", e);
+  }
+
+  // ── 音乐 ──
+  // 只同步收藏曲目：全库 1222 首约 4.8 GB，收藏 369 首约 1.6 GB，
+  // 静态托管放不下全量。元数据走 JSON 同步，音频文件本体由媒体同步搬运。
+
+  try {
+    const music = await apiPost<unknown, unknown>("/music/page", {
+      ...PAGE,
+      query: { onlyFavorite: true },
+    });
+    files.push({ path: "music.json", content: JSON.stringify(music, null, 2) });
+  } catch (e) {
+    markFailed("music.json", e);
+  }
+
+  try {
+    const singers = await apiPost<unknown, unknown>("/singer/page", PAGE);
+    files.push({ path: "singers.json", content: JSON.stringify(singers, null, 2) });
+  } catch (e) {
+    markFailed("singers.json", e);
+  }
+
+  try {
+    const musicCategories = await apiPost<unknown, unknown>("/music-category/page", PAGE);
+    files.push({ path: "musicCategories.json", content: JSON.stringify(musicCategories, null, 2) });
+  } catch (e) {
+    markFailed("musicCategories.json", e);
   }
 
   // 评论区已迁移至 GitHub Discussions (Giscus)，不再从 Java 后端同步
@@ -515,11 +435,11 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
         const photos = await apiGet<unknown>(`/photo/by-album/${a.id}`);
         files.push({ path: `albums/${a.id}.json`, content: JSON.stringify(photos, null, 2) });
       } catch (e) {
-        console.error("[SYNC] Failed to fetch album photos:", e);
+        markFailed(`albums/${a.id}.json`, e);
       }
     }
   } catch (e) {
-    console.error("[SYNC] Failed to fetch albums:", e);
+    markFailed("albums.json", e);
   }
 
   // Chatter / Moments data
@@ -527,7 +447,7 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     const chatters = await apiGet<unknown>("/chatter/list");
     files.push({ path: "chatters.json", content: JSON.stringify(chatters, null, 2) });
   } catch (e) {
-    console.error("[SYNC] Failed to fetch chatters:", e);
+    markFailed("chatters.json", e);
   }
 
   // Friend links
@@ -535,7 +455,7 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     const friendLinks = await apiGet<unknown>("/friend-link/list");
     files.push({ path: "friendLinks.json", content: JSON.stringify(friendLinks, null, 2) });
   } catch (e) {
-    console.error("[SYNC] Failed to fetch friend links:", e);
+    markFailed("friendLinks.json", e);
   }
 
   // Bookmarks
@@ -545,14 +465,14 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     const bookmarkCats = await apiGet<unknown>("/bookmark/category/tree");
     files.push({ path: "bookmarkCategories.json", content: JSON.stringify(bookmarkCats, null, 2) });
   } catch (e) {
-    console.error("[SYNC] Failed to fetch bookmarks:", e);
+    markFailed("bookmarks.json", e);
   }
 
   // Literature：取全部作品，但只把**已发布**的写入 data 分支。
   // data 分支是公开的，隐藏作品（草稿）的正文不得进入线上静态数据。
   try {
     const all = await apiPost<{ total: number; rows: { isPublished?: number }[] }, unknown>(
-      "/literature/admin/page", { pageNum: 1, pageSize: 1000 }
+      "/literature/admin/page", { pageNum: 1, pageSize: 1000000 }
     );
     const publishedRows = (all.rows || []).filter((a) => a.isPublished === 1);
     files.push({
@@ -560,7 +480,7 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
       content: JSON.stringify({ total: publishedRows.length, rows: publishedRows }, null, 2),
     });
   } catch (e) {
-    console.error("[SYNC] Failed to fetch literature:", e);
+    markFailed("literature.json", e);
   }
 
   // 文学分类（供前端映射 categoryId -> 分类名）
@@ -568,42 +488,40 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
     const literatureCategories = await apiGet<unknown>("/literature/public/categories");
     files.push({ path: "literatureCategories.json", content: JSON.stringify(literatureCategories, null, 2) });
   } catch (e) {
-    console.error("[SYNC] Failed to fetch literature categories:", e);
+    markFailed("literatureCategories.json", e);
   }
 
   files.push({
     path: "index.json",
     content: JSON.stringify(
-      ["dashboard", "about", "articles", "projects", "categories", "tags", "timeline", "skills", "media", "comments", "music", "literature", "literatureCategories", "albums", "friendLinks", "chatters", "bookmarks", "bookmarkCategories"],
+      // 仅用于 static-data 的 HEAD 探测，内容不参与逻辑
+      ["dashboard", "about", "articles", "projects", "categories", "tags", "timeline", "skills", "media", "music", "singers", "musicCategories", "literature", "literatureCategories", "albums", "friendLinks", "chatters", "bookmarks", "bookmarkCategories"],
       null, 2
     ),
   });
 
-  // ── 替换所有 JSON 中的媒体 URL 为本地路径 ──
-  try {
-    const mediaRes = await apiPost<{ rows: { id: number; fileUrl: string; originalFilename?: string }[] }, unknown>(
-      "/media/page", { pageNum: 1, pageSize: 1000000 }
-    );
-    const mediaMap = new Map<number, { newPath: string; originalUrl: string }>();
-    for (const m of mediaRes.rows || []) {
-      const ext = m.originalFilename?.includes(".") ? m.originalFilename.slice(m.originalFilename.lastIndexOf(".")) : ".bin";
-      mediaMap.set(m.id, {
-        newPath: `/data/media/${m.id}${ext}`,
-        originalUrl: m.fileUrl,
-      });
-    }
-    if (mediaMap.size > 0) {
-      for (const f of files) {
-        if (f.path.endsWith(".json")) {
-          f.content = replaceMediaUrls(f.content, mediaMap);
-        }
+  // 媒体 URL 替换失败是致命的：所有 JSON 会带着 localhost 的远程地址上线，
+  // 线上图片/音频全部 404。这里不能吞掉，直接抛出中止整次同步。
+  const mediaRes = await apiPost<{ rows: { id: number; fileUrl: string; originalFilename?: string }[] }, unknown>(
+    "/media/page", { pageNum: 1, pageSize: 1000000 }
+  );
+  const mediaMap = new Map<number, { newPath: string; originalUrl: string }>();
+  for (const m of mediaRes.rows || []) {
+    const ext = m.originalFilename?.includes(".") ? m.originalFilename.slice(m.originalFilename.lastIndexOf(".")) : ".bin";
+    mediaMap.set(m.id, {
+      newPath: `/data/media/${m.id}${ext}`,
+      originalUrl: m.fileUrl,
+    });
+  }
+  if (mediaMap.size > 0) {
+    for (const f of files) {
+      if (f.path.endsWith(".json")) {
+        f.content = replaceMediaUrls(f.content, mediaMap);
       }
     }
-  } catch (e) {
-    console.error("[SYNC] Failed to replace media URLs:", e);
   }
 
-  return files;
+  return { files, failedPaths };
 }
 
 export interface SyncResult {
@@ -768,7 +686,7 @@ export async function syncJson(
     }
     onProgress?.({ stage: "collecting", message: `Existing tree: ${existingShas.size} files. Fetching new data...` });
 
-    const files = await collectAllData(token, onProgress);
+    const { files, failedPaths } = await collectAllData(token, onProgress);
     onProgress?.({ stage: "collecting", message: `Collected ${files.length} files.` });
 
     // 计算 SHA 比对变更
@@ -782,11 +700,14 @@ export async function syncJson(
     onProgress?.({ stage: "collecting", message: `Changed: ${changed.length}, unchanged: ${files.length - changed.length}.` });
 
     // 检测已删除的详情文件（路径在 tree 中但不在新采集的 files 中）
+    //
+    // 关键：failedPaths 必须排除。拉取失败不等于数据被删除，
+    // 否则一次网络抖动就会把线上文章/相册文件删掉。
     const deletePaths: string[] = [];
     const newPaths = new Set(files.map(f => f.path));
     for (const path of existingShas.keys()) {
       const isManagedSubFile = path.includes("/") && !path.startsWith("media/") && !path.startsWith("music/");
-      if (isManagedSubFile && !newPaths.has(path)) {
+      if (isManagedSubFile && !newPaths.has(path) && !failedPaths.has(path)) {
         deletePaths.push(path);
       }
     }
@@ -840,7 +761,7 @@ export async function syncMedia(
     const { commitSha: mediaCommit, treeSha: mediaTree } = await getBranchCommitAndTreeSha(token);
 
     onProgress?.({ stage: "collecting", message: "Fetching media from API..." });
-    const { mediaItems, mediaMap, deletedIds } = await collectMedia(apiBase, onProgress, existingManifest, limit);
+    const { mediaItems, deletedIds } = await collectMedia(apiBase, onProgress, existingManifest, limit);
 
     if (mediaItems.length === 0 && deletedIds.length === 0) {
       onProgress?.({ stage: "done", message: "No media changes to sync." });
@@ -882,99 +803,3 @@ export async function syncMedia(
     return { success: false, filesCount: 0, error: msg };
   }
 }
-
-export async function syncMusic(
-  token: string,
-  onProgress?: ProgressCb
-): Promise<SyncResult> {
-  console.log(`[SYNC MUSIC] Starting... repo=${OWNER}/${REPO} branch=${BRANCH}`);
-  try {
-    const apiBase = `http://${siteConfig.backUrl}/api`;
-
-    onProgress?.({ stage: "collecting", message: "Fetching existing manifest from GitHub..." });
-    const existingManifest = await getExistingMusicManifest(token);
-    const { commitSha, treeSha } = await getBranchCommitAndTreeSha(token);
-
-    onProgress?.({ stage: "collecting", message: "Fetching music from API..." });
-    const { musicData, audioFiles, deletedIds } = await collectMusic(apiBase, onProgress, existingManifest);
-
-    if (audioFiles.length === 0 && deletedIds.length === 0) {
-      onProgress?.({ stage: "done", message: "No music changes to sync." });
-      return { success: true, filesCount: 0 };
-    }
-
-    // 删除的曲目路径（使用 manifest 记录的扩展名，兼容旧数据）
-    const stalePaths: string[] = [];
-    for (const id of deletedIds) {
-      const entry = existingManifest?.get(id);
-      stalePaths.push(`music/${id}${entry?.ext || ".mp3"}`);
-      if (entry?.coverExt) {
-        stalePaths.push(`music/${id}-cover${entry.coverExt}`);
-      }
-    }
-
-    // 从新下载的 audioFiles 中提取扩展名
-    const newExts = new Map<number, { ext?: string; coverExt?: string }>();
-    for (const f of audioFiles) {
-      const fileName = f.path.split("/").pop() || "";
-      const dotIdx = fileName.lastIndexOf(".");
-      if (dotIdx === -1) continue;
-      const ext = fileName.slice(dotIdx);
-      const idMatch = fileName.match(/^(\d+)/);
-      if (!idMatch) continue;
-      const id = Number(idMatch[1]);
-      if (!newExts.has(id)) newExts.set(id, {});
-      const entry = newExts.get(id)!;
-      if (fileName.includes("-cover")) entry.coverExt = ext;
-      else entry.ext = ext;
-    }
-
-    // 构建最新 manifest（合并已有记录的扩展名 + 新下载的）
-    const manifestIds = new Set((existingManifest?.keys() || []));
-    for (const f of audioFiles) {
-      const id = Number(f.path.split("/")[1].split(".")[0]);
-      if (id) manifestIds.add(id);
-    }
-    const manifestEntries = [...manifestIds].map((id) => {
-      const prev = existingManifest?.get(id);
-      const update = newExts.get(id);
-      return { id, ext: update?.ext || prev?.ext, coverExt: update?.coverExt || prev?.coverExt };
-    });
-    const manifestContent = JSON.stringify(manifestEntries, null, 2);
-
-    // 先解析对象，再逐条修改属性（避免 replaceAll 字符串替换污染其他曲目）
-    const parsed = JSON.parse(JSON.stringify(musicData)) as { total: number; rows: OpMusic[] };
-    for (const track of parsed.rows) {
-      if (track.id == null) continue;
-      if (track.url) {
-        const audioExt = extFromFilename(track.url) || ".mp3";
-        track.url = `/data/music/${track.id}${audioExt}`;
-      }
-      if (track.pictureUrl) {
-        const ext = extFromFilename(track.pictureUrl) || ".png";
-        track.pictureUrl = `/data/music/${track.id}-cover${ext}`;
-      }
-    }
-
-    // 仅保留已同步的曲目（有音频文件的），其余剔除
-    parsed.rows = parsed.rows.filter(t => t.id != null && manifestIds.has(t.id));
-    parsed.total = parsed.rows.length;
-
-    const files: SyncFile[] = [
-      { path: "music.json", content: JSON.stringify(parsed, null, 2), encoding: "utf-8" },
-      { path: "music-manifest.json", content: manifestContent, encoding: "utf-8" },
-    ];
-    for (const af of audioFiles) {
-      files.push({ path: af.path, content: af.content, encoding: "base64" });
-    }
-
-    const ts = new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
-    return await syncFiles(token, files, `${ts} sync music (${audioFiles.length} files)`, onProgress, stalePaths, commitSha, treeSha);
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Unknown error";
-    console.error("[SYNC MUSIC] Error:", err);
-    onProgress?.({ stage: "error", message: msg });
-    return { success: false, filesCount: 0, error: msg };
-  }
-}
-
