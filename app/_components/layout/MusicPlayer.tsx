@@ -55,8 +55,8 @@ export default function MusicPlayer() {
             <div className="w-full h-full rounded-full bg-slate-50 dark:bg-slate-900" />
           </div>
           <div className="absolute inset-[3px] rounded-full overflow-hidden shadow-inner">
-            {currentTrack.pictureUrl ? (
-              <img src={assetUrl(currentTrack.pictureUrl)} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+            {currentTrack.singerPictureUrl || siteConfig.defaultSingerCover ? (
+              <img src={assetUrl(currentTrack.singerPictureUrl || siteConfig.defaultSingerCover)} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-2xl">🎵</div>
             )}

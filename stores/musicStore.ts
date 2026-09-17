@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import type { OpMusic } from "@/lib/types";
+import type { Music } from "@/lib/types";
 
 interface MusicState {
-  currentTrack: OpMusic | null;
+  currentTrack: Music | null;
   isPlaying: boolean;
-  setTrack: (track: OpMusic) => void;
+  setTrack: (track: Music) => void;
   toggle: () => void;
   pause: () => void;
   play: () => void;

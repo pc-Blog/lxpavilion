@@ -386,12 +386,27 @@ export interface Photo {
   updateTime?: string;
 }
 
-export interface OpMusic {
+/** 音乐曲目（对应后端 MusicVO） */
+export interface Music {
   id: number;
   title: string;
+  /** 音频地址；静态模式下已被改写为 /data/media/... */
+  fileUrl: string;
+  /** 时长（秒） */
   duration: number;
-  url: string;
-  pictureUrl: string;
+  playCount?: number;
+  isFavorite?: boolean;
+  lastPlayed?: string | null;
+  /** 歌手，可为空表示未指定 */
+  singerId?: number | null;
+  singerName?: string | null;
+  /** 歌手封面；同一歌手的曲目共用一张图，当前多为空 */
+  singerPictureUrl?: string | null;
+  /** 分类，可为空表示未分类 */
+  categoryId?: number | null;
+  categoryName?: string | null;
+  createTime?: string;
+  updateTime?: string;
 }
 
 // ========== Diary（日记，仅本地） ==========

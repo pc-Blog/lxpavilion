@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useMusicStore } from "@/stores/musicStore";
-import { getMusic } from "@/lib/api/op";
+import { nextRandom } from "@/lib/api/music";
 import { assetUrl } from "@/lib/asset-url";
 
 let _sharedAudio: HTMLAudioElement | null = null;
@@ -33,11 +33,13 @@ export function useAudioPlayer() {
     if (!_endedAttached) {
       _endedAttached = true;
       _sharedAudio.addEventListener("ended", () => {
-        getMusic().then((t) => {
+        // 自动切歌：计入播放次数与累计时长
+        const cur = useMusicStore.getState().currentTrack;
+        nextRandom(cur?.id, true).then((t) => {
           if (t && _sharedAudio) {
             useMusicStore.getState().setTrack(t);
             useMusicStore.getState().play();
-            _sharedAudio.src = assetUrl(t.url);
+            _sharedAudio.src = assetUrl(t.fileUrl);
             _sharedAudio.play().catch(() => {});
           }
         }).catch(() => {});
@@ -47,10 +49,10 @@ export function useAudioPlayer() {
     return _sharedAudio;
   }, [volume]);
 
-  // 初始加载曲目
+  // 初始加载曲目（首次播放，无 currentMusicId，不计入播放次数）
   useEffect(() => {
     if (currentTrack) return;
-    getMusic().then((t) => t && setTrack(t)).catch(() => {});
+    nextRandom(undefined, false).then((t) => t && setTrack(t)).catch(() => {});
   }, [currentTrack, setTrack]);
 
   // 封面旋转
@@ -69,7 +71,7 @@ export function useAudioPlayer() {
     const a = getAudio();
     if (a.getAttribute("data-track-id") === String(currentTrack.id)) return;
     a.setAttribute("data-track-id", String(currentTrack.id));
-    a.src = assetUrl(currentTrack.url);
+    a.src = assetUrl(currentTrack.fileUrl);
     if (isPlaying) {
       const onReady = () => { a.play().catch(() => {}); a.removeEventListener("canplay", onReady); };
       a.addEventListener("canplay", onReady);
@@ -129,8 +131,10 @@ export function useAudioPlayer() {
     }
   };
 
+  // 手动切歌：不计入播放次数，只更新 last_played
   const handleNext = useCallback(() => {
-    getMusic().then((t) => { if (t) { setTrack(t); play(); } }).catch(() => {});
+    const cur = useMusicStore.getState().currentTrack;
+    nextRandom(cur?.id, false).then((t) => { if (t) { setTrack(t); play(); } }).catch(() => {});
   }, [setTrack, play]);
 
   return {
