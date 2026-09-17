@@ -33,13 +33,16 @@ interface SyncState {
   result: "success" | "error" | null;
 }
 
-function SyncPanel({ label, syncing, progress, logs, result, onSync }: {
+function SyncPanel({ label, syncing, progress, logs, result, onSync, limit, onLimitChange }: {
   label: string;
   syncing: boolean;
   progress: SyncProgress | null;
   logs: string[];
   result: "success" | "error" | null;
   onSync: () => void;
+  /** 本次同步的文件数量上限；传入才显示输入框 */
+  limit?: number;
+  onLimitChange?: (v: number) => void;
 }) {
   return (
     <div className="border-t border-slate-200 dark:border-slate-700 pt-4 first:border-t-0 first:pt-0">
@@ -49,6 +52,20 @@ function SyncPanel({ label, syncing, progress, logs, result, onSync }: {
         >
           {syncing ? "Syncing..." : `Sync ${label}`}
         </button>
+        {onLimitChange && limit !== undefined && (
+          <label className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            每次
+            <input
+              type="number"
+              min={1}
+              value={limit}
+              disabled={syncing}
+              onChange={(e) => onLimitChange(Math.max(1, Number(e.target.value) || 1))}
+              className="w-20 px-2 py-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 disabled:opacity-50"
+            />
+            个
+          </label>
+        )}
         {progress && (
           <span className="text-xs text-slate-500 dark:text-slate-400 animate-pulse">{progress.message}</span>
         )}
@@ -80,6 +97,7 @@ export default function AdminDashboardPage() {
   const [jsonSync, setJsonSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [mediaSync, setMediaSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
   const [musicSync, setMusicSync] = useState<SyncState>({ syncing: false, progress: null, logs: [], result: null });
+  const [mediaSyncLimit, setMediaSyncLimit] = useState(100);
   const [cleanupState, setCleanupState] = useState({ scanning: false, deleting: false, items: [] as MediaScanItem[], totalMedia: 0, orphanCount: 0, logs: [] as string[] });
   const [cleanupPage, setCleanupPage] = useState(1);
   const [cleanupPageSize, setCleanupPageSize] = useState(10);
@@ -153,7 +171,7 @@ export default function AdminDashboardPage() {
         progress: p,
         logs: p.log ? [...prev.logs, p.log] : prev.logs,
       }));
-    });
+    }, mediaSyncLimit);
     setMediaSync((prev) => ({
       ...prev,
       syncing: false,
@@ -400,7 +418,7 @@ export default function AdminDashboardPage() {
 
             <div className="flex flex-col gap-4 mt-2">
               <SyncPanel label="JSON Data" onSync={handleJsonSync} syncing={jsonSync.syncing} progress={jsonSync.progress} logs={jsonSync.logs} result={jsonSync.result} />
-              <SyncPanel label="Media" onSync={handleMediaSync} syncing={mediaSync.syncing} progress={mediaSync.progress} logs={mediaSync.logs} result={mediaSync.result} />
+              <SyncPanel label="Media" onSync={handleMediaSync} syncing={mediaSync.syncing} progress={mediaSync.progress} logs={mediaSync.logs} result={mediaSync.result} limit={mediaSyncLimit} onLimitChange={setMediaSyncLimit} />
               <SyncPanel label="Music" onSync={handleMusicSync} syncing={musicSync.syncing} progress={musicSync.progress} logs={musicSync.logs} result={musicSync.result} />
             </div>
 

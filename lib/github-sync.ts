@@ -167,7 +167,8 @@ async function getExistingMediaManifest(
 async function collectMedia(
   apiBase: string,
   onProgress?: ProgressCb,
-  existingManifest?: Map<number, MediaItem>
+  existingManifest?: Map<number, MediaItem>,
+  limit = 100
 ): Promise<{
   mediaItems: MediaItem[];
   mediaMap: Map<number, { newPath: string; originalUrl: string }>;
@@ -179,10 +180,12 @@ async function collectMedia(
 
   let mediaRows: Media[] = [];
   try {
+    // 必须一次取全：媒体表按 id 倒序，音乐 id 比图文大、排在前面，
+    // 单页取不全时图文媒体会缺失，进而被误判为「已删除」而删除线上文件。
     const res = await fetch(`${apiBase}/media/page`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pageNum: 1, pageSize: 999 }),
+      body: JSON.stringify({ pageNum: 1, pageSize: 1000000 }),
     });
     const body = await res.json() as { code: number; data?: { rows?: Media[] } };
     mediaRows = body.data?.rows || [];
@@ -201,11 +204,13 @@ async function collectMedia(
   }
 
   // 只下载新增的文件（已有文件不变，因为没有更新功能）
+  // 按文件体积升序：先搬小的，避免大音频占满本次配额导致图文永远轮不到
   const toDownload = mediaRows.filter((media) => {
     if (media.id == null) return false;
     if (!existingManifest) return true;
     return !existingManifest.has(media.id);
-  }).slice(0, 10);  // 每次最多同步 10 张
+  }).sort((a, b) => (a.fileSize || 0) - (b.fileSize || 0))
+    .slice(0, limit);
 
   onProgress?.({
     stage: "collecting",
@@ -492,7 +497,7 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
   files.push({ path: "projects.json", content: JSON.stringify(projectList, null, 2) });
 
   try {
-    const media = await apiPost<unknown, unknown>("/media/page", { pageNum: 1, pageSize: 999 });
+    const media = await apiPost<unknown, unknown>("/media/page", { pageNum: 1, pageSize: 1000000 });
     files.push({ path: "media.json", content: JSON.stringify(media, null, 2) });
   } catch (e) {
     console.error("[SYNC] Failed to fetch media.json:", e);
@@ -577,7 +582,7 @@ async function collectAllData(ghToken?: string, onProgress?: ProgressCb): Promis
   // ── 替换所有 JSON 中的媒体 URL 为本地路径 ──
   try {
     const mediaRes = await apiPost<{ rows: { id: number; fileUrl: string; originalFilename?: string }[] }, unknown>(
-      "/media/page", { pageNum: 1, pageSize: 999 }
+      "/media/page", { pageNum: 1, pageSize: 1000000 }
     );
     const mediaMap = new Map<number, { newPath: string; originalUrl: string }>();
     for (const m of mediaRes.rows || []) {
@@ -673,9 +678,15 @@ async function syncFiles(
 
   console.log(`[SYNC] Blobs created: ${blobResults.length} OK, ${failCount} FAILED (out of ${files.length})`);
 
-  if (blobResults.length === 0) {
-    onProgress?.({ stage: "error", message: "All files failed to upload." });
-    return { success: false, filesCount: 0, error: "All files failed to upload" };
+  // 只要有一个 blob 失败就整批中止，不建 tree、不提交。
+  //
+  // 此时分支尚未被改动：blob/tree/commit 都是悬空对象，只有最后 PATCH ref
+  // 才移动分支指针。若带着失败继续提交，会出现「manifest 已记录该文件、
+  // 但文件实际不在分支里」的永久 404，且下次同步因 manifest 命中而永不重试。
+  if (failCount > 0) {
+    const msg = `${failCount} of ${files.length} files failed to upload, aborted before commit.`;
+    onProgress?.({ stage: "error", message: msg });
+    return { success: false, filesCount: 0, error: msg };
   }
 
   onProgress?.({ stage: "tree", message: "Building tree..." });
@@ -817,9 +828,10 @@ async function getBranchCommitAndTreeSha(token: string): Promise<{ commitSha: st
 
 export async function syncMedia(
   token: string,
-  onProgress?: ProgressCb
+  onProgress?: ProgressCb,
+  limit = 100
 ): Promise<SyncResult> {
-  console.log(`[SYNC MEDIA] Starting... repo=${OWNER}/${REPO} branch=${BRANCH}`);
+  console.log(`[SYNC MEDIA] Starting... repo=${OWNER}/${REPO} branch=${BRANCH} limit=${limit}`);
   try {
     const apiBase = `http://${siteConfig.backUrl}/api`;
 
@@ -828,7 +840,7 @@ export async function syncMedia(
     const { commitSha: mediaCommit, treeSha: mediaTree } = await getBranchCommitAndTreeSha(token);
 
     onProgress?.({ stage: "collecting", message: "Fetching media from API..." });
-    const { mediaItems, mediaMap, deletedIds } = await collectMedia(apiBase, onProgress, existingManifest);
+    const { mediaItems, mediaMap, deletedIds } = await collectMedia(apiBase, onProgress, existingManifest, limit);
 
     if (mediaItems.length === 0 && deletedIds.length === 0) {
       onProgress?.({ stage: "done", message: "No media changes to sync." });
