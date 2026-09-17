@@ -18,10 +18,16 @@ interface Props {
 /**
  * 左侧歌手列表。
  *
- * <p>复刻源项目 {@code views/singerSide/}：点击歌手即按 {@code singerId} 过滤曲目，
- * 高亮当前选中项。源项目的「设置」按钮已移除（其检查文件接口在后端不存在）。</p>
+ * <p>复刻源项目 {@code views/singerSide/index.vue} 的结构：管理按钮组在
+ * **列表上方居中**，下方才是歌手列表。点击歌手即按 {@code singerId} 过滤曲目，
+ * 高亮当前选中项。</p>
  *
- * <p>样式取自 {@code SingerSideList.vue} 与 {@code SingerSideCard.vue}：
+ * <p>源项目此处的两个按钮分别是「设置」（图形按钮，其检查文件接口在后端不存在，
+ * 已移除）与「管理分类」（方形文字按钮）。本页按需求改为「歌手 / 分类」两个
+ * 方形文字按钮，沿用源项目 {@code .singer-aside} 的布局与 {@code .aside-button}
+ * 的悬浮效果（上移 2px + 提亮 1.1）。</p>
+ *
+ * <p>列表样式取自 {@code SingerSideList.vue} 与 {@code SingerSideCard.vue}：
  * 列表头带下分隔线、头像 30×30 圆角 10%、选中态左侧 3px 霓虹竖条。</p>
  */
 export default function SingerSidebar({
@@ -34,6 +40,18 @@ export default function SingerSidebar({
 }: Props) {
   return (
     <div className="flex flex-col h-full p-3">
+      {/* 管理按钮组：源 .singer-aside —— 位于列表上方，水平居中，间距 16px */}
+      {isLive && (
+        <div className="flex justify-center items-center gap-4 py-3 z-10">
+          <button onClick={onManageSingers} className="mt-btn mt-btn-primary aside-button">
+            歌手
+          </button>
+          <button onClick={onManageCategories} className="mt-btn mt-btn-primary aside-button">
+            分类
+          </button>
+        </div>
+      )}
+
       {/* 列表头部（源 .list-header） */}
       <div
         className="flex justify-between items-center mb-4 pb-2"
@@ -70,21 +88,6 @@ export default function SingerSidebar({
           />
         ))}
       </div>
-
-      {/* 管理入口：仅本地可见 */}
-      {isLive && (
-        <div
-          className="flex flex-col gap-2 pt-3 mt-2"
-          style={{ borderTop: "1px solid rgba(120,230,255,0.15)" }}
-        >
-          <button onClick={onManageSingers} className="mt-btn">
-            管理歌手
-          </button>
-          <button onClick={onManageCategories} className="mt-btn">
-            管理分类
-          </button>
-        </div>
-      )}
     </div>
   );
 }

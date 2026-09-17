@@ -5,10 +5,11 @@ export async function getList(params: PageDTO<Media>) {
   return api.post<PageVO<Media>, PageVO<Media>>("/media/page", params);
 }
 
-export async function upload(file: File) {
+export async function upload(file: File, relationType?: string) {
   const form = new FormData();
   form.append("file", file);
-  return api.post("/media/upload", form, {
+  if (relationType) form.append("relationType", relationType);
+  return api.post<Media, Media>("/media/upload", form, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 }

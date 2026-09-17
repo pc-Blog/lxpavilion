@@ -642,6 +642,21 @@
   cursor: pointer;
 }
 
+/*
+ * 侧栏顶部的管理按钮。
+ * 源项目 views/singerSide/index.vue 的 .aside-button：
+ *   transition: all 0.3s ease;
+ *   :hover { transform: translateY(-2px); filter: brightness(1.1); }
+ */
+.aside-button {
+  transition: all 0.3s ease;
+}
+
+.aside-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
 .mt-side-item:hover {
   transform: translateX(4px);
   box-shadow:
