@@ -194,12 +194,41 @@ async function collectMedia(
     return { mediaItems, deletedIds };
   }
 
-  // 检测已删除的文件
+  // 只同步收藏曲目的音频：全库音频约 4.8 GB，静态托管放不下。
+  // 收藏曲目的 fileUrl 集合由 /music/page 提供，按 URL 等值匹配剔除其余音频。
+  // 图文媒体（relationType 非 music）全部保留。
+  //
+  // 注意：过滤只影响「下载什么」，不影响「什么算已删除」。
+  // 被跳过的非收藏音频仍在库中，必须留在 allIds 里，否则会被当作已删除而清出分支。
+  const allIds = new Set<number>();
+  for (const m of mediaRows) { if (m.id != null) allIds.add(m.id); }
+
+  let skippedMusic = 0;
+  try {
+    const res = await fetch(`${apiBase}/music/page`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pageNum: 1, pageSize: 1000000, query: { onlyFavorite: true } }),
+    });
+    const body = await res.json() as { code: number; data?: { rows?: { fileUrl?: string }[] } };
+    const favoriteUrls = new Set(
+      (body.data?.rows || []).map((t) => t.fileUrl).filter((u): u is string => !!u)
+    );
+    const before = mediaRows.length;
+    mediaRows = mediaRows.filter(
+      (m) => m.relationType !== "music" || (m.fileUrl != null && favoriteUrls.has(m.fileUrl))
+    );
+    skippedMusic = before - mediaRows.length;
+  } catch (e) {
+    // 拿不到收藏列表时中止，而不是「不过滤」：
+    // 若退化成全量，会白传 3.3 GB 非收藏音频。
+    throw new Error(`获取收藏曲目失败，已中止媒体同步：${e instanceof Error ? e.message : e}`);
+  }
+
+  // 检测已删除的文件（以过滤前的全量 id 为准）
   if (existingManifest && existingManifest.size > 0) {
-    const apiIds = new Set<number>();
-    for (const m of mediaRows) { if (m.id != null) apiIds.add(m.id); }
     for (const [id] of existingManifest) {
-      if (!apiIds.has(id)) deletedIds.push(id);
+      if (!allIds.has(id)) deletedIds.push(id);
     }
   }
 
@@ -214,7 +243,7 @@ async function collectMedia(
 
   onProgress?.({
     stage: "collecting",
-    message: `API: ${mediaRows.length} files, need download: ${toDownload.length}${deletedIds.length > 0 ? `, delete: ${deletedIds.length}` : ""}`,
+    message: `API: ${mediaRows.length} files${skippedMusic > 0 ? ` (skipped ${skippedMusic} non-favorite audio)` : ""}, need download: ${toDownload.length}${deletedIds.length > 0 ? `, delete: ${deletedIds.length}` : ""}`,
   });
 
   // 并行下载（5 个并发）
@@ -241,6 +270,10 @@ async function collectMedia(
   }
 
   // 未变动的文件保留记录（不带 base64，不下载）
+  //
+  // 这里遍历 mediaRows（已过滤掉非收藏音频）。被跳过的文件若在 manifest 中，
+  // 本轮不会保留 —— 这是有意的：它们不应继续占用分支空间，下次也不会被误判为新增，
+  // 因为过滤是稳定的（同一批收藏 URL 每轮都会再被跳过一次）。
   if (existingManifest) {
     for (const media of mediaRows) {
       if (media.id == null) continue;
