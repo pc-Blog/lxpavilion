@@ -1,0 +1,355 @@
+1:"$Sreact.fragment"
+2:I[17467,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/0xrzn2mdpvkvi.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+4:T322b,## 前言
+
+如果你的博客网站配置了自定义域名并交由 **Cloudflare** 托管，那么你可以利用 Cloudflare 提供的 Analytics 服务和 GraphQL API 来获取网站的流量数据，包括请求数、独立访客（UV）、页面浏览量（PV）等。
+
+本文将介绍**三种获取网站流量数据的方式**，从零门槛的 Cloudflare 控制台直接查看，到通过 API 编程获取，再到部署 Worker 为前端提供数据接口。
+
+---
+
+> **前置条件**：你的域名已托管在 Cloudflare。以我的博客 `lxpavilion.top` 为例，详细配置步骤可参考：
+> [为 GitHub Pages 博客配置自定义域名与 Cloudflare 加速](https://www.lxpavilion.top/article/36/)
+
+---
+
+## 一、在 Cloudflare 控制台直接查看流量数据
+
+如果你是初次接触 CF 数据分析，最直接的方式是在控制台查看流量概览。
+
+进入域名管理的 **Analytics** 页面，可以看到多项数据面板。
+
+![Cloudflare Analytics 控制台概览，展示请求量、带宽、HTTP 状态码等核心指标的折线图面板和汇总卡片](/data/media/298.png)
+
+在 Analytics 页面中，你还可以通过 **Dashboards** 功能自定义数据看板，自由组合所需的图表模块，也可以导入社区或官方预设的模板。
+
+![Dashboards 自定义看板编辑界面，展示添加/删除图表面板、选择数据维度和时间范围的配置项](/data/media/299.png)
+
+这种方式无需编写任何代码，适合快速查看实时流量概况。
+
+---
+
+## 二、通过 GraphQL API 编程获取流量数据
+
+控制台查看虽然方便，但如果你希望**在前端页面上展示**流量数据，或者需要**定时采集与分析**，就需要通过 API 来获取。
+
+> **关于 CORS 限制**：Cloudflare 的 GraphQL API 不允许浏览器端直接调用（存在 CORS 跨域限制），因此该方式仅适用于后端代码或服务器环境的 HTTP 请求。如果需要浏览器端访问，请参考第三部分的 Worker 方案。
+
+### 2.1 获取 Zone ID 和 API Token
+
+调用 API 需要两个核心凭证：
+
+- **Zone ID**：标识你的域名
+- **API Token**：用于身份验证的密钥
+
+#### 获取 Zone ID
+
+在域名管理的 **Overview** 页面向下滚动，右侧信息栏中即可看到 Zone ID。
+
+![Cloudflare 域名 Overview 页面底部，右侧信息面板中 Zone ID 字段用框线标注说明](/data/media/301.png)
+
+#### 创建 API Token
+
+点击右上角账户头像 -> **My Profile** -> **API Tokens**，进入 Token 管理页面。
+
+![API Tokens 管理页面入口，左侧侧边栏中高亮显示 API Tokens 菜单项](/data/media/302.png)
+
+点击 **Create Token**，由于用途是获取网站流量数据，可以直接使用预设模板 **Read analytics and logs**。
+
+![创建 API Token 页面，Read analytics and logs 模板卡片上标注了创建按钮的位置](/data/media/303.png)
+
+创建完成后，在 Token 详情页面可以查看到该 Token 的权限范围——仅有读取权限，可以读取账户信息和网站流量数据，**无法对资源做任何修改**。
+
+![Token 详情页面的权限列表，展示 Account Analytics Read 和 Zone Analytics Read 两项只读权限](/data/media/304.png)
+
+### 2.2 Python 示例：获取近 7 天的流量数据
+
+以下代码使用 Cloudflare GraphQL API 查询指定域名近 7 天的每日请求数、独立访客和页面浏览量。
+
+```python
+import requests
+from datetime import datetime, timedelta, timezone
+
+# 安全警告：请勿将 API Token 和 Zone ID 硬编码在代码中！
+# 若不慎泄露，他人可读取你的网站流量数据。
+# 建议通过环境变量读取，或使用 .env 文件管理。
+API_TOKEN = "cfut_YOUR_TOKEN_HERE"
+ZONE_ID = "your_zone_id_here"
+
+end = datetime.now(timezone.utc)
+start = end - timedelta(days=7)
+
+query = f"""
+{{
+  viewer {{
+    zones(filter: {{zoneTag: "{ZONE_ID}"}}) {{
+      httpRequests1dGroups(limit: 8, filter: {{date_geq: "{start:%Y-%m-%d}", date_leq: "{end:%Y-%m-%d}"}}) {{
+        dimensions {{ date }}
+        sum {{ requests pageViews }}
+        uniq {{ uniques }}
+      }}
+    }}
+  }}
+}}
+"""
+
+resp = requests.post(
+    "https://api.cloudflare.com/client/v4/graphql",
+    headers={"Authorization": f"Bearer {API_TOKEN}"},
+    json={"query": query}
+)
+
+# 解析返回数据
+data = resp.json()["data"]["viewer"]["zones"][0]["httpRequests1dGroups"]
+print("日期       请求数  访客  浏览量")
+for day in data:
+    d = day["dimensions"]["date"]
+    req = day["sum"]["requests"]
+    uv = day["uniq"]["uniques"]
+    pv = day["sum"]["pageViews"]
+    print(f"{d}  {req:6d}  {uv:4d}  {pv:5d}")
+```
+
+**运行结果示例：**
+
+```
+日期       请求数  访客  浏览量
+2026-06-09    9830   190   1087
+2026-06-10    4782   183    439
+```
+
+### 2.3 API 查询维度与时间范围说明
+
+根据实际需求，你可以调整 GraphQL 查询语句来获取不同粒度的数据：
+
+| 维度 | 最长回溯时间 | 说明 |
+|------|-------------|------|
+| **按天** (httpRequests1dGroups) | **1 年** | 获取每日的请求数、访客数、带宽等，适合长期趋势分析 |
+| **按小时** (httpRequests1hGroups) | **3 天** | 获取每小时的细粒度数据，适合短期监控和异常排查 |
+| **按国家/地区** | **1 天** | 获取请求的地理分布；如需一周的按国家统计，需要逐天连续请求后自行合并 |
+
+> **官方文档参考**：[Cloudflare GraphQL API 入门](https://developers.cloudflare.com/analytics/graphql-api/getting-started/authentication/)
+
+> **实用小技巧**：你可以将官方 API 文档链接喂给 AI 工具（如 Claude Code、ChatGPT 等），让 AI 帮你生成符合特定需求的查询代码，比自己从零翻阅文档效率更高。
+
+---
+
+## 三、部署 Cloudflare Worker 获取流量数据
+
+上述 API 方式虽然直接，但受 CORS 策略限制无法在浏览器中调用。为了让**前端页面也能展示流量数据**，我们需要一个后端中间层——**Cloudflare Workers**。
+
+### 3.1 Worker 概述
+
+Cloudflare Workers 是一个**无服务器计算平台**，你只需编写简单的 JavaScript 代码，Cloudflare 就会将其部署在全球 330+ 个边缘节点上。
+
+简单来说，Worker 相当于一个运行在云端边缘节点的轻量后端服务，对外暴露 HTTP 接口，浏览器可以正常访问这些接口获取数据。
+
+### 3.2 通过控制台创建 Worker
+
+#### 创建 Worker 实例
+
+在 CF Dashboard 中，导航到 **Build -> Compute -> Workers & Pages**，点击 **Create Worker**。
+
+![Workers and Pages 页面概览，展示已创建的 Worker 列表和创建按钮的位置](/data/media/305.png)
+
+选择官方提供的 **Hello World!** 模板开始创建。
+
+![Worker 模板选择界面，Hello World 模板卡片被高亮框选](/data/media/306.png)
+
+#### 配置自定义域名
+
+进入 Worker 详情页，导航到 **Domains** 选项卡，点击 **Add Domain**。
+
+![Domains 配置页面，包含域名输入框、添加按钮和已绑定域名列表](/data/media/307.png)
+
+> **注意**：只能配置你已拥有域名的**子域名**。例如：`helloworld.lxpavilion.top`。
+
+#### 验证 Worker
+
+访问你配置的域名，如果 Worker 正常工作，浏览器会返回 Hello World! 的响应内容。
+
+![浏览器访问 helloworld.lxpavilion.top，页面正常显示 Hello World! 纯文本响应](/data/media/308.png)
+
+> 如需返回实际的网站流量数据，只需在 Worker 代码中调用 Cloudflare GraphQL API（类似前文的 Python 逻辑），将数据以 JSON 格式响应给前端即可。
+
+---
+
+## 四、使用 Wrangler 本地构建 Worker
+
+除了在控制台通过图形界面创建外，你还可以使用 **Wrangler**（Cloudflare 官方 CLI 工具）在本地开发、测试和部署 Worker。这种方式更适合需要版本管理和 CI/CD 集成的项目。
+
+### 4.1 环境准备
+
+确保电脑上已安装 **Node.js**（版本 >= 18），然后通过 npm 安装 Wrangler：
+
+```bash
+npm install -g wrangler
+
+wrangler --version
+```
+
+![终端中执行 npm install -g wrangler，安装过程日志输出，包含版本号和安装路径信息](/data/media/309.png)
+
+![终端执行 wrangler --version，显示当前安装的 Wrangler 版本号，如 3.xx.x](/data/media/310.png)
+
+### 4.2 登录 Cloudflare 账号
+
+```bash
+wrangler login
+```
+
+执行命令后，终端会提示正在打开浏览器进行 OAuth 授权。
+
+![终端输出 wrangler login 的提示信息，显示正在启动浏览器进入 Cloudflare 授权页面](/data/media/312.png)
+
+浏览器自动跳转到 Cloudflare 授权页面，点击 **Authorize** 即可完成登录。
+
+![浏览器中的 Cloudflare OAuth 授权确认页面，标注了 Authorize 按钮位置和授权范围说明](/data/media/313.png)
+
+### 4.3 编写配置文件和 Worker 脚本
+
+在项目目录下创建以下两个核心文件：
+
+#### wrangler.json 配置文件
+
+```json
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "test",
+  "main": "main.js",
+  "compatibility_date": "2026-06-10",
+  "placement": {
+    "mode": "smart"
+  },
+  "vars": {
+    "var": "我是环境变量"
+  }
+}
+```
+
+各字段说明：
+
+| 字段 | 作用 |
+|------|------|
+| `$schema` | JSON Schema 路径，用于 IDE 自动补全和校验（部署时无用） |
+| `name` | Worker 唯一名称，仪表盘中显示，也是默认子域名的一部分 |
+| `main` | 入口文件路径（相对项目根目录） |
+| `compatibility_date` | API 行为版本，此日期前的行为保持兼容 |
+| `placement.mode` | 智能放置，设为 smart 可让 CF 将 Worker 调度到离用户最近的节点 |
+| `vars` | 普通环境变量；敏感信息（如 API Token）请使用 wrangler secret 单独加密存储 |
+
+#### main.js 执行脚本
+
+```js
+export default {
+    async fetch(request, env) {
+        const message = env.var || "未设置环境变量";
+        return new Response(`环境变量的值是: ${message}`, {
+            headers: { "Content-Type": "text/plain; charset=utf-8" }
+        });
+    }
+};
+```
+
+### 4.4 部署 Worker
+
+在项目目录下执行：
+
+```bash
+wrangler deploy
+```
+
+![终端中执行 wrangler deploy 的完整输出，包含部署进度、生成的 Worker 名称和公网访问地址](/data/media/314.png)
+
+部署成功后，在 Cloudflare Dashboard 的 Workers & Pages 页面可以看到新部署的 Worker 状态为 **Active**。
+
+![Dashboard 中 Workers 列表页面，test Worker 显示 Active 运行状态和绑定的域名链接](/data/media/315.png)
+
+后续配置自定义域名和验证测试的方法与第三节相同，此处不再赘述。
+
+---
+
+## 五、最终效果
+
+配置好 Worker 并编写好获取流量数据的 JS 脚本后，前端就可以通过 fetch 请求 Worker 域名获取流量数据，并在页面上以图表形式呈现。
+
+以下是我博客中监控板块的实际效果截图：
+
+![博客 Analytics 页面效果，展示近 7 天请求数、独立访客和页面浏览量的趋势折线图，下方数据表格同步显示](/data/media/316.png)
+
+你可以访问 [栏轩阁 - Analytics](https://www.lxpavilion.top/analytics/) 查看实时效果。
+
+---
+
+## 六、总结与最佳实践
+
+本文介绍了三种获取 Cloudflare 网站流量数据的方式，按**技术门槛从低到高**排列：
+
+| 方式 | 适用场景 | 优点 | 缺点 |
+|------|---------|------|------|
+| **控制台直接查看** | 快速概览、日常巡检 | 零代码、实时数据 | 无法自定义展示、无法嵌入前端 |
+| **GraphQL API 编程获取** | 后端定时采集、数据分析 | 灵活、可自动化 | 有 CORS 限制，浏览器无法直接调用 |
+| **Worker 部署为 API 中间层** | 前端展示流量数据 | 无 CORS 限制、全球加速、可缓存 | 需要编写和部署额外代码 |
+
+### 最佳实践建议
+
+1. **安全第一**：API Token 等敏感信息**切勿硬编码**，建议通过环境变量或 wrangler secret 管理
+2. **数据缓存**：Worker 返回的数据可以设置合理的 Cache-Control 头部，减少 GraphQL API 的调用次数（每天查询 1-2 次即可满足展示需求）
+3. **可视化展示**：前端推荐搭配图表库（如 ECharts、Chart.js、ApexCharts）将数据渲染为折线图或柱状图
+4. **架构推荐**：**前端到 Worker（数据中间层，含缓存）到 Cloudflare GraphQL API** 的三层架构，兼顾了安全性、性能和可维护性
+
+本文的 Worker 示例展示了最基础的 API 调用和数据返回流程。如果你希望构建功能更完善、性能更优的流量看板（例如支持多维度数据、30天细分统计、POST 请求缓存、并发控制等），可以进一步阅读我博客的生产级实践文章。
+
+👉 **[生产级流量分析 Worker 设计与实现](https://www.lxpavilion.top/article/38/)** —— 完整拆解 270 行生产脚本的设计思路与核心技巧。b:X
+10:X
+10:C
+0:{"buildId":"PubyX9K3ghXgkulBN7a7V","data":[{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"给我的博客添加监控板块：使用 Cloudflare API 获取网站流量信息\",\"item\":\"https://www.lxpavilion.top/article/37\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"给我的博客添加监控板块：使用 Cloudflare API 获取网站流量信息\",\"headline\":\"给我的博客添加监控板块：使用 Cloudflare API 获取网站流量信息\",\"description\":\"介绍了三种获取 Cloudflare 网站流量数据的方式：Cloudflare 控制台直接查看（零代码）、GraphQL API 编程获取（Python 示例）、部署 Worker 作为数据中间层。涵盖 Zone ID 和 API Token 的获取、GraphQL 查询语句编写、API 维度说明（按天/按小时/按国家），以及通过 Wrangler 本地构建 Worker 的完整流程。适合首次接触 Cloudflare Analytics 的读者。\",\"datePublished\":\"2026-06-10T21:20:34.516448\",\"dateCreated\":\"2026-06-10T21:20:34.516448\",\"dateModified\":\"2026-06-11T08:26:47.002639\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/317.webp\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"给我的博客添加监控板块：使用 Cloudflare API 获取网站流量信息","initialContent":"$4"}]],["$L5","$L6","$L7","$L8"],"$L9"]}],"isPartial":"$@a","staleTime":"$b","varyParams":null},{"rsc":"$Lc","isPartial":"$@d","staleTime":"$b","varyParams":null},{"rsc":"$Le","isPartial":"$@f","staleTime":"$b","varyParams":"$10"},{"rsc":"$L11","isPartial":"$@12","staleTime":"$b","varyParams":"$10"},{"rsc":"$L13","isPartial":"$@14","staleTime":"$b","varyParams":null},{"rsc":"$L15","isPartial":"$@16","staleTime":"$b","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@17","rootVaryParams":null,"needsRuntimeRequest":"$@18"}
+19:I[97367,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+1a:"$Sreact.suspense"
+1c:I[97367,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+1d:I[97367,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+1e:I[27201,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+1f:I[39756,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+20:I[37457,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+21:I[39756,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+27:I[18233,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js"],"default"]
+28:I[34858,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js"],"default"]
+29:I[23191,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+2a:I[26908,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+2b:I[54774,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2c:I[79617,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2d:I[22464,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2e:I[3799,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2f:I[56499,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+30:I[61421,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+31:I[6521,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+32:I[8123,["/_next/static/chunks/2v2_x9y2lqexy.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/0v_dzqj4z9bqc.css","style"]
+3:{"id":"37"}
+5:["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true}]
+6:["$","script","script-1",{"src":"/_next/static/chunks/0xrzn2mdpvkvi.js","async":true}]
+7:["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true}]
+8:["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true}]
+9:["$","$L19",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@1b"}]}]
+c:["$","$1","h",{"children":[null,["$","$L1c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L1d",null,{"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"给我的博客添加监控板块：使用 Cloudflare API 获取网站流量信息 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"介绍了三种获取 Cloudflare 网站流量数据的方式：Cloudflare 控制台直接查看（零代码）、GraphQL API 编程获取（Python 示例）、部署 Worker 作为数据中间层。涵盖 Zone ID 和 API Token 的获取、GraphQL 查询语句编写、API 维度说明（按天/按小时/按国家），以及通过 Wrangler 本地构建 Worker 的完整流程。适合首次接触 Cloudflare Analytics 的读者。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/37/"}],["$","meta","5",{"property":"og:title","content":"给我的博客添加监控板块：使用 Cloudflare API 获取网站流量信息 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"介绍了三种获取 Cloudflare 网站流量数据的方式：Cloudflare 控制台直接查看（零代码）、GraphQL API 编程获取（Python 示例）、部署 Worker 作为数据中间层。涵盖 Zone ID 和 API Token 的获取、GraphQL 查询语句编写、API 维度说明（按天/按小时/按国家），以及通过 Wrangler 本地构建 Worker 的完整流程。适合首次接触 Cloudflare Analytics 的读者。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/317.webp"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","15",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+e:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+11:["$","$L21",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L22"]}],"$L23","$L24","$L25"]}]]}],[],null],"children":"$L26"}]
+13:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/109z71992pbyo.js","async":true}]],[["$","$L27",null,{}],["$","$L28",null,{"children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L29",null,{"children":["$","$L20",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+15:["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/0v_dzqj4z9bqc.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/2v2_x9y2lqexy.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/17y8-kabk8se9.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2a",null,{"children":[["$","$L2b",null,{}],["$","$L2c",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L2d",null,{}],["$","$L2e",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L2f",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L30",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","$L31",null,{}],["$","$L32",null,{}]]}],["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]]}]}]]}]]}]
+1b:null
+22:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+23:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+24:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+25:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+26:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+18:true
+b:300
+b:C
+17:0
+d:"$undefined"
+f:"$undefined"
+14:"$undefined"
+12:"$undefined"
+16:"$undefined"
+a:"$undefined"
