@@ -1,0 +1,32 @@
+{
+  "categoryId": 38,
+  "categoryName": "网站部署",
+  "content": "\n\n---\n\n## 一、Bing Webmaster Tools 简介\n\nBing Webmaster Tools（必应网站管理员工具）是微软提供的免费服务，帮助网站所有者：\n\n- 向 Bing 提交网站和网址\n- 提交站点地图（Sitemap）\n- 查看搜索流量和关键词数据\n- 检查网站抓取错误和安全问题\n- 管理搜索结果的展示方式\n\n> 🔗 官网入口：[https://www.bing.com/webmaster](https://www.bing.com/webmaster)\n\n![1.png](/data/media/42.png)\n\n---\n\n## 二、准备工作\n\n在开始之前，请确保你已准备好以下文件：\n\n### 1. BingSiteAuth.xml（验证文件）\n\n这是 Bing 验证你对网站所有权时使用的文件，**不需要手动创建**——在添加网站并选择验证方式后，Bing 会自动生成并提供下载。\n\n### 2. robots.txt\n\n告诉搜索引擎哪些页面可以抓取、哪些不可以。一个简单的示例：\n\n```txt\nUser-agent: *\nAllow: /\nSitemap: https://你的域名/sitemap.xml\n```\n\n将 `https://你的域名` 替换为你的实际网址。\n\n### 3. sitemap.xml（站点地图）\n\n列出你网站上所有页面的 XML 文件，帮助搜索引擎更快发现内容。你可以：\n\n- 使用在线工具生成（如 XML-Sitemaps.com）\n- 如果使用博客平台（如 WordPress、Hugo、Hexo 等），通常有插件或插件自动生成\n\n示例结构：\n\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>https://你的域名/</loc>\n    <lastmod>2025-01-01</lastmod>\n    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>https://你的域名/about/</loc>\n    <lastmod>2025-01-01</lastmod>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n```\n\n---\n\n## 三、添加网站\n\n1. 登录后，在仪表盘页面点击 **\"添加网站\"**（Add a site）\n2. 在弹出的输入框中输入你的完整网站地址（例如 `https://example.com`）\n3. 点击 **\"添加\"** 按钮\n\n![2.png](/data/media/48.png)\n\n---\n\n## 四、验证网站\n\n**XML 文件验证（推荐，最简单）**\n\n下载 `BingSiteAuth.xml` 文件放在网站根目录，然后验证。\n\n> **注意：** 如果使用 Hugo 等静态站点生成器，需要将验证文件放到 `static` 文件夹下，然后重新构建部署。\n\n---\n\n## 五、提交站点地图（Sitemap）\n\n验证成功后：\n\n1. 在左侧菜单点击 **\"Sitemaps\"**（站点地图）\n2. 在输入框中填写站点地图的 URL（如 `https://你的域名/sitemap.xml`）\n3. 点击 **\"提交\"**（Submit）\n4. 等待 Bing 抓取和处理，通常几分钟到几小时\n\n![3.png](/data/media/43.png)\n\n> 💡 **提示：** 提交后可以在 Sitemaps 页面查看状态，显示\"成功\"表示已正常处理。\n\n---\n\n## 六、提交单个网址（URL Submission）\n\n如果需要快速让 Bing 收录某篇新文章，可以手动提交单个网址：\n\n1. 在左侧菜单点击 **\"URL 检查\"**（URL Inspection）\n2. 输入要提交的完整网址\n3. 点击 **\"现场抓取\"**（Live Fetch）→ **\"请求编制索引\"**（Request Indexing）\n\n![4.png](/data/media/44.png)\n\n---\n\n## 七、检查收录状态\n\n提交后，建议定期回来检查收录情况：\n\n1. 在 **\"URL 检查\"** 中输入你的网址\n2. 查看显示的状态：\n   - **\"已编制索引\"**（Indexed）→ 收录成功 ✅\n   - **\"已发现，未编制索引\"**（Discovered, not indexed）→ 已发现但尚未处理，请等待\n   - **\"找不到\"**（Not found）→ 检查网址是否正确\n   - **\"已被阻止\"**（Blocked）→ 检查 robots.txt 是否误拦截\n\n![PixPin_2026-06-06_15-56-12.png](/data/media/214.png)\n\n你还可以在 **\"网站诊断\" → \"索引页面\"** 中查看整体收录数量。\n\n---\n\n## 八、在搜索引擎检索验证\n\n完成以上步骤后，在 Bing 搜索框中搜索你的网站地址或网站名称，确认是否已经成功收录。\n\n![PixPin_2026-06-06_15-57-48.png](/data/media/215.png)\n\n---\n",
+  "coverImage": "/data/media/47.jpg",
+  "createdAt": "2026-05-26T20:16:47.720519",
+  "id": 35,
+  "isPinned": 0,
+  "isPublished": 1,
+  "next": {
+    "id": 36,
+    "title": "为 GitHub Pages 博客配置自定义域名与 Cloudflare 加速"
+  },
+  "prev": {
+    "id": 33,
+    "title": "codex安装及接入deepseek教程"
+  },
+  "series": null,
+  "summary": "本教程将指导你如何将个人网站/博客提交到 Bing 搜索引擎，让 Bing 用户能够搜索到你的内容",
+  "tags": [
+    {
+      "id": 25,
+      "name": "Bing"
+    },
+    {
+      "id": 26,
+      "name": "SEO"
+    }
+  ],
+  "title": "将个人网址录入Bing搜索引擎",
+  "updateTime": "2026-06-10T14:42:38.102608"
+}

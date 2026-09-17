@@ -1,0 +1,40 @@
+{
+  "categoryId": 38,
+  "categoryName": "网站部署",
+  "content": "## 前言\n\nGitHub Pages 默认提供 `yourname.github.io` 这样的二级域名，虽然能用，但不够专业。配置自己的域名不仅能让博客更有辨识度，还能配合 Cloudflare 获得 CDN 加速、DDoS 防护、HTTPS 加密等一系列好处。\n\n本文记录从**阿里云购买域名**到**Cloudflare 托管 DNS**，再到**GitHub Pages 绑定自定义域名**的完整流程。\n\n> 整体流程：阿里云（域名注册商） → Cloudflare（DNS 托管 / CDN） → GitHub Pages（博客托管）\n\n---\n\n## 一、在阿里云购买域名\n\n### 1.1 搜索并选购域名\n\n登录阿里云官网，进入\"域名注册\"页面，搜索你想要的域名。\n\n![14.png](/data/media/284.png)\n\n选购建议：\n\n- 首选 `.com` / `.dev` / `.me` 等常见后缀\n- 域名尽量简短、易记、与博客品牌一致\n- 首年价格通常较低，续费价格会贵一些\n\n### 1.2 完成实名认证\n\n根据工信部要求，国内注册域名必须完成实名认证。提交身份证信息后通常 **1-3 个工作日**审核通过。\n\n![16.png](/data/media/285.png)\n\n### 1.3 购买域名以及等待审查\n\n按照步骤购买域名后，等待若干小时，直到审核通过\n\n![image.png](/data/media/295.png)\n\n### 1.4 修改 DNS 服务器（关键步骤）\n\n域名购买完成后，**不要直接在阿里云做解析**，我们要把 DNS 交给 Cloudflare 管理。\n\n进入阿里云控制台 → 域名列表 → 管理 → DNS 修改，将 DNS 服务器改为 Cloudflare 后续提供的地址。\n\n> 这一步会在后面的 Cloudflare 配置中获得具体地址。\n\n---\n\n## 二、在 Cloudflare 添加站点\n\n### 2.1 注册 / 登录 Cloudflare\n\n访问 [Cloudflare 官网](https://dash.cloudflare.com) 注册账号，添加站点，免费套餐（Free Plan）足以满足个人博客需求。\n\n![12.png](/data/media/287.png)\n\n![55.png](/data/media/288.png)\n\n### 2.2 添加站点\n\n点击 **Add a Site**，输入你的域名（例如 `example.com`），Cloudflare 会自动扫描现有 DNS 记录。\n\n### 2.3 扫描并导入 DNS 记录\n\nCloudflare 会扫描域名的现有 DNS 记录（此时扫描结果为空，因为阿里云上还没有配解析）。扫描完成后点击 **Continue**。\n\n### 2.4 修改域名服务器（Nameservers）\n\nCloudflare 会分配两个 Nameserver 地址，例如：\n\n```\nfiona.ns.cloudflare.com\nmax.ns.cloudflare.com\n```\n\n![image.png](/data/media/292.png)\n\n回到阿里云控制台 → 域名列表 → 点击\"管理\" → DNS 修改 → 将 DNS 服务器改为这两个地址。\n\n![13.png](/data/media/286.png)\n\n> DNS 修改后，全网生效通常需要 **几分钟到 48 小时**，但大多数情况下 10~30 分钟即可生效。\n\n---\n\n## 三、配置 DNS 解析记录\n\n### 3.1 添加 GitHub Pages 解析\n\n在 Cloudflare Dashboard → DNS → Records，添加以下记录：\n\n| 类型 | 名称 | 内容 | 代理状态 |\n|------|------|------|---------|\n| A | `@` | `185.199.108.153` | 开启代理（橙色云朵） |\n| A | `@` | `185.199.109.153` | 开启代理（橙色云朵） |\n| A | `@` | `185.199.110.153` | 开启代理（橙色云朵） |\n| A | `@` | `185.199.111.153` | 开启代理（橙色云朵） |\n| CNAME | `www` | `yourname.github.io` | 开启代理（橙色云朵） |\n\n> 如果使用 `www` 子域名做跳转，也可以将 `www` 的 Proxy 关闭，设置 Page Rule 做 301 重定向到裸域。\n\n![image.png](/data/media/289.png)\n\n### 3.2 开启严格 SSL/TLS 模式\n\n在 Cloudflare 侧边栏 → **SSL/TLS** → **Overview**：\n\n- 将模式改为 **Full (strict)**\n- 这样 Cloudflare 到访客之间是 HTTPS，Cloudflare 到 GitHub Pages 之间也是 HTTPS\n\n![image.png](/data/media/290.png)\n\n### 3.3 开启 Always Use HTTPS（可选）\n\nSSL/TLS → Edge Certificates → 开启 **Always Use HTTPS**，自动将所有 HTTP 请求重定向到 HTTPS。\n\n![[file-20260609181430427.png]]\n\n---\n\n## 四、在 GitHub Pages 绑定自定义域名\n\n### 4.1 进入仓库设置\n\n打开你的 GitHub Pages 仓库 → **Settings** → **Pages**。\n\n### 4.2 填写自定义域名\n\n在 **Custom domain** 中输入你的域名（例如 `example.com`），点击 **Save**。\n\n![image.png](/data/media/291.png)\n\n#### 4.3 Custom domain 的作用\n\n以我的博客为例：\n\n- 默认部署地址：`https://pc-blog.github.io/next/`\n    \n- 访问博客需要带上 `/next` 路径前缀\n    \n\n#### 配置 Custom domain 后的变化\n\n|配置项|配置前|配置后|\n|---|---|---|\n|**访问地址**|`https://pc-blog.github.io/next/`|`https://lxpavilion.top/`|\n|**路径前缀**|需要 `/next`|无需 `/next`，直接根路径访问|\n|**URL 美观度**|一般|专业、简洁|\n\n#### 核心机制说明\n\n1. **域名绑定**  \n    在 GitHub Pages 的 Custom domain 中填入 `lxpavilion.top` 后，GitHub 会自动在仓库根目录生成一个 `CNAME` 文件，内容为 `lxpavilion.top`。这个文件告诉 GitHub：“当用户访问这个域名时，从此仓库提供内容。”\n    \n2. **路径重定向（关键）**\n    \n    - 配置前：GitHub Pages 默认将仓库内容托管在 `/{仓库名}` 路径下\n        \n    - 配置后：GitHub Pages 会将仓库内容托管到**域名根路径** (`/`)\n        \n    - 这意味着：原本需要 `/next/xxx` 才能访问的资源，现在可以直接通过 `/xxx` 访问\n        \n3. **域名解析必须正确**\n    \n    > 注意：即使 DNS 解析正确指向了 GitHub Pages 的 IP，如果不在 GitHub 的 Custom domain 中填写域名，GitHub 也不会响应这个域名的请求。Custom domain 是告诉 GitHub “允许这个域名访问我的仓库”的开关。\n    \n\n#### 需要同步修改的内容\n\n由于博客的访问路径从 `/next/` 变成了 `/`，项目中所有资源的引用路径都需要相应调整：\n\n**需要修改的文件/位置：**\n\n|资源类型|修改前|修改后|\n|---|---|---|\n|图片路径|`/next/images/logo.png`|`/images/logo.png`|\n|CSS 路径|`/next/css/style.css`|`/css/style.css`|\n|JS 路径|`/next/js/main.js`|`/js/main.js`|\n|内部链接|`/next/about.html`|`/about.html`|\n\n\n### 4.4 等待 DNS 校验\n\nGitHub 会自动验证域名所有权。如果 DNS 已经生效，会出现绿色提示。如果提示未验证，等待 DNS 传播后再次点击 **Save**。\n\n### 4.5 勾选 Enforce HTTPS（可选）\n\nGitHub Pages 会为你的自定义域名自动申请 Let's Encrypt 证书。等待几分钟后，勾选 **Enforce HTTPS**。\n\n> 注意：由于此时流量经过 Cloudflare，而Cloudflare托管服务以及开启了相关功能，那么 Enforce HTTPS就无法启动，这是正常现象\n\n### 4.6 CNAME 文件（重要）\n\n如果你使用 GitHub 的自动 Pages 构建和部署，绑定域名后 GitHub 会自动在仓库根目录生成 `CNAME` 文件，内容为你的域名。建议将这个文件保留在版本控制中，否则每次部署都要手动配置**Custom domain** 字段。\n\n![[file-20260609181656981.png]]\n\n### 4.7 演示\n\n可以看到，通过自定义域名可以正常访问我的博客网站\n\n![image.png](/data/media/294.png)\n\n---\n\n你的博客现在既有自定义域名的专业感，又享受了 Cloudflare 的全球加速和安全防护。🚀",
+  "coverImage": "/data/media/283.jpg",
+  "createdAt": "2026-06-09T12:41:52.583618",
+  "id": 36,
+  "isPinned": 0,
+  "isPublished": 1,
+  "next": {
+    "id": 37,
+    "title": "给我的博客添加监控板块：使用 Cloudflare API 获取网站流量信息"
+  },
+  "prev": {
+    "id": 35,
+    "title": "将个人网址录入Bing搜索引擎"
+  },
+  "series": null,
+  "summary": "在阿里云购买域名，交给 Cloudflare 托管 DNS 并开启 CDN 加速，最后绑定到 GitHub Pages——手把手教你让你的博客拥有自定义域名，兼顾专业感与访问速度。全文涵盖域名购买、DNS 托管、解析配置、SSL 证书、性能优化及常见排错。",
+  "tags": [
+    {
+      "id": 27,
+      "name": "Github"
+    },
+    {
+      "id": 28,
+      "name": "Cloudflare"
+    },
+    {
+      "id": 29,
+      "name": "域名"
+    },
+    {
+      "id": 30,
+      "name": "博客"
+    }
+  ],
+  "title": "为 GitHub Pages 博客配置自定义域名与 Cloudflare 加速",
+  "updateTime": "2026-06-10T14:42:38.102608"
+}
