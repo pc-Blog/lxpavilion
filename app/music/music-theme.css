@@ -23,6 +23,16 @@
   user-select: none;
 }
 
+/*
+ * 音乐页是整屏布局，自身不产生页面级滚动。
+ * 但根布局的 <body> 带 overflow-y-scroll（其余页面需要常驻滚动条以避免
+ * 内容切换时抖动），因此这里在音乐页挂载时把 body 的滚动条隐掉。
+ * :has() 让作用范围限定在存在 .music-theme 的页面，不影响其它路由。
+ */
+body:has(.music-theme) {
+  overflow: hidden;
+}
+
 /* ============================================================
    面板 / 容器
    （源 .el-container / .el-card / .el-dialog / .el-drawer）

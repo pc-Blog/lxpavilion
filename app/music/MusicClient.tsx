@@ -113,18 +113,31 @@ export default function MusicClient() {
     <>
       <WaveBackground />
 
-      <div className="relative" style={{ padding: "clamp(16px, 4vw, 64px)" }}>
+      {/*
+        高度链：源项目是 #app{height:100vh} → .home-container{height:100%}
+        → .main-layout{height:100%}，全程「确定高度」，因此内部 SongList 的
+        max-height:60% 才能生效。这里同样要给出确定高度，不能用 minHeight —— 
+        否则百分比无法解析，列表不再滚动，内容会把整页撑高并出现页面级滚动条。
+      */}
+      <div
+        className="relative"
+        style={{
+          height: "100vh",
+          padding: "clamp(16px, 4vw, 64px)",
+          boxSizing: "border-box",
+          overflow: "hidden",
+        }}
+      >
         {/* 主容器：源项目 main/index.vue 的 .main-layout */}
         <div
-          className="flex w-full rounded-[25px]"
+          className="flex w-full h-full rounded-[25px]"
           style={{
-            minHeight: "calc(100vh - 2 * clamp(16px, 4vw, 64px))",
             background:
               "linear-gradient(135deg, rgba(35,35,45,0.38) 0%, rgba(45,45,60,0.45) 100%)",
           }}
         >
           {/* 左侧栏：15%，最小 175px */}
-          <div className="w-[15%] min-w-[175px] h-full">
+          <div className="w-[15%] min-w-[175px] h-full overflow-hidden">
             <SingerSidebar
               singers={singers}
               activeSingerId={singerId}
@@ -135,9 +148,9 @@ export default function MusicClient() {
             />
           </div>
 
-          {/* 内容区：源 song/index.vue 的 .song-container（0.15 透明 + blur(18px)） */}
-          <div className="flex-1 p-5 overflow-y-auto box-border">
-            <div className="mt-song-container flex flex-col h-full p-5">
+          {/* 内容区：源 .content-container（flex:1 + overflow-y:auto） */}
+          <div className="flex-1 p-5 box-border overflow-hidden">
+            <div className="mt-song-container flex flex-col h-full p-5 min-h-0">
               <TrackHeader
                 currentMusicId={currentMusicId}
                 isLive={isLive}
