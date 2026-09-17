@@ -404,28 +404,29 @@ export default function Live2DWidget() {
     }
   };
 
-  const isAdmin = pathname?.startsWith("/admin");
+  // 这些路由下不显示看板娘：admin 后台，以及独立的音乐页面（全屏 canvas 背景）
+  const shouldHide = pathname?.startsWith("/admin") || pathname?.startsWith("/music");
 
-  // admin 时销毁，返回时重建
-  const wasAdmin = useRef(false);
+  // 隐藏时销毁，返回时重建
+  const wasHidden = useRef(false);
   useEffect(() => {
-    if (isAdmin) {
-      wasAdmin.current = true;
+    if (shouldHide) {
+      wasHidden.current = true;
       stopIdleTimer();
       document.querySelector(".pio-container")?.remove();
       (document.getElementById("pio-container") as HTMLElement)?.remove();
       return;
     }
-    if (wasAdmin.current) {
-      wasAdmin.current = false;
+    if (wasHidden.current) {
+      wasHidden.current = false;
       loaded.current = false;
       // 小延迟确保 DOM 已清理
       setTimeout(() => initPio(), 100);
     }
-  }, [isAdmin]);
+  }, [shouldHide]);
 
   useEffect(() => {
-    if (isAdmin) return;
+    if (shouldHide) return;
     if (loaded.current) return;
     loaded.current = true;
 

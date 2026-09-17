@@ -50,6 +50,27 @@ export default function WaveBackground() {
 /** 每帧最多推进一次，避免高刷屏超频重绘（源项目 e < S - 3 的节流） */
 const FRAME_MS = 1000 / 60;
 
+/**
+ * 定种 xorshift 随机数，对应源项目的 {@code let r = 1} 与 {@code const a}。
+ *
+ * <p>源项目把它定义在 {@code setupAlienLandscape} 的闭包里，供颜色类
+ * {@code o.mutate()} 与逐帧绘制共用。此处提到模块级，语义完全一致：
+ * 每帧绘制前重置为当次场景种子，因此同一帧内所有取数都确定且可复现。</p>
+ */
+let rngState = 1;
+
+function seeded(max = 1, min = 0) {
+  rngState ^= rngState << 13;
+  rngState ^= rngState >>> 17;
+  rngState ^= rngState << 5;
+  return min + (max - min) * (Math.abs(rngState % 1e9) / 1e9);
+}
+
+/** 在 [min, max) 上的均匀随机，对应源项目的 {@code const e = Math.random} */
+function rand(max = 1, min = 0) {
+  return min + (max - min) * Math.random();
+}
+
 /** 色值容器，对应源项目的 class o */
 class Rgba {
   constructor(
@@ -97,15 +118,20 @@ class Rgba {
     return this;
   }
 
+  /**
+   * 颜色扰动。
+   *
+   * <p>源项目用定种随机 {@code a()} 而非 {@code Math.random()}，
+   * 因此同一帧内每次绘制都得到相同结果，画面才不会闪烁。此处必须保持一致。</p>
+   */
   mutate(amount = 0.05, alphaAmount = 0) {
     return new Rgba(
-      this.r + rand(amount, -amount),
-      this.g + rand(amount, -amount),
-      this.b + rand(amount, -amount),
-      this.a + rand(alphaAmount, -alphaAmount),
+      this.r + seeded(amount, -amount),
+      this.g + seeded(amount, -amount),
+      this.b + seeded(amount, -amount),
+      this.a + seeded(alphaAmount, -alphaAmount),
     ).clamp();
   }
-
   rgba() {
     return `rgb(${(255 * this.r) | 0},${(255 * this.g) | 0},${(255 * this.b) | 0},${this.a})`;
   }
@@ -115,20 +141,7 @@ function clamp01(v: number) {
   return v < 0 ? 0 : v > 1 ? 1 : v;
 }
 
-/** 在 [min, max) 上的均匀随机 */
-function rand(max = 1, min = 0) {
-  return min + (max - min) * Math.random();
-}
-
 function setupAlienLandscape(canvas: HTMLCanvasElement): () => void {
-  // xorshift 随机数，整幅风景由种子决定，因此每帧形状保持稳定
-  let seed = 1;
-  const seeded = (max = 1, min = 0) => {
-    seed ^= seed << 13;
-    seed ^= seed >>> 17;
-    seed ^= seed << 5;
-    return min + (max - min) * (Math.abs(seed % 1e9) / 1e9);
-  };
   // 每次重新播种时刷新的场景参数
   let baseSeed = 0;
   let hueBase = 0;
@@ -146,11 +159,25 @@ function setupAlienLandscape(canvas: HTMLCanvasElement): () => void {
     skyTop = new Rgba().setHSLA(hueBase, rand(), rand(0.5));
     skyBottom = new Rgba().setHSLA(hueBase + rand(0.3, 0.7), rand(), rand(0.8, 0.2));
     mountainPhase = rand(1e3);
-    // 山峦基色在深灰与浅灰之间随机插值（源项目用三元表达式控制是否 lerp）
-    const shade = rand() < 0.5;
-    ridgeTint = shade
-      ? new Rgba(0.1, 0.1, 0.1).lerp(new Rgba(0.9, 0.9, 0.9), rand())
-      : new Rgba(rand(0.1, 0.9), rand(0.1, 0.9), rand(0.1, 0.9), rand(0, 1));
+    /*
+     * 山峦基色。
+     *
+     * 源项目写法：
+     *   g = ((t=new o(.1,.1,.1), i=new o(.9,.9,.9), r) =>
+     *          r ? t.lerp(i, e()) : new o(e(t.r,i.r), e(t.g,i.g), e(t.b,i.b), e(t.a,i.a))
+     *       )(new o(.1,.1,.1), new o(.9,.9,.9))
+     *
+     * 这是逗号表达式的 IIFE：括号内最后一项才是那个箭头函数，因此它被当作
+     * 实参传给外层调用，而「调用」时只给了 2 个参数 —— 第三个形参 r 恒为
+     * undefined，所以 **永远走 else 分支**，即每个通道独立取 [0.1, 0.9) 的随机值。
+     * （t.a 与 i.a 都是 1，e(1,1) 恒等于 1，因此 alpha 固定为 1。）
+     */
+    ridgeTint = new Rgba(
+      rand(0.1, 0.9),
+      rand(0.1, 0.9),
+      rand(0.1, 0.9),
+      1,
+    );
     const speed = rand(12, 1) * (rand() < 0.5 ? 1 : -1);
     denseStars = rand() < 0.5;
     meteorSeedFlag = rand() < 0.5;
@@ -173,12 +200,14 @@ function setupAlienLandscape(canvas: HTMLCanvasElement): () => void {
     // 节流：距离上一帧不足 ~3ms 时跳过，等价于源项目的 e < S - 3
     if (stamp < lastStamp - 3) return;
     lastStamp = Math.max(lastStamp + FRAME_MS, stamp);
+    // 源项目写的是 f = m++ / 60：先取当前值再自增，因此首帧 f = 0
+    const frame = elapsed;
     elapsed += 1 / 60;
 
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
-    // 每帧重置种子，保证星点以外的随机序列可复现
-    seed = baseSeed;
+    // 每帧重置种子（源项目 r = l），使整幅风景由本次场景种子确定
+    rngState = baseSeed;
 
     // ① 纵向渐变铺底
     const horizon = 600 + seeded(300);
@@ -192,7 +221,7 @@ function setupAlienLandscape(canvas: HTMLCanvasElement): () => void {
     for (let i = 4000; i--; ) {
       const size = seeded(2, 1);
       const star = new Rgba().setHSLA(seeded(), seeded() ** 3, seeded() ** 2);
-      const x = (seeded(canvas.width) + seeded(9) * elapsed) % (canvas.width + 20) - 10;
+      const x = (seeded(canvas.width) + seeded(9) * frame) % (canvas.width + 20) - 10;
       const y = seeded(horizon);
       ctx.fillStyle = star.rgba();
       ctx.fillRect(x, y, size, size);
@@ -240,8 +269,8 @@ function setupAlienLandscape(canvas: HTMLCanvasElement): () => void {
         !meteorSeedFlag || seeded() < 0.02
           ? seeded(-99, 99)
           : (drift + seeded(-10, 10)) * driftDir;
-      const px = (seeded(spanX) + elapsed * dx) % spanX - 500;
-      const py = (seeded(spanY) + elapsed * drift) % spanY - 500;
+      const px = (seeded(spanX) + frame * dx) % spanX - 500;
+      const py = (seeded(spanY) + frame * drift) % spanY - 500;
       const tail = seeded(0.5, 3);
       const tx = px - tail * dx;
       const ty = py - tail * drift;
@@ -268,7 +297,7 @@ function setupAlienLandscape(canvas: HTMLCanvasElement): () => void {
       const amp = seeded(0.3, 1);
       let height = 0;
       let prev = 0;
-      const offset = layer * layer * 1e3 + elapsed * speed * (layer - 1) ** 2;
+      const offset = layer * layer * 1e3 + frame * speed * (layer - 1) ** 2;
       let counter = 0 | offset;
       const frac = (offset % 1) - 1;
       const baseY = horizon - 250 + layer * layer * 13;
