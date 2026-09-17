@@ -409,6 +409,24 @@ export interface Music {
   updateTime?: string;
 }
 
+/** 歌手（对应后端 Singer 实体） */
+export interface Singer {
+  id: number;
+  name: string;
+  /** 歌手封面；为空时前端回落到默认图 */
+  pictureUrl?: string | null;
+  createTime?: string;
+  updateTime?: string;
+}
+
+/** 音乐分类（对应后端 MusicCategory 实体） */
+export interface MusicCategory {
+  id: number;
+  name: string;
+  createTime?: string;
+  updateTime?: string;
+}
+
 // ========== Diary（日记，仅本地） ==========
 
 /** 单条活动条目 */

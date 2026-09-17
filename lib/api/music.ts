@@ -17,6 +17,14 @@ export interface PlayResult {
 
 export type PlayMode = "loop" | "reverse" | "single" | "random";
 
+/** 歌曲查询条件（对应后端 MusicQueryDTO） */
+export interface MusicQuery {
+  title?: string;
+  singerId?: number | null;
+  categoryId?: number | null;
+  onlyFavorite?: boolean;
+}
+
 /**
  * 选曲 + 计数合并接口。
  *
@@ -26,19 +34,98 @@ export type PlayMode = "loop" | "reverse" | "single" | "random";
 export async function play(
   currentMusicId?: number,
   addPlay = false,
+  query: MusicQuery = FAVORITE_ONLY,
+  playMode: PlayMode = "random",
 ): Promise<PlayResult | null> {
   if ((await detectMode()) === "static") return null;
   return api.post<PlayResult, PlayResult>("/music/play", {
     currentMusicId,
-    playMode: "random",
+    playMode,
     addPlay,
     pageSize: PAGE_SIZE,
-    query: FAVORITE_ONLY,
+    query,
   });
 }
 
-export async function getPage(params: PageDTO<Music>) {
-  return api.post<PageVO<Music>, PageVO<Music>>("/music/page", params);
+/**
+ * 分页查询曲目。
+ *
+ * <p>静态模式下 {@code music.json} 只含收藏曲目（与同步范围一致），
+ * 因此筛选、分页全部在客户端完成。</p>
+ */
+export async function getPage(
+  pageNum = 1,
+  pageSize = 10,
+  query: MusicQuery = {},
+): Promise<PageVO<Music>> {
+  if ((await detectMode()) === "static") {
+    const data = (await ensureData<PageVO<Music>>("music")) ?? { rows: [], total: 0 };
+    const rows = (data.rows ?? []).filter((m) => {
+      if (query.title && !m.title.includes(query.title)) return false;
+      if (query.singerId != null && m.singerId !== query.singerId) return false;
+      if (query.categoryId != null && m.categoryId !== query.categoryId) return false;
+      if (query.onlyFavorite && !m.isFavorite) return false;
+      return true;
+    });
+    const start = (pageNum - 1) * pageSize;
+    return { rows: rows.slice(start, start + pageSize), total: rows.length };
+  }
+  return api.post<PageVO<Music>, PageVO<Music>>("/music/page", {
+    pageNum,
+    pageSize,
+    query,
+  } satisfies PageDTO<MusicQuery>);
+}
+
+export async function getById(id: number): Promise<Music | null> {
+  if ((await detectMode()) === "static") {
+    const data = await ensureData<PageVO<Music>>("music");
+    return data?.rows?.find((m) => m.id === id) ?? null;
+  }
+  return api.get<Music, Music>(`/music/${id}`);
+}
+
+/** 批量上传音频；后端会同步登记到 t_media */
+export async function upload(files: File[], singerId?: number | null, categoryId?: number | null) {
+  const form = new FormData();
+  files.forEach((f) => form.append("files", f));
+  if (singerId != null) form.append("singerId", String(singerId));
+  if (categoryId != null) form.append("categoryId", String(categoryId));
+  return api.post<number[], number[]>("/music/batch", form, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
+
+/**
+ * 更新曲目。
+ *
+ * <p>后端只接受业务字段：{@code title} / {@code singerId} / {@code categoryId} /
+ * {@code isFavorite}；{@code fileUrl}、{@code duration}、{@code playCount} 不可改。</p>
+ */
+export async function update(data: Music) {
+  return api.put("/music", {
+    id: data.id,
+    title: data.title,
+    singerId: data.singerId ?? null,
+    categoryId: data.categoryId ?? null,
+    isFavorite: data.isFavorite ?? false,
+  });
+}
+
+export async function remove(id: number) {
+  return api.delete(`/music/${id}`);
+}
+
+/** 切换收藏，返回切换后的状态 */
+export async function toggleFavorite(id: number): Promise<boolean | null> {
+  if ((await detectMode()) === "static") return null;
+  return api.post<boolean, boolean>(`/music/${id}/favorite`);
+}
+
+/** 累计播放时长（秒），用于展示「听歌时间」 */
+export async function playDuration(): Promise<number> {
+  if ((await detectMode()) === "static") return 0;
+  return api.get<number, number>("/music/play-duration");
 }
 
 /** 静态模式下的随机取曲（无后端，不计入播放统计） */

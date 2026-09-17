@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useAudioPlayer } from "@/lib/useAudioPlayer";
 import Tooltip from "@/app/_components/common/Tooltip";
 import { assetUrl } from "@/lib/asset-url";
@@ -13,6 +14,8 @@ function fmt(sec: number) {
 }
 
 export default function MusicPlayer() {
+  const router = useRouter();
+
   if (!siteConfig.featureMusic) {
     return (
       <div className="rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 min-h-[220px] h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
@@ -41,7 +44,11 @@ export default function MusicPlayer() {
   }
 
   return (
-    <div className="relative rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-5 sm:p-6 min-h-[220px] h-full flex flex-col justify-center transition-all duration-700 hover:scale-[1.01] group overflow-hidden">
+    <div
+      onClick={() => router.push("/music")}
+      title="进入音乐页面"
+      className="relative rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-5 sm:p-6 min-h-[220px] h-full flex flex-col justify-center transition-all duration-700 hover:scale-[1.01] group overflow-hidden cursor-pointer"
+    >
       {isPlaying && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-indigo-500/15 dark:bg-indigo-500/20 blur-[50px] rounded-full pointer-events-none animate-pulse" />
       )}
