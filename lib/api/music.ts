@@ -1,6 +1,7 @@
 import api from "@/lib/axios";
 import type { Music, PageVO, PageDTO } from "@/lib/types";
 import { detectMode, ensureData } from "@/lib/static-data";
+import type { CycleMode } from "@/lib/music-prefs";
 
 /** 播放范围：首页播放器只播收藏曲目，与静态站同步范围保持一致 */
 const FAVORITE_ONLY = { onlyFavorite: true } as const;
@@ -47,6 +48,15 @@ export async function play(
   });
 }
 
+/** 静态模式下的过滤谓词，与实时模式后端的 buildWrapper 保持同一口径 */
+function matchQuery(m: Music, query: MusicQuery): boolean {
+  if (query.title && !m.title.includes(query.title)) return false;
+  if (query.singerId != null && m.singerId !== query.singerId) return false;
+  if (query.categoryId != null && m.categoryId !== query.categoryId) return false;
+  if (query.onlyFavorite && !m.isFavorite) return false;
+  return true;
+}
+
 /**
  * 分页查询曲目。
  *
@@ -60,13 +70,7 @@ export async function getPage(
 ): Promise<PageVO<Music>> {
   if ((await detectMode()) === "static") {
     const data = (await ensureData<PageVO<Music>>("music")) ?? { rows: [], total: 0 };
-    const rows = (data.rows ?? []).filter((m) => {
-      if (query.title && !m.title.includes(query.title)) return false;
-      if (query.singerId != null && m.singerId !== query.singerId) return false;
-      if (query.categoryId != null && m.categoryId !== query.categoryId) return false;
-      if (query.onlyFavorite && !m.isFavorite) return false;
-      return true;
-    });
+    const rows = (data.rows ?? []).filter((m) => matchQuery(m, query));
     const start = (pageNum - 1) * pageSize;
     return { rows: rows.slice(start, start + pageSize), total: rows.length };
   }
@@ -160,5 +164,58 @@ export async function nextRandom(
 ): Promise<Music | null> {
   if ((await detectMode()) === "static") return randomFromStatic();
   const res = await play(currentMusicId, addPlay);
+  return res?.nextMusic ?? null;
+}
+
+/** 切歌方向 */
+export type PlayDirection = "next" | "prev";
+
+/**
+ * 按播放模式取「下一首 / 上一首」。
+ *
+ * <p>实时模式直接走后端 {@code /music/play}：它已经支持顺序（{@code loop}）、
+ * 顺序往前（{@code reverse}）、单曲循环（{@code single}）、随机（{@code random}）
+ * 四种模式，并按 {@code query} 限定选曲范围、环形取曲
+ * （见 {@code MusicServiceImpl.selectNext}）。</p>
+ *
+ * <p>静态模式（GitHub Pages）没有后端，退化为在 {@code music.json} 上按同一套
+ * 规则本地环形选取。</p>
+ *
+ * <p>单曲循环不在这里处理：它等价于「重播当前曲目」，由调用方直接 seek(0) 重放，
+ * 不需要请求。因此入参类型排除了 {@code "single"}，由类型系统保证不会被漏掉。</p>
+ */
+export async function selectTrack(opts: {
+  currentMusicId?: number;
+  mode: Exclude<CycleMode, "single">;
+  dir?: PlayDirection;
+  addPlay?: boolean;
+  query?: MusicQuery;
+}): Promise<Music | null> {
+  const { currentMusicId, mode, dir = "next", addPlay = false, query = {} } = opts;
+
+  if ((await detectMode()) === "static") {
+    const data = await ensureData<PageVO<Music>>("music");
+    const rows = (data?.rows ?? []).filter((m) => matchQuery(m, query));
+    if (!rows.length) return null;
+
+    if (mode === "random") {
+      if (rows.length === 1) return rows[0];
+      let picked: Music;
+      // 避免随机到当前这首，否则表现为「没有切换」（与后端 selectNext 一致）
+      do {
+        picked = rows[Math.floor(Math.random() * rows.length)];
+      } while (picked.id === currentMusicId);
+      return picked;
+    }
+
+    const idx = rows.findIndex((m) => m.id === currentMusicId);
+    if (idx < 0) return rows[0];
+    const step = dir === "prev" ? -1 : 1;
+    return rows[(idx + step + rows.length) % rows.length];
+  }
+
+  const requestMode: PlayMode =
+    mode === "random" ? "random" : dir === "prev" ? "reverse" : "loop";
+  const res = await play(currentMusicId, addPlay, query, requestMode);
   return res?.nextMusic ?? null;
 }

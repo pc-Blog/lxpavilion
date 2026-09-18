@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import WaveBackground from "./_components/WaveBackground";
+import FloatingDraggable from "./_components/FloatingDraggable";
+import MusicPlayer from "./_components/MusicPlayer";
 import SingerSidebar from "./_components/SingerSidebar";
 import TrackHeader from "./_components/TrackHeader";
 import TrackList from "./_components/TrackList";
@@ -112,6 +114,15 @@ export default function MusicClient() {
   return (
     <>
       <WaveBackground />
+
+      {/*
+        悬浮播放器：源项目 views/main/index.vue:28-30 把 MusicPlayer 包在
+        FloatingDraggable 里。scope 传当前筛选条件，让上一首/下一首与自动切歌
+        都在当前列表范围内选曲（源 getNextMusic 的 query 默认取页面查询条件）。
+      */}
+      <FloatingDraggable>
+        <MusicPlayer scope={query} />
+      </FloatingDraggable>
 
       {/*
         高度链：源项目是 #app{height:100vh} → .home-container{height:100%}

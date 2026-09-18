@@ -1083,3 +1083,516 @@ body:has(.music-theme) {
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
+
+/* ============================================================
+   悬浮播放器
+   （源 components/FloatingDraggable.vue + components/MusicPlayer.vue）
+
+   注意：这一块整体挂在 document.body 上（portal），不在 .music-theme 里面，
+   因此既不能用 .music-theme 前缀，也取不到那里的 CSS 变量，
+   颜色一律按源文件的 SCSS 变量展开：
+     $neon-blue         = rgba(120, 230, 255, 0.8)
+     $glass-bg          = rgba(55, 55, 65, 0.75)
+     $transition-smooth = all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+   ============================================================ */
+
+.mt-floating-wrapper {
+  position: relative;
+}
+
+/* 抓手：源 .drag-handle（直径由组件内联给出，这里只管外观） */
+.mt-drag-handle {
+  position: fixed;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  user-select: none;
+  background-color: rgba(70, 165, 255, 0.35);
+  border: 0.5px solid rgba(120, 230, 255, 0.4);
+  color: #fff;
+  box-shadow:
+    0 0 10px rgba(70, 165, 255, 0.3),
+    inset 0 0 6px rgba(255, 255, 255, 0.2);
+  transform: translateZ(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* 触摸拖拽时不要触发页面滚动（React 的 touchstart 是 passive，拦不住默认行为） */
+  touch-action: none;
+}
+
+.mt-drag-handle::after {
+  content: "⋯";
+  font-size: 16px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 6px rgba(120, 230, 255, 0.5);
+}
+
+.mt-drag-handle:hover {
+  background-color: rgba(70, 165, 255, 0.45);
+  transform: scale(1.1) translateZ(0);
+  box-shadow:
+    0 0 14px rgba(70, 165, 255, 0.4),
+    inset 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* 容器：源 .floating-container（固定定位 + 最高层级） */
+.mt-floating-container {
+  position: fixed;
+  z-index: 9999;
+  min-width: 100px;
+  border-radius: 4px;
+  overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/*
+ * 展开/收起：等价于源项目用的 el-collapse-transition（高度过渡）。
+ * 0fr → 1fr 的 grid 行高过渡不需要 JS 量高度；子元素必须
+ * min-height:0 + overflow:hidden 才能被压到 0。
+ */
+.mt-floating-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.mt-floating-collapse.is-open {
+  grid-template-rows: 1fr;
+}
+
+/* 源 .content-area 的 padding: 10px */
+.mt-floating-content {
+  min-height: 0;
+  overflow: hidden;
+  padding: 10px;
+}
+
+/* 播放器主体：源 .music-player */
+.mt-player {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px;
+  background-color: rgba(55, 55, 65, 0.75);
+  -webkit-backdrop-filter: blur(12px) brightness(0.96);
+  backdrop-filter: blur(12px) brightness(0.96);
+  border: 0.5px solid rgba(120, 230, 255, 0.2);
+  border-radius: 10px;
+  box-shadow:
+    0 0 14px rgba(120, 230, 255, 0.12),
+    inset 0 0 10px rgba(120, 230, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 源 &::before：整块的中心径向辉光（backdrop-filter 已让父元素成为层叠上下文，
+   z-index:-1 因此绘制在背景之上、内容之下） */
+.mt-player::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(120, 230, 255, 0.05) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.mt-player:hover {
+  box-shadow:
+    0 0 18px rgba(120, 230, 255, 0.15),
+    inset 0 0 12px rgba(120, 230, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+/* 左：封面与基本信息（源 .player-info / .cover / .meta） */
+.mt-player-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 220px;
+  z-index: 1;
+}
+
+.mt-player-cover {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 0.5px solid rgba(120, 230, 255, 0.25);
+  box-shadow:
+    0 0 8px rgba(120, 230, 255, 0.1),
+    inset 0 0 6px rgba(120, 230, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+}
+
+.mt-player-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mt-player-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(120, 230, 255, 0.1) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.mt-player-cover:hover {
+  transform: scale(1.03);
+  box-shadow:
+    0 0 12px rgba(120, 230, 255, 0.15),
+    inset 0 0 8px rgba(120, 230, 255, 0.1);
+}
+
+.mt-player-meta {
+  line-height: 1.5;
+  overflow: hidden;
+  text-shadow: 0 0 4px rgba(120, 230, 255, 0.1);
+}
+
+.mt-player-title {
+  margin: 0;
+  width: 200px;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(240, 240, 255, 0.95);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mt-player-artist {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: rgba(180, 220, 255, 0.8);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* 中：控制按钮 + 进度条（源 .player-controls / .buttons） */
+.mt-player-controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 1;
+}
+
+.mt-player-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 圆形按钮：源 .el-button / &.is-circle 的合并结果（EP 默认圆形按钮 32×32） */
+.mt-player-btn {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: rgba(70, 70, 80, 0.6);
+  border: 0.5px solid rgba(120, 230, 255, 0.3);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  color: rgba(180, 220, 255, 0.9);
+  cursor: pointer;
+}
+
+.mt-player-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(120, 230, 255, 0.2) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mt-player-btn:hover {
+  background-color: rgba(80, 80, 90, 0.7);
+  border-color: rgba(120, 230, 255, 0.4);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.mt-player-btn:hover::before {
+  opacity: 1;
+}
+
+.mt-player-btn:active {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+/* 图标压在 ::before 之上（源 .el-icon 的 hover 放大） */
+.mt-player-btn > svg {
+  position: relative;
+  transition: transform 0.15s ease;
+}
+
+.mt-player-btn:hover > svg {
+  transform: scale(1.15);
+}
+
+/* 主按钮：源 .el-button--primary */
+.mt-player-btn.is-primary {
+  background-color: rgba(70, 130, 255, 0.85);
+  border-color: rgba(120, 180, 255, 0.4);
+  box-shadow:
+    0 2px 8px rgba(70, 130, 255, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.mt-player-btn.is-primary:hover {
+  background-color: rgba(80, 140, 255, 0.95);
+  box-shadow:
+    0 4px 16px rgba(70, 130, 255, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.mt-player-btn.is-primary > svg {
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+}
+
+.mt-player-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/*
+ * 播放模式按钮底色：源 .mode-order / .mode-random / .mode-loop。
+ * 源文件把这三条嵌在 .player-info 里，而按钮在 .player-controls .buttons 下，
+ * 选择器匹配不到、底色实际不生效；这里按意图接上（blog 侧类名随模式名）。
+ */
+.mt-player-btn.mode-loop {
+  background-color: rgba(70, 165, 255, 0.3);
+}
+
+.mt-player-btn.mode-loop:hover {
+  background-color: rgba(70, 165, 255, 0.4);
+}
+
+.mt-player-btn.mode-random {
+  background-color: rgba(160, 120, 255, 0.3);
+}
+
+.mt-player-btn.mode-random:hover {
+  background-color: rgba(160, 120, 255, 0.4);
+}
+
+.mt-player-btn.mode-single {
+  background-color: rgba(255, 120, 200, 0.3);
+}
+
+.mt-player-btn.mode-single:hover {
+  background-color: rgba(255, 120, 200, 0.4);
+}
+
+/* 进度条容器：源 .progress-container */
+.mt-player-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/*
+ * 进度条 / 音量条：源 el-slider 的 runway + bar + button。
+ * 已播部分用 inline 的 --mt-fill 百分比画在背景渐变上（EP 是独立的 bar 元素）。
+ */
+.mt-player-slider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0.5px solid rgba(120, 230, 255, 0.2);
+  border-radius: 3px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+  background-color: rgba(70, 70, 80, 0.5);
+  background-image: linear-gradient(
+    to right,
+    rgba(120, 230, 255, 0.6) 0 var(--mt-fill, 0%),
+    rgba(70, 70, 80, 0.5) var(--mt-fill, 0%) 100%
+  );
+  outline: none;
+  cursor: pointer;
+}
+
+.mt-player-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: rgba(120, 230, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 0 8px rgba(120, 230, 255, 0.6),
+    inset 0 0 4px rgba(255, 255, 255, 0.3);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.mt-player-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+.mt-player-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: rgba(120, 230, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 0 8px rgba(120, 230, 255, 0.6),
+    inset 0 0 4px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.mt-player-slider::-moz-range-track {
+  height: 4px;
+  background: transparent;
+}
+
+/* 右：音量（源 .player-extra） */
+.mt-player-extra {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+  z-index: 1;
+}
+
+.mt-player-extra .mt-player-slider {
+  flex: none;
+  width: 100px;
+  background-image: linear-gradient(
+    to right,
+    rgba(120, 230, 255, 0.5) 0 var(--mt-fill, 0%),
+    rgba(70, 70, 80, 0.5) var(--mt-fill, 0%) 100%
+  );
+}
+
+.mt-player-extra .mt-player-slider::-webkit-slider-thumb {
+  background-color: rgba(120, 230, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.mt-player-extra .mt-player-slider::-moz-range-thumb {
+  background-color: rgba(120, 230, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+/* 源项目这个图标只有 hover 效果，没有点击行为，这里保持原样 */
+.mt-player-volume-icon {
+  display: inline-flex;
+  color: rgba(180, 220, 255, 0.8);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.mt-player-volume-icon:hover {
+  color: rgba(120, 230, 255, 0.8);
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 4px rgba(120, 230, 255, 0.3));
+}
+
+/* 播放中的额外效果：源 .is-playing */
+@keyframes mt-neon-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.mt-player.is-playing .mt-player-cover::after {
+  animation: mt-neon-pulse 2s infinite;
+}
+
+.mt-player.is-playing .mt-player-btn.is-primary {
+  box-shadow:
+    0 0 10px rgba(70, 130, 255, 0.5),
+    0 0 20px rgba(70, 130, 255, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+/* 响应式：源 @media (max-width: 768px) */
+@media (max-width: 768px) {
+  .mt-player {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    -webkit-backdrop-filter: blur(8px) brightness(0.94);
+    backdrop-filter: blur(8px) brightness(0.94);
+  }
+
+  .mt-player-info {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mt-player-meta {
+    width: 100%;
+  }
+
+  .mt-player-controls {
+    width: 100%;
+  }
+
+  .mt-player-buttons {
+    margin-bottom: 8px;
+  }
+
+  .mt-player-extra {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+}

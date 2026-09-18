@@ -17,12 +17,13 @@ type IconProps = SVGProps<SVGSVGElement> & { size?: number | string };
 function Icon({
   paths,
   size = "1em",
+  viewBox = "0 0 1024 1024",
   ...rest
-}: IconProps & { paths: string[] }) {
+}: IconProps & { paths: string[]; viewBox?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1024 1024"
+      viewBox={viewBox}
       width={size}
       height={size}
       fill="currentColor"
@@ -200,6 +201,48 @@ export function User(p: IconProps) {
       {...p}
       paths={[
         "M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384m0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512m320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0",
+      ]}
+    />
+  );
+}
+
+/*
+ * 以下三个音量图标不来自 @element-plus/icons-vue，而是源项目
+ * MusicPlayer.vue:14-18 用的 @element-extended-icon-pack/vue
+ * （LinearNewSoundBroadcastVolumeUp / Down / Off）。
+ * 该包的 viewBox 是 0 0 32 32（不是 1024），因此单独传 viewBox。
+ */
+export function VolumeUp(p: IconProps) {
+  return (
+    <Icon
+      {...p}
+      viewBox="0 0 32 32"
+      paths={[
+        "M14.293 2.293C14.923 1.663 16 2.109 16 3v26c0 .89-1.077 1.337-1.707.707L7.585 23H2a1 1 0 0 1-.993-.883L1 22V10a1 1 0 0 1 1-1h5.584zM14 5.414l-5.293 5.293A1 1 0 0 1 8 11H3v10h5a1 1 0 0 1 .608.206l.1.087L14 26.585zm5.536 7.05a5 5 0 0 1 0 7.072 1 1 0 0 1-1.415-1.415 3 3 0 0 0 0-4.242 1 1 0 0 1 1.415-1.415m7.07-7.07c5.858 5.857 5.858 15.355 0 21.213a1 1 0 1 1-1.414-1.415c5.077-5.076 5.077-13.308 0-18.384a1 1 0 0 1 1.415-1.415m-3.535 3.535c3.905 3.905 3.905 10.237 0 14.142a1 1 0 0 1-1.414-1.414 8 8 0 0 0 0-11.314A1 1 0 0 1 23.07 8.93",
+      ]}
+    />
+  );
+}
+
+export function VolumeDown(p: IconProps) {
+  return (
+    <Icon
+      {...p}
+      viewBox="0 0 32 32"
+      paths={[
+        "M19.536 12.464a5 5 0 0 1 0 7.072 1 1 0 0 1-1.415-1.415 3 3 0 0 0 0-4.242 1 1 0 0 1 1.415-1.415M14.293 2.293C14.923 1.663 16 2.109 16 3v26c0 .89-1.077 1.337-1.707.707L7.585 23H2a1 1 0 0 1-.993-.883L1 22V10a1 1 0 0 1 1-1h5.584zM14 5.414l-5.293 5.293A1 1 0 0 1 8 11H3v10h5a1 1 0 0 1 .608.206l.1.087L14 26.585z",
+      ]}
+    />
+  );
+}
+
+export function VolumeOff(p: IconProps) {
+  return (
+    <Icon
+      {...p}
+      viewBox="0 0 32 32"
+      paths={[
+        "M23 13.242V29c0 .89-1.077 1.337-1.707.707L14.585 23h-1.342l1.975-1.976a1 1 0 0 1 .39.182l.1.087L21 26.585V15.242zM23 3v4.584l3.293-3.291a1 1 0 0 1 1.414 1.414l-22 22a1 1 0 1 1-1.414-1.414l3.823-3.825a.995.995 0 0 1-.11-.351L8 22V10a1 1 0 0 1 1-1h5.584l6.709-6.707C21.923 1.663 23 2.109 23 3m-2 2.414-5.293 5.293A1 1 0 0 1 15 11h-5v9.584l11-11z",
       ]}
     />
   );

@@ -2,11 +2,60 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useMusicStore } from "@/stores/musicStore";
-import { nextRandom } from "@/lib/api/music";
+import {
+  nextRandom,
+  selectTrack,
+  type MusicQuery,
+  type PlayDirection,
+} from "@/lib/api/music";
+import type { CycleMode } from "@/lib/music-prefs";
 import { assetUrl } from "@/lib/asset-url";
 
 let _sharedAudio: HTMLAudioElement | null = null;
 let _endedAttached = false;
+
+/** 自动切歌时的选曲上下文：播放模式 + 选曲范围 */
+export interface PlayContext {
+  mode: CycleMode;
+  query: MusicQuery;
+}
+
+/**
+ * 首页播放器的上下文：随机 + 只播收藏。
+ *
+ * <p>这与改动前的行为完全一致（原先自动切歌固定调
+ * {@code nextRandom}，即 {@code play(..., FAVORITE_ONLY, "random")}）。</p>
+ */
+const HOME_CONTEXT: PlayContext = { mode: "random", query: { onlyFavorite: true } };
+
+/**
+ * 当前选曲上下文，模块级单例。
+ *
+ * <p>音频元素是模块级单例，它的 ended 回调只能挂在模块作用域里，
+ * 拿不到任何组件的 props，因此用这个可变的上下文把「当前是谁在播」
+ * 传进去。音乐页的播放器挂载时设置、卸载时复位，首页播放器从不设置，
+ * 于是两边的自动切歌互不干扰。</p>
+ */
+let _context: PlayContext = HOME_CONTEXT;
+
+/** 音乐页挂载时调用：让自动切歌跟随页面的播放模式与筛选范围 */
+export function setPlayContext(ctx: PlayContext) {
+  _context = ctx;
+}
+
+/** 音乐页卸载时调用：把自动切歌还原为首页行为 */
+export function resetPlayContext() {
+  _context = HOME_CONTEXT;
+}
+
+/** 偏好只恢复一次（一个页面里可能有几十个 hook 实例） */
+let _prefsHydrated = false;
+
+function hydratePrefsOnce() {
+  if (_prefsHydrated) return;
+  _prefsHydrated = true;
+  useMusicStore.getState().hydratePrefs();
+}
 
 export function useAudioPlayer() {
   const currentTrack = useMusicStore((s) => s.currentTrack);
@@ -14,40 +63,57 @@ export function useAudioPlayer() {
   const toggle = useMusicStore((s) => s.toggle);
   const setTrack = useMusicStore((s) => s.setTrack);
   const play = useMusicStore((s) => s.play);
+  // 音量提升到 store：音频元素本就是全局单例，且音乐页悬浮播放器要与首页共用一份
+  const volume = useMusicStore((s) => s.volume);
+  const setVolume = useMusicStore((s) => s.setVolume);
+  const toggleMute = useMusicStore((s) => s.toggleMute);
 
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.8);
-  const [prevVolume, setPrevVolume] = useState(0.8);
   const [isCoverSpinning, setIsCoverSpinning] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressRef = useRef<HTMLInputElement>(null);
 
+  // 恢复 localStorage 里的播放模式与音量。放在 hook 里而不是音乐页组件里，
+  // 首页播放器同样受益（它不读播放模式，但共用音量）
+  useEffect(() => {
+    hydratePrefsOnce();
+  }, []);
+
   const getAudio = useCallback(() => {
     if (!_sharedAudio) {
       _sharedAudio = new Audio();
-      _sharedAudio.volume = volume;
+      _sharedAudio.volume = useMusicStore.getState().volume;
     }
     if (!_endedAttached) {
       _endedAttached = true;
       _sharedAudio.addEventListener("ended", () => {
-        // 自动切歌：计入播放次数与累计时长
+        // 自动切歌：按当前上下文（模式 + 范围）选下一首，计入播放次数与累计时长
         const cur = useMusicStore.getState().currentTrack;
-        nextRandom(cur?.id, true).then((t) => {
-          if (t && _sharedAudio) {
-            useMusicStore.getState().setTrack(t);
-            useMusicStore.getState().play();
-            _sharedAudio.src = assetUrl(t.fileUrl);
-            _sharedAudio.play().catch(() => {});
-          }
-        }).catch(() => {});
+        const { mode, query } = _context;
+        const startNext = (t: NonNullable<typeof cur> | null) => {
+          if (!t || !_sharedAudio) return;
+          useMusicStore.getState().setTrack(t);
+          useMusicStore.getState().play();
+          _sharedAudio.src = assetUrl(t.fileUrl);
+          _sharedAudio.play().catch(() => {});
+        };
+        if (mode === "single") {
+          // 单曲循环：原地重播，不需要请求
+          _sharedAudio.currentTime = 0;
+          _sharedAudio.play().catch(() => {});
+          return;
+        }
+        selectTrack({ currentMusicId: cur?.id, mode, dir: "next", addPlay: true, query })
+          .then(startNext)
+          .catch(() => {});
       });
     }
     audioRef.current = _sharedAudio;
     return _sharedAudio;
-  }, [volume]);
+  }, []);
 
   // 初始加载曲目（首次播放，无 currentMusicId，不计入播放次数）
   useEffect(() => {
@@ -77,7 +143,7 @@ export function useAudioPlayer() {
       a.addEventListener("canplay", onReady);
       a.load();
     }
-  }, [currentTrack?.id, getAudio, isPlaying]);
+  }, [currentTrack, getAudio, isPlaying]);
 
   // 播放/暂停
   useEffect(() => {
@@ -108,40 +174,64 @@ export function useAudioPlayer() {
     };
   }, [getAudio]);
 
+  /** 按百分比定位（0~100），供自定义进度条用 */
+  const seek = useCallback((pct: number) => {
+    const a = getAudio();
+    const total = a.duration || 0;
+    if (total) a.currentTime = (pct / 100) * total;
+    setProgress(pct);
+  }, [getAudio]);
+
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = Number(e.target.value) / 100;
-    setVolume(v);
-    setPrevVolume(v || 0.8);
+    setVolume(Number(e.target.value) / 100);
   };
 
   const handleMuteToggle = useCallback(() => {
-    if (volume > 0) {
-      setPrevVolume(volume);
-      setVolume(0);
-    } else {
-      setVolume(prevVolume);
-    }
-  }, [volume, prevVolume]);
+    toggleMute();
+  }, [toggleMute]);
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pct = Number(e.target.value);
-    setProgress(pct);
-    if (audioRef.current && duration) {
-      audioRef.current.currentTime = (pct / 100) * duration;
-    }
+    seek(Number(e.target.value));
   };
 
-  // 手动切歌：不计入播放次数，只更新 last_played
+  /** 手动切歌：不计入播放次数，只更新 last_played（首页按钮用，固定随机收藏曲目） */
   const handleNext = useCallback(() => {
     const cur = useMusicStore.getState().currentTrack;
     nextRandom(cur?.id, false).then((t) => { if (t) { setTrack(t); play(); } }).catch(() => {});
   }, [setTrack, play]);
 
+  /**
+   * 音乐页的上一首/下一首：按给定模式与范围向服务端取曲。
+   *
+   * <p>单曲循环模式下不请求，直接原地重播（对应源项目
+   * {@code playNext → getNextMusic(..., 'loop')} 拿到自身后重新播放）。</p>
+   */
+  const step = useCallback(
+    (dir: PlayDirection, mode: CycleMode, query: MusicQuery) => {
+      const cur = useMusicStore.getState().currentTrack;
+      if (mode === "single") {
+        const a = getAudio();
+        a.currentTime = 0;
+        useMusicStore.getState().play();
+        a.play().catch(() => {});
+        return;
+      }
+      selectTrack({ currentMusicId: cur?.id, mode, dir, addPlay: false, query })
+        .then((t) => {
+          if (!t) return;
+          setTrack(t);
+          play();
+        })
+        .catch(() => {});
+    },
+    [getAudio, setTrack, play],
+  );
+
   return {
     currentTrack, isPlaying,
     progress, currentTime, duration, volume, isCoverSpinning,
     audioRef, progressRef,
-    toggle, handleNext,
+    toggle, handleNext, step, seek,
     handleVolumeChange, handleMuteToggle, handleSeek,
   };
 }
