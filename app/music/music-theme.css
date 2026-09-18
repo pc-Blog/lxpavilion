@@ -324,22 +324,36 @@ body:has(.music-theme) {
   pointer-events: none;
 }
 
-/* 原生 select，模拟源项目的 el-select 外观 */
+/* ============================================================
+   下拉选择器（源 el-select）
+   原生 <select> 的展开列表由操作系统绘制，CSS 完全触达不到，
+   因此改为自绘浮层：触发器沿用 .mt-select，浮层见 .mt-el-select-panel*。
+   浮层经 portal 挂在 body 上，取不到 .music-theme 上的 CSS 变量，
+   所以这一段的数值一律写死字面量。
+   ============================================================ */
+
+/* 触发器（源 .el-select__wrapper + index.scss:712-719 的覆写） */
 .mt-select {
-  appearance: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  min-width: 0;
   background-color: rgba(75, 75, 85, 0.65);
   border: 0.5px solid rgba(120, 230, 255, 0.25);
   border-radius: 4px;
   color: #e3dcdc;
   min-height: 35px;
-  padding: 0 32px 0 12px;
+  padding: 0 12px;
   font-size: 13px;
   outline: none;
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
-.mt-select:focus {
+/* 聚焦态（源 .el-select__wrapper.is-focus；展开时触发器仍持有焦点） */
+.mt-select.is-focus {
   border: 0.5px solid rgba(120, 230, 255, 0.4);
   box-shadow:
     0 0 0 1px rgba(120, 230, 255, 0.3),
@@ -347,9 +361,175 @@ body:has(.music-theme) {
   background-color: rgba(80, 80, 90, 0.7);
 }
 
-.mt-select option {
-  background-color: rgba(55, 55, 65, 0.98);
+/* 选中项 / 占位文本（源 .el-select__selected-item、.el-select__placeholder） */
+.mt-select-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mt-select-text.is-placeholder {
+  color: rgba(246, 242, 242, 0.7);
+}
+
+/* 右侧箭头（源 .el-select__caret，字号 14px） */
+.mt-select-caret {
+  display: flex;
+  flex-shrink: 0;
+  color: rgba(180, 220, 255, 0.8);
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.mt-select.is-focus .mt-select-caret {
+  transform: rotate(180deg);
+  color: rgba(120, 230, 255, 0.9);
+}
+
+/* 清除按钮（源 .el-select__clear） */
+.mt-select-clear {
+  display: flex;
+  flex-shrink: 0;
+  color: rgba(180, 200, 220, 0.7);
+  transition: all 0.2s ease;
+}
+
+.mt-select-clear:hover {
+  color: rgba(255, 120, 120, 0.9);
+  transform: scale(1.1);
+}
+
+/* 浮层（源 .el-select-dropdown，见 index.scss:828-871） */
+.mt-el-select-panel {
+  position: fixed;
+  z-index: 2000;
+  box-sizing: border-box;
+  background-color: rgba(55, 55, 65, 0.95);
+  -webkit-backdrop-filter: blur(12px) brightness(0.96);
+  backdrop-filter: blur(12px) brightness(0.96);
+  border: 0.5px solid rgba(120, 230, 255, 0.2);
+  border-radius: 6px;
+  box-shadow:
+    0 0 14px rgba(120, 230, 255, 0.12),
+    inset 0 0 10px rgba(120, 230, 255, 0.1);
+}
+
+/* 源 .el-select-dropdown__wrap：max-height 274px */
+.mt-el-select-panel-wrap {
+  max-height: 274px;
+  overflow-y: auto;
+  /* 浮层在 body 上，取不到 .music-theme 作用域的滚动条规则，这里补一份 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 230, 255, 0.3) rgba(50, 50, 60, 0.5);
+}
+
+.mt-el-select-panel-wrap::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.mt-el-select-panel-wrap::-webkit-scrollbar-track {
+  background: rgba(50, 50, 60, 0.5);
+  border-radius: 4px;
+}
+
+.mt-el-select-panel-wrap::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 230, 255, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(120, 230, 255, 0.1);
+}
+
+.mt-el-select-panel-wrap::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 230, 255, 0.5);
+}
+
+/* 源 .el-select-dropdown__list */
+.mt-el-select-panel-list {
+  box-sizing: border-box;
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+
+/* 源 .el-select-dropdown__item + index.scss 的悬停 / 选中态 */
+.mt-el-select-panel-item {
+  box-sizing: border-box;
+  height: 34px;
+  line-height: 34px;
+  padding: 0 32px 0 20px;
+  font-size: 14px;
   color: rgba(220, 230, 240, 0.9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mt-el-select-panel-item:hover,
+.mt-el-select-panel-item.is-hovering {
+  background-color: rgba(120, 230, 255, 0.18);
+  color: #fff;
+  text-shadow: 0 0 6px rgba(120, 230, 255, 0.35);
+}
+
+.mt-el-select-panel-item.is-selected {
+  background-color: rgba(70, 165, 255, 0.35);
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 空数据（源 .el-select-dropdown__empty；源项目没引 locale，故为英文） */
+.mt-el-select-panel-empty {
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(160, 180, 200, 0.7);
+}
+
+/* 浮层箭头（源 .el-popper__arrow：10px 方块旋转 45°，只为露出两条边） */
+.mt-el-select-arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  z-index: -1;
+}
+
+.mt-el-select-arrow::before {
+  content: " ";
+  position: absolute;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(55, 55, 65, 0.95);
+  border: 0.5px solid rgba(120, 230, 255, 0.2);
+  transform: rotate(45deg);
+}
+
+/* 浮层在下方：箭头贴上沿，留朝上的两条边 */
+.mt-el-select-panel[data-placement="bottom"] .mt-el-select-arrow {
+  top: -5px;
+}
+
+.mt-el-select-panel[data-placement="bottom"] .mt-el-select-arrow::before {
+  border-top-left-radius: 2px;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+}
+
+/* 浮层在上方：箭头贴下沿，留朝下的两条边 */
+.mt-el-select-panel[data-placement="top"] .mt-el-select-arrow {
+  bottom: -5px;
+}
+
+.mt-el-select-panel[data-placement="top"] .mt-el-select-arrow::before {
+  border-bottom-right-radius: 2px;
+  border-top-color: transparent;
+  border-left-color: transparent;
 }
 
 /* ============================================================
@@ -490,37 +670,17 @@ body:has(.music-theme) {
   margin: 0 15px 0 0;
 }
 
-/* 选择器本体（源 .el-select 宽 128px + .el-select__wrapper 外观） */
+/* 分页的每页条数选择器（源 .el-pagination__sizes 下的 .el-select，宽 128px）。
+   其余外观继承 .mt-select，聚焦态由 .mt-select.is-focus 统一提供。 */
 .mt-pagination-select {
   width: 128px;
   min-height: 35px;
   height: 35px;
-  padding: 0 12px;
-  background-color: rgba(75, 75, 85, 0.65);
-  border: var(--border-smoothness) solid rgba(120, 230, 255, 0.25);
-  border-radius: 4px;
-  color: #e3dcdc;
   font-size: 14px;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 .mt-pagination-select:hover {
   border-color: rgba(120, 230, 255, 0.4);
-}
-
-.mt-pagination-select:focus {
-  border-color: rgba(120, 230, 255, 0.4);
-  background-color: rgba(80, 80, 90, 0.7);
-  box-shadow:
-    0 0 0 1px rgba(120, 230, 255, 0.3),
-    inset 0 0 8px rgba(120, 230, 255, 0.1);
-}
-
-.mt-pagination-select option {
-  background-color: rgba(60, 60, 70, 0.95);
-  color: rgba(220, 230, 240, 0.9);
 }
 
 /* 跳页（源 .el-pagination__jump） */

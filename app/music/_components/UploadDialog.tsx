@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Dialog from "./Dialog";
+import Select from "./Select";
 import { Close } from "./icons";
 import * as musicApi from "@/lib/api/music";
 import type { Singer, MusicCategory } from "@/lib/types";
@@ -92,38 +93,28 @@ export default function UploadDialog({ singers, categories, onClose, onDone }: P
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <span className="mt-label">歌手</span>
-          <select
-            value={singerId ?? ""}
-            onChange={(e) =>
-              setSingerId(e.target.value === "" ? null : Number(e.target.value))
-            }
-            className="mt-select flex-1"
-          >
-            <option value="">请选择歌手</option>
-            {singers.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            className="flex-1"
+            placeholder="请选择歌手"
+            ariaLabel="歌手"
+            clearable
+            value={singerId === null ? "" : String(singerId)}
+            options={singers.map((s) => ({ value: String(s.id), label: s.name }))}
+            onChange={(v) => setSingerId(v === "" ? null : Number(v))}
+          />
         </div>
 
         <div className="flex items-center gap-3">
           <span className="mt-label">分类</span>
-          <select
-            value={categoryId ?? ""}
-            onChange={(e) =>
-              setCategoryId(e.target.value === "" ? null : Number(e.target.value))
-            }
-            className="mt-select flex-1"
-          >
-            <option value="">请选择分类</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            className="flex-1"
+            placeholder="请选择分类"
+            ariaLabel="分类"
+            clearable
+            value={categoryId === null ? "" : String(categoryId)}
+            options={categories.map((c) => ({ value: String(c.id), label: c.name }))}
+            onChange={(v) => setCategoryId(v === "" ? null : Number(v))}
+          />
         </div>
 
         <div className="flex items-center gap-3">

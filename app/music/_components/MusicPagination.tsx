@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
+import Select from "./Select";
 import {
   ArrowLeft,
   ArrowRight,
@@ -147,18 +148,16 @@ export default function MusicPagination({
 
         {showSizes && (
           <span className="mt-pagination-sizes">
-            <select
-              value={pageSize}
-              onChange={(e) => onPageSizeChange(Number(e.target.value))}
+            <Select
               className="mt-pagination-select"
-              aria-label="page size"
-            >
-              {pageSizeOptions.map((s) => (
-                <option key={s} value={s}>
-                  {s}/page
-                </option>
-              ))}
-            </select>
+              ariaLabel="page size"
+              value={String(pageSize)}
+              options={pageSizeOptions.map((s) => ({
+                value: String(s),
+                label: `${s}/page`,
+              }))}
+              onChange={(v) => onPageSizeChange(Number(v))}
+            />
           </span>
         )}
 

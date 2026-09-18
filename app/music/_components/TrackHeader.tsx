@@ -5,6 +5,7 @@ import { assetUrl } from "@/lib/asset-url";
 import { siteConfig } from "@/lib/siteConfig";
 import { useAudioPlayer } from "@/lib/useAudioPlayer";
 import { VideoPlay, VideoPause, Search, Plus, Star, StarFilled, Location } from "./icons";
+import Select from "./Select";
 import type { MusicCategory } from "@/lib/types";
 
 interface Props {
@@ -122,21 +123,17 @@ export default function TrackHeader({
             />
           </div>
 
-          {/* 分类下拉 */}
-          <select
-            value={categoryId ?? ""}
-            onChange={(e) =>
-              onCategoryChange(e.target.value === "" ? null : Number(e.target.value))
-            }
-            className="mt-select w-[100px]"
-          >
-            <option value="">分类</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          {/* 分类下拉：源 SongHead.vue:236-249 为 el-select（clearable + filterable）。
+              clearable 保留「清空筛选」的入口，filterable 未实现（原生 select 也没有）。 */}
+          <Select
+            className="w-[100px]"
+            placeholder="分类"
+            ariaLabel="分类"
+            clearable
+            value={categoryId === null ? "" : String(categoryId)}
+            options={categories.map((c) => ({ value: String(c.id), label: c.name }))}
+            onChange={(v) => onCategoryChange(v === "" ? null : Number(v))}
+          />
 
           {/* 收藏筛选：源项目用 Star / StarFilled 切换 */}
           <button
