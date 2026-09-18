@@ -36,8 +36,10 @@ import Tooltip from "./Tooltip";
  *
  * <p>相对源文件的三处修正，都会在交付说明里单独列出：</p>
  * <ul>
- *   <li>源文件的边界约束用的是从未被赋值的 {@code containerSize}（恒为 0，
- *       等于不约束，可以把面板拖到屏幕外），这里改成实测容器宽 / 内容高；</li>
+ *   <li>源文件的边界约束用的是从未被赋值的 {@code containerSize}（恒为 0），
+ *       含义是「拖动范围跟着小球走、面板可以伸出视口」；这里保持同一意图，
+ *       但按小球自身尺寸收紧成「整个小球留在视口内」——源项目那组数值在小球
+ *       贴到右边时会有半个球悬在屏幕外；</li>
  *   <li>源文件给 {@code left/top} 定位的元素声明了
  *       {@code transition: transform 0.3s ease-out}，不产生任何效果，这里不写；</li>
  *   <li>没有照搬源 {@code .floating-container} 的 {@code min-height: 50px}：
@@ -92,8 +94,6 @@ export default function FloatingDraggable({
   const [open, setOpen] = useState(initialOpen);
   const [dragging, setDragging] = useState(false);
 
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const innerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
   const velocityRef = useRef({ x: 0, y: 0 });
   const dragRef = useRef({
@@ -112,26 +112,38 @@ export default function FloatingDraggable({
     setPos({ x, y });
   }, []);
 
-  /** 约束用的尺寸：宽度取容器，高度取内容（收起时容器高度为 0，量不到内容高） */
-  const measure = useCallback(
-    () => ({
-      w: wrapRef.current?.offsetWidth ?? 0,
-      h: innerRef.current?.scrollHeight ?? 0,
-    }),
-    [],
-  );
+  /**
+   * 抓手（小球）的边界区间。
+   *
+   * <p>拖动范围跟着<b>小球</b>走，而不是「整个面板留在视口内」——这正是源项目的行为：
+   * 它拿从未被赋值的 {@code containerSize}（恒 {0,0}）去夹容器左上角，
+   * 等价于「小球锚点落在视口内」，于是面板可以伸到屏幕外。</p>
+   *
+   * <p>{@code position} 是容器左上角，也正是小球的锚点：小球盒是
+   * {@code [x - 10, x + 14]}（直径 24、锚点偏 10），因此要整个小球留在视口内就是
+   * {@code x ∈ [10, innerWidth - 14]}。源项目那组数值在小球贴右边时会有半个球
+   * 悬在屏幕外，这里不照搬。</p>
+   */
+  const ballBounds = useCallback(() => {
+    const minX = HANDLE_OFFSET;
+    const minY = HANDLE_OFFSET;
+    return {
+      minX,
+      minY,
+      maxX: Math.max(minX, window.innerWidth - (HANDLE_SIZE - HANDLE_OFFSET)),
+      maxY: Math.max(minY, window.innerHeight - (HANDLE_SIZE - HANDLE_OFFSET)),
+    };
+  }, []);
 
   const clampTo = useCallback(
     (x: number, y: number) => {
-      const { w, h } = measure();
-      const maxX = Math.max(0, window.innerWidth - w);
-      const maxY = Math.max(0, window.innerHeight - h);
+      const { minX, minY, maxX, maxY } = ballBounds();
       return {
-        x: Math.min(Math.max(0, x), maxX),
-        y: Math.min(Math.max(0, y), maxY),
+        x: Math.min(Math.max(minX, x), maxX),
+        y: Math.min(Math.max(minY, y), maxY),
       };
     },
-    [measure],
+    [ballBounds],
   );
 
   /** 惯性滑行（源 animateInertia） */
@@ -143,11 +155,11 @@ export default function FloatingDraggable({
         rafRef.current = null;
         return;
       }
-      const { w, h } = measure();
-      let nx = posRef.current.x + v.x;
-      let ny = posRef.current.y + v.y;
-      if (nx <= 0 || nx >= window.innerWidth - w) v.x *= BOUNCE;
-      if (ny <= 0 || ny >= window.innerHeight - h) v.y *= BOUNCE;
+      const { minX, minY, maxX, maxY } = ballBounds();
+      const nx = posRef.current.x + v.x;
+      const ny = posRef.current.y + v.y;
+      if (nx <= minX || nx >= maxX) v.x *= BOUNCE;
+      if (ny <= minY || ny >= maxY) v.y *= BOUNCE;
       const next = clampTo(nx, ny);
       applyPos(next.x, next.y);
       v.x *= INERTIA_DECAY;
@@ -155,7 +167,7 @@ export default function FloatingDraggable({
       rafRef.current = requestAnimationFrame(tick);
     };
     tick();
-  }, [applyPos, clampTo, measure]);
+  }, [applyPos, ballBounds, clampTo]);
 
   // 拖拽期间监听 window：源项目也是挂在 window 上，保证鼠标移出元素仍跟手
   useEffect(() => {
@@ -263,11 +275,10 @@ export default function FloatingDraggable({
 
       <div
         className="mt-floating-container"
-        ref={wrapRef}
         style={{ left: pos.x, top: pos.y }}
       >
         <div className={`mt-floating-collapse${open ? " is-open" : ""}`}>
-          <div className="mt-floating-content" ref={innerRef}>
+          <div className="mt-floating-content">
             {/* padding 必须在这一层：放在 .mt-floating-content 上会让 grid 行收不到 0 */}
             <div className="mt-floating-pad">{children}</div>
           </div>
