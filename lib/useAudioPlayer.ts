@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useMusicStore } from "@/stores/musicStore";
 import {
+  getById,
   nextRandom,
   selectTrack,
   type MusicQuery,
   type PlayDirection,
 } from "@/lib/api/music";
-import type { CycleMode } from "@/lib/music-prefs";
+import { readLastTrackId, type CycleMode } from "@/lib/music-prefs";
 import { assetUrl } from "@/lib/asset-url";
 import { siteConfig } from "@/lib/siteConfig";
 import type { Music } from "@/lib/types";
@@ -57,6 +58,54 @@ function hydratePrefsOnce() {
   if (_prefsHydrated) return;
   _prefsHydrated = true;
   useMusicStore.getState().hydratePrefs();
+}
+
+/** 初始曲目只加载一次（一个页面里可能挂载十几个 hook 实例：TrackCard 每行一个） */
+let _initialTrackStarted = false;
+
+/**
+ * 当前是否在音乐页。
+ *
+ * <p>按路径段判断而不是整体比对 pathname：GitHub Pages 部署在
+ * {@code /<repo>/music} 子路径下，{@code window.location.pathname} 带仓库前缀。
+ * 这里在 effect 里读一次即可，不必为此引入路由 hook。</p>
+ */
+function isMusicPage(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.location.pathname.split("/").includes("music");
+}
+
+/**
+ * 初始曲目（首次播放，无 currentMusicId，不计入播放次数）。
+ *
+ * <p>音乐页恢复上次播放的曲目：对应源项目 {@code musicPlayStore.getPlayArg()}
+ * 按 {@code currentMusicId} 调 {@code fetchMusicById} 还原 {@code currentMusic}
+ * （{@code views/main/index.vue:17-20} 在 onMounted 里调）。首页不恢复，保持
+ * 「挂载即随机取一首」的既有表现。</p>
+ *
+ * <p>只恢复曲目，不恢复播放状态与进度：浏览器不允许无用户手势自动播放
+ * （挂载时那句 {@code play()} 会被静默拒绝），源项目恢复后同样停在暂停态。</p>
+ *
+ * <p>恢复用的 id 可能已失效（曲目被删、被取消收藏、换了筛选范围），
+ * {@code getById} 拿不到就退回随机。</p>
+ */
+async function loadInitialTrack() {
+  if (_initialTrackStarted) return;
+  _initialTrackStarted = true;
+
+  if (isMusicPage()) {
+    const id = readLastTrackId();
+    if (id !== null) {
+      const restored = await getById(id).catch(() => null);
+      if (restored) {
+        useMusicStore.getState().setTrack(restored);
+        return;
+      }
+    }
+  }
+
+  const t = await nextRandom(undefined, false).catch(() => null);
+  if (t) useMusicStore.getState().setTrack(t);
 }
 
 /** 懒创建共享音频元素（模块级单例，首页音乐卡片与音乐页悬浮播放器共用它） */
@@ -291,11 +340,12 @@ export function useAudioPlayer() {
     return audio;
   }, []);
 
-  // 初始加载曲目（首次播放，无 currentMusicId，不计入播放次数）
+  // 初始加载曲目：音乐页恢复上次播放的曲目，其他页面随机取一首
+  // （只跑一次，见 loadInitialTrack —— 一个页面里会挂载多个 hook 实例）
   useEffect(() => {
     if (currentTrack) return;
-    nextRandom(undefined, false).then((t) => t && setTrack(t)).catch(() => {});
-  }, [currentTrack, setTrack]);
+    loadInitialTrack();
+  }, [currentTrack]);
 
   // 封面旋转
   useEffect(() => {

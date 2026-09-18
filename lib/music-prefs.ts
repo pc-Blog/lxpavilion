@@ -11,12 +11,15 @@
  * page / detail / play-duration / batch / delete / favorite / play），
  * 因此这两项改为存浏览器 localStorage。</p>
  *
- * <p>{@code currentMusicId} 不在这里恢复：首页播放器依赖
- * {@code useAudioPlayer} 挂载即随机取一首的行为，恢复上次曲目会改变首页表现。</p>
+ * <p>{@code currentMusicId} 也存本地（只存 id），但<b>只在音乐页恢复</b>：
+ * 首页播放器依赖 {@code useAudioPlayer} 挂载即随机取一首的行为，恢复上次曲目
+ * 会改变首页表现。所以恢复与否不在这里判断，由 {@code useAudioPlayer} 的初始
+ * 曲目逻辑按当前路由决定。</p>
  */
 
 const MODE_KEY = "music_play_mode";
 const VOLUME_KEY = "music_volume";
+const TRACK_KEY = "music_last_track_id";
 
 /** 默认音量，与 useAudioPlayer 原默认值一致 */
 export const DEFAULT_VOLUME = 0.8;
@@ -89,6 +92,33 @@ export function writeVolume(volume: number): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(VOLUME_KEY, String(volume));
+  } catch {
+    /* 同上 */
+  }
+}
+
+/**
+ * 读取上次播放的曲目 id；缺失或非法返回 null。
+ *
+ * <p>只存 id 不存整个曲目对象：曲目信息会变（改名、换歌手、被删、被取消收藏），
+ * 恢复时按 id 重新取一次拿到的才是当前状态，取不到就退回随机。</p>
+ */
+export function readLastTrackId(): number | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(TRACK_KEY);
+    if (raw === null) return null;
+    const id = Number(raw);
+    return Number.isInteger(id) && id > 0 ? id : null;
+  } catch {
+    return null;
+  }
+}
+
+export function writeLastTrackId(id: number): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(TRACK_KEY, String(id));
   } catch {
     /* 同上 */
   }

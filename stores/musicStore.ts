@@ -6,6 +6,7 @@ import {
   MODE_CYCLE,
   readPlayMode,
   readVolume,
+  writeLastTrackId,
   writePlayMode,
   writeVolume,
   type CycleMode,
@@ -26,6 +27,10 @@ interface MusicState {
   /** 静音前的音量，仅内存不持久化 */
   prevVolume: number;
 
+  /**
+   * 切歌。顺带把曲目 id 记进 localStorage，供音乐页刷新后恢复
+   * （首页不恢复，见 {@code useAudioPlayer} 的初始曲目逻辑）。
+   */
   setTrack: (track: Music) => void;
   toggle: () => void;
   pause: () => void;
@@ -49,7 +54,11 @@ export const useMusicStore = create<MusicState>()((set, get) => ({
   volume: DEFAULT_VOLUME,
   prevVolume: DEFAULT_VOLUME,
 
-  setTrack: (track) => set({ currentTrack: track }),
+  setTrack: (track) => {
+    // 记下曲目 id：音乐页刷新后按 id 恢复上次播放的曲目
+    writeLastTrackId(track.id);
+    set({ currentTrack: track });
+  },
   toggle: () => set((s) => ({ isPlaying: !s.isPlaying })),
   pause: () => set({ isPlaying: false }),
   play: () => set({ isPlaying: true }),
