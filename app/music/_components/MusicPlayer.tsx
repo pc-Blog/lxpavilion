@@ -23,6 +23,7 @@ import {
   VolumeOff,
   VolumeUp,
 } from "./icons";
+import Tooltip from "./Tooltip";
 
 /**
  * 音乐页的悬浮播放器，对应源项目 {@code components/MusicPlayer.vue}。
@@ -129,42 +130,46 @@ export default function MusicPlayer({ scope }: { scope: MusicQuery }) {
       {/* 中：控制按钮与进度条（源 .player-controls） */}
       <div className="mt-player-controls">
         <div className="mt-player-buttons">
-          <button
-            className="mt-player-btn"
-            onClick={() => step("prev", playMode, scope)}
-            title="上一首"
-            aria-label="上一首"
-          >
-            <CaretLeft size={14} />
-          </button>
+          <Tooltip content="上一首">
+            <button
+              className="mt-player-btn"
+              onClick={() => step("prev", playMode, scope)}
+              aria-label="上一首"
+            >
+              <CaretLeft size={14} />
+            </button>
+          </Tooltip>
 
-          <button
-            className="mt-player-btn is-primary"
-            onClick={toggle}
-            disabled={!currentTrack}
-            title={isPlaying ? "暂停" : "播放"}
-            aria-label={isPlaying ? "暂停" : "播放"}
-          >
-            {isPlaying ? <VideoPause size={20} /> : <VideoPlay size={20} />}
-          </button>
+          <Tooltip content={isPlaying ? "暂停" : "播放"}>
+            <button
+              className="mt-player-btn is-primary"
+              onClick={toggle}
+              disabled={!currentTrack}
+              aria-label={isPlaying ? "暂停" : "播放"}
+            >
+              {isPlaying ? <VideoPause size={20} /> : <VideoPlay size={20} />}
+            </button>
+          </Tooltip>
 
-          <button
-            className="mt-player-btn"
-            onClick={() => step("next", playMode, scope)}
-            title="下一首"
-            aria-label="下一首"
-          >
-            <CaretRight size={14} />
-          </button>
+          <Tooltip content="下一首">
+            <button
+              className="mt-player-btn"
+              onClick={() => step("next", playMode, scope)}
+              aria-label="下一首"
+            >
+              <CaretRight size={14} />
+            </button>
+          </Tooltip>
 
-          <button
-            className={`mt-player-btn mode-${playMode}`}
-            onClick={cyclePlayMode}
-            title={modeLabel(playMode)}
-            aria-label={modeLabel(playMode)}
-          >
-            <ModeIcon size={14} />
-          </button>
+          <Tooltip content={modeLabel(playMode)}>
+            <button
+              className={`mt-player-btn mode-${playMode}`}
+              onClick={cyclePlayMode}
+              aria-label={modeLabel(playMode)}
+            >
+              <ModeIcon size={14} />
+            </button>
+          </Tooltip>
         </div>
 
         <div className="mt-player-progress">

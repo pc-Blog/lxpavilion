@@ -3,6 +3,7 @@
 import { useAudioPlayer } from "@/lib/useAudioPlayer";
 import { useMusicStore } from "@/stores/musicStore";
 import { VideoPlay, VideoPause, Star, StarFilled, Edit } from "./icons";
+import Tooltip from "./Tooltip";
 import type { Music } from "@/lib/types";
 
 interface Props {
@@ -70,36 +71,42 @@ export default function TrackCard({ music, isLive, onEdit, onToggleFavorite }: P
 
       {/* 悬停浮现的操作（源 .song-actions + .action-btn） */}
       <div className="mt-song-actions flex gap-2 ml-4">
-        <button
-          onClick={handlePlay}
-          title={isPlayingThis ? "暂停" : "播放"}
-          className={`mt-btn mt-btn-circle ${
-            isPlayingThis ? "mt-btn-success" : "mt-btn-primary"
-          }`}
-        >
-          {isPlayingThis ? <VideoPause size={13} /> : <VideoPlay size={13} />}
-        </button>
+        <Tooltip content={isPlayingThis ? "暂停" : "播放"}>
+          <button
+            onClick={handlePlay}
+            aria-label={isPlayingThis ? "暂停" : "播放"}
+            className={`mt-btn mt-btn-circle ${
+              isPlayingThis ? "mt-btn-success" : "mt-btn-primary"
+            }`}
+          >
+            {isPlayingThis ? <VideoPause size={13} /> : <VideoPlay size={13} />}
+          </button>
+        </Tooltip>
 
         {isLive && (
-          <button
-            onClick={onEdit}
-            title="编辑"
-            className="mt-btn mt-btn-warning mt-btn-circle"
-          >
-            <Edit size={13} />
-          </button>
+          <Tooltip content="编辑">
+            <button
+              onClick={onEdit}
+              aria-label="编辑"
+              className="mt-btn mt-btn-warning mt-btn-circle"
+            >
+              <Edit size={13} />
+            </button>
+          </Tooltip>
         )}
 
         {isLive && (
-          <button
-            onClick={onToggleFavorite}
-            title={music.isFavorite ? "取消收藏" : "收藏"}
-            className={`mt-btn mt-btn-circle ${
-              music.isFavorite ? "mt-btn-danger" : "mt-btn-info"
-            }`}
-          >
-            {music.isFavorite ? <StarFilled size={13} /> : <Star size={13} />}
-          </button>
+          <Tooltip content={music.isFavorite ? "取消收藏" : "收藏"}>
+            <button
+              onClick={onToggleFavorite}
+              aria-label={music.isFavorite ? "取消收藏" : "收藏"}
+              className={`mt-btn mt-btn-circle ${
+                music.isFavorite ? "mt-btn-danger" : "mt-btn-info"
+              }`}
+            >
+              {music.isFavorite ? <StarFilled size={13} /> : <Star size={13} />}
+            </button>
+          </Tooltip>
         )}
       </div>
     </div>

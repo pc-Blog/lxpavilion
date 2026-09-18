@@ -1098,6 +1098,11 @@ body:has(.music-theme) {
 
 .mt-floating-wrapper {
   position: relative;
+  /*
+   * 抓手外面套了 tooltip 的 inline-flex 包裹层，而抓手是 fixed 定位、不占位，
+   * 行高归零可避免在 body 末尾留下一个空行盒。
+   */
+  line-height: 0;
 }
 
 /* 抓手：源 .drag-handle（直径由组件内联给出，这里只管外观） */
@@ -1605,4 +1610,95 @@ body:has(.music-theme) {
     justify-content: center;
     margin-top: 8px;
   }
+}
+
+/* ============================================================
+   悬浮提示
+   （音乐模块自绘，对应源项目的 el-tooltip。浮层挂在 body 上，
+   沿用与 .mt-el-select-panel 相同的霓虹玻璃；实现见 Tooltip.tsx）
+   ============================================================ */
+
+/* 触发器包裹层：保持 inline-flex，避免行盒给尺寸带来额外高度 */
+.mt-tooltip-trigger {
+  display: inline-flex;
+}
+
+.mt-tooltip {
+  position: fixed;
+  /*
+   * 高于悬浮播放器的 9999 / 10000：浮层下沿会压到播放器上沿，
+   * z-index 低于播放器时箭头会被盖掉（源项目里 tooltip 走 EP 的 popper，
+   * z-index 2000 上下，确实会被 9999 的播放器盖住箭头那一角）。
+   */
+  z-index: 10100;
+  box-sizing: border-box;
+  max-width: 260px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 19px;
+  color: #fff;
+  text-shadow: 0 0 6px rgba(120, 230, 255, 0.25);
+  background-color: rgba(55, 55, 65, 0.95);
+  -webkit-backdrop-filter: blur(12px) brightness(0.96);
+  backdrop-filter: blur(12px) brightness(0.96);
+  border: 0.5px solid rgba(120, 230, 255, 0.2);
+  border-radius: 6px;
+  box-shadow:
+    0 0 14px rgba(120, 230, 255, 0.12),
+    inset 0 0 10px rgba(120, 230, 255, 0.1);
+  /* 浮层永远不吃鼠标事件，避免遮挡触发器 */
+  pointer-events: none;
+  animation: mt-tooltip-in 0.15s ease;
+}
+
+@keyframes mt-tooltip-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 箭头：与 .mt-el-select-arrow 同一套 10px 旋转方块 */
+.mt-tooltip-arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  z-index: -1;
+}
+
+.mt-tooltip-arrow::before {
+  content: " ";
+  position: absolute;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(55, 55, 65, 0.95);
+  border: 0.5px solid rgba(120, 230, 255, 0.2);
+  transform: rotate(45deg);
+}
+
+/* 浮层在上方：箭头贴下沿。浮层本身以触发器中心对齐，箭头取自身水平中点 */
+.mt-tooltip.is-top .mt-tooltip-arrow {
+  bottom: -5px;
+  left: calc(50% - 5px);
+}
+
+.mt-tooltip.is-top .mt-tooltip-arrow::before {
+  border-bottom-right-radius: 2px;
+  border-top-color: transparent;
+  border-left-color: transparent;
+}
+
+/* 浮层在下方：箭头贴上沿 */
+.mt-tooltip.is-bottom .mt-tooltip-arrow {
+  top: -5px;
+  left: calc(50% - 5px);
+}
+
+.mt-tooltip.is-bottom .mt-tooltip-arrow::before {
+  border-top-left-radius: 2px;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
 }

@@ -6,6 +6,7 @@ import { siteConfig } from "@/lib/siteConfig";
 import { useAudioPlayer } from "@/lib/useAudioPlayer";
 import { VideoPlay, VideoPause, Search, Plus, Star, StarFilled, Location } from "./icons";
 import Select from "./Select";
+import Tooltip from "./Tooltip";
 import type { MusicCategory } from "@/lib/types";
 
 interface Props {
@@ -77,15 +78,17 @@ export default function TrackHeader({
             }}
           >
             {currentTrack?.singerName || "佚名"}
-            <button
-              onClick={() => currentMusicId && onLocate(currentMusicId)}
-              disabled={!currentMusicId}
-              title="定位歌曲"
-              className="mt-btn mt-btn-info mt-btn-circle"
-              style={{ width: 28, height: 28, padding: 0, fontSize: 15 }}
-            >
-              <Location size={15} />
-            </button>
+            <Tooltip content="定位歌曲">
+              <button
+                onClick={() => currentMusicId && onLocate(currentMusicId)}
+                disabled={!currentMusicId}
+                aria-label="定位歌曲"
+                className="mt-btn mt-btn-info mt-btn-circle"
+                style={{ width: 28, height: 28, padding: 0, fontSize: 15 }}
+              >
+                <Location size={15} />
+              </button>
+            </Tooltip>
           </h1>
           <h2
             className="mt-1 mb-0 text-lg font-normal leading-snug truncate"

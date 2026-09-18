@@ -11,6 +11,7 @@ import {
   type TouchEvent as ReactTouchEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import Tooltip from "./Tooltip";
 
 /**
  * 可拖拽的悬浮容器，对应源项目 {@code components/FloatingDraggable.vue}。
@@ -245,19 +246,20 @@ export default function FloatingDraggable({
 
   return createPortal(
     <div className="mt-floating-wrapper">
-      <div
-        className="mt-drag-handle"
-        style={{
-          left: pos.x - HANDLE_OFFSET,
-          top: pos.y - HANDLE_OFFSET,
-          width: HANDLE_SIZE,
-          height: HANDLE_SIZE,
-          cursor: dragging ? "grabbing" : "grab",
-        }}
-        onMouseDown={onHandleDown}
-        onTouchStart={onHandleDown}
-        title={open ? "收起播放器" : "展开播放器"}
-      />
+      <Tooltip content={open ? "收起播放器" : "展开播放器"}>
+        <div
+          className="mt-drag-handle"
+          style={{
+            left: pos.x - HANDLE_OFFSET,
+            top: pos.y - HANDLE_OFFSET,
+            width: HANDLE_SIZE,
+            height: HANDLE_SIZE,
+            cursor: dragging ? "grabbing" : "grab",
+          }}
+          onMouseDown={onHandleDown}
+          onTouchStart={onHandleDown}
+        />
+      </Tooltip>
 
       <div
         className="mt-floating-container"
