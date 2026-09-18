@@ -8,7 +8,7 @@
     "dev": "esbuild src/main.ts --bundle --outfile=main.js --external:obsidian --format=cjs --platform=node --sourcemap=inline"
   },
   "devDependencies": {
-    "esbuild": "^0.20.0",
+    "esbuild": "^0.28.2",
     "obsidian": "^1.7.2"
   }
 }
