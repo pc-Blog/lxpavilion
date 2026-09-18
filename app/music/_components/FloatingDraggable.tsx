@@ -266,7 +266,8 @@ export default function FloatingDraggable({
       >
         <div className={`mt-floating-collapse${open ? " is-open" : ""}`}>
           <div className="mt-floating-content" ref={innerRef}>
-            {children}
+            {/* padding 必须在这一层：放在 .mt-floating-content 上会让 grid 行收不到 0 */}
+            <div className="mt-floating-pad">{children}</div>
           </div>
         </div>
       </div>

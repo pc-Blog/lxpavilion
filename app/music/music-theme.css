@@ -1163,10 +1163,20 @@ body:has(.music-theme) {
   grid-template-rows: 1fr;
 }
 
-/* 源 .content-area 的 padding: 10px */
+/*
+ * 折叠子项：必须 min-height:0 + overflow:hidden 才能被 grid 的 0fr 行压到 0。
+ * 这里不能带 padding —— grid 轨道的最小尺寸取子项的最小贡献，而子项自身的
+ * padding 也算在内（padding 压不掉），带 padding 时收起后仍会残留
+ * padding 那一圈；又因为 overflow 是在 padding box 上裁剪，
+ * 残留区域里会露出播放器顶部那条 0.5px 边框。padding 因此下移到 .mt-floating-pad。
+ */
 .mt-floating-content {
   min-height: 0;
   overflow: hidden;
+}
+
+/* 源 .content-area 的 padding: 10px */
+.mt-floating-pad {
   padding: 10px;
 }
 
