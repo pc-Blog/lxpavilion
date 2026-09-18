@@ -10,12 +10,12 @@
       "id": 1450,
       "isFavorite": true,
       "lastPlayed": "2026-09-16T20:04:50.871234",
-      "playCount": 6,
+      "playCount": 7,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "唤醒秋天",
-      "updateTime": "2026-09-16T20:04:50.875677"
+      "updateTime": "2026-09-17T22:22:52.309431"
     },
     {
       "categoryId": 9,
@@ -25,13 +25,13 @@
       "fileUrl": "/data/media/1976.mp3",
       "id": 1444,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T04:20:50",
-      "playCount": 3,
+      "lastPlayed": "2026-09-17T18:41:54.323871",
+      "playCount": 5,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "魔幻旋律",
-      "updateTime": "2026-09-15T04:20:50"
+      "updateTime": "2026-09-17T18:44:48.652765"
     },
     {
       "categoryId": 9,
@@ -41,13 +41,13 @@
       "fileUrl": "/data/media/1978.mp3",
       "id": 1442,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T04:26:20",
+      "lastPlayed": "2026-09-18T07:42:51.15599",
       "playCount": 3,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "穿越曙光",
-      "updateTime": "2026-09-15T04:26:19"
+      "updateTime": "2026-09-18T07:42:51.157151"
     },
     {
       "categoryId": null,
@@ -73,13 +73,13 @@
       "fileUrl": "/data/media/1968.mp3",
       "id": 1437,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T02:14:35",
+      "lastPlayed": "2026-09-17T13:03:42.116113",
       "playCount": 143,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Alpha",
-      "updateTime": "2026-09-08T02:14:34"
+      "updateTime": "2026-09-17T13:03:42.116572"
     },
     {
       "categoryId": null,
@@ -93,7 +93,7 @@
       "playCount": 130,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "百利甜",
       "updateTime": "2026-09-15T05:24:36"
     },
@@ -105,13 +105,13 @@
       "fileUrl": "/data/media/2040.mp3",
       "id": 1420,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T05:28:34",
-      "playCount": 157,
+      "lastPlayed": "2026-09-17T18:30:21.823706",
+      "playCount": 158,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "走马",
-      "updateTime": "2026-09-15T05:28:34"
+      "updateTime": "2026-09-17T18:34:20.067188"
     },
     {
       "categoryId": null,
@@ -121,13 +121,13 @@
       "fileUrl": "/data/media/2039.mp3",
       "id": 1418,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T05:43:40",
+      "lastPlayed": "2026-09-17T13:01:07.784274",
       "playCount": 137,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Sunshine Girl",
-      "updateTime": "2026-09-15T05:43:40"
+      "updateTime": "2026-09-17T13:01:07.784768"
     },
     {
       "categoryId": null,
@@ -137,13 +137,13 @@
       "fileUrl": "/data/media/2035.mp3",
       "id": 1417,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T05:48:14",
+      "lastPlayed": "2026-09-17T13:33:58.534741",
       "playCount": 136,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "昔涟",
-      "updateTime": "2026-09-15T05:48:13"
+      "updateTime": "2026-09-17T13:33:58.53529"
     },
     {
       "categoryId": null,
@@ -157,7 +157,7 @@
       "playCount": 125,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "昨夜风今宵月",
       "updateTime": "2026-09-15T05:50:18"
     },
@@ -173,7 +173,7 @@
       "playCount": 154,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "time machine",
       "updateTime": "2026-09-15T05:57:36"
     },
@@ -189,7 +189,7 @@
       "playCount": 150,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Cupid",
       "updateTime": "2026-09-15T06:00:30"
     },
@@ -201,29 +201,29 @@
       "fileUrl": "/data/media/2023.mp3",
       "id": 1412,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T06:03:33",
+      "lastPlayed": "2026-09-18T07:56:15.604329",
       "playCount": 144,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "如果月亮会说话",
-      "updateTime": "2026-09-15T06:03:32"
+      "updateTime": "2026-09-18T07:56:15.60481"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2026-01-27T04:54:59",
       "duration": 146,
       "fileUrl": "/data/media/2020.mp3",
       "id": 1411,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T12:06:46",
-      "playCount": 142,
+      "lastPlayed": "2026-09-17T18:59:40.223999",
+      "playCount": 143,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "森の小さなレストラン",
-      "updateTime": "2026-09-07T12:06:46"
+      "updateTime": "2026-09-18T08:21:26.831993"
     },
     {
       "categoryId": null,
@@ -233,13 +233,13 @@
       "fileUrl": "/data/media/2021.mp3",
       "id": 1407,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T12:24:08",
+      "lastPlayed": "2026-09-17T11:12:55.905657",
       "playCount": 141,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "红昭愿",
-      "updateTime": "2026-09-01T12:24:07"
+      "updateTime": "2026-09-17T11:12:55.906439"
     },
     {
       "categoryId": null,
@@ -253,7 +253,7 @@
       "playCount": 121,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "爱情讯息",
       "updateTime": "2026-09-06T13:16:02"
     },
@@ -265,13 +265,13 @@
       "fileUrl": "/data/media/2025.mp3",
       "id": 1403,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T07:13:37",
+      "lastPlayed": "2026-09-17T13:00:08.674274",
       "playCount": 131,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "镜中花",
-      "updateTime": "2026-09-06T07:13:36"
+      "updateTime": "2026-09-17T13:00:08.674391"
     },
     {
       "categoryId": 9,
@@ -283,11 +283,11 @@
       "isFavorite": true,
       "lastPlayed": "2026-07-22T06:00:20",
       "playCount": 26,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 29,
+      "singerName": "邓紫棋",
+      "singerPictureUrl": "/data/media/2060.jpg",
       "title": "来自天堂的魔鬼",
-      "updateTime": "2026-07-22T06:00:20"
+      "updateTime": "2026-09-18T08:21:23.159446"
     },
     {
       "categoryId": 9,
@@ -297,13 +297,13 @@
       "fileUrl": "/data/media/1950.mp3",
       "id": 1398,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T06:17:59",
+      "lastPlayed": "2026-09-17T14:06:03.295162",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "绿色",
-      "updateTime": "2026-09-15T06:17:58"
+      "updateTime": "2026-09-17T14:06:03.295407"
     },
     {
       "categoryId": 9,
@@ -329,13 +329,13 @@
       "fileUrl": "/data/media/1944.mp3",
       "id": 1396,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T06:25:34",
+      "lastPlayed": "2026-09-18T08:14:46.049118",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "大城小爱",
-      "updateTime": "2026-09-15T06:25:34"
+      "updateTime": "2026-09-18T08:14:46.050727"
     },
     {
       "categoryId": 7,
@@ -345,13 +345,13 @@
       "fileUrl": "/data/media/1941.mp3",
       "id": 1394,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T06:31:28",
+      "lastPlayed": "2026-09-18T07:43:29.372121",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Mr. _Broken Heart_",
-      "updateTime": "2026-09-15T06:31:27"
+      "updateTime": "2026-09-18T07:43:29.372557"
     },
     {
       "categoryId": 7,
@@ -361,13 +361,13 @@
       "fileUrl": "/data/media/1948.mp3",
       "id": 1393,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T06:35:53",
-      "playCount": 41,
+      "lastPlayed": "2026-09-17T19:15:03.667466",
+      "playCount": 42,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "If You",
-      "updateTime": "2026-09-15T06:35:52"
+      "updateTime": "2026-09-17T19:19:28.974531"
     },
     {
       "categoryId": 7,
@@ -393,13 +393,13 @@
       "fileUrl": "/data/media/1943.mp3",
       "id": 1390,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T06:45:29",
+      "lastPlayed": "2026-09-17T14:06:03.28709",
       "playCount": 54,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 28,
+      "singerName": "许嵩",
+      "singerPictureUrl": "/data/media/2059.jpg",
       "title": "清明雨上",
-      "updateTime": "2026-09-15T06:45:29"
+      "updateTime": "2026-09-18T08:21:23.197484"
     },
     {
       "categoryId": null,
@@ -409,13 +409,13 @@
       "fileUrl": "/data/media/1942.mp3",
       "id": 1389,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T06:49:11",
+      "lastPlayed": "2026-09-18T07:56:15.568645",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "风度",
-      "updateTime": "2026-09-15T06:49:11"
+      "updateTime": "2026-09-18T07:56:15.568898"
     },
     {
       "categoryId": null,
@@ -425,13 +425,13 @@
       "fileUrl": "/data/media/1930.mp3",
       "id": 1388,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T06:52:38",
+      "lastPlayed": "2026-09-18T07:56:29.289057",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "使一颗心免于哀伤",
-      "updateTime": "2026-09-15T06:52:37"
+      "updateTime": "2026-09-18T07:56:29.289435"
     },
     {
       "categoryId": null,
@@ -441,13 +441,13 @@
       "fileUrl": "/data/media/1933.mp3",
       "id": 1386,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T01:19:36",
+      "lastPlayed": "2026-09-17T13:00:08.626049",
       "playCount": 18,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "虹之间",
-      "updateTime": "2026-09-07T01:19:36"
+      "updateTime": "2026-09-17T13:00:08.633987"
     },
     {
       "categoryId": null,
@@ -457,13 +457,13 @@
       "fileUrl": "/data/media/1936.mp3",
       "id": 1385,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T04:03:55",
+      "lastPlayed": "2026-09-17T11:12:57.494009",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "别害怕",
-      "updateTime": "2026-09-12T04:03:55"
+      "updateTime": "2026-09-17T11:12:57.494318"
     },
     {
       "categoryId": null,
@@ -473,13 +473,13 @@
       "fileUrl": "/data/media/1937.mp3",
       "id": 1383,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T22:59:16",
-      "playCount": 22,
+      "lastPlayed": "2026-09-17T18:02:07.876894",
+      "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "爱情公寓",
-      "updateTime": "2026-09-06T22:59:16"
+      "updateTime": "2026-09-17T18:06:58.929393"
     },
     {
       "categoryId": null,
@@ -489,13 +489,13 @@
       "fileUrl": "/data/media/1932.mp3",
       "id": 1381,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:06:10",
+      "lastPlayed": "2026-09-18T07:56:15.359393",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "靠近",
-      "updateTime": "2026-09-07T03:06:09"
+      "updateTime": "2026-09-18T07:56:15.359829"
     },
     {
       "categoryId": null,
@@ -505,13 +505,13 @@
       "fileUrl": "/data/media/1928.mp3",
       "id": 1380,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:38:51",
+      "lastPlayed": "2026-09-17T13:50:31.086875",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Gentleman",
-      "updateTime": "2026-09-07T04:38:51"
+      "updateTime": "2026-09-17T13:50:31.087612"
     },
     {
       "categoryId": null,
@@ -521,13 +521,13 @@
       "fileUrl": "/data/media/1935.mp3",
       "id": 1378,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:24:43",
+      "lastPlayed": "2026-09-17T12:54:23.569037",
       "playCount": 22,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "爱的回归线",
-      "updateTime": "2026-09-07T03:24:43"
+      "updateTime": "2026-09-17T12:54:23.569203"
     },
     {
       "categoryId": 14,
@@ -553,13 +553,13 @@
       "fileUrl": "/data/media/1909.ogg",
       "id": 1300,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:36:43",
+      "lastPlayed": "2026-09-17T13:00:27.840525",
       "playCount": 74,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "KingSlime",
-      "updateTime": "2026-09-12T08:36:43"
+      "updateTime": "2026-09-17T13:00:27.840665"
     },
     {
       "categoryId": 14,
@@ -569,13 +569,13 @@
       "fileUrl": "/data/media/1912.ogg",
       "id": 1252,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T03:59:43",
+      "lastPlayed": "2026-09-17T13:33:05.377554",
       "playCount": 91,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "TownParty",
-      "updateTime": "2026-09-12T03:59:42"
+      "updateTime": "2026-09-17T13:33:05.378066"
     },
     {
       "categoryId": 14,
@@ -585,13 +585,13 @@
       "fileUrl": "/data/media/1911.ogg",
       "id": 1249,
       "isFavorite": true,
-      "lastPlayed": "2026-09-15T05:02:58",
-      "playCount": 48,
+      "lastPlayed": "2026-09-17T17:59:48.087246",
+      "playCount": 49,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "SlimeRain",
-      "updateTime": "2026-09-15T05:02:57"
+      "updateTime": "2026-09-17T18:02:07.880752"
     },
     {
       "categoryId": 14,
@@ -601,13 +601,13 @@
       "fileUrl": "/data/media/1917.ogg",
       "id": 1243,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T22:08:36",
+      "lastPlayed": "2026-09-17T13:50:31.288346",
       "playCount": 75,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "LanternFestival",
-      "updateTime": "2026-09-06T22:08:36"
+      "updateTime": "2026-09-17T13:50:31.289094"
     },
     {
       "categoryId": 14,
@@ -617,13 +617,13 @@
       "fileUrl": "/data/media/1916.ogg",
       "id": 1226,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T05:13:07",
-      "playCount": 49,
+      "lastPlayed": "2026-09-17T18:34:20.062719",
+      "playCount": 50,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "TownNight",
-      "updateTime": "2026-09-07T05:13:07"
+      "updateTime": "2026-09-17T18:37:33.366225"
     },
     {
       "categoryId": 14,
@@ -633,13 +633,13 @@
       "fileUrl": "/data/media/1921.ogg",
       "id": 1216,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T02:21:49",
-      "playCount": 86,
+      "lastPlayed": "2026-09-17T22:36:27.893154",
+      "playCount": 87,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "ForestDayMorning",
-      "updateTime": "2026-09-08T02:21:49"
+      "updateTime": "2026-09-17T22:41:03.467651"
     },
     {
       "categoryId": 14,
@@ -649,13 +649,13 @@
       "fileUrl": "/data/media/1903.ogg",
       "id": 1213,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T14:59:22",
+      "lastPlayed": "2026-09-17T13:32:11.049438",
       "playCount": 37,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "ForestDayAfternoon",
-      "updateTime": "2026-08-31T14:59:22"
+      "updateTime": "2026-09-17T13:32:11.049795"
     },
     {
       "categoryId": 9,
@@ -665,13 +665,13 @@
       "fileUrl": "/data/media/1989.mp3",
       "id": 1171,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T05:29:02",
-      "playCount": 54,
+      "lastPlayed": "2026-09-17T19:38:37.827292",
+      "playCount": 55,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "凑热闹",
-      "updateTime": "2026-09-02T05:29:01"
+      "updateTime": "2026-09-17T19:42:40.986607"
     },
     {
       "categoryId": 9,
@@ -681,13 +681,13 @@
       "fileUrl": "/data/media/1987.mp3",
       "id": 1170,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T06:00:31",
+      "lastPlayed": "2026-09-17T13:59:07.646415",
       "playCount": 31,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "Always Online",
-      "updateTime": "2026-09-02T06:00:31"
+      "updateTime": "2026-09-17T13:59:07.656427"
     },
     {
       "categoryId": 8,
@@ -713,13 +713,13 @@
       "fileUrl": "/data/media/1895.mp3",
       "id": 1165,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T04:27:56",
+      "lastPlayed": "2026-09-17T13:11:21.247441",
       "playCount": 157,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "ありがとう",
-      "updateTime": "2026-09-04T04:27:56"
+      "updateTime": "2026-09-17T13:11:21.248634"
     },
     {
       "categoryId": 7,
@@ -729,13 +729,13 @@
       "fileUrl": "/data/media/1902.mp3",
       "id": 1164,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T04:32:44",
-      "playCount": 66,
+      "lastPlayed": "2026-09-17T22:31:27.066122",
+      "playCount": 67,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "三月は夜の底",
-      "updateTime": "2026-09-12T04:32:44"
+      "updateTime": "2026-09-17T22:36:27.897058"
     },
     {
       "categoryId": 7,
@@ -745,13 +745,13 @@
       "fileUrl": "/data/media/1900.mp3",
       "id": 1163,
       "isFavorite": true,
-      "lastPlayed": "2026-08-30T12:29:01",
+      "lastPlayed": "2026-09-17T13:00:27.838132",
       "playCount": 62,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "三月は夜の底",
-      "updateTime": "2026-08-30T12:29:01"
+      "updateTime": "2026-09-17T13:00:27.838375"
     },
     {
       "categoryId": 9,
@@ -761,13 +761,13 @@
       "fileUrl": "/data/media/2041.mp3",
       "id": 1160,
       "isFavorite": true,
-      "lastPlayed": "2026-09-16T19:47:22.458288",
+      "lastPlayed": "2026-09-17T13:51:04.731806",
       "playCount": 148,
       "singerId": 28,
       "singerName": "许嵩",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2059.jpg",
       "title": "幻听",
-      "updateTime": "2026-09-16T19:47:22.458765"
+      "updateTime": "2026-09-17T13:51:04.732054"
     },
     {
       "categoryId": 7,
@@ -777,13 +777,13 @@
       "fileUrl": "/data/media/1899.mp3",
       "id": 1159,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:29:09",
+      "lastPlayed": "2026-09-18T07:56:29.029056",
       "playCount": 92,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "For フルーツバスケット",
-      "updateTime": "2026-09-07T03:29:08"
+      "updateTime": "2026-09-18T07:56:29.030062"
     },
     {
       "categoryId": 9,
@@ -793,13 +793,13 @@
       "fileUrl": "/data/media/2031.mp3",
       "id": 1125,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T00:58:50",
+      "lastPlayed": "2026-09-17T14:06:03.316972",
       "playCount": 177,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "两难",
-      "updateTime": "2026-09-07T00:58:49"
+      "updateTime": "2026-09-17T14:06:03.31719"
     },
     {
       "categoryId": null,
@@ -809,13 +809,13 @@
       "fileUrl": "/data/media/2014.mp3",
       "id": 1124,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T02:05:18",
+      "lastPlayed": "2026-09-17T13:51:04.579104",
       "playCount": 170,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Recuérdame",
-      "updateTime": "2026-09-07T02:05:18"
+      "updateTime": "2026-09-17T13:51:04.579893"
     },
     {
       "categoryId": null,
@@ -825,13 +825,13 @@
       "fileUrl": "/data/media/2016.mp3",
       "id": 1123,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T12:46:20",
+      "lastPlayed": "2026-09-17T13:00:08.661241",
       "playCount": 166,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Ojos Tristes",
-      "updateTime": "2026-09-07T12:46:20"
+      "updateTime": "2026-09-17T13:00:08.661448"
     },
     {
       "categoryId": 7,
@@ -841,13 +841,13 @@
       "fileUrl": "/data/media/2015.mp3",
       "id": 1122,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T14:34:48",
+      "lastPlayed": "2026-09-18T07:56:15.557196",
       "playCount": 178,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "22才の别れ",
-      "updateTime": "2026-09-02T14:34:47"
+      "updateTime": "2026-09-18T07:56:15.557756"
     },
     {
       "categoryId": 7,
@@ -857,13 +857,13 @@
       "fileUrl": "/data/media/2008.mp3",
       "id": 1121,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T06:57:41",
-      "playCount": 162,
+      "lastPlayed": "2026-09-17T22:52:13.443908",
+      "playCount": 163,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "0.0000%",
-      "updateTime": "2026-09-02T06:57:40"
+      "updateTime": "2026-09-17T22:54:47.987321"
     },
     {
       "categoryId": 7,
@@ -873,13 +873,13 @@
       "fileUrl": "/data/media/2009.mp3",
       "id": 1120,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T06:13:13",
-      "playCount": 181,
+      "lastPlayed": "2026-09-17T19:19:28.970144",
+      "playCount": 182,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "CATHY",
-      "updateTime": "2026-09-02T06:13:12"
+      "updateTime": "2026-09-17T19:22:05.352217"
     },
     {
       "categoryId": null,
@@ -889,13 +889,13 @@
       "fileUrl": "/data/media/2011.mp3",
       "id": 1118,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:03:26",
+      "lastPlayed": "2026-09-17T13:33:58.55689",
       "playCount": 177,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Häschenparty",
-      "updateTime": "2026-09-07T04:03:26"
+      "updateTime": "2026-09-17T13:33:58.557073"
     },
     {
       "categoryId": null,
@@ -909,7 +909,7 @@
       "playCount": 278,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Despacito",
       "updateTime": "2026-09-09T05:00:22"
     },
@@ -921,13 +921,13 @@
       "fileUrl": "/data/media/1886.mp3",
       "id": 1115,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T04:17:02",
+      "lastPlayed": "2026-09-17T13:33:58.539379",
       "playCount": 35,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "おちゃめ機能",
-      "updateTime": "2026-09-04T04:17:01"
+      "updateTime": "2026-09-17T13:33:58.539601"
     },
     {
       "categoryId": 9,
@@ -941,7 +941,7 @@
       "playCount": 163,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "世界赠予我的",
       "updateTime": "2026-09-08T03:37:06"
     },
@@ -953,13 +953,13 @@
       "fileUrl": "/data/media/2017.mp3",
       "id": 1112,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T03:19:49",
+      "lastPlayed": "2026-09-17T13:00:27.805525",
       "playCount": 193,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "未完成の歌",
-      "updateTime": "2026-09-12T03:19:49"
+      "updateTime": "2026-09-17T13:00:27.80582"
     },
     {
       "categoryId": 7,
@@ -969,13 +969,13 @@
       "fileUrl": "/data/media/1882.mp3",
       "id": 1111,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:40:24",
+      "lastPlayed": "2026-09-17T13:21:16.287981",
       "playCount": 51,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "水の星へ爱をこめて",
-      "updateTime": "2026-09-12T08:40:23"
+      "updateTime": "2026-09-17T13:21:16.288329"
     },
     {
       "categoryId": 8,
@@ -989,7 +989,7 @@
       "playCount": 173,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Dream Love",
       "updateTime": "2026-09-07T13:26:06"
     },
@@ -1001,13 +1001,13 @@
       "fileUrl": "/data/media/2006.mp3",
       "id": 1109,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T11:26:35",
+      "lastPlayed": "2026-09-17T14:06:03.340568",
       "playCount": 207,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "莫愁乡",
-      "updateTime": "2026-09-06T11:26:35"
+      "updateTime": "2026-09-17T14:06:03.340901"
     },
     {
       "categoryId": 8,
@@ -1021,7 +1021,7 @@
       "playCount": 207,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Moonlit Dream",
       "updateTime": "2026-09-04T03:32:42"
     },
@@ -1033,13 +1033,13 @@
       "fileUrl": "/data/media/1888.mp3",
       "id": 1107,
       "isFavorite": true,
-      "lastPlayed": "2026-09-05T05:07:41",
+      "lastPlayed": "2026-09-18T07:56:15.48327",
       "playCount": 35,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Cathy",
-      "updateTime": "2026-09-05T05:07:40"
+      "updateTime": "2026-09-18T07:56:15.483636"
     },
     {
       "categoryId": 3,
@@ -1065,13 +1065,13 @@
       "fileUrl": "/data/media/1789.opus",
       "id": 1094,
       "isFavorite": true,
-      "lastPlayed": "2026-07-22T03:05:54",
+      "lastPlayed": "2026-09-17T13:36:40.4727",
       "playCount": 37,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "I Still Want Your Love",
-      "updateTime": "2026-07-22T03:05:54"
+      "updateTime": "2026-09-17T13:36:40.47295"
     },
     {
       "categoryId": 7,
@@ -1081,13 +1081,13 @@
       "fileUrl": "/data/media/1764.opus",
       "id": 1093,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T06:33:03",
+      "lastPlayed": "2026-09-17T13:50:31.242991",
       "playCount": 41,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "はいよろこんで",
-      "updateTime": "2026-09-12T06:33:02"
+      "updateTime": "2026-09-17T13:50:31.243212"
     },
     {
       "categoryId": 4,
@@ -1097,13 +1097,13 @@
       "fileUrl": "/data/media/1766.opus",
       "id": 1092,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T13:02:52",
-      "playCount": 46,
+      "lastPlayed": "2026-09-17T19:42:40.97864",
+      "playCount": 48,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Are You Lost",
-      "updateTime": "2026-09-02T13:02:51"
+      "updateTime": "2026-09-17T19:45:29.647165"
     },
     {
       "categoryId": 3,
@@ -1113,13 +1113,13 @@
       "fileUrl": "/data/media/1771.opus",
       "id": 1090,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T04:40:53",
+      "lastPlayed": "2026-09-17T13:00:08.67748",
       "playCount": 33,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "樱花樱花想见你",
-      "updateTime": "2026-09-12T04:40:53"
+      "updateTime": "2026-09-17T13:00:08.677941"
     },
     {
       "categoryId": 8,
@@ -1129,13 +1129,13 @@
       "fileUrl": "/data/media/1768.opus",
       "id": 1086,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T01:51:21",
+      "lastPlayed": "2026-09-17T12:49:03.035592",
       "playCount": 42,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Fly, My Wings",
-      "updateTime": "2026-09-07T01:51:20"
+      "updateTime": "2026-09-17T12:49:03.036387"
     },
     {
       "categoryId": 3,
@@ -1145,13 +1145,13 @@
       "fileUrl": "/data/media/1770.opus",
       "id": 1085,
       "isFavorite": true,
-      "lastPlayed": "2026-07-01T07:40:40",
-      "playCount": 28,
+      "lastPlayed": "2026-09-17T20:41:00.510103",
+      "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "四月樱花",
-      "updateTime": "2026-07-01T07:40:39"
+      "updateTime": "2026-09-17T20:44:34.687133"
     },
     {
       "categoryId": 3,
@@ -1177,13 +1177,13 @@
       "fileUrl": "/data/media/1769.opus",
       "id": 1080,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:34:05",
-      "playCount": 40,
+      "lastPlayed": "2026-09-17T20:06:48.296928",
+      "playCount": 41,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "乙女解剖",
-      "updateTime": "2026-09-06T05:34:05"
+      "updateTime": "2026-09-17T20:10:32.94885"
     },
     {
       "categoryId": 7,
@@ -1193,13 +1193,13 @@
       "fileUrl": "/data/media/1773.opus",
       "id": 1076,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:27:03",
+      "lastPlayed": "2026-09-17T13:33:58.60538",
       "playCount": 83,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Cry For Me",
-      "updateTime": "2026-09-12T08:27:02"
+      "updateTime": "2026-09-17T13:33:58.605679"
     },
     {
       "categoryId": 8,
@@ -1209,13 +1209,13 @@
       "fileUrl": "/data/media/1756.opus",
       "id": 1071,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T04:26:58",
+      "lastPlayed": "2026-09-18T07:56:15.425459",
       "playCount": 36,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Catch My Breath",
-      "updateTime": "2026-09-06T04:26:57"
+      "updateTime": "2026-09-18T07:56:15.426416"
     },
     {
       "categoryId": 8,
@@ -1225,13 +1225,13 @@
       "fileUrl": "/data/media/1759.opus",
       "id": 1065,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T11:38:16",
+      "lastPlayed": "2026-09-17T14:06:03.296953",
       "playCount": 55,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Rindu Semalam",
-      "updateTime": "2026-09-06T11:38:15"
+      "updateTime": "2026-09-17T14:06:03.297167"
     },
     {
       "categoryId": 9,
@@ -1241,13 +1241,13 @@
       "fileUrl": "/data/media/1753.opus",
       "id": 1063,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T14:57:01",
+      "lastPlayed": "2026-09-17T11:23:30.161452",
       "playCount": 118,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "寄明月",
-      "updateTime": "2026-09-06T14:57:01"
+      "updateTime": "2026-09-17T11:23:30.16204"
     },
     {
       "categoryId": 7,
@@ -1257,13 +1257,13 @@
       "fileUrl": "/data/media/1761.opus",
       "id": 1062,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T03:13:03",
-      "playCount": 33,
+      "lastPlayed": "2026-09-17T18:25:19.220135",
+      "playCount": 34,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "さくら ~あなたに出会えてよかった~ ",
-      "updateTime": "2026-09-12T03:13:02"
+      "updateTime": "2026-09-17T18:30:21.830405"
     },
     {
       "categoryId": 8,
@@ -1273,13 +1273,13 @@
       "fileUrl": "/data/media/1755.opus",
       "id": 1061,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T02:57:49",
+      "lastPlayed": "2026-09-17T13:33:58.582449",
       "playCount": 22,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Gone",
-      "updateTime": "2026-09-07T02:57:48"
+      "updateTime": "2026-09-17T13:33:58.582763"
     },
     {
       "categoryId": 8,
@@ -1289,13 +1289,13 @@
       "fileUrl": "/data/media/1738.opus",
       "id": 1058,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T13:23:48",
+      "lastPlayed": "2026-09-17T14:06:03.383411",
       "playCount": 26,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Angel",
-      "updateTime": "2026-09-07T13:23:47"
+      "updateTime": "2026-09-17T14:06:03.383588"
     },
     {
       "categoryId": 8,
@@ -1305,13 +1305,13 @@
       "fileUrl": "/data/media/1732.opus",
       "id": 1056,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T03:43:09",
-      "playCount": 31,
+      "lastPlayed": "2026-09-18T07:43:29.795881",
+      "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Everytime We Touch",
-      "updateTime": "2026-09-12T03:43:08"
+      "updateTime": "2026-09-18T07:43:29.796146"
     },
     {
       "categoryId": 9,
@@ -1325,7 +1325,7 @@
       "playCount": 112,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "秋风寄",
       "updateTime": "2026-09-12T08:45:38"
     },
@@ -1337,13 +1337,13 @@
       "fileUrl": "/data/media/1745.opus",
       "id": 1052,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:14:52",
+      "lastPlayed": "2026-09-17T12:54:23.566297",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Merry Christmas",
-      "updateTime": "2026-09-07T03:14:52"
+      "updateTime": "2026-09-17T12:54:23.566426"
     },
     {
       "categoryId": 4,
@@ -1353,13 +1353,13 @@
       "fileUrl": "/data/media/1743.opus",
       "id": 1051,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T11:34:46",
+      "lastPlayed": "2026-09-17T13:38:53.96905",
       "playCount": 34,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "秋姉妹のなく顷に in the autumn sky",
-      "updateTime": "2026-09-07T11:34:46"
+      "updateTime": "2026-09-17T13:38:53.969503"
     },
     {
       "categoryId": 2,
@@ -1369,13 +1369,13 @@
       "fileUrl": "/data/media/1734.opus",
       "id": 1048,
       "isFavorite": true,
-      "lastPlayed": "2026-09-16T20:04:52.087848",
+      "lastPlayed": "2026-09-17T12:59:35.735878",
       "playCount": 55,
       "singerId": 28,
       "singerName": "许嵩",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2059.jpg",
       "title": "昨夜书",
-      "updateTime": "2026-09-16T20:04:52.088845"
+      "updateTime": "2026-09-17T12:59:35.73709"
     },
     {
       "categoryId": 9,
@@ -1401,13 +1401,13 @@
       "fileUrl": "/data/media/1741.opus",
       "id": 1045,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:55:30",
+      "lastPlayed": "2026-09-17T12:49:03.113653",
       "playCount": 40,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "长相思",
-      "updateTime": "2026-09-07T04:55:30"
+      "updateTime": "2026-09-17T12:49:03.113787"
     },
     {
       "categoryId": null,
@@ -1417,13 +1417,13 @@
       "fileUrl": "/data/media/2004.mp3",
       "id": 1042,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:22:19",
-      "playCount": 207,
+      "lastPlayed": "2026-09-17T20:14:39.11289",
+      "playCount": 208,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Rindu Semalam",
-      "updateTime": "2026-09-06T05:22:19"
+      "updateTime": "2026-09-17T20:15:53.257898"
     },
     {
       "categoryId": null,
@@ -1433,13 +1433,13 @@
       "fileUrl": "/data/media/2013.mp3",
       "id": 1040,
       "isFavorite": true,
-      "lastPlayed": "2026-07-22T06:16:58",
-      "playCount": 285,
+      "lastPlayed": "2026-09-17T20:00:04.78258",
+      "playCount": 286,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "土坡上的狗尾草",
-      "updateTime": "2026-07-22T06:16:58"
+      "updateTime": "2026-09-17T20:03:00.147265"
     },
     {
       "categoryId": 2,
@@ -1449,13 +1449,13 @@
       "fileUrl": "/data/media/1887.mp3",
       "id": 1036,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T03:22:22",
+      "lastPlayed": "2026-09-18T07:41:07.512566",
       "playCount": 40,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "九歌·山鬼",
-      "updateTime": "2026-09-08T03:22:21"
+      "updateTime": "2026-09-18T07:41:07.513538"
     },
     {
       "categoryId": 7,
@@ -1465,13 +1465,13 @@
       "fileUrl": "/data/media/1720.opus",
       "id": 1028,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T05:28:48",
+      "lastPlayed": "2026-09-17T12:56:10.806784",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "처음 그 자리에",
-      "updateTime": "2026-09-04T05:28:47"
+      "updateTime": "2026-09-17T12:56:10.807198"
     },
     {
       "categoryId": 9,
@@ -1485,7 +1485,7 @@
       "playCount": 21,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "醉赤壁",
       "updateTime": "2026-09-02T11:59:22"
     },
@@ -1497,13 +1497,13 @@
       "fileUrl": "/data/media/1723.opus",
       "id": 1020,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T03:30:30",
+      "lastPlayed": "2026-09-18T08:17:44.899045",
       "playCount": 36,
       "singerId": 4,
       "singerName": "周杰伦",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "最伟大的作品",
-      "updateTime": "2026-09-04T03:30:29"
+      "updateTime": "2026-09-18T08:17:44.899622"
     },
     {
       "categoryId": 9,
@@ -1513,13 +1513,13 @@
       "fileUrl": "/data/media/1718.opus",
       "id": 1014,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:38:02",
+      "lastPlayed": "2026-09-17T13:51:04.702655",
       "playCount": 35,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "追光者",
-      "updateTime": "2026-09-06T05:38:01"
+      "updateTime": "2026-09-17T13:51:04.707335"
     },
     {
       "categoryId": 2,
@@ -1529,13 +1529,13 @@
       "fileUrl": "/data/media/1728.opus",
       "id": 1013,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T11:55:12",
+      "lastPlayed": "2026-09-17T14:05:38.568908",
       "playCount": 43,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "壮游",
-      "updateTime": "2026-09-07T11:55:11"
+      "updateTime": "2026-09-17T14:05:38.569254"
     },
     {
       "categoryId": 7,
@@ -1545,13 +1545,13 @@
       "fileUrl": "/data/media/1702.opus",
       "id": 1009,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:31:51",
-      "playCount": 22,
+      "lastPlayed": "2026-09-17T18:17:02.00153",
+      "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "忠犬ハチ",
-      "updateTime": "2026-09-12T05:31:50"
+      "updateTime": "2026-09-17T18:20:04.141142"
     },
     {
       "categoryId": 9,
@@ -1561,13 +1561,13 @@
       "fileUrl": "/data/media/1710.opus",
       "id": 1000,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T04:24:20",
-      "playCount": 20,
+      "lastPlayed": "2026-09-17T20:29:17.5088",
+      "playCount": 21,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "只为遇见",
-      "updateTime": "2026-08-31T04:24:20"
+      "updateTime": "2026-09-17T20:33:12.923576"
     },
     {
       "categoryId": 2,
@@ -1577,13 +1577,13 @@
       "fileUrl": "/data/media/1705.opus",
       "id": 998,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T05:24:53",
+      "lastPlayed": "2026-09-18T08:21:08.507518",
       "playCount": 27,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "知音者",
-      "updateTime": "2026-09-04T05:24:53"
+      "updateTime": "2026-09-18T08:21:08.508231"
     },
     {
       "categoryId": 2,
@@ -1597,7 +1597,7 @@
       "playCount": 25,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "云山",
       "updateTime": "2026-09-07T04:25:11"
     },
@@ -1609,13 +1609,13 @@
       "fileUrl": "/data/media/1697.opus",
       "id": 984,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T15:01:26",
+      "lastPlayed": "2026-09-17T13:51:04.571772",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "月牙湾",
-      "updateTime": "2026-09-02T15:01:25"
+      "updateTime": "2026-09-17T13:51:04.571984"
     },
     {
       "categoryId": 9,
@@ -1625,13 +1625,13 @@
       "fileUrl": "/data/media/1690.opus",
       "id": 979,
       "isFavorite": true,
-      "lastPlayed": "2026-07-01T06:19:58",
+      "lastPlayed": "2026-09-17T11:12:56.898152",
       "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "月亮惹的祸",
-      "updateTime": "2026-07-01T06:19:57"
+      "updateTime": "2026-09-17T11:12:56.898515"
     },
     {
       "categoryId": 4,
@@ -1657,13 +1657,13 @@
       "fileUrl": "/data/media/1671.opus",
       "id": 969,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T13:34:11",
-      "playCount": 26,
+      "lastPlayed": "2026-09-18T07:56:15.357976",
+      "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "有形的翅膀",
-      "updateTime": "2026-09-01T13:34:10"
+      "updateTime": "2026-09-18T07:56:15.35817"
     },
     {
       "categoryId": null,
@@ -1673,29 +1673,29 @@
       "fileUrl": "/data/media/1670.opus",
       "id": 958,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T05:24:22",
+      "lastPlayed": "2026-09-17T13:51:04.631993",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "隐形的翅膀",
-      "updateTime": "2026-09-07T05:24:21"
+      "updateTime": "2026-09-17T13:51:04.632332"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:45",
       "duration": 342,
       "fileUrl": "/data/media/1681.opus",
       "id": 956,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:52:34",
+      "lastPlayed": "2026-09-17T13:01:59.255235",
       "playCount": 27,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 4,
+      "singerName": "周杰伦",
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "以父之名",
-      "updateTime": "2026-09-06T05:52:33"
+      "updateTime": "2026-09-18T08:21:25.179295"
     },
     {
       "categoryId": 9,
@@ -1705,13 +1705,13 @@
       "fileUrl": "/data/media/1661.opus",
       "id": 944,
       "isFavorite": true,
-      "lastPlayed": "2026-09-05T11:03:25",
-      "playCount": 37,
+      "lastPlayed": "2026-09-17T20:03:00.141478",
+      "playCount": 38,
       "singerId": 4,
       "singerName": "周杰伦",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "夜曲",
-      "updateTime": "2026-09-05T11:03:24"
+      "updateTime": "2026-09-17T20:06:48.30616"
     },
     {
       "categoryId": null,
@@ -1721,13 +1721,13 @@
       "fileUrl": "/data/media/1652.opus",
       "id": 942,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T11:10:05",
+      "lastPlayed": "2026-09-17T13:33:05.237548",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "夜空的寂静",
-      "updateTime": "2026-09-06T11:10:05"
+      "updateTime": "2026-09-17T13:33:05.24186"
     },
     {
       "categoryId": 9,
@@ -1737,13 +1737,13 @@
       "fileUrl": "/data/media/1658.opus",
       "id": 939,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T04:23:48",
+      "lastPlayed": "2026-09-17T12:49:02.471477",
       "playCount": 142,
       "singerId": 4,
       "singerName": "周杰伦",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "夜的第七章",
-      "updateTime": "2026-09-04T04:23:48"
+      "updateTime": "2026-09-17T12:49:02.472166"
     },
     {
       "categoryId": 9,
@@ -1753,13 +1753,13 @@
       "fileUrl": "/data/media/1647.opus",
       "id": 929,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T14:53:09",
+      "lastPlayed": "2026-09-17T14:06:03.296255",
       "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "演员",
-      "updateTime": "2026-09-06T14:53:08"
+      "updateTime": "2026-09-17T14:06:03.296467"
     },
     {
       "categoryId": 9,
@@ -1769,13 +1769,13 @@
       "fileUrl": "/data/media/1642.opus",
       "id": 926,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T04:07:30",
+      "lastPlayed": "2026-09-17T12:48:09.210152",
       "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "勋章",
-      "updateTime": "2026-09-12T04:07:30"
+      "updateTime": "2026-09-17T12:48:09.211069"
     },
     {
       "categoryId": 9,
@@ -1785,13 +1785,13 @@
       "fileUrl": "/data/media/1645.opus",
       "id": 925,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T02:54:06",
-      "playCount": 36,
+      "lastPlayed": "2026-09-17T22:41:03.448515",
+      "playCount": 37,
       "singerId": 21,
       "singerName": "周深",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "雪落下的声音",
-      "updateTime": "2026-09-12T02:54:06"
+      "updateTime": "2026-09-17T22:45:00.07539"
     },
     {
       "categoryId": 9,
@@ -1805,7 +1805,7 @@
       "playCount": 30,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "修炼爱情",
       "updateTime": "2026-09-02T08:06:27"
     },
@@ -1817,13 +1817,13 @@
       "fileUrl": "/data/media/1643.opus",
       "id": 914,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T07:48:57",
+      "lastPlayed": "2026-09-17T13:51:04.650938",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "星茶会",
-      "updateTime": "2026-09-06T07:48:56"
+      "updateTime": "2026-09-17T13:51:04.651106"
     },
     {
       "categoryId": 9,
@@ -1833,13 +1833,13 @@
       "fileUrl": "/data/media/1635.opus",
       "id": 912,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T06:13:11",
+      "lastPlayed": "2026-09-17T12:48:09.443692",
       "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "小雨",
-      "updateTime": "2026-08-31T06:13:11"
+      "updateTime": "2026-09-17T12:48:09.444592"
     },
     {
       "categoryId": 2,
@@ -1849,13 +1849,13 @@
       "fileUrl": "/data/media/1633.opus",
       "id": 906,
       "isFavorite": true,
-      "lastPlayed": "2026-09-09T03:59:57",
+      "lastPlayed": "2026-09-17T12:48:37.427943",
       "playCount": 37,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "逍遥游",
-      "updateTime": "2026-09-09T03:59:56"
+      "updateTime": "2026-09-17T12:48:37.42845"
     },
     {
       "categoryId": 9,
@@ -1881,13 +1881,13 @@
       "fileUrl": "/data/media/1861.mp3",
       "id": 903,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T05:04:49",
+      "lastPlayed": "2026-09-18T07:41:07.378808",
       "playCount": 34,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 16,
+      "singerName": "凤凰传奇",
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "乡关何处是",
-      "updateTime": "2026-09-07T05:04:48"
+      "updateTime": "2026-09-18T08:21:23.359767"
     },
     {
       "categoryId": 9,
@@ -1913,13 +1913,13 @@
       "fileUrl": "/data/media/1622.opus",
       "id": 896,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T07:10:05",
-      "playCount": 31,
+      "lastPlayed": "2026-09-18T07:56:15.416266",
+      "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "悟空",
-      "updateTime": "2026-09-06T07:10:04"
+      "updateTime": "2026-09-18T07:56:15.417133"
     },
     {
       "categoryId": 9,
@@ -1949,7 +1949,7 @@
       "playCount": 28,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "乌兰巴托的夜",
       "updateTime": "2026-09-12T07:07:42"
     },
@@ -1961,13 +1961,13 @@
       "fileUrl": "/data/media/1613.opus",
       "id": 887,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:53:06",
+      "lastPlayed": "2026-09-17T13:22:31.026603",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "我只在乎你",
-      "updateTime": "2026-09-12T07:53:05"
+      "updateTime": "2026-09-17T13:22:31.026871"
     },
     {
       "categoryId": 3,
@@ -1977,13 +1977,13 @@
       "fileUrl": "/data/media/1604.opus",
       "id": 886,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T15:07:50",
+      "lastPlayed": "2026-09-17T12:52:20.632082",
       "playCount": 35,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "我在那一角落患过伤风",
-      "updateTime": "2026-08-31T15:07:50"
+      "updateTime": "2026-09-17T12:52:20.632394"
     },
     {
       "categoryId": 9,
@@ -1993,13 +1993,13 @@
       "fileUrl": "/data/media/1617.opus",
       "id": 879,
       "isFavorite": true,
-      "lastPlayed": "2026-07-03T02:01:59",
+      "lastPlayed": "2026-09-17T12:48:08.994674",
       "playCount": 21,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "我们的歌谣",
-      "updateTime": "2026-07-03T02:01:58"
+      "updateTime": "2026-09-17T12:48:08.995946"
     },
     {
       "categoryId": 9,
@@ -2009,13 +2009,13 @@
       "fileUrl": "/data/media/1616.opus",
       "id": 878,
       "isFavorite": true,
-      "lastPlayed": "2026-09-03T14:37:23",
+      "lastPlayed": "2026-09-18T07:56:15.5026",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "我们的爱",
-      "updateTime": "2026-09-03T14:37:23"
+      "updateTime": "2026-09-18T07:56:15.502892"
     },
     {
       "categoryId": 9,
@@ -2025,13 +2025,13 @@
       "fileUrl": "/data/media/1998.mp3",
       "id": 872,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T14:33:25",
-      "playCount": 32,
+      "lastPlayed": "2026-09-17T20:10:32.940364",
+      "playCount": 33,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "我还想她",
-      "updateTime": "2026-09-01T14:33:24"
+      "updateTime": "2026-09-17T20:14:39.119656"
     },
     {
       "categoryId": null,
@@ -2041,13 +2041,13 @@
       "fileUrl": "/data/media/1596.opus",
       "id": 857,
       "isFavorite": true,
-      "lastPlayed": "2026-09-03T13:31:32",
-      "playCount": 29,
+      "lastPlayed": "2026-09-17T17:55:37.162257",
+      "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "万象长安",
-      "updateTime": "2026-09-03T13:31:31"
+      "updateTime": "2026-09-17T17:59:48.105398"
     },
     {
       "categoryId": null,
@@ -2057,29 +2057,29 @@
       "fileUrl": "/data/media/1569.opus",
       "id": 832,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T13:25:29",
+      "lastPlayed": "2026-09-17T13:50:31.162443",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "滕王阁序",
-      "updateTime": "2026-09-02T13:25:29"
+      "updateTime": "2026-09-17T13:50:31.163152"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:35",
       "duration": 220,
       "fileUrl": "/data/media/1561.opus",
       "id": 830,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T06:18:37",
+      "lastPlayed": "2026-09-17T13:00:27.84744",
       "playCount": 30,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 29,
+      "singerName": "邓紫棋",
+      "singerPictureUrl": "/data/media/2060.jpg",
       "title": "桃花诺",
-      "updateTime": "2026-09-12T06:18:36"
+      "updateTime": "2026-09-18T08:21:25.30443"
     },
     {
       "categoryId": null,
@@ -2105,17 +2105,17 @@
       "fileUrl": "/data/media/1568.opus",
       "id": 825,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:06:05",
-      "playCount": 26,
+      "lastPlayed": "2026-09-17T18:13:06.870996",
+      "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "溯",
-      "updateTime": "2026-09-12T05:06:04"
+      "updateTime": "2026-09-17T18:17:02.014233"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:34",
       "duration": 239,
       "fileUrl": "/data/media/1563.opus",
@@ -2123,11 +2123,11 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-01T04:59:36",
       "playCount": 24,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 28,
+      "singerName": "许嵩",
+      "singerPictureUrl": "/data/media/2059.jpg",
       "title": "素颜",
-      "updateTime": "2026-09-01T04:59:36"
+      "updateTime": "2026-09-18T08:21:25.321285"
     },
     {
       "categoryId": null,
@@ -2137,13 +2137,13 @@
       "fileUrl": "/data/media/1559.opus",
       "id": 822,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T12:27:18",
+      "lastPlayed": "2026-09-17T14:06:03.306072",
       "playCount": 21,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "苏幕遮",
-      "updateTime": "2026-09-07T12:27:17"
+      "updateTime": "2026-09-17T14:06:03.306333"
     },
     {
       "categoryId": null,
@@ -2153,13 +2153,13 @@
       "fileUrl": "/data/media/1562.opus",
       "id": 818,
       "isFavorite": true,
-      "lastPlayed": "2026-07-03T05:05:50",
+      "lastPlayed": "2026-09-17T13:33:06.401601",
       "playCount": 33,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "说散就散",
-      "updateTime": "2026-07-03T05:05:49"
+      "updateTime": "2026-09-17T13:33:06.401946"
     },
     {
       "categoryId": null,
@@ -2169,29 +2169,29 @@
       "fileUrl": "/data/media/1557.opus",
       "id": 817,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:23:21",
-      "playCount": 30,
+      "lastPlayed": "2026-09-17T23:07:41.58776",
+      "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "瞬间的永恒",
-      "updateTime": "2026-09-12T07:23:20"
+      "updateTime": "2026-09-17T23:10:23.713727"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:34",
       "duration": 260,
       "fileUrl": "/data/media/1566.opus",
       "id": 816,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T09:42:05",
-      "playCount": 25,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "lastPlayed": "2026-09-17T19:10:42.771664",
+      "playCount": 26,
+      "singerId": 16,
+      "singerName": "凤凰传奇",
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "水云间",
-      "updateTime": "2026-09-06T09:42:04"
+      "updateTime": "2026-09-18T08:21:25.35401"
     },
     {
       "categoryId": 9,
@@ -2217,13 +2217,13 @@
       "fileUrl": "/data/media/1538.opus",
       "id": 811,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T01:20:02",
+      "lastPlayed": "2026-09-18T07:56:15.357048",
       "playCount": 26,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "蜀道难",
-      "updateTime": "2026-09-04T01:20:02"
+      "updateTime": "2026-09-18T07:56:15.357516"
     },
     {
       "categoryId": 9,
@@ -2233,13 +2233,13 @@
       "fileUrl": "/data/media/2001.mp3",
       "id": 809,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:42:35",
+      "lastPlayed": "2026-09-17T12:59:35.966166",
       "playCount": 22,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "手心的蔷薇",
-      "updateTime": "2026-09-12T05:42:34"
+      "updateTime": "2026-09-17T12:59:35.966642"
     },
     {
       "categoryId": null,
@@ -2249,13 +2249,13 @@
       "fileUrl": "/data/media/1552.opus",
       "id": 808,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:08:42",
-      "playCount": 31,
+      "lastPlayed": "2026-09-18T08:08:31.953668",
+      "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "笹舟",
-      "updateTime": "2026-09-07T04:08:42"
+      "updateTime": "2026-09-18T08:08:31.953974"
     },
     {
       "categoryId": null,
@@ -2265,13 +2265,13 @@
       "fileUrl": "/data/media/1546.opus",
       "id": 807,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:57:01",
+      "lastPlayed": "2026-09-17T13:00:08.633777",
       "playCount": 39,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "是你",
-      "updateTime": "2026-09-12T08:57:00"
+      "updateTime": "2026-09-17T13:00:08.63398"
     },
     {
       "categoryId": null,
@@ -2281,13 +2281,13 @@
       "fileUrl": "/data/media/1852.mp3",
       "id": 806,
       "isFavorite": true,
-      "lastPlayed": "2026-07-20T13:46:18",
+      "lastPlayed": "2026-09-17T12:56:11.345844",
       "playCount": 29,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "视奸",
-      "updateTime": "2026-07-20T13:46:18"
+      "updateTime": "2026-09-17T12:56:11.346178"
     },
     {
       "categoryId": 9,
@@ -2297,13 +2297,13 @@
       "fileUrl": "/data/media/1848.mp3",
       "id": 802,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T14:03:24",
+      "lastPlayed": "2026-09-17T13:51:04.568296",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "时间煮雨",
-      "updateTime": "2026-08-31T14:03:24"
+      "updateTime": "2026-09-17T13:51:04.568783"
     },
     {
       "categoryId": null,
@@ -2313,29 +2313,29 @@
       "fileUrl": "/data/media/1844.mp3",
       "id": 800,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T04:51:57",
+      "lastPlayed": "2026-09-17T13:50:31.296308",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "圣诞节的雪",
-      "updateTime": "2026-09-12T04:51:57"
+      "updateTime": "2026-09-17T13:50:31.29654"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:33",
       "duration": 242,
       "fileUrl": "/data/media/1547.opus",
       "id": 797,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:01:30",
+      "lastPlayed": "2026-09-17T13:33:04.902293",
       "playCount": 24,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 21,
+      "singerName": "周深",
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "生活总该迎着光亮",
-      "updateTime": "2026-09-12T08:01:30"
+      "updateTime": "2026-09-18T08:21:25.369235"
     },
     {
       "categoryId": 9,
@@ -2345,13 +2345,13 @@
       "fileUrl": "/data/media/1535.opus",
       "id": 793,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T14:54:33",
-      "playCount": 27,
+      "lastPlayed": "2026-09-18T07:41:00.39835",
+      "playCount": 28,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "奢香夫人",
-      "updateTime": "2026-09-01T14:54:33"
+      "updateTime": "2026-09-18T07:41:00.398802"
     },
     {
       "categoryId": 7,
@@ -2361,13 +2361,13 @@
       "fileUrl": "/data/media/1856.mp3",
       "id": 785,
       "isFavorite": true,
-      "lastPlayed": "2026-07-22T03:52:05",
+      "lastPlayed": "2026-09-17T19:45:29.637802",
       "playCount": 55,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "三月は夜の底",
-      "updateTime": "2026-07-22T03:52:05"
+      "updateTime": "2026-09-17T19:45:29.639559"
     },
     {
       "categoryId": 9,
@@ -2377,13 +2377,13 @@
       "fileUrl": "/data/media/1533.opus",
       "id": 784,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:55:01",
+      "lastPlayed": "2026-09-17T13:05:23.854561",
       "playCount": 22,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "三万年之前",
-      "updateTime": "2026-09-12T05:55:00"
+      "updateTime": "2026-09-17T13:05:23.854813"
     },
     {
       "categoryId": 9,
@@ -2409,13 +2409,13 @@
       "fileUrl": "/data/media/1527.opus",
       "id": 781,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T12:31:28",
+      "lastPlayed": "2026-09-17T12:59:36.021525",
       "playCount": 17,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "若月亮没来",
-      "updateTime": "2026-09-01T12:31:28"
+      "updateTime": "2026-09-17T12:59:36.021967"
     },
     {
       "categoryId": 9,
@@ -2425,13 +2425,13 @@
       "fileUrl": "/data/media/1532.opus",
       "id": 780,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T06:19:45",
+      "lastPlayed": "2026-09-17T14:20:35.653417",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "如愿",
-      "updateTime": "2026-09-06T06:19:44"
+      "updateTime": "2026-09-17T14:20:35.653691"
     },
     {
       "categoryId": null,
@@ -2441,13 +2441,13 @@
       "fileUrl": "/data/media/1534.opus",
       "id": 779,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T06:30:20",
-      "playCount": 27,
+      "lastPlayed": "2026-09-17T18:55:19.767491",
+      "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "如果没有你",
-      "updateTime": "2026-09-12T06:30:19"
+      "updateTime": "2026-09-17T18:59:40.233838"
     },
     {
       "categoryId": null,
@@ -2473,29 +2473,29 @@
       "fileUrl": "/data/media/1507.opus",
       "id": 777,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T13:11:52",
+      "lastPlayed": "2026-09-18T07:45:41.348003",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "人鱼之歌",
-      "updateTime": "2026-09-06T13:11:52"
+      "updateTime": "2026-09-18T07:45:41.348431"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:31",
       "duration": 275,
       "fileUrl": "/data/media/1519.opus",
       "id": 776,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:20:39",
+      "lastPlayed": "2026-09-17T12:59:35.767567",
       "playCount": 23,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 21,
+      "singerName": "周深",
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "人是_",
-      "updateTime": "2026-09-12T07:20:38"
+      "updateTime": "2026-09-18T08:21:25.400894"
     },
     {
       "categoryId": null,
@@ -2521,13 +2521,13 @@
       "fileUrl": "/data/media/1520.opus",
       "id": 770,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T13:02:43",
+      "lastPlayed": "2026-09-17T20:59:13.347583",
       "playCount": 46,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "染",
-      "updateTime": "2026-09-07T13:02:42"
+      "updateTime": "2026-09-17T20:59:13.350566"
     },
     {
       "categoryId": 7,
@@ -2537,13 +2537,13 @@
       "fileUrl": "/data/media/1512.opus",
       "id": 769,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:27:30",
+      "lastPlayed": "2026-09-18T07:45:36.910804",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "群青",
-      "updateTime": "2026-09-12T07:27:30"
+      "updateTime": "2026-09-18T07:45:36.911424"
     },
     {
       "categoryId": 9,
@@ -2553,29 +2553,29 @@
       "fileUrl": "/data/media/1515.opus",
       "id": 767,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T10:50:23",
+      "lastPlayed": "2026-09-17T12:54:23.567074",
       "playCount": 28,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "全是爱",
-      "updateTime": "2026-08-31T10:50:23"
+      "updateTime": "2026-09-17T12:54:23.56722"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:30",
       "duration": 248,
       "fileUrl": "/data/media/1513.opus",
       "id": 765,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:34:35",
+      "lastPlayed": "2026-09-18T07:56:15.475108",
       "playCount": 20,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 16,
+      "singerName": "凤凰传奇",
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "秋画",
-      "updateTime": "2026-09-12T08:34:35"
+      "updateTime": "2026-09-18T08:21:25.415457"
     },
     {
       "categoryId": 9,
@@ -2617,13 +2617,13 @@
       "fileUrl": "/data/media/1497.opus",
       "id": 756,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T12:31:25",
+      "lastPlayed": "2026-09-17T13:01:01.492726",
       "playCount": 21,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "千秋家国梦",
-      "updateTime": "2026-09-07T12:31:24"
+      "updateTime": "2026-09-17T13:01:01.492949"
     },
     {
       "categoryId": 7,
@@ -2633,13 +2633,13 @@
       "fileUrl": "/data/media/1495.opus",
       "id": 751,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:02:10",
+      "lastPlayed": "2026-09-17T13:09:42.323888",
       "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "千本桜",
-      "updateTime": "2026-09-12T05:02:09"
+      "updateTime": "2026-09-17T13:09:42.324106"
     },
     {
       "categoryId": null,
@@ -2649,29 +2649,29 @@
       "fileUrl": "/data/media/1504.opus",
       "id": 750,
       "isFavorite": true,
-      "lastPlayed": "2026-07-03T07:10:07",
+      "lastPlayed": "2026-09-18T07:41:07.458102",
       "playCount": 21,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "起风了",
-      "updateTime": "2026-07-03T07:10:06"
+      "updateTime": "2026-09-18T07:41:07.45849"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:29",
       "duration": 299,
       "fileUrl": "/data/media/1501.opus",
       "id": 747,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T03:33:09",
+      "lastPlayed": "2026-09-17T14:20:41.291702",
       "playCount": 27,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 4,
+      "singerName": "周杰伦",
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "七里香",
-      "updateTime": "2026-09-12T03:33:08"
+      "updateTime": "2026-09-18T08:21:25.462648"
     },
     {
       "categoryId": null,
@@ -2681,13 +2681,13 @@
       "fileUrl": "/data/media/1491.opus",
       "id": 745,
       "isFavorite": true,
-      "lastPlayed": "2026-07-03T07:18:39",
+      "lastPlayed": "2026-09-17T13:00:08.683662",
       "playCount": 19,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "破茧",
-      "updateTime": "2026-07-03T07:18:38"
+      "updateTime": "2026-09-17T13:00:08.683862"
     },
     {
       "categoryId": 9,
@@ -2713,13 +2713,13 @@
       "fileUrl": "/data/media/1485.opus",
       "id": 742,
       "isFavorite": true,
-      "lastPlayed": "2026-09-05T05:32:05",
+      "lastPlayed": "2026-09-18T07:41:07.434681",
       "playCount": 26,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "篇章",
-      "updateTime": "2026-09-05T05:32:04"
+      "updateTime": "2026-09-18T07:41:07.434875"
     },
     {
       "categoryId": 2,
@@ -2749,25 +2749,25 @@
       "playCount": 30,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "陪你一辈子",
       "updateTime": "2026-09-02T07:10:27"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:28",
       "duration": 259,
       "fileUrl": "/data/media/1486.opus",
       "id": 737,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T06:26:00",
+      "lastPlayed": "2026-09-18T07:56:15.359154",
       "playCount": 33,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 29,
+      "singerName": "邓紫棋",
+      "singerPictureUrl": "/data/media/2060.jpg",
       "title": "泡沫",
-      "updateTime": "2026-09-12T06:25:59"
+      "updateTime": "2026-09-18T08:21:25.476974"
     },
     {
       "categoryId": 9,
@@ -2793,13 +2793,13 @@
       "fileUrl": "/data/media/1463.opus",
       "id": 722,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T03:44:57",
+      "lastPlayed": "2026-09-17T13:00:08.633437",
       "playCount": 20,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "你把爱情给了谁",
-      "updateTime": "2026-09-04T03:44:56"
+      "updateTime": "2026-09-17T13:00:08.63379"
     },
     {
       "categoryId": 9,
@@ -2809,13 +2809,13 @@
       "fileUrl": "/data/media/1458.opus",
       "id": 719,
       "isFavorite": true,
-      "lastPlayed": "2026-09-09T02:12:19",
-      "playCount": 27,
+      "lastPlayed": "2026-09-17T19:27:32.226574",
+      "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "暮色回响",
-      "updateTime": "2026-09-09T02:12:19"
+      "updateTime": "2026-09-17T19:30:31.655396"
     },
     {
       "categoryId": 2,
@@ -2825,13 +2825,13 @@
       "fileUrl": "/data/media/1467.opus",
       "id": 718,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:57:27",
+      "lastPlayed": "2026-09-17T14:06:03.256891",
       "playCount": 35,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "木兰诗",
-      "updateTime": "2026-09-12T07:57:26"
+      "updateTime": "2026-09-17T14:06:03.257102"
     },
     {
       "categoryId": 13,
@@ -2841,13 +2841,13 @@
       "fileUrl": "/data/media/1983.mp3",
       "id": 714,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T11:49:58",
+      "lastPlayed": "2026-09-17T14:20:58.845402",
       "playCount": 19,
       "singerId": 22,
       "singerName": "仓木麻衣",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2058.jpg",
       "title": "夢みたあとで",
-      "updateTime": "2026-09-07T11:49:57"
+      "updateTime": "2026-09-17T14:20:58.845617"
     },
     {
       "categoryId": 9,
@@ -2857,29 +2857,29 @@
       "fileUrl": "/data/media/1999.mp3",
       "id": 711,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T06:41:14",
+      "lastPlayed": "2026-09-17T13:11:06.058628",
       "playCount": 31,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "美人鱼",
-      "updateTime": "2026-09-12T06:41:14"
+      "updateTime": "2026-09-17T13:11:06.058866"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:25",
       "duration": 393,
       "fileUrl": "/data/media/1472.opus",
       "id": 708,
       "isFavorite": true,
-      "lastPlayed": "2026-07-03T08:14:09",
+      "lastPlayed": "2026-09-17T12:49:03.126406",
       "playCount": 21,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "美しきもの",
-      "updateTime": "2026-07-03T08:14:09"
+      "updateTime": "2026-09-18T08:21:26.905684"
     },
     {
       "categoryId": null,
@@ -2921,13 +2921,13 @@
       "fileUrl": "/data/media/1456.opus",
       "id": 702,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T03:13:55",
-      "playCount": 23,
+      "lastPlayed": "2026-09-17T18:50:04.791536",
+      "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "落叶归根",
-      "updateTime": "2026-09-08T03:13:54"
+      "updateTime": "2026-09-17T18:55:19.780982"
     },
     {
       "categoryId": null,
@@ -2937,13 +2937,13 @@
       "fileUrl": "/data/media/1448.opus",
       "id": 699,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T10:50:02",
+      "lastPlayed": "2026-09-17T13:34:58.485448",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "龙卷风",
-      "updateTime": "2026-09-06T10:50:02"
+      "updateTime": "2026-09-17T13:34:58.485745"
     },
     {
       "categoryId": null,
@@ -2953,17 +2953,17 @@
       "fileUrl": "/data/media/1444.opus",
       "id": 697,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T12:14:58",
+      "lastPlayed": "2026-09-17T13:00:57.329387",
       "playCount": 29,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "淋雨一直走",
-      "updateTime": "2026-09-07T12:14:57"
+      "updateTime": "2026-09-17T13:00:57.329605"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:24",
       "duration": 185,
       "fileUrl": "/data/media/1443.opus",
@@ -2971,27 +2971,27 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-06T04:53:56",
       "playCount": 37,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 21,
+      "singerName": "周深",
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "临安初雨",
-      "updateTime": "2026-09-06T04:53:55"
+      "updateTime": "2026-09-18T08:21:25.569212"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 13,
+      "categoryName": "名科",
       "createTime": "2025-07-06T18:43:24",
       "duration": 252,
       "fileUrl": "/data/media/1451.opus",
       "id": 691,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T01:23:50",
+      "lastPlayed": "2026-09-17T13:09:42.17396",
       "playCount": 30,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 22,
+      "singerName": "仓木麻衣",
+      "singerPictureUrl": "/data/media/2058.jpg",
       "title": "恋に恋して",
-      "updateTime": "2026-09-07T01:23:50"
+      "updateTime": "2026-09-18T08:21:26.774391"
     },
     {
       "categoryId": null,
@@ -3001,13 +3001,13 @@
       "fileUrl": "/data/media/1453.opus",
       "id": 689,
       "isFavorite": true,
-      "lastPlayed": "2026-09-09T02:29:02",
+      "lastPlayed": "2026-09-17T14:20:58.219558",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "李白",
-      "updateTime": "2026-09-09T02:29:01"
+      "updateTime": "2026-09-17T14:20:58.219807"
     },
     {
       "categoryId": null,
@@ -3017,13 +3017,13 @@
       "fileUrl": "/data/media/1441.opus",
       "id": 687,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T04:53:56",
+      "lastPlayed": "2026-09-17T13:00:08.696511",
       "playCount": 22,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "离骚",
-      "updateTime": "2026-08-31T04:53:55"
+      "updateTime": "2026-09-17T13:00:08.69687"
     },
     {
       "categoryId": 9,
@@ -3033,13 +3033,13 @@
       "fileUrl": "/data/media/1440.opus",
       "id": 686,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T01:24:59",
-      "playCount": 29,
+      "lastPlayed": "2026-09-17T13:00:56.734322",
+      "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "离人",
-      "updateTime": "2026-09-04T01:24:59"
+      "updateTime": "2026-09-17T13:00:56.734862"
     },
     {
       "categoryId": null,
@@ -3049,13 +3049,13 @@
       "fileUrl": "/data/media/1438.opus",
       "id": 682,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T14:36:41",
-      "playCount": 23,
+      "lastPlayed": "2026-09-17T23:02:40.709137",
+      "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "泪海",
-      "updateTime": "2026-08-31T14:36:40"
+      "updateTime": "2026-09-17T23:07:41.59613"
     },
     {
       "categoryId": 9,
@@ -3065,13 +3065,13 @@
       "fileUrl": "/data/media/1439.opus",
       "id": 681,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:57:35",
+      "lastPlayed": "2026-09-17T13:50:31.069498",
       "playCount": 35,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "老男孩",
-      "updateTime": "2026-09-06T05:57:34"
+      "updateTime": "2026-09-17T13:50:31.069688"
     },
     {
       "categoryId": null,
@@ -3081,13 +3081,13 @@
       "fileUrl": "/data/media/1433.opus",
       "id": 679,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:18:11",
+      "lastPlayed": "2026-09-17T13:50:31.230073",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "浪淘沙令",
-      "updateTime": "2026-09-06T05:18:10"
+      "updateTime": "2026-09-17T13:50:31.230648"
     },
     {
       "categoryId": 2,
@@ -3106,8 +3106,8 @@
       "updateTime": "2026-07-22T07:35:26"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:22",
       "duration": 297,
       "fileUrl": "/data/media/1838.mp3",
@@ -3115,15 +3115,15 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-02T08:30:06",
       "playCount": 20,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 20,
+      "singerName": "林俊杰",
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "可惜没如果",
-      "updateTime": "2026-09-02T08:30:05"
+      "updateTime": "2026-09-18T08:21:25.615608"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:22",
       "duration": 284,
       "fileUrl": "/data/media/1421.opus",
@@ -3135,23 +3135,23 @@
       "singerName": null,
       "singerPictureUrl": null,
       "title": "君への嘘",
-      "updateTime": "2026-09-06T11:19:15"
+      "updateTime": "2026-09-18T08:21:26.930841"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:22",
       "duration": 342,
       "fileUrl": "/data/media/1425.opus",
       "id": 658,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T13:35:46",
+      "lastPlayed": "2026-09-18T07:43:12.576527",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "君がくれたもの～",
-      "updateTime": "2026-09-07T13:35:46"
+      "updateTime": "2026-09-18T08:21:26.970415"
     },
     {
       "categoryId": null,
@@ -3161,13 +3161,13 @@
       "fileUrl": "/data/media/1420.opus",
       "id": 653,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T02:43:06",
+      "lastPlayed": "2026-09-17T14:06:03.290413",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "九九八十一",
-      "updateTime": "2026-09-07T02:43:05"
+      "updateTime": "2026-09-17T14:06:03.290757"
     },
     {
       "categoryId": null,
@@ -3186,36 +3186,36 @@
       "updateTime": "2026-08-30T12:11:13"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:20",
       "duration": 256,
       "fileUrl": "/data/media/1406.opus",
       "id": 649,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T13:01:55",
+      "lastPlayed": "2026-09-18T07:56:03.322001",
       "playCount": 30,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 28,
+      "singerName": "许嵩",
+      "singerPictureUrl": "/data/media/2059.jpg",
       "title": "惊鸿一面",
-      "updateTime": "2026-08-31T13:01:55"
+      "updateTime": "2026-09-18T08:21:25.632406"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:20",
       "duration": 278,
       "fileUrl": "/data/media/1836.mp3",
       "id": 646,
       "isFavorite": true,
-      "lastPlayed": "2026-07-22T07:17:00",
+      "lastPlayed": "2026-09-17T13:50:31.076179",
       "playCount": 28,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 20,
+      "singerName": "林俊杰",
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "交换余生",
-      "updateTime": "2026-07-22T07:17:00"
+      "updateTime": "2026-09-18T08:21:25.647457"
     },
     {
       "categoryId": 2,
@@ -3229,7 +3229,7 @@
       "playCount": 34,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "将进酒",
       "updateTime": "2026-09-12T07:44:38"
     },
@@ -3241,13 +3241,13 @@
       "fileUrl": "/data/media/1403.opus",
       "id": 641,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:35:56",
+      "lastPlayed": "2026-09-18T07:41:07.433811",
       "playCount": 26,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "江南",
-      "updateTime": "2026-09-12T07:35:56"
+      "updateTime": "2026-09-18T07:41:07.434126"
     },
     {
       "categoryId": 9,
@@ -3257,13 +3257,13 @@
       "fileUrl": "/data/media/1405.opus",
       "id": 640,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T01:15:30",
+      "lastPlayed": "2026-09-17T13:00:27.854873",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "煎熬",
-      "updateTime": "2026-09-07T01:15:29"
+      "updateTime": "2026-09-17T13:00:27.855629"
     },
     {
       "categoryId": null,
@@ -3273,13 +3273,13 @@
       "fileUrl": "/data/media/1409.opus",
       "id": 639,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T05:09:54",
+      "lastPlayed": "2026-09-18T07:56:15.491283",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "假如爱有天意",
-      "updateTime": "2026-09-07T05:09:53"
+      "updateTime": "2026-09-18T07:56:15.491517"
     },
     {
       "categoryId": 9,
@@ -3289,13 +3289,13 @@
       "fileUrl": "/data/media/1400.opus",
       "id": 635,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:30:27",
+      "lastPlayed": "2026-09-17T13:22:38.272668",
       "playCount": 29,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "记念",
-      "updateTime": "2026-09-12T08:30:26"
+      "updateTime": "2026-09-17T13:22:38.273225"
     },
     {
       "categoryId": 8,
@@ -3321,13 +3321,13 @@
       "fileUrl": "/data/media/1379.opus",
       "id": 623,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T04:19:58",
+      "lastPlayed": "2026-09-17T13:01:23.906329",
       "playCount": 39,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "黄昏晓",
-      "updateTime": "2026-09-04T04:19:58"
+      "updateTime": "2026-09-17T13:01:23.907413"
     },
     {
       "categoryId": null,
@@ -3337,17 +3337,17 @@
       "fileUrl": "/data/media/1393.opus",
       "id": 622,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T11:24:59",
+      "lastPlayed": "2026-09-18T08:21:08.92026",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "画心",
-      "updateTime": "2026-09-07T11:24:59"
+      "updateTime": "2026-09-18T08:21:08.925608"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:18",
       "duration": 242,
       "fileUrl": "/data/media/1828.mp3",
@@ -3359,7 +3359,7 @@
       "singerName": null,
       "singerPictureUrl": null,
       "title": "花舞う街で",
-      "updateTime": "2026-07-03T10:30:52"
+      "updateTime": "2026-09-18T08:21:26.978593"
     },
     {
       "categoryId": 9,
@@ -3369,13 +3369,13 @@
       "fileUrl": "/data/media/1387.opus",
       "id": 618,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T08:10:26",
+      "lastPlayed": "2026-09-17T13:51:04.794831",
       "playCount": 66,
       "singerId": 21,
       "singerName": "周深",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "花开忘忧",
-      "updateTime": "2026-09-06T08:10:25"
+      "updateTime": "2026-09-17T13:51:04.795182"
     },
     {
       "categoryId": null,
@@ -3385,13 +3385,13 @@
       "fileUrl": "/data/media/1377.opus",
       "id": 606,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:46:51",
+      "lastPlayed": "2026-09-18T07:56:15.555416",
       "playCount": 33,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "寒露",
-      "updateTime": "2026-09-06T05:46:50"
+      "updateTime": "2026-09-18T07:56:15.555811"
     },
     {
       "categoryId": 9,
@@ -3410,68 +3410,68 @@
       "updateTime": "2026-09-06T11:30:52"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:16",
       "duration": 234,
       "fileUrl": "/data/media/1374.opus",
       "id": 602,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T06:57:55",
+      "lastPlayed": "2026-09-17T17:45:34.30232",
       "playCount": 27,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 17,
+      "singerName": "米津玄师",
+      "singerPictureUrl": "/data/media/2053.jpg",
       "title": "海の幽霊",
-      "updateTime": "2026-09-06T06:57:54"
+      "updateTime": "2026-09-18T08:21:25.743164"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:16",
       "duration": 185,
       "fileUrl": "/data/media/1363.opus",
       "id": 598,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T04:18:30",
+      "lastPlayed": "2026-09-17T13:33:05.501773",
       "playCount": 25,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 16,
+      "singerName": "凤凰传奇",
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "过山",
-      "updateTime": "2026-09-06T04:18:29"
+      "updateTime": "2026-09-18T08:21:25.772008"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:15",
       "duration": 236,
       "fileUrl": "/data/media/1370.opus",
       "id": 593,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:31:27",
+      "lastPlayed": "2026-09-18T07:41:07.447549",
       "playCount": 26,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 29,
+      "singerName": "邓紫棋",
+      "singerPictureUrl": "/data/media/2060.jpg",
       "title": "光年之外",
-      "updateTime": "2026-09-12T07:31:27"
+      "updateTime": "2026-09-18T08:21:25.786841"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:15",
       "duration": 211,
       "fileUrl": "/data/media/1350.opus",
       "id": 591,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T06:27:39",
-      "playCount": 31,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "lastPlayed": "2026-09-17T22:52:08.568761",
+      "playCount": 32,
+      "singerId": 16,
+      "singerName": "凤凰传奇",
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "光芒",
-      "updateTime": "2026-09-06T06:27:39"
+      "updateTime": "2026-09-18T08:21:25.801984"
     },
     {
       "categoryId": null,
@@ -3497,45 +3497,45 @@
       "fileUrl": "/data/media/1346.opus",
       "id": 584,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T06:16:16",
+      "lastPlayed": "2026-09-17T13:33:58.561948",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "勾指起誓",
-      "updateTime": "2026-08-31T06:16:15"
+      "updateTime": "2026-09-17T13:33:58.562135"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:14",
       "duration": 272,
       "fileUrl": "/data/media/1358.opus",
       "id": 583,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:02:22",
-      "playCount": 22,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "lastPlayed": "2026-09-17T22:26:54.199578",
+      "playCount": 23,
+      "singerId": 16,
+      "singerName": "凤凰传奇",
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "耕织曲",
-      "updateTime": "2026-09-07T03:02:21"
+      "updateTime": "2026-09-18T08:21:25.817976"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:14",
       "duration": 240,
       "fileUrl": "/data/media/1353.opus",
       "id": 582,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:21:59",
+      "lastPlayed": "2026-09-17T13:51:04.567952",
       "playCount": 24,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 4,
+      "singerName": "周杰伦",
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "搁浅",
-      "updateTime": "2026-09-12T08:21:58"
+      "updateTime": "2026-09-18T08:21:25.833423"
     },
     {
       "categoryId": 9,
@@ -3545,13 +3545,13 @@
       "fileUrl": "/data/media/1352.opus",
       "id": 581,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T04:27:43",
+      "lastPlayed": "2026-09-17T12:54:23.677664",
       "playCount": 26,
       "singerId": 4,
       "singerName": "周杰伦",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "告白气球",
-      "updateTime": "2026-09-12T04:27:43"
+      "updateTime": "2026-09-17T12:54:23.678932"
     },
     {
       "categoryId": null,
@@ -3577,13 +3577,13 @@
       "fileUrl": "/data/media/1338.opus",
       "id": 572,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T03:40:56",
+      "lastPlayed": "2026-09-17T12:49:03.120401",
       "playCount": 22,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "父亲写的散文诗",
-      "updateTime": "2026-09-08T03:40:55"
+      "updateTime": "2026-09-17T12:49:03.120667"
     },
     {
       "categoryId": null,
@@ -3593,17 +3593,17 @@
       "fileUrl": "/data/media/1343.opus",
       "id": 571,
       "isFavorite": true,
-      "lastPlayed": "2026-09-05T11:33:10",
+      "lastPlayed": "2026-09-18T07:56:15.434448",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "父亲",
-      "updateTime": "2026-09-05T11:33:10"
+      "updateTime": "2026-09-18T07:56:15.435411"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:13",
       "duration": 274,
       "fileUrl": "/data/media/1823.mp3",
@@ -3611,27 +3611,27 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-06T07:06:44",
       "playCount": 29,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 21,
+      "singerName": "周深",
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "浮光",
-      "updateTime": "2026-09-06T07:06:43"
+      "updateTime": "2026-09-18T08:21:25.867738"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:13",
       "duration": 293,
       "fileUrl": "/data/media/1824.mp3",
       "id": 565,
       "isFavorite": true,
-      "lastPlayed": "2026-07-03T11:39:46",
+      "lastPlayed": "2026-09-17T22:19:34.650946",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "風のように",
-      "updateTime": "2026-07-03T11:39:46"
+      "updateTime": "2026-09-18T08:21:27.028652"
     },
     {
       "categoryId": 9,
@@ -3641,13 +3641,13 @@
       "fileUrl": "/data/media/1980.mp3",
       "id": 563,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T04:19:56",
+      "lastPlayed": "2026-09-17T13:00:27.816225",
       "playCount": 33,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "风大浪大",
-      "updateTime": "2026-09-12T04:19:56"
+      "updateTime": "2026-09-17T13:00:27.816588"
     },
     {
       "categoryId": 9,
@@ -3657,13 +3657,13 @@
       "fileUrl": "/data/media/1335.opus",
       "id": 556,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T13:13:18",
+      "lastPlayed": "2026-09-17T13:01:59.909062",
       "playCount": 24,
       "singerId": 4,
       "singerName": "周杰伦",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "反方向的钟",
-      "updateTime": "2026-09-01T13:13:18"
+      "updateTime": "2026-09-17T13:01:59.90944"
     },
     {
       "categoryId": 3,
@@ -3673,13 +3673,13 @@
       "fileUrl": "/data/media/1336.opus",
       "id": 555,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T07:17:19",
+      "lastPlayed": "2026-09-17T12:48:09.432906",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "繁华的寂静",
-      "updateTime": "2026-09-06T07:17:18"
+      "updateTime": "2026-09-17T12:48:09.436666"
     },
     {
       "categoryId": 9,
@@ -3689,13 +3689,13 @@
       "fileUrl": "/data/media/1327.opus",
       "id": 554,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:12:12",
+      "lastPlayed": "2026-09-17T13:51:04.635705",
       "playCount": 35,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "繁花",
-      "updateTime": "2026-09-12T07:12:12"
+      "updateTime": "2026-09-17T13:51:04.635966"
     },
     {
       "categoryId": 9,
@@ -3709,7 +3709,7 @@
       "playCount": 34,
       "singerId": 29,
       "singerName": "邓紫棋",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2060.jpg",
       "title": "多远都要在一起",
       "updateTime": "2026-09-16T19:47:18.390987"
     },
@@ -3721,13 +3721,13 @@
       "fileUrl": "/data/media/1325.opus",
       "id": 550,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T04:24:06",
-      "playCount": 35,
+      "lastPlayed": "2026-09-17T20:36:50.183467",
+      "playCount": 36,
       "singerId": 22,
       "singerName": "仓木麻衣",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2058.jpg",
       "title": "渡月橋～君 想ふ～",
-      "updateTime": "2026-09-12T04:24:06"
+      "updateTime": "2026-09-17T20:41:00.521399"
     },
     {
       "categoryId": null,
@@ -3737,17 +3737,17 @@
       "fileUrl": "/data/media/1318.opus",
       "id": 548,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T11:08:26",
+      "lastPlayed": "2026-09-17T12:54:23.751185",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "冬天里的一把火",
-      "updateTime": "2026-09-07T11:08:25"
+      "updateTime": "2026-09-17T12:54:23.751918"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:11",
       "duration": 223,
       "fileUrl": "/data/media/1322.opus",
@@ -3755,15 +3755,15 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-06T13:43:10",
       "playCount": 21,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 4,
+      "singerName": "周杰伦",
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "稻香",
-      "updateTime": "2026-09-06T13:43:10"
+      "updateTime": "2026-09-18T08:21:25.912057"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:11",
       "duration": 229,
       "fileUrl": "/data/media/1316.opus",
@@ -3771,27 +3771,27 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-12T06:02:34",
       "playCount": 17,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 29,
+      "singerName": "邓紫棋",
+      "singerPictureUrl": "/data/media/2060.jpg",
       "title": "倒数",
-      "updateTime": "2026-09-12T06:02:34"
+      "updateTime": "2026-09-18T08:21:25.926938"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:11",
       "duration": 314,
       "fileUrl": "/data/media/1313.opus",
       "id": 533,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T03:04:19",
-      "playCount": 36,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "lastPlayed": "2026-09-17T20:15:53.250538",
+      "playCount": 37,
+      "singerId": 21,
+      "singerName": "周深",
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "大鱼",
-      "updateTime": "2026-09-12T03:04:19"
+      "updateTime": "2026-09-18T08:21:25.943564"
     },
     {
       "categoryId": null,
@@ -3817,13 +3817,13 @@
       "fileUrl": "/data/media/1311.opus",
       "id": 526,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T02:26:40",
+      "lastPlayed": "2026-09-17T13:33:05.245326",
       "playCount": 26,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "打上花火",
-      "updateTime": "2026-09-08T02:26:39"
+      "updateTime": "2026-09-17T13:33:05.245768"
     },
     {
       "categoryId": null,
@@ -3833,13 +3833,13 @@
       "fileUrl": "/data/media/1303.opus",
       "id": 525,
       "isFavorite": true,
-      "lastPlayed": "2026-07-04T11:18:25",
+      "lastPlayed": "2026-09-18T07:55:40.041429",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "答案",
-      "updateTime": "2026-07-04T11:18:24"
+      "updateTime": "2026-09-18T07:55:40.042376"
     },
     {
       "categoryId": 9,
@@ -3853,7 +3853,7 @@
       "playCount": 39,
       "singerId": 21,
       "singerName": "周深",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "错位时空",
       "updateTime": "2026-09-12T04:37:02"
     },
@@ -3881,29 +3881,29 @@
       "fileUrl": "/data/media/1293.opus",
       "id": 518,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T06:15:18",
+      "lastPlayed": "2026-09-18T08:14:46.277319",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "辞·九门回忆",
-      "updateTime": "2026-09-06T06:15:17"
+      "updateTime": "2026-09-18T08:14:46.278171"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:09",
       "duration": 289,
       "fileUrl": "/data/media/1295.opus",
       "id": 517,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T05:29:12",
+      "lastPlayed": "2026-09-17T14:03:44.389623",
       "playCount": 37,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 17,
+      "singerName": "米津玄师",
+      "singerPictureUrl": "/data/media/2053.jpg",
       "title": "春雷",
-      "updateTime": "2026-09-07T05:29:11"
+      "updateTime": "2026-09-18T08:21:26.004272"
     },
     {
       "categoryId": null,
@@ -3913,29 +3913,29 @@
       "fileUrl": "/data/media/1292.opus",
       "id": 516,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T12:39:35",
-      "playCount": 30,
+      "lastPlayed": "2026-09-17T18:37:33.36158",
+      "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "春江花月夜",
-      "updateTime": "2026-09-06T12:39:34"
+      "updateTime": "2026-09-17T18:41:54.331381"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:09",
       "duration": 196,
       "fileUrl": "/data/media/1287.opus",
       "id": 514,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T06:04:21",
+      "lastPlayed": "2026-09-17T13:33:05.438533",
       "playCount": 38,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "春を告げる",
-      "updateTime": "2026-09-06T06:04:20"
+      "updateTime": "2026-09-18T08:21:27.038967"
     },
     {
       "categoryId": null,
@@ -3945,13 +3945,13 @@
       "fileUrl": "/data/media/1283.opus",
       "id": 513,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T01:52:16",
+      "lastPlayed": "2026-09-17T13:50:31.073179",
       "playCount": 34,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "春",
-      "updateTime": "2026-09-04T01:52:16"
+      "updateTime": "2026-09-17T13:50:31.07416"
     },
     {
       "categoryId": 2,
@@ -3961,13 +3961,13 @@
       "fileUrl": "/data/media/1296.opus",
       "id": 512,
       "isFavorite": true,
-      "lastPlayed": "2026-09-09T04:04:23",
+      "lastPlayed": "2026-09-17T12:49:03.08288",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "吹梦到西洲",
-      "updateTime": "2026-09-09T04:04:22"
+      "updateTime": "2026-09-17T12:49:03.083423"
     },
     {
       "categoryId": null,
@@ -3977,13 +3977,13 @@
       "fileUrl": "/data/media/1289.opus",
       "id": 507,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:48:48",
+      "lastPlayed": "2026-09-17T14:05:37.956288",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "丑八怪",
-      "updateTime": "2026-09-12T07:48:48"
+      "updateTime": "2026-09-17T14:05:37.956581"
     },
     {
       "categoryId": null,
@@ -3993,13 +3993,13 @@
       "fileUrl": "/data/media/1297.opus",
       "id": 506,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T05:20:36",
+      "lastPlayed": "2026-09-17T13:33:58.512567",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "赤壁赋",
-      "updateTime": "2026-09-07T05:20:36"
+      "updateTime": "2026-09-17T13:33:58.512833"
     },
     {
       "categoryId": null,
@@ -4009,13 +4009,13 @@
       "fileUrl": "/data/media/1281.opus",
       "id": 496,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T06:14:56",
-      "playCount": 33,
+      "lastPlayed": "2026-09-17T22:54:47.983359",
+      "playCount": 34,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "布拉格广场",
-      "updateTime": "2026-09-12T06:14:55"
+      "updateTime": "2026-09-17T22:59:43.957032"
     },
     {
       "categoryId": 9,
@@ -4025,29 +4025,29 @@
       "fileUrl": "/data/media/1273.opus",
       "id": 493,
       "isFavorite": true,
-      "lastPlayed": "2026-09-09T02:41:06",
+      "lastPlayed": "2026-09-17T13:33:58.656344",
       "playCount": 29,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "不问天",
-      "updateTime": "2026-09-09T02:41:06"
+      "updateTime": "2026-09-17T13:33:58.656597"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:07",
       "duration": 266,
       "fileUrl": "/data/media/1275.opus",
       "id": 492,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T11:45:07",
+      "lastPlayed": "2026-09-17T22:19:40.595342",
       "playCount": 34,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 20,
+      "singerName": "林俊杰",
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "不为谁而作的歌",
-      "updateTime": "2026-09-07T11:45:06"
+      "updateTime": "2026-09-18T08:21:26.036533"
     },
     {
       "categoryId": 2,
@@ -4057,13 +4057,13 @@
       "fileUrl": "/data/media/1258.opus",
       "id": 481,
       "isFavorite": true,
-      "lastPlayed": "2026-09-09T03:50:35",
+      "lastPlayed": "2026-09-18T08:08:31.698427",
       "playCount": 25,
       "singerId": 16,
       "singerName": "凤凰传奇",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2052.jpg",
       "title": "别董大",
-      "updateTime": "2026-09-09T03:50:35"
+      "updateTime": "2026-09-18T08:08:31.69888"
     },
     {
       "categoryId": 9,
@@ -4077,7 +4077,7 @@
       "playCount": 30,
       "singerId": 20,
       "singerName": "林俊杰",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2056.jpg",
       "title": "背对背拥抱",
       "updateTime": "2026-08-30T10:53:08"
     },
@@ -4093,13 +4093,13 @@
       "playCount": 28,
       "singerId": 4,
       "singerName": "周杰伦",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "半岛铁盒",
       "updateTime": "2026-09-05T04:16:47"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:06",
       "duration": 293,
       "fileUrl": "/data/media/1264.opus",
@@ -4107,11 +4107,11 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-07T03:37:52",
       "playCount": 30,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 28,
+      "singerName": "许嵩",
+      "singerPictureUrl": "/data/media/2059.jpg",
       "title": "半城烟沙",
-      "updateTime": "2026-09-07T03:37:51"
+      "updateTime": "2026-09-18T08:21:26.093093"
     },
     {
       "categoryId": null,
@@ -4121,17 +4121,17 @@
       "fileUrl": "/data/media/1814.mp3",
       "id": 469,
       "isFavorite": true,
-      "lastPlayed": "2026-09-05T11:37:49",
+      "lastPlayed": "2026-09-17T13:33:58.382715",
       "playCount": 34,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "爸爸妈妈",
-      "updateTime": "2026-09-05T11:37:48"
+      "updateTime": "2026-09-17T13:33:58.383617"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 9,
+      "categoryName": "中文",
       "createTime": "2025-07-06T18:43:05",
       "duration": 234,
       "fileUrl": "/data/media/1242.opus",
@@ -4139,11 +4139,11 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-02T15:05:22",
       "playCount": 24,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 4,
+      "singerName": "周杰伦",
+      "singerPictureUrl": "/data/media/2050.jpg",
       "title": "爱在西元前",
-      "updateTime": "2026-09-02T15:05:21"
+      "updateTime": "2026-09-18T08:21:26.131334"
     },
     {
       "categoryId": null,
@@ -4153,13 +4153,13 @@
       "fileUrl": "/data/media/1822.mp3",
       "id": 464,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T22:21:21",
+      "lastPlayed": "2026-09-17T13:00:08.684962",
       "playCount": 37,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "爱笑的眼睛",
-      "updateTime": "2026-09-06T22:21:21"
+      "updateTime": "2026-09-17T13:00:08.685255"
     },
     {
       "categoryId": 9,
@@ -4169,13 +4169,13 @@
       "fileUrl": "/data/media/1239.opus",
       "id": 461,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:54:33",
+      "lastPlayed": "2026-09-17T12:59:35.758779",
       "playCount": 26,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "爱你",
-      "updateTime": "2026-09-07T03:54:32"
+      "updateTime": "2026-09-17T12:59:35.759283"
     },
     {
       "categoryId": null,
@@ -4185,13 +4185,13 @@
       "fileUrl": "/data/media/1812.mp3",
       "id": 459,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T02:34:47",
+      "lastPlayed": "2026-09-17T12:59:35.700124",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "爱的代价",
-      "updateTime": "2026-09-04T02:34:47"
+      "updateTime": "2026-09-17T12:59:35.700441"
     },
     {
       "categoryId": null,
@@ -4201,33 +4201,33 @@
       "fileUrl": "/data/media/1247.opus",
       "id": 454,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T14:38:53",
+      "lastPlayed": "2026-09-18T07:56:03.862187",
       "playCount": 19,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "阿房宫赋",
-      "updateTime": "2026-09-01T14:38:52"
+      "updateTime": "2026-09-18T07:56:03.863821"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:04",
       "duration": 211,
       "fileUrl": "/data/media/1236.opus",
       "id": 450,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:12:14",
+      "lastPlayed": "2026-09-18T07:56:15.215254",
       "playCount": 33,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "ねぇねぇねぇ。",
-      "updateTime": "2026-09-07T04:12:13"
+      "updateTime": "2026-09-18T08:21:27.07014"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:04",
       "duration": 273,
       "fileUrl": "/data/media/1244.opus",
@@ -4239,39 +4239,39 @@
       "singerName": null,
       "singerPictureUrl": null,
       "title": "だんご大家族",
-      "updateTime": "2026-09-12T05:19:23"
+      "updateTime": "2026-09-18T08:21:27.088027"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:04",
       "duration": 535,
       "fileUrl": "/data/media/1233.opus",
       "id": 446,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T11:47:12",
+      "lastPlayed": "2026-09-17T14:00:06.977244",
       "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "スパークル",
-      "updateTime": "2026-09-06T11:47:12"
+      "updateTime": "2026-09-18T08:21:27.102354"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:04",
       "duration": 252,
       "fileUrl": "/data/media/1228.opus",
       "id": 444,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T12:14:34",
-      "playCount": 30,
+      "lastPlayed": "2026-09-17T20:25:04.21496",
+      "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "カワキヲアメク",
-      "updateTime": "2026-09-06T12:14:34"
+      "updateTime": "2026-09-18T08:21:27.111335"
     },
     {
       "categoryId": 7,
@@ -4281,61 +4281,61 @@
       "fileUrl": "/data/media/1230.opus",
       "id": 443,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T09:48:55",
+      "lastPlayed": "2026-09-17T13:02:05.306232",
       "playCount": 29,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "カサネテク",
-      "updateTime": "2026-09-06T09:48:54"
+      "updateTime": "2026-09-17T13:02:05.306543"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:03",
       "duration": 254,
       "fileUrl": "/data/media/1813.mp3",
       "id": 441,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T10:42:59",
+      "lastPlayed": "2026-09-18T07:56:15.358785",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "イキたいの。",
-      "updateTime": "2026-09-06T10:42:58"
+      "updateTime": "2026-09-18T08:21:27.119563"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:03",
       "duration": 172,
       "fileUrl": "/data/media/1220.opus",
       "id": 440,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T07:28:09",
+      "lastPlayed": "2026-09-18T07:40:04.776721",
       "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "ありふれて花束",
-      "updateTime": "2026-09-06T07:28:09"
+      "updateTime": "2026-09-18T08:21:27.128874"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:43:03",
       "duration": 214,
       "fileUrl": "/data/media/1225.opus",
       "id": 439,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T07:02:58",
-      "playCount": 30,
+      "lastPlayed": "2026-09-17T20:55:38.124992",
+      "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "あのね。",
-      "updateTime": "2026-09-12T07:02:58"
+      "updateTime": "2026-09-18T08:21:27.137796"
     },
     {
       "categoryId": null,
@@ -4345,13 +4345,13 @@
       "fileUrl": "/data/media/1229.opus",
       "id": 436,
       "isFavorite": true,
-      "lastPlayed": "2026-09-03T13:51:43",
+      "lastPlayed": "2026-09-17T13:50:31.221101",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Колыбельная (摇篮曲)",
-      "updateTime": "2026-09-03T13:51:42"
+      "updateTime": "2026-09-17T13:50:31.221274"
     },
     {
       "categoryId": null,
@@ -4377,29 +4377,29 @@
       "fileUrl": "/data/media/1209.opus",
       "id": 428,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:50:57",
+      "lastPlayed": "2026-09-17T14:06:03.259146",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Young For You",
-      "updateTime": "2026-09-12T05:50:57"
+      "updateTime": "2026-09-17T14:06:03.259504"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:43:02",
       "duration": 345,
       "fileUrl": "/data/media/1214.opus",
       "id": 426,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:51:14",
+      "lastPlayed": "2026-09-18T07:56:38.167653",
       "playCount": 26,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "You Are Not Alone",
-      "updateTime": "2026-09-07T04:51:14"
+      "updateTime": "2026-09-18T08:21:26.193544"
     },
     {
       "categoryId": null,
@@ -4409,29 +4409,29 @@
       "fileUrl": "/data/media/1212.opus",
       "id": 420,
       "isFavorite": true,
-      "lastPlayed": "2026-09-05T11:17:28",
+      "lastPlayed": "2026-09-17T13:01:08.311479",
       "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Wonderful U",
-      "updateTime": "2026-09-05T11:17:28"
+      "updateTime": "2026-09-17T13:01:08.311702"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:43:02",
       "duration": 459,
       "fileUrl": "/data/media/1217.opus",
       "id": 417,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T14:55:07",
+      "lastPlayed": "2026-09-18T07:55:40.476857",
       "playCount": 24,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Will You Be There",
-      "updateTime": "2026-09-02T14:55:07"
+      "updateTime": "2026-09-18T08:21:26.203835"
     },
     {
       "categoryId": null,
@@ -4450,8 +4450,8 @@
       "updateTime": "2026-09-08T02:17:13"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:43:01",
       "duration": 395,
       "fileUrl": "/data/media/1200.opus",
@@ -4459,11 +4459,11 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-06T13:26:24",
       "playCount": 31,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Who Is It",
-      "updateTime": "2026-09-06T13:26:24"
+      "updateTime": "2026-09-18T08:21:26.222066"
     },
     {
       "categoryId": null,
@@ -4482,20 +4482,20 @@
       "updateTime": "2026-09-06T12:06:24"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:43:01",
       "duration": 297,
       "fileUrl": "/data/media/1198.opus",
       "id": 410,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T02:59:04",
+      "lastPlayed": "2026-09-17T12:54:23.845927",
       "playCount": 25,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Whatever Happens",
-      "updateTime": "2026-09-12T02:59:04"
+      "updateTime": "2026-09-18T08:21:26.238091"
     },
     {
       "categoryId": null,
@@ -4505,13 +4505,13 @@
       "fileUrl": "/data/media/1191.opus",
       "id": 409,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T03:50:38",
+      "lastPlayed": "2026-09-17T13:22:36.78335",
       "playCount": 29,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "What Makes You Beautiful",
-      "updateTime": "2026-09-12T03:50:37"
+      "updateTime": "2026-09-17T13:22:36.783809"
     },
     {
       "categoryId": null,
@@ -4521,13 +4521,13 @@
       "fileUrl": "/data/media/1192.opus",
       "id": 407,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T11:56:06",
+      "lastPlayed": "2026-09-17T13:51:04.565961",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Welcome To New York",
-      "updateTime": "2026-09-06T11:56:05"
+      "updateTime": "2026-09-17T13:51:04.566274"
     },
     {
       "categoryId": null,
@@ -4569,13 +4569,13 @@
       "fileUrl": "/data/media/1201.opus",
       "id": 403,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T14:26:43",
-      "playCount": 29,
+      "lastPlayed": "2026-09-17T22:45:00.066346",
+      "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "We Are The World",
-      "updateTime": "2026-09-06T14:26:42"
+      "updateTime": "2026-09-17T22:52:08.572968"
     },
     {
       "categoryId": null,
@@ -4585,13 +4585,13 @@
       "fileUrl": "/data/media/1171.opus",
       "id": 395,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T04:43:09",
+      "lastPlayed": "2026-09-17T14:06:03.324952",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Wake",
-      "updateTime": "2026-09-02T04:43:09"
+      "updateTime": "2026-09-17T14:06:03.325509"
     },
     {
       "categoryId": null,
@@ -4601,13 +4601,13 @@
       "fileUrl": "/data/media/1815.mp3",
       "id": 392,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:45:28",
+      "lastPlayed": "2026-09-17T13:20:33.96554",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Viva La Vida 1999",
-      "updateTime": "2026-09-07T04:45:27"
+      "updateTime": "2026-09-17T13:20:33.966064"
     },
     {
       "categoryId": null,
@@ -4617,13 +4617,13 @@
       "fileUrl": "/data/media/1185.opus",
       "id": 389,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T03:04:41",
+      "lastPlayed": "2026-09-17T13:31:50.70644",
       "playCount": 35,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Variations On The Kanon By Pachelbel",
-      "updateTime": "2026-09-08T03:04:40"
+      "updateTime": "2026-09-17T13:31:50.707002"
     },
     {
       "categoryId": 7,
@@ -4633,29 +4633,29 @@
       "fileUrl": "/data/media/1177.opus",
       "id": 387,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T14:10:54",
-      "playCount": 35,
+      "lastPlayed": "2026-09-18T07:45:36.161808",
+      "playCount": 36,
       "singerId": 21,
       "singerName": "周深",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2057.jpg",
       "title": "Unravel",
-      "updateTime": "2026-09-06T14:10:53"
+      "updateTime": "2026-09-18T07:45:36.162436"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 13,
+      "categoryName": "名科",
       "createTime": "2025-07-06T18:42:57",
       "duration": 269,
       "fileUrl": "/data/media/1165.opus",
       "id": 380,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T14:34:58",
+      "lastPlayed": "2026-09-17T13:02:14.467955",
       "playCount": 26,
       "singerId": 22,
       "singerName": "仓木麻衣",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2058.jpg",
       "title": "TRY AGAIN",
-      "updateTime": "2026-09-06T14:34:58"
+      "updateTime": "2026-09-18T08:21:26.815867"
     },
     {
       "categoryId": 7,
@@ -4669,7 +4669,7 @@
       "playCount": 31,
       "singerId": 22,
       "singerName": "仓木麻衣",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2058.jpg",
       "title": "Tonight, I feel close to you",
       "updateTime": "2026-09-02T15:21:54"
     },
@@ -4697,13 +4697,13 @@
       "fileUrl": "/data/media/1160.opus",
       "id": 364,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:35:47",
-      "playCount": 30,
+      "lastPlayed": "2026-09-17T20:21:08.161754",
+      "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Things You Said",
-      "updateTime": "2026-09-12T05:35:46"
+      "updateTime": "2026-09-17T20:25:04.222855"
     },
     {
       "categoryId": null,
@@ -4713,13 +4713,13 @@
       "fileUrl": "/data/media/1147.opus",
       "id": 361,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:32:58",
+      "lastPlayed": "2026-09-17T14:03:41.185094",
       "playCount": 17,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "The Way I Still Love You",
-      "updateTime": "2026-09-07T03:32:57"
+      "updateTime": "2026-09-17T14:03:41.18549"
     },
     {
       "categoryId": 3,
@@ -4729,13 +4729,13 @@
       "fileUrl": "/data/media/1149.opus",
       "id": 360,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T12:39:28",
+      "lastPlayed": "2026-09-17T13:33:06.479308",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "The Truth That You Leave",
-      "updateTime": "2026-09-07T12:39:28"
+      "updateTime": "2026-09-17T13:33:06.479667"
     },
     {
       "categoryId": 7,
@@ -4745,13 +4745,13 @@
       "fileUrl": "/data/media/1820.mp3",
       "id": 351,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:17:58",
+      "lastPlayed": "2026-09-18T07:40:06.41744",
       "playCount": 30,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "TEAR DROPS",
-      "updateTime": "2026-09-12T08:17:57"
+      "updateTime": "2026-09-18T07:40:06.418714"
     },
     {
       "categoryId": null,
@@ -4761,13 +4761,13 @@
       "fileUrl": "/data/media/1150.opus",
       "id": 349,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T11:30:22",
+      "lastPlayed": "2026-09-17T12:59:35.703208",
       "playCount": 33,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Take Me Hand",
-      "updateTime": "2026-09-07T11:30:22"
+      "updateTime": "2026-09-17T12:59:35.704083"
     },
     {
       "categoryId": null,
@@ -4777,13 +4777,13 @@
       "fileUrl": "/data/media/1153.opus",
       "id": 348,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T01:48:05",
+      "lastPlayed": "2026-09-17T12:59:35.970674",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Taco Truck",
-      "updateTime": "2026-09-07T01:48:04"
+      "updateTime": "2026-09-17T12:59:35.970915"
     },
     {
       "categoryId": null,
@@ -4793,17 +4793,17 @@
       "fileUrl": "/data/media/1146.opus",
       "id": 346,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T07:02:08",
+      "lastPlayed": "2026-09-17T13:33:58.65828",
       "playCount": 33,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Summertime",
-      "updateTime": "2026-09-06T07:02:07"
+      "updateTime": "2026-09-17T13:33:58.658512"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:42:54",
       "duration": 344,
       "fileUrl": "/data/media/1137.opus",
@@ -4811,11 +4811,11 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-02T07:31:52",
       "playCount": 20,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Stranger In Moscow",
-      "updateTime": "2026-09-02T07:31:51"
+      "updateTime": "2026-09-18T08:21:26.368792"
     },
     {
       "categoryId": null,
@@ -4825,13 +4825,13 @@
       "fileUrl": "/data/media/1123.opus",
       "id": 339,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:20:21",
+      "lastPlayed": "2026-09-18T07:56:15.561683",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "STAY",
-      "updateTime": "2026-09-07T03:20:21"
+      "updateTime": "2026-09-18T07:56:15.562348"
     },
     {
       "categoryId": null,
@@ -4857,29 +4857,29 @@
       "fileUrl": "/data/media/1126.opus",
       "id": 334,
       "isFavorite": true,
-      "lastPlayed": "2026-06-30T08:05:08",
+      "lastPlayed": "2026-09-17T11:24:26.642959",
       "playCount": 17,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Something Else",
-      "updateTime": "2026-06-30T08:05:08"
+      "updateTime": "2026-09-17T11:24:26.64343"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:42:53",
       "duration": 326,
       "fileUrl": "/data/media/1136.opus",
       "id": 333,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T03:46:22",
-      "playCount": 17,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "lastPlayed": "2026-09-17T19:22:05.342626",
+      "playCount": 18,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Someone Put Your Hand Out",
-      "updateTime": "2026-09-08T03:46:22"
+      "updateTime": "2026-09-18T08:21:26.398616"
     },
     {
       "categoryId": null,
@@ -4909,7 +4909,7 @@
       "playCount": 26,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Small girl",
       "updateTime": "2026-09-02T15:23:06"
     },
@@ -4921,29 +4921,29 @@
       "fileUrl": "/data/media/1816.mp3",
       "id": 312,
       "isFavorite": true,
-      "lastPlayed": "2026-08-30T14:35:52",
+      "lastPlayed": "2026-09-17T13:33:58.946228",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Shape Of You",
-      "updateTime": "2026-08-30T14:35:51"
+      "updateTime": "2026-09-17T13:33:58.946494"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 13,
+      "categoryName": "名科",
       "createTime": "2025-07-06T18:42:51",
       "duration": 267,
       "fileUrl": "/data/media/1104.opus",
       "id": 309,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T02:50:15",
-      "playCount": 29,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "lastPlayed": "2026-09-18T07:56:15.493263",
+      "playCount": 30,
+      "singerId": 22,
+      "singerName": "仓木麻衣",
+      "singerPictureUrl": "/data/media/2058.jpg",
       "title": "Secret of my heart",
-      "updateTime": "2026-09-08T02:50:15"
+      "updateTime": "2026-09-18T08:21:26.801536"
     },
     {
       "categoryId": null,
@@ -4953,13 +4953,13 @@
       "fileUrl": "/data/media/1105.opus",
       "id": 303,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T06:46:33",
+      "lastPlayed": "2026-09-18T07:56:15.425736",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Sacred Play Secret Place",
-      "updateTime": "2026-09-12T06:46:32"
+      "updateTime": "2026-09-18T07:56:15.426472"
     },
     {
       "categoryId": null,
@@ -4969,13 +4969,13 @@
       "fileUrl": "/data/media/1096.opus",
       "id": 300,
       "isFavorite": true,
-      "lastPlayed": "2026-07-20T13:07:38",
+      "lastPlayed": "2026-09-18T07:43:13.15053",
       "playCount": 13,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Romeo's Tune",
-      "updateTime": "2026-07-20T13:07:37"
+      "updateTime": "2026-09-18T07:43:13.151046"
     },
     {
       "categoryId": null,
@@ -4985,13 +4985,13 @@
       "fileUrl": "/data/media/1081.opus",
       "id": 293,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T03:17:59",
+      "lastPlayed": "2026-09-18T07:42:51.584551",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "River Flows In You",
-      "updateTime": "2026-09-07T03:17:58"
+      "updateTime": "2026-09-18T07:42:51.584751"
     },
     {
       "categoryId": 7,
@@ -5001,13 +5001,13 @@
       "fileUrl": "/data/media/1798.mp3",
       "id": 292,
       "isFavorite": true,
-      "lastPlayed": "2026-09-09T05:38:07",
+      "lastPlayed": "2026-09-17T12:59:35.963334",
       "playCount": 15,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Revenge",
-      "updateTime": "2026-09-09T05:38:06"
+      "updateTime": "2026-09-17T12:59:35.963669"
     },
     {
       "categoryId": null,
@@ -5017,13 +5017,13 @@
       "fileUrl": "/data/media/1089.opus",
       "id": 290,
       "isFavorite": true,
-      "lastPlayed": "2026-09-08T02:00:09",
+      "lastPlayed": "2026-09-17T13:12:39.834858",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Remember",
-      "updateTime": "2026-09-08T02:00:09"
+      "updateTime": "2026-09-17T13:12:39.835418"
     },
     {
       "categoryId": null,
@@ -5049,13 +5049,13 @@
       "fileUrl": "/data/media/1087.opus",
       "id": 282,
       "isFavorite": true,
-      "lastPlayed": "2026-09-04T04:35:41",
+      "lastPlayed": "2026-09-18T07:45:42.023464",
       "playCount": 19,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Pretty Boy",
-      "updateTime": "2026-09-04T04:35:41"
+      "updateTime": "2026-09-18T07:45:42.024554"
     },
     {
       "categoryId": null,
@@ -5081,13 +5081,13 @@
       "fileUrl": "/data/media/1993.mp3",
       "id": 275,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T09:44:32",
+      "lastPlayed": "2026-09-18T07:56:15.486164",
       "playCount": 26,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "Piece Of Your Heart",
-      "updateTime": "2026-09-06T09:44:31"
+      "updateTime": "2026-09-18T07:56:15.486414"
     },
     {
       "categoryId": null,
@@ -5097,13 +5097,13 @@
       "fileUrl": "/data/media/1066.opus",
       "id": 265,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T13:00:17",
+      "lastPlayed": "2026-09-17T13:33:05.441631",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "One Day",
-      "updateTime": "2026-09-01T13:00:17"
+      "updateTime": "2026-09-17T13:33:05.442689"
     },
     {
       "categoryId": null,
@@ -5113,29 +5113,29 @@
       "fileUrl": "/data/media/1994.mp3",
       "id": 251,
       "isFavorite": true,
-      "lastPlayed": "2026-09-01T14:04:22",
-      "playCount": 25,
+      "lastPlayed": "2026-09-17T18:10:24.092927",
+      "playCount": 26,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "My Stupid Heart",
-      "updateTime": "2026-09-01T14:04:21"
+      "updateTime": "2026-09-17T18:13:06.8763"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:42:46",
       "duration": 319,
       "fileUrl": "/data/media/1041.opus",
       "id": 235,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T11:52:32",
+      "lastPlayed": "2026-09-17T13:51:04.292663",
       "playCount": 30,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Man In The Mirror",
-      "updateTime": "2026-09-06T11:52:32"
+      "updateTime": "2026-09-18T08:21:26.483856"
     },
     {
       "categoryId": null,
@@ -5145,13 +5145,13 @@
       "fileUrl": "/data/media/1037.opus",
       "id": 232,
       "isFavorite": true,
-      "lastPlayed": "2026-09-03T13:55:45",
+      "lastPlayed": "2026-09-17T13:33:06.396342",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "MAGIC",
-      "updateTime": "2026-09-03T13:55:45"
+      "updateTime": "2026-09-17T13:33:06.398288"
     },
     {
       "categoryId": null,
@@ -5161,13 +5161,13 @@
       "fileUrl": "/data/media/1034.opus",
       "id": 231,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:48:56",
+      "lastPlayed": "2026-09-17T11:12:54.616913",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Luv Letter",
-      "updateTime": "2026-09-12T08:48:55"
+      "updateTime": "2026-09-17T11:12:54.618099"
     },
     {
       "categoryId": 8,
@@ -5177,13 +5177,13 @@
       "fileUrl": "/data/media/1029.opus",
       "id": 228,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T11:11:55",
-      "playCount": 27,
+      "lastPlayed": "2026-09-17T22:59:43.948852",
+      "playCount": 29,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Loves Me Not",
-      "updateTime": "2026-09-02T11:11:54"
+      "updateTime": "2026-09-17T23:02:40.714478"
     },
     {
       "categoryId": null,
@@ -5209,29 +5209,29 @@
       "fileUrl": "/data/media/1015.opus",
       "id": 221,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:02:47",
+      "lastPlayed": "2026-09-17T12:54:23.692488",
       "playCount": 31,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Look What You Made Me Do",
-      "updateTime": "2026-09-06T05:02:47"
+      "updateTime": "2026-09-17T12:54:23.692715"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:42:44",
       "duration": 234,
       "fileUrl": "/data/media/1017.opus",
       "id": 214,
       "isFavorite": true,
-      "lastPlayed": "2026-09-03T13:43:59",
+      "lastPlayed": "2026-09-17T12:51:27.523836",
       "playCount": 31,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Liberian Girl",
-      "updateTime": "2026-09-03T13:43:58"
+      "updateTime": "2026-09-18T08:21:26.512369"
     },
     {
       "categoryId": null,
@@ -5241,17 +5241,17 @@
       "fileUrl": "/data/media/1016.opus",
       "id": 210,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T14:30:28",
-      "playCount": 27,
+      "lastPlayed": "2026-09-17T19:34:52.736761",
+      "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Let It Go",
-      "updateTime": "2026-09-06T14:30:27"
+      "updateTime": "2026-09-17T19:38:37.835619"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 7,
+      "categoryName": "霓虹",
       "createTime": "2025-07-06T18:42:43",
       "duration": 256,
       "fileUrl": "/data/media/1005.opus",
@@ -5259,11 +5259,11 @@
       "isFavorite": true,
       "lastPlayed": "2026-09-06T06:08:38",
       "playCount": 26,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 17,
+      "singerName": "米津玄师",
+      "singerPictureUrl": "/data/media/2053.jpg",
       "title": "Lemon",
-      "updateTime": "2026-09-06T06:08:37"
+      "updateTime": "2026-09-18T08:21:26.522444"
     },
     {
       "categoryId": null,
@@ -5273,13 +5273,13 @@
       "fileUrl": "/data/media/1004.opus",
       "id": 205,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T14:14:58",
+      "lastPlayed": "2026-09-18T07:56:15.426949",
       "playCount": 20,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Landing Guy",
-      "updateTime": "2026-09-06T14:14:57"
+      "updateTime": "2026-09-18T07:56:15.428173"
     },
     {
       "categoryId": null,
@@ -5289,13 +5289,13 @@
       "fileUrl": "/data/media/1008.opus",
       "id": 198,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T05:00:20",
+      "lastPlayed": "2026-09-17T13:33:05.456306",
       "playCount": 26,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Just Say Hello",
-      "updateTime": "2026-09-07T05:00:19"
+      "updateTime": "2026-09-17T13:33:05.458489"
     },
     {
       "categoryId": null,
@@ -5314,20 +5314,20 @@
       "updateTime": "2026-09-03T14:55:48"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:42:42",
       "duration": 228,
       "fileUrl": "/data/media/1000.opus",
       "id": 193,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T10:59:26",
+      "lastPlayed": "2026-09-18T07:41:07.515207",
       "playCount": 28,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "It's the Falling in Love",
-      "updateTime": "2026-09-07T10:59:26"
+      "updateTime": "2026-09-18T08:21:26.540764"
     },
     {
       "categoryId": 7,
@@ -5337,13 +5337,13 @@
       "fileUrl": "/data/media/991.opus",
       "id": 190,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T05:42:25",
+      "lastPlayed": "2026-09-17T13:50:31.266009",
       "playCount": 21,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "INSIDE IDENTITY",
-      "updateTime": "2026-09-06T05:42:25"
+      "updateTime": "2026-09-17T13:50:31.266573"
     },
     {
       "categoryId": null,
@@ -5385,13 +5385,13 @@
       "fileUrl": "/data/media/992.opus",
       "id": 180,
       "isFavorite": true,
-      "lastPlayed": "2026-07-20T12:26:00",
+      "lastPlayed": "2026-09-17T13:50:31.068733",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "I Need You",
-      "updateTime": "2026-07-20T12:25:59"
+      "updateTime": "2026-09-17T13:50:31.069214"
     },
     {
       "categoryId": null,
@@ -5401,29 +5401,29 @@
       "fileUrl": "/data/media/985.opus",
       "id": 176,
       "isFavorite": true,
-      "lastPlayed": "2026-09-09T03:15:02",
+      "lastPlayed": "2026-09-17T13:50:31.162463",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Hymn For The Weekend",
-      "updateTime": "2026-09-09T03:15:02"
+      "updateTime": "2026-09-17T13:50:31.162966"
     },
     {
-      "categoryId": null,
-      "categoryName": null,
+      "categoryId": 8,
+      "categoryName": "英文",
       "createTime": "2025-07-06T18:42:40",
       "duration": 384,
       "fileUrl": "/data/media/977.opus",
       "id": 171,
       "isFavorite": true,
-      "lastPlayed": "2026-07-05T05:28:58",
+      "lastPlayed": "2026-09-17T13:50:31.158885",
       "playCount": 15,
-      "singerId": null,
-      "singerName": null,
-      "singerPictureUrl": null,
+      "singerId": 15,
+      "singerName": "MJ",
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Heal The World",
-      "updateTime": "2026-07-05T05:28:58"
+      "updateTime": "2026-09-18T08:21:26.61014"
     },
     {
       "categoryId": null,
@@ -5449,13 +5449,13 @@
       "fileUrl": "/data/media/975.opus",
       "id": 162,
       "isFavorite": true,
-      "lastPlayed": "2026-09-02T13:20:35",
+      "lastPlayed": "2026-09-17T13:00:08.65958",
       "playCount": 34,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Grido",
-      "updateTime": "2026-09-02T13:20:34"
+      "updateTime": "2026-09-17T13:00:08.659736"
     },
     {
       "categoryId": null,
@@ -5481,13 +5481,13 @@
       "fileUrl": "/data/media/1805.mp3",
       "id": 145,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:00:42",
-      "playCount": 21,
+      "lastPlayed": "2026-09-17T22:19:51.809352",
+      "playCount": 22,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "FREELY TOMORROW",
-      "updateTime": "2026-09-07T04:00:42"
+      "updateTime": "2026-09-17T22:19:51.809627"
     },
     {
       "categoryId": null,
@@ -5497,13 +5497,13 @@
       "fileUrl": "/data/media/1995.mp3",
       "id": 143,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T14:00:17",
-      "playCount": 23,
+      "lastPlayed": "2026-09-17T18:06:58.920661",
+      "playCount": 24,
       "singerId": 19,
       "singerName": "果宝Official",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2055.jpg",
       "title": "free flow",
-      "updateTime": "2026-09-06T14:00:16"
+      "updateTime": "2026-09-17T18:10:24.103036"
     },
     {
       "categoryId": null,
@@ -5513,13 +5513,13 @@
       "fileUrl": "/data/media/956.opus",
       "id": 139,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T08:53:16",
+      "lastPlayed": "2026-09-17T13:01:14.027926",
       "playCount": 21,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "For You",
-      "updateTime": "2026-09-12T08:53:16"
+      "updateTime": "2026-09-17T13:01:14.028227"
     },
     {
       "categoryId": null,
@@ -5529,13 +5529,13 @@
       "fileUrl": "/data/media/944.opus",
       "id": 137,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T13:45:44",
+      "lastPlayed": "2026-09-18T07:41:07.470267",
       "playCount": 25,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Flower Dance",
-      "updateTime": "2026-08-31T13:45:43"
+      "updateTime": "2026-09-18T07:41:07.471192"
     },
     {
       "categoryId": null,
@@ -5545,13 +5545,13 @@
       "fileUrl": "/data/media/931.opus",
       "id": 130,
       "isFavorite": true,
-      "lastPlayed": "2026-07-22T02:05:10",
+      "lastPlayed": "2026-09-17T23:23:03.943625",
       "playCount": 24,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Fatal Love",
-      "updateTime": "2026-07-22T02:05:10"
+      "updateTime": "2026-09-17T23:23:03.945648"
     },
     {
       "categoryId": null,
@@ -5577,13 +5577,13 @@
       "fileUrl": "/data/media/926.opus",
       "id": 125,
       "isFavorite": true,
-      "lastPlayed": "2026-06-25T06:30:46",
+      "lastPlayed": "2026-09-18T07:41:07.550482",
       "playCount": 7,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Fall Again",
-      "updateTime": "2026-06-25T06:30:46"
+      "updateTime": "2026-09-18T07:41:07.550947"
     },
     {
       "categoryId": 8,
@@ -5593,13 +5593,13 @@
       "fileUrl": "/data/media/932.opus",
       "id": 123,
       "isFavorite": true,
-      "lastPlayed": "2026-07-22T03:47:38",
+      "lastPlayed": "2026-09-17T13:33:06.405479",
       "playCount": 19,
       "singerId": 18,
       "singerName": "Alan Walker",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2054.jpg",
       "title": "Faded",
-      "updateTime": "2026-07-22T03:47:38"
+      "updateTime": "2026-09-17T13:33:06.40597"
     },
     {
       "categoryId": 8,
@@ -5609,13 +5609,13 @@
       "fileUrl": "/data/media/895.opus",
       "id": 86,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T02:54:20",
+      "lastPlayed": "2026-09-17T12:48:08.697475",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Cruel Summer",
-      "updateTime": "2026-09-07T02:54:20"
+      "updateTime": "2026-09-17T12:48:08.71402"
     },
     {
       "categoryId": null,
@@ -5657,13 +5657,13 @@
       "fileUrl": "/data/media/883.opus",
       "id": 71,
       "isFavorite": true,
-      "lastPlayed": "2026-09-05T11:21:12",
+      "lastPlayed": "2026-09-17T14:06:03.330118",
       "playCount": 29,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Cheap Thrills",
-      "updateTime": "2026-09-05T11:21:12"
+      "updateTime": "2026-09-17T14:06:03.330347"
     },
     {
       "categoryId": 8,
@@ -5677,7 +5677,7 @@
       "playCount": 25,
       "singerId": 15,
       "singerName": "MJ",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2051.jpg",
       "title": "Behind The Mask",
       "updateTime": "2026-09-06T11:07:28"
     },
@@ -5689,13 +5689,13 @@
       "fileUrl": "/data/media/867.opus",
       "id": 51,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T03:08:00",
+      "lastPlayed": "2026-09-17T14:06:03.997899",
       "playCount": 23,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Because of You",
-      "updateTime": "2026-09-12T03:07:59"
+      "updateTime": "2026-09-17T14:06:03.998378"
     },
     {
       "categoryId": 8,
@@ -5705,13 +5705,13 @@
       "fileUrl": "/data/media/855.opus",
       "id": 39,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:58:44",
-      "playCount": 18,
+      "lastPlayed": "2026-09-17T23:19:20.517481",
+      "playCount": 19,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "As Long As You Love Me",
-      "updateTime": "2026-09-12T05:58:44"
+      "updateTime": "2026-09-17T23:23:03.950514"
     },
     {
       "categoryId": 8,
@@ -5721,13 +5721,13 @@
       "fileUrl": "/data/media/849.opus",
       "id": 36,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T15:18:39",
-      "playCount": 21,
+      "lastPlayed": "2026-09-17T23:16:14.532227",
+      "playCount": 22,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "Apologize",
-      "updateTime": "2026-08-31T15:18:38"
+      "updateTime": "2026-09-17T23:19:20.524165"
     },
     {
       "categoryId": 7,
@@ -5741,7 +5741,7 @@
       "playCount": 23,
       "singerId": 22,
       "singerName": "仓木麻衣",
-      "singerPictureUrl": null,
+      "singerPictureUrl": "/data/media/2058.jpg",
       "title": "always",
       "updateTime": "2026-09-06T13:39:25"
     },
@@ -5769,13 +5769,13 @@
       "fileUrl": "/data/media/828.opus",
       "id": 16,
       "isFavorite": true,
-      "lastPlayed": "2026-09-05T04:45:54",
-      "playCount": 40,
+      "lastPlayed": "2026-09-18T07:56:33.559217",
+      "playCount": 41,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "2021~听风捕梦~",
-      "updateTime": "2026-09-05T04:45:54"
+      "updateTime": "2026-09-18T07:56:33.559931"
     },
     {
       "categoryId": 10,
@@ -5785,13 +5785,13 @@
       "fileUrl": "/data/media/826.opus",
       "id": 15,
       "isFavorite": true,
-      "lastPlayed": "2026-09-06T11:33:57",
+      "lastPlayed": "2026-09-18T07:56:39.010648",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "2020~此间未来~",
-      "updateTime": "2026-09-06T11:33:57"
+      "updateTime": "2026-09-18T07:56:39.01187"
     },
     {
       "categoryId": 10,
@@ -5801,13 +5801,13 @@
       "fileUrl": "/data/media/831.opus",
       "id": 14,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:47:17",
+      "lastPlayed": "2026-09-17T14:06:03.316973",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "2019~予你成歌~",
-      "updateTime": "2026-09-12T05:47:16"
+      "updateTime": "2026-09-17T14:06:03.317189"
     },
     {
       "categoryId": 10,
@@ -5817,13 +5817,13 @@
       "fileUrl": "/data/media/832.opus",
       "id": 13,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T12:57:56",
+      "lastPlayed": "2026-09-17T13:33:05.438453",
       "playCount": 28,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "2018～朝你靠近～",
-      "updateTime": "2026-09-07T12:57:56"
+      "updateTime": "2026-09-17T13:33:05.439146"
     },
     {
       "categoryId": 10,
@@ -5833,13 +5833,13 @@
       "fileUrl": "/data/media/833.opus",
       "id": 12,
       "isFavorite": true,
-      "lastPlayed": "2026-09-12T05:11:55",
-      "playCount": 32,
+      "lastPlayed": "2026-09-17T23:10:23.706957",
+      "playCount": 33,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "2017～陪你到世界尽头～",
-      "updateTime": "2026-09-12T05:11:55"
+      "updateTime": "2026-09-17T23:16:14.535947"
     },
     {
       "categoryId": 10,
@@ -5849,13 +5849,13 @@
       "fileUrl": "/data/media/827.opus",
       "id": 11,
       "isFavorite": true,
-      "lastPlayed": "2026-06-26T14:55:08",
+      "lastPlayed": "2026-09-17T13:00:27.816553",
       "playCount": 27,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "2016～谢谢陌生的你～",
-      "updateTime": "2026-06-26T14:55:08"
+      "updateTime": "2026-09-17T13:00:27.817412"
     },
     {
       "categoryId": 10,
@@ -5881,13 +5881,13 @@
       "fileUrl": "/data/media/825.opus",
       "id": 9,
       "isFavorite": true,
-      "lastPlayed": "2026-09-07T04:42:52",
+      "lastPlayed": "2026-09-17T11:12:58.19301",
       "playCount": 32,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "2014~唱于你听~",
-      "updateTime": "2026-09-07T04:42:51"
+      "updateTime": "2026-09-17T11:12:58.193508"
     },
     {
       "categoryId": 10,
@@ -5897,13 +5897,13 @@
       "fileUrl": "/data/media/1808.mp3",
       "id": 6,
       "isFavorite": true,
-      "lastPlayed": "2026-08-31T12:22:48",
+      "lastPlayed": "2026-09-17T13:22:37.227645",
       "playCount": 41,
       "singerId": null,
       "singerName": null,
       "singerPictureUrl": null,
       "title": "2011～祝福乐章～",
-      "updateTime": "2026-08-31T12:22:48"
+      "updateTime": "2026-09-17T13:22:37.227822"
     }
   ]
 }
