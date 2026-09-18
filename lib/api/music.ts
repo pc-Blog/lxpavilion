@@ -77,6 +77,19 @@ export async function getPage(
   } satisfies PageDTO<MusicQuery>);
 }
 
+/**
+ * 曲目总数（首页统计用）。
+ *
+ * <p>口径与音乐页 {@code getPage} 一致：live 为全库曲目，静态站为
+ * {@code music.json} 里已发布的曲目（同步脚本只导出收藏，
+ * 见 {@code github-sync.ts} 的「音乐」段）。只取 total，避免为显示
+ * 一个数字传输整页数据。</p>
+ */
+export async function getCount(): Promise<number> {
+  const page = await getPage(1, 1);
+  return page.total;
+}
+
 export async function getById(id: number): Promise<Music | null> {
   if ((await detectMode()) === "static") {
     const data = await ensureData<PageVO<Music>>("music");

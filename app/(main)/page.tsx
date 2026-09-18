@@ -10,6 +10,7 @@ import { get as getAbout } from "@/lib/api/about";
 import { getCount as getLiteratureCount } from "@/lib/api/literature";
 import { getPublishedList as getFriendLinks } from "@/lib/api/friend-link";
 import { getPublishedList as getChatters } from "@/lib/api/chatter";
+import { getCount as getMusicCount } from "@/lib/api/music";
 import ThemeToggleBlock from "@/app/_components/common/ThemeToggle";
 import Tooltip from "@/app/_components/common/Tooltip";
 import SiteDashboard from "@/app/_components/layout/SiteDashboard";
@@ -25,6 +26,7 @@ export default function Home() {
   const [literatureCount, setLiteratureCount] = useState<number | null>(null);
   const [friendCount, setFriendCount] = useState<number | null>(null);
   const [chatterCount, setChatterCount] = useState<number | null>(null);
+  const [musicCount, setMusicCount] = useState<number | null>(null);
   const [repoStats, setRepoStats] = useState<{ stars: number; forks: number; watchers: number } | null>(null);
 
   useEffect(() => {
@@ -55,6 +57,9 @@ export default function Home() {
     getChatters().then(list => {
       setChatterCount(Array.isArray(list) ? list.length : (list as { rows?: unknown[] })?.rows?.length ?? null);
     }).catch(() => { });
+    if (siteConfig.featureMusic) {
+      getMusicCount().then(setMusicCount).catch(() => { });
+    }
     fetch(`https://api.github.com/repos/${siteConfig.repo}`)
       .then(r => r.json())
       .then(d => {
@@ -250,6 +255,7 @@ export default function Home() {
                   ...(siteConfig.featureComments ? [{ v: dash.commentCount, l: "Comments" as const }] : []),
                   ...(siteConfig.featureViewCount ? [{ v: dash.totalViews ?? "—", l: "Views" as const }] : []),
                   ...(siteConfig.featureLiterature ? [{ v: literatureCount ?? "—", l: "Literature" as const }] : []),
+                  ...(siteConfig.featureMusic ? [{ v: musicCount ?? "—", l: "Music" as const }] : []),
                   { v: dash.timelineCount, l: "Milestones" },
                   { v: friendCount ?? "—", l: "Friends" },
                   { v: chatterCount ?? "—", l: "Chatter" },
