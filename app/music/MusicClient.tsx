@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import WaveBackground from "./_components/WaveBackground";
 import FloatingDraggable from "./_components/FloatingDraggable";
 import MusicPlayer from "./_components/MusicPlayer";
@@ -54,6 +54,11 @@ export default function MusicClient() {
   // 当前播放曲目，「定位歌曲」用它；直接取全局播放状态，无需本地副本
   const currentMusicId = useMusicStore((s) => s.currentTrack?.id ?? null);
 
+  /** 已跟随过的曲目 id；undefined 表示尚未初始化（首次拿到的曲目只登记、不跟随） */
+  const followedIdRef = useRef<number | null | undefined>(undefined);
+  /** 定位请求序号：并列的切歌只认最后一次，避免慢响应把页码覆盖回去 */
+  const locateSeqRef = useRef(0);
+
   // 弹窗
   const [showUpload, setShowUpload] = useState(false);
   const [editing, setEditing] = useState<Music | null>(null);
@@ -104,12 +109,47 @@ export default function MusicClient() {
     await fetchPage();
   };
 
-  /** 「定位歌曲」：算出当前播放曲目所在页码并跳转，对应源项目 getMusicPosition */
-  const handleLocate = async (id: number) => {
+  /**
+   * 「定位歌曲」：算出曲目所在页码并跳转，对应源项目 getMusicPosition。
+   *
+   * <p>用 {@code getPage} 拉全量再按索引算页码，而不是用 {@code /music/play} 返回的
+   * position：一是静态模式没有后端、拿不到 position；二是那个 position 由请求里的
+   * {@code pageSize} 算出（{@code lib/api/music.ts} 固定为 20），与页面实际可选的
+   * 5/10/20/50 不一致，只有每页恰好 20 条时才准。</p>
+   */
+  const handleLocate = useCallback(async (id: number) => {
+    const seq = ++locateSeqRef.current;
     const data = await musicApi.getPage(1, 1_000_000, query);
+    if (seq !== locateSeqRef.current) return;
     const idx = (data.rows ?? []).findIndex((m) => m.id === id);
-    if (idx >= 0) setPageNum(Math.floor(idx / pageSize) + 1);
-  };
+    if (idx < 0) return;
+    const target = Math.floor(idx / pageSize) + 1;
+    // 页码没变（列表快照过期等）也要重新拉一次，否则点了没有任何反馈
+    if (target === pageNum) await fetchPage();
+    else setPageNum(target);
+  }, [query, pageSize, pageNum, fetchPage]);
+
+  /**
+   * 切歌后跟随翻页，对应源项目 {@code getNextMusic} 里的三处「不在当前页就改页码 +
+   * fetchMusicPage()」：顺序模式越界往后翻、反向越界往前翻、随机模式随机到哪页跳哪页。
+   *
+   * <p>源项目把跟随写在选曲流程里；Blog 的选曲分散在后端与模块级 hook 中（都拿不到
+   * 页码），因此在页面这一层统一跟随——列表点播、悬浮播放器上/下一首、播完自动切歌、
+   * 浏览器媒体控件切歌，走到的都是这里。新歌已在当前页时不请求（列表点播、页内切歌
+   * 都属于这种情况）。</p>
+   */
+  useEffect(() => {
+    if (currentMusicId == null) return;
+    // 首次拿到的曲目（含进入页面时 hook 预取的那首）只登记、不跟随：跟随只发生在切歌时
+    if (followedIdRef.current === undefined) {
+      followedIdRef.current = currentMusicId;
+      return;
+    }
+    if (followedIdRef.current === currentMusicId) return;
+    followedIdRef.current = currentMusicId;
+    if (rows.some((m) => m.id === currentMusicId)) return;
+    handleLocate(currentMusicId);
+  }, [currentMusicId, rows, handleLocate]);
 
   return (
     <>
