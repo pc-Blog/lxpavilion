@@ -87,23 +87,25 @@ export function useAudioPlayer() {
       _sharedAudio = new Audio();
       _sharedAudio.volume = useMusicStore.getState().volume;
     }
+    // 捕获成局部常量：_sharedAudio 是模块级可变变量，闭包里无法保留非空收窄
+    const audio = _sharedAudio;
     if (!_endedAttached) {
       _endedAttached = true;
-      _sharedAudio.addEventListener("ended", () => {
+      audio.addEventListener("ended", () => {
         // 自动切歌：按当前上下文（模式 + 范围）选下一首，计入播放次数与累计时长
         const cur = useMusicStore.getState().currentTrack;
         const { mode, query } = _context;
         const startNext = (t: NonNullable<typeof cur> | null) => {
-          if (!t || !_sharedAudio) return;
+          if (!t) return;
           useMusicStore.getState().setTrack(t);
           useMusicStore.getState().play();
-          _sharedAudio.src = assetUrl(t.fileUrl);
-          _sharedAudio.play().catch(() => {});
+          audio.src = assetUrl(t.fileUrl);
+          audio.play().catch(() => {});
         };
         if (mode === "single") {
           // 单曲循环：原地重播，不需要请求
-          _sharedAudio.currentTime = 0;
-          _sharedAudio.play().catch(() => {});
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
           return;
         }
         selectTrack({ currentMusicId: cur?.id, mode, dir: "next", addPlay: true, query })
@@ -111,8 +113,8 @@ export function useAudioPlayer() {
           .catch(() => {});
       });
     }
-    audioRef.current = _sharedAudio;
-    return _sharedAudio;
+    audioRef.current = audio;
+    return audio;
   }, []);
 
   // 初始加载曲目（首次播放，无 currentMusicId，不计入播放次数）
