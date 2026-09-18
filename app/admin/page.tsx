@@ -234,6 +234,12 @@ export default function AdminDashboardPage() {
     ? savedToken.slice(0, 4) + "****" + savedToken.slice(-4)
     : "";
 
+  // 孤儿置顶：后端按 id 倒序返回（MediaServiceImpl.scanOrphans），孤儿散落其中。
+  // 用副本做稳定排序，组内保留后端的 id 倒序，不影响 cleanupState.items 本身。
+  const sortedCleanupItems = [...cleanupState.items].sort(
+    (a, b) => (a.refs.length === 0 ? 0 : 1) - (b.refs.length === 0 ? 0 : 1),
+  );
+
   if (!dash) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -433,7 +439,7 @@ export default function AdminDashboardPage() {
                   {/* Media list */}
                   {cleanupState.items.length > 0 && (
                     <div className="max-h-80 overflow-y-auto space-y-1.5">
-                      {cleanupState.items.slice((cleanupPage - 1) * cleanupPageSize, cleanupPage * cleanupPageSize).map((item) => {
+                      {sortedCleanupItems.slice((cleanupPage - 1) * cleanupPageSize, cleanupPage * cleanupPageSize).map((item) => {
                         const m = item;
                         const isOrphan = item.refs.length === 0;
                         return (
