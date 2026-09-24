@@ -1,6 +1,75 @@
 {
-  "total": 113,
+  "total": 116,
   "rows": [
+    {
+      "categoryId": 40,
+      "categoryName": "后端",
+      "coverImage": "/data/media/783.jpeg",
+      "createdAt": "2026-09-23T16:49:25.655465",
+      "id": 220,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Spring开发日志",
+      "summary": "三个微服务的一次删除，一个远程成功一个远程失败，本地回滚后数据就对不上了。文章先说明 Seata 全局事务方案的原理与适用边界，再展开 RabbitMQ 最终一致性的完整流程：为什么直接在事务里发消息仍有窗口，本地消息表如何用同一事务消除窗口，提交后投递与定时重投如何配合，以及消费端幂等与死信队列为什么是必需的。",
+      "tags": [
+        {
+          "id": 74,
+          "name": "Spring Boot"
+        },
+        {
+          "id": 91,
+          "name": "RabbitMQ"
+        }
+      ],
+      "title": "RabbitMQ 实现微服务分布式事务",
+      "updateTime": "2026-09-23T16:50:45.891688"
+    },
+    {
+      "categoryId": 40,
+      "categoryName": "后端",
+      "coverImage": "/data/media/783.jpeg",
+      "createdAt": "2026-09-23T16:49:23.394224",
+      "id": 219,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Spring开发日志",
+      "summary": "从交换机、绑定、队列三个基本概念讲起，梳理 Spring Boot 中 RabbitMQ 的 yaml 配置、拓扑声明、RabbitTemplate 的定制与使用、消息发送与监听，以及手动确认和死信队列的配合方式。",
+      "tags": [
+        {
+          "id": 74,
+          "name": "Spring Boot"
+        },
+        {
+          "id": 91,
+          "name": "RabbitMQ"
+        }
+      ],
+      "title": "RabbitMQ 在 Spring Boot 中的完整使用",
+      "updateTime": "2026-09-23T16:50:27.055882"
+    },
+    {
+      "categoryId": 40,
+      "categoryName": "后端",
+      "coverImage": "/data/media/783.jpeg",
+      "createdAt": "2026-09-23T16:49:12.581878",
+      "id": 218,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Spring开发日志",
+      "summary": "@Transactional 的回滚范围只覆盖当前数据库连接上的操作，文件删除、远程调用、消息投递都在范围之外。文章分析删库与删文件放在一起时的三种处理方式——写在同一事务方法内、注册 afterCommit、拆分为两个方法，给出各自在回滚与提交两条路径上的结果，并整理严格一致性的实现路径。",
+      "tags": [
+        {
+          "id": 66,
+          "name": "Mysql"
+        },
+        {
+          "id": 74,
+          "name": "Spring Boot"
+        }
+      ],
+      "title": "Spring Boot 事务回滚方法",
+      "updateTime": "2026-09-23T16:50:34.053952"
+    },
     {
       "categoryId": 45,
       "categoryName": "工具教程",
