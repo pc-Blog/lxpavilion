@@ -8,6 +8,39 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[RabbitMQ 实现微服务分布式事务]]></title>
+      <link>https://www.lxpavilion.top/article/220/</link>
+      <guid>https://www.lxpavilion.top/article/220/</guid>
+      <pubDate>Wed, 23 Sep 2026 16:49:25 GMT</pubDate>
+      <description><![CDATA[三个微服务的一次删除，一个远程成功一个远程失败，本地回滚后数据就对不上了。文章先说明 Seata 全局事务方案的原理与适用边界，再展开 RabbitMQ 最终一致性的完整流程：为什么直接在事务里发消息仍有窗口，本地消息表如何用同一事务消除窗口，提交后投递与定时重投如何配合，以及消费端幂等与死信队列为什么是必需的。]]></description>
+      <category>后端</category>
+      <tag>Spring Boot</tag>
+      <tag>RabbitMQ</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[RabbitMQ 在 Spring Boot 中的完整使用]]></title>
+      <link>https://www.lxpavilion.top/article/219/</link>
+      <guid>https://www.lxpavilion.top/article/219/</guid>
+      <pubDate>Wed, 23 Sep 2026 16:49:23 GMT</pubDate>
+      <description><![CDATA[从交换机、绑定、队列三个基本概念讲起，梳理 Spring Boot 中 RabbitMQ 的 yaml 配置、拓扑声明、RabbitTemplate 的定制与使用、消息发送与监听，以及手动确认和死信队列的配合方式。]]></description>
+      <category>后端</category>
+      <tag>Spring Boot</tag>
+      <tag>RabbitMQ</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Spring Boot 事务回滚方法]]></title>
+      <link>https://www.lxpavilion.top/article/218/</link>
+      <guid>https://www.lxpavilion.top/article/218/</guid>
+      <pubDate>Wed, 23 Sep 2026 16:49:12 GMT</pubDate>
+      <description><![CDATA[@Transactional 的回滚范围只覆盖当前数据库连接上的操作，文件删除、远程调用、消息投递都在范围之外。文章分析删库与删文件放在一起时的三种处理方式——写在同一事务方法内、注册 afterCommit、拆分为两个方法，给出各自在回滚与提交两条路径上的结果，并整理严格一致性的实现路径。]]></description>
+      <category>后端</category>
+      <tag>Mysql</tag>
+      <tag>Spring Boot</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[Windows 数据使用量页面卡死：1097 个热点档案和 161 MB 的 SRUM 库]]></title>
       <link>https://www.lxpavilion.top/article/217/</link>
       <guid>https://www.lxpavilion.top/article/217/</guid>
@@ -196,39 +229,6 @@
       <guid>https://www.lxpavilion.top/article/169/</guid>
       <pubDate>Thu, 06 Aug 2026 02:41:32 GMT</pubDate>
       <description><![CDATA[Tauri v2 桌面应用完整工程实践：搭建多文件项目、tauri.conf.json 配置、Rust 后端命令对接、前端 JS 调用 invoke API、前后端数据通信全流程。从零到跑通，踩过的坑一次讲清。]]></description>
-      <category>学习笔记</category>
-      <tag>Rust</tag>
-      <tag>JetBrains</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Rust学习笔记：Cargo与第三方依赖——Rust生态的正确打开方式]]></title>
-      <link>https://www.lxpavilion.top/article/168/</link>
-      <guid>https://www.lxpavilion.top/article/168/</guid>
-      <pubDate>Thu, 06 Aug 2026 02:40:26 GMT</pubDate>
-      <description><![CDATA[Rust Cargo 依赖管理终极教程：Cargo.toml 结构详解、cargo add 添加依赖、语义化版本号规则、Cargo.lock 精确锁定、三种引入第三方库的方式、国内镜像配置。从标准库到 crates.io，开启真正的 Rust 开发生态。]]></description>
-      <category>学习笔记</category>
-      <tag>Rust</tag>
-      <tag>JetBrains</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Rust学习笔记：模块系统——mod、use、pub与多文件项目]]></title>
-      <link>https://www.lxpavilion.top/article/167/</link>
-      <guid>https://www.lxpavilion.top/article/167/</guid>
-      <pubDate>Thu, 06 Aug 2026 00:31:11 GMT</pubDate>
-      <description><![CDATA[Rust 模块系统完整教程：行内模块与文件模块的定义、pub 可见性控制私有默认与公开导出、use 路径简化、嵌套模块目录组织、结构体字段级可见性。从单文件到多文件项目，组织 Rust 代码的终极指南。]]></description>
-      <category>学习笔记</category>
-      <tag>Rust</tag>
-      <tag>JetBrains</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Rust学习笔记：泛型与Trait——写出可复用的Rust代码]]></title>
-      <link>https://www.lxpavilion.top/article/166/</link>
-      <guid>https://www.lxpavilion.top/article/166/</guid>
-      <pubDate>Thu, 06 Aug 2026 00:20:07 GMT</pubDate>
-      <description><![CDATA[Rust 泛型与 Trait 入门教程：泛型函数与结构体的定义、Trait 接口的定义与实现、impl Trait 参数简化、Trait Bound 多重约束、derive 自动实现常见 Trait。从代码重复到类型安全的抽象，一步到位。]]></description>
       <category>学习笔记</category>
       <tag>Rust</tag>
       <tag>JetBrains</tag>

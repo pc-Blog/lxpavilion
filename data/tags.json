@@ -1,6 +1,13 @@
 {
-  "total": 58,
+  "total": 59,
   "rows": [
+    {
+      "createTime": "2026-09-23T15:05:34.476593",
+      "deleted": 0,
+      "id": 91,
+      "name": "RabbitMQ",
+      "updateTime": "2026-09-23T15:05:34.476679"
+    },
     {
       "createTime": "2026-09-14T10:14:05.892861",
       "deleted": 0,

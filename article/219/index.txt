@@ -1,0 +1,758 @@
+1:"$Sreact.fragment"
+2:I[26908,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+3:I[54774,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+4:I[79617,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+5:I[22464,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+6:I[3799,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+7:I[56499,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+8:I[61421,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+9:I[39756,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+a:I[37457,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+15:I[68027,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default",1]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/0bdci7hcq17mj.css","style"]
+:HL["/_next/static/media/geist_latin-s.p.0wgildi0cnwt9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/geist_mono_latin-s.p.0w5z4e7s8jfe5.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/noto_serif_sc_latin-s.p.2xkduggpvd1-n.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+13:X
+0:{"P":null,"c":["","article","219",""],"q":"","i":false,"f":[[["",{"children":["(main)",{"children":["article",{"children":[["id","219","d",[]],{"children":["__PAGE__",{},"$undefined","$undefined",4608]},"$undefined","$undefined",4608]},"$undefined","$undefined",4612]},"$undefined","$undefined",4616]},"$undefined","$undefined",4632],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/0bdci7hcq17mj.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/0psyl9v--p-ak.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/17y8-kabk8se9.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L5",null,{}],["$","$L6",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L7",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L8",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$L9",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$La",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],"$Lb"]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],"$Lc","$Ld"]}],"$Le"]}]}]]}]]}],{"children":["$Lf",{"children":["$L10",{"children":["$L11",{"children":["$L12",{},null,false,null]},null,false,"$13"]},null,false,"$13"]},null,false,null]},null,false,null],"$L14",false]],"m":"$undefined","G":["$15",["$L16","$L17"]],"S":true,"h":null,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"SqV7kjmPxBylln7j9aB74"}
+18:I[6521,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+19:I[8123,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1a:I[18233,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js"],"default"]
+1b:I[34858,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js"],"default"]
+1c:I[23191,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+1d:I[39756,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+24:I[97367,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+25:"$Sreact.suspense"
+27:I[97367,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+29:I[97367,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+b:["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]
+c:["$","$L18",null,{}]
+d:["$","$L19",null,{}]
+e:["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]
+f:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/109z71992pbyo.js","async":true,"nonce":"$undefined"}]],[["$","$L1a",null,{}],["$","$L1b",null,{"children":["$","$L9",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L1c",null,{"children":["$","$La",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:2:props:children:2:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:2:props:children:2:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$b:props:style","children":["$","h2",null,{"style":"$b:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+10:["$","$L1d",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L1e"]}],"$L1f","$L20","$L21"]}]]}],[],null],"children":"$L22"}]
+11:["$","$1","c",{"children":[null,["$","$L9",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$La",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+12:["$","$1","c",{"children":["$L23",[["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/0xrzn2mdpvkvi.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true,"nonce":"$undefined"}]],["$","$L24",null,{"children":["$","$25",null,{"name":"Next.MetadataOutlet","children":"$@26"}]}]]}]
+14:["$","$1","h",{"children":[null,["$","$L27",null,{"children":"$L28"}],["$","div",null,{"hidden":true,"children":["$","$L29",null,{"children":["$","$25",null,{"name":"Next.Metadata","children":"$L2a"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+16:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+17:["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/0bdci7hcq17mj.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+13:C
+1e:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+1f:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+20:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+21:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+22:["$","$1","c",{"children":[null,["$","$L9",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$La",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+2b:I[17467,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/0xrzn2mdpvkvi.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+2d:T8c03,## 概述
+
+RabbitMQ 是一个消息中间件，它在系统之间充当异步的、可靠的中转站。生产者把消息投递进去，消费者从中取出处理，两侧不需要同时在线，也不需要知道对方的地址。
+
+它解决的问题来自"一次请求里做了太多事"。以电商下单为例，下单要扣库存、发通知、加积分、写日志。如果这些都在一个 HTTP 请求里同步完成，任何一步变慢或失败都会拖住用户，任何一步重试都可能造成重复扣减。把非核心的部分交给消息队列，接口先返回，其余工作由消费者完成，这是最直接的价值。
+
+除此之外，消息队列还可以承担削峰、跨服务最终一致性和失败重试：秒杀流量先入队，消费者按自身能力消费；跨服务的写操作通过消息对齐而不是分布式事务；消费失败的消息可以退避重投，而不是直接丢弃。
+
+引入消息队列的代价是，系统从"一次调用要么成功要么失败"变成"最终一致"。重复投递、消息顺序、消费失败后的去向，都需要在设计时想清楚。
+
+## 基本概念
+
+RabbitMQ 的模型由三个核心角色组成，其余的配置都是围绕它们展开。
+
+**交换机（Exchange）** 是消息进入 RabbitMQ 的第一站。生产者不直接把消息发给队列，而是发给交换机，由交换机决定这条消息进入哪些队列。交换机自身不存储消息，只负责路由判断。
+
+**队列（Queue）** 是消息真正排队等待的地方。消息在队列中等待被消费者取走，取走并确认之后才会被删除。
+
+**绑定（Binding）** 是交换机与队列之间的连线，同时携带一个 routingKey 或一组匹配规则。交换机收到消息后，用消息的 routingKey 与所有绑定比对，命中的队列各收到一份消息副本。
+
+一条消息的完整路径是：`生产者 → 交换机 → （按绑定规则匹配）→ 一个或多个队列 → 消费者`。
+
+### 死信队列
+
+RabbitMQ 中并没有名为"死信队列"的队列类型，它只是一个普通队列，被用作死信的落脚点。
+
+当一条消息在某个队列中满足以下任一条件时，RabbitMQ 会把它投递给另一个交换机，这个交换机称为死信交换机（DLX）：
+
+- 消费者用 `basicNack` 或 `basicReject` 拒绝它，并且 `requeue=false`；
+- 消息的 TTL 到期仍未消费；
+- 队列长度超过上限，消息被挤出。
+
+死信交换机再按普通的绑定规则把消息路由到目标队列，那个队列就是通常所说的死信队列。因此配置死信只需要在业务队列上添加 `x-dead-letter-exchange` 参数，其余部分都是常规路由。
+
+消息每次被死信，broker 都会在它的 `x-death` header 中留下记录，并且是持久化的：
+
+```
+x-death = [{
+  reason=rejected,
+  count=1,
+  queue=order.release.order.queue,
+  exchange=order-event-exchange,
+  routing-keys=[order.release.order],
+  time=Wed Sep 23 15:10:56 CST 2026
+}]
+```
+
+`reason` 表示死信原因（`rejected` 被拒、`expired` 过期、`maxlen` 被挤出），`count` 是累计次数。要区分业务拒绝和 TTL 到期这两种不同的失败原因，就依靠这个字段。条目中的 `exchange` 和 `routing-keys` 记录的是消息最初被发布时的信息，而不是死信后的去向；死信的去向体现在消费端收到的 `receivedExchange` 与 `receivedRoutingKey` 上。
+
+`x-death` 也是做重试计数的依据：不需要在内存中记次数，并且进程重启不会丢失。
+
+### 交换机类型
+
+交换机类型决定 routingKey 如何匹配：
+
+| 类型 | 匹配规则 | 典型场景 |
+| --- | --- | --- |
+| `direct` | routingKey 完全相等 | 点对点精确投递 |
+| `topic` | routingKey 按 `*`（一个词）和 `#`（零到多个词）通配 | 按业务前缀分流，最常用 |
+| `fanout` | 忽略 routingKey，广播给所有绑定的队列 | 事件广播、缓存刷新 |
+| `headers` | 按消息 header 匹配，忽略 routingKey | 需要按多组属性匹配时 |
+
+其中 `topic` 既有前缀语义又足够灵活，是实际项目中使用最多的一种，下面的示例也以它为主。
+
+## 安装（Docker）
+
+```bash
+docker run -d \
+  --name gl-rabbitmq \
+  -p 55671:5671 \
+  -p 55672:5672 \
+  -p 54369:4369 \
+  -p 25672:25672 \
+  -p 15671:15671 \
+  -p 15672:15672 \
+  -p 51883:1883 \
+  -p 58883:8883 \
+  -p 61613:61613 \
+  -p 61614:61614 \
+  rabbitmq:management
+```
+
+各端口的用途：
+
+```
+55671:5671     # AMQP (TLS)
+55672:5672     # AMQP 主端口（应用连接）
+54369:4369     # Erlang 发现端口
+25672:25672    # Erlang 集群通信端口
+15671:15671    # Web 管理界面 (HTTPS)
+15672:15672    # Web 管理界面（浏览器访问）
+51883:1883     # MQTT 协议端口
+58883:8883     # MQTT (TLS)
+61613:61613    # STOMP 协议端口
+61614:61614    # STOMP (TLS)
+```
+
+这里把宿主机的 55672 映射到容器内的 5672，可以避免和本机已有的 RabbitMQ 端口冲突。选择 `rabbitmq:management` 而不是基础镜像，是因为管理界面在排查问题时非常有用：队列积压、消费者数量、unacked 消息数都能直接看到。
+
+启动后访问 `http://localhost:15672`，默认账号密码都是 `guest`。`guest` 用户默认只允许从本机登录，容器化部署时需要另建账号或调整权限。
+
+## 配置 yaml
+
+```yaml
+spring:
+  rabbitmq:
+    host: 127.0.0.1                          # RabbitMQ 服务器地址，示例：127.0.0.1
+    port: 5672                               # AMQP 主端口，默认 5672，TLS 通常为 5671
+    username: guest                          # 连接用户名，示例：guest
+    password: guest                          # 连接密码，示例：guest
+    virtual-host: /                          # 虚拟主机，默认 /，用于逻辑隔离
+
+    publisher-confirm-type: correlated       # 生产者确认模式：none / simple / correlated，推荐 correlated
+    publisher-returns: true                  # 开启路由失败退回机制，配合 mandatory 使用
+    template:
+      mandatory: true                        # 消息无法路由到队列时退回给生产者，否则静默丢弃
+
+    listener:
+      simple:
+        acknowledge-mode: manual             # 消费确认模式：none / auto / manual，手动 ack 更可靠
+        prefetch: 10                         # 每个消费者一次预取的消息数量，防止分布不均
+        concurrency: 2                       # 每个监听容器最小消费者线程数
+        max-concurrency: 10                  # 每个监听容器最大消费者线程数，流量大时自动扩容
+        retry:
+          enabled: true                      # 开启消费异常重试
+          max-attempts: 3                    # 最大重试次数（含首次），超过后走后续处理
+          initial-interval: 2000ms           # 重试间隔，默认固定为该值
+        default-requeue-rejected: false      # 消费被拒绝时不重新入队，避免死循环，通常配合死信队列
+```
+
+### 虚拟主机与逻辑隔离
+
+`virtual-host` 是在一个 RabbitMQ 实例内部再做一层切分。每个 vhost 拥有独立的交换机、队列和绑定，名称可以重复，权限分别授予。在同一套 broker 上运行多个环境或多个业务线时，用 vhost 隔离比部署多个实例更省资源。默认的 `/` 是最常用的一个。
+
+### 生产者确认模式
+
+生产者把消息发出后，默认无法知道 broker 是否收到，网络异常时消息会丢失而应用毫无感知。Publisher Confirm 用于补上这一点：broker 收到消息后异步返回确认给生产者。
+
+三个取值的区别：
+
+| 取值 | 行为 |
+| --- | --- |
+| `none` | 不开启确认，`ConfirmCallback` 不会触发 |
+| `simple` | 开启确认，面向同步等待场景（`rabbitTemplate.invoke(...)`、`waitForConfirms()`） |
+| `correlated` | 开启确认，并按消息做关联，异步回调场景使用这个值 |
+
+生产环境通常选 `correlated`。确认回调是异步的，需要能把回调与具体消息对应起来，才能确定是哪条消息出了问题并做出相应处理。
+
+使用 `simple` 时有一个依赖关系需要注意：只有在 `publisher-returns` 也为 `true` 时，`ConfirmCallback` 才会被触发。如果只配置 `publisher-confirm-type: simple` 而把 `publisher-returns` 关掉，回调不会被调用，`CorrelationData.getFuture()` 也始终不会完成。原因是 `CachingConnectionFactory` 只在需要确认或退回时才创建带回调的 channel，而 `simple` 模式下 `isPublisherConfirms()` 为 `false`，此时若 `publisher-returns` 同样是 `false`，这个 channel 就不会被创建。
+
+关于 Publisher Confirm 的背景，可以参考：[阿里云开发者社区 - RabbitMQ 消息确认机制](https://developer.aliyun.com/article/1505339#1)
+
+### 路由失败退回机制
+
+Publisher Confirm 保证的是消息到达交换机，不包括进入队列。如果消息的 routingKey 匹配不上任何绑定，交换机会把它丢弃，而 confirm 回调依然是 `ack=true`，从确认结果上无法看出异常。
+
+`publisher-returns` 用于处理这种情况：开启之后，配合 `template.mandatory: true`，无法路由的消息会通过 `basic.return` 退回给生产者，触发 `ReturnsCallback`。
+
+两个配置需要一起使用：
+
+- `mandatory` 决定是否退回。不开启时，不可路由的消息被直接丢弃，即使 `publisher-returns: true` 也不会有任何回调。
+- `publisher-returns` 决定退回事件能否被 Spring AMQP 感知并转换成回调。
+
+因此推荐同时开启。判断一条消息是否真正投递成功，需要把 confirm 和 returns 两个回调结合起来看。
+
+### 消费者确认模式
+
+消费者确认模式决定消费者取到消息后，以什么方式告知 RabbitMQ 这条消息已经处理完毕、可以删除。
+
+- `none`：自动确认。消息一发出就从队列删除，消费者处理中途失败时消息会丢失。
+- `auto`：Spring AMQP 在监听方法正常返回后自动 ack；抛出异常时不 ack，并按 `default-requeue-rejected` 决定是否重新入队。
+- `manual`：容器不处理 ack，由代码显式调用 `basicAck` / `basicNack`。需要精确控制失败消息的去向（退避重试、进入死信队列）时，只有这个模式能做到。
+
+选择 `manual` 之后，监听方法中必须真的执行确认操作，否则消息不会被删除。
+
+### 重试配置
+
+`listener.simple.retry` 控制监听方法抛出异常后的重试行为，有三点需要注意。
+
+`max-attempts` 包含首次调用，配置为 3 表示方法最多被调用 3 次。
+
+`initial-interval` 是重试间隔。Spring Retry 的退避策略默认 `multiplier=1.0`，此时间隔是恒定的，不会逐次递增；需要递增时要显式配置 `multiplier`（例如 `2.0`）。当 `multiplier` 为 1.0 时，启动日志中会出现提示：`Multiplier must be > 1.0 for effective exponential backoff, but was 1.0`。
+
+`spring-retry` 不是 `spring-boot-starter-amqp` 的传递依赖，该 starter 只依赖 `spring-boot-starter`、`spring-messaging` 和 `spring-rabbit`。要使用重试功能，需要显式引入：
+
+```xml
+<dependency>
+    <groupId>org.springframework.retry</groupId>
+    <artifactId>spring-retry</artifactId>
+</dependency>
+```
+
+## 声明队列、交换机与绑定
+
+### Java 配置类 + `@Bean`
+
+```java
+@Configuration
+public class RabbitMQConfig {
+
+    // 1. 交换机
+    @Bean
+    public TopicExchange productExchange() {
+        return new TopicExchange("product.event.exchange", true, false);
+    }
+
+    // 2. 队列
+    @Bean
+    public Queue productQueue() {
+        return new Queue("product.event.queue", true);
+    }
+
+    // 3. 绑定
+    @Bean
+    public Binding productBinding() {
+        return BindingBuilder.bind(productQueue())
+                .to(productExchange())
+                .with("product.*");
+    }
+}
+```
+
+**为什么三者都要声明成 `@Bean`**：Spring Boot 自动配置的 `RabbitAdmin` 会在启动时扫描容器中所有实现了 `Declarable` 接口的 bean，并把它们声明到 broker 上。`Exchange`、`Queue`、`Binding` 都实现了这个接口，因此只要它们是 bean，就会被自动声明，不需要手写 `channel.exchangeDeclare(...)`。
+
+由此也可以推出：如果这些对象不是 bean（例如在方法内 `new` 出来直接使用），就不会被声明。判断某个队列是否会被自动声明，可以注入 `ApplicationContext` 打印 `getBeanNamesForType(Declarable.class)` 来确认。
+
+`RabbitAdmin` 的声明是幂等的。多个服务声明同名同参数的交换机不会冲突，但参数必须完全一致，否则会得到 `406 PRECONDITION_FAILED`。跨服务共用交换机时需要注意这一点。
+
+### 交换机
+
+示例中使用的是 `TopicExchange`，另外三种类型分别对应 `DirectExchange`、`FanoutExchange`、`HeadersExchange`。
+
+构造参数的含义：
+
+- `name`：交换机名称。
+- `durable=true`：持久化，broker 重启后仍然存在。
+- `autoDelete=false`：没有队列绑定时不自动删除。
+
+这两个布尔参数通常都按上述取值配置。交换机如果不是持久化的，broker 重启后拓扑会缺失。
+
+### 队列
+
+```java
+new Queue("product.event.queue", true);                      // 队列名 + 是否持久化
+new Queue(name, durable, exclusive, autoDelete);             // 完整参数
+new Queue(name, durable, exclusive, autoDelete, arguments);  // 带自定义参数
+```
+
+四个参数的语义分别是：`durable` 是否持久化；`exclusive` 是否排他（只允许声明它的连接使用，连接断开即删除）；`autoDelete` 是否在最后一个消费者断开后自动删除。
+
+死信相关的参数放在 `arguments` 中：
+
+```java
+Map<String, Object> arguments = new HashMap<>();
+arguments.put("x-dead-letter-exchange", "order-event-exchange");
+arguments.put("x-dead-letter-routing-key", "order.release.order");
+arguments.put("x-message-ttl", 60000);   // 消息在这个队列里最多待 60 秒
+return new Queue("order.delay.queue", true, false, false, arguments);
+```
+
+这三个参数组合起来就是一个延迟队列：消息进入后先等待，60 秒后 TTL 到期变成死信，被投递到 `order-event-exchange`，再按 `order.release.order` 路由到真正处理它的队列。RabbitMQ 本身没有延迟队列类型，TTL 配合死信是常用的实现方式。
+
+使用 `QueueBuilder` 的链式写法会更直观：
+
+```java
+QueueBuilder.durable("order.delay.queue")
+        .ttl(60_000)
+        .deadLetterExchange("order-event-exchange")
+        .deadLetterRoutingKey("order.release.order")
+        .build();
+```
+
+需要注意，队列的 `durable` 通常应当设为 `true`。RabbitMQ 4.x 已经废弃"瞬时非排他队列"，声明 `durable=false` 且 `exclusive=false` 的队列会被拒绝，报错为：
+
+```
+reply-code=541, reply-text=INTERNAL_ERROR
+  - Feature `transient_nonexcl_queues` is deprecated.
+```
+
+相比之下，非持久化的交换机仍然允许声明，两者并不一致。
+
+### 绑定
+
+```java
+BindingBuilder.bind(queue).to(exchange).with("routingKey");
+```
+
+`to(...)` 有多个重载，分别对应 `TopicExchange`、`DirectExchange`、`FanoutExchange` 等类型，使用具体类型时代码提示更准确。`FanoutExchange` 的 `with` 会被忽略，因为广播不依赖 routingKey。
+
+一个队列可以绑定多个 routingKey，声明多个 `@Bean` 即可：
+
+```java
+@Bean
+public Binding bindingCreated() {
+    return BindingBuilder.bind(productQueue()).to(productExchange()).with("product.created");
+}
+
+@Bean
+public Binding bindingUpdated() {
+    return BindingBuilder.bind(productQueue()).to(productExchange()).with("product.updated");
+}
+```
+
+使用通配符可以一次覆盖一类路由键。`topic` 的规则是 `*` 匹配恰好一个词，`#` 匹配零到多个词。例如绑定 `product.*` 时，`product.created` 会进入队列，而 `product.created.extra` 不会，因为多了一层。路由键多写一段导致匹配不上，是"消息发出去了但没人收到"的常见原因。
+
+## RabbitTemplate
+
+Spring Boot 自动配置了一个可以直接注入的 `RabbitTemplate`：
+
+```java
+private final RabbitTemplate rabbitTemplate;
+```
+
+它已经读取了 yaml 中的连接信息和 `template.*` 配置，并与 `ConnectionFactory` 共享确认与退回开关。
+
+### 定制方式的取舍
+
+需要添加回调或更换消息转换器时，有两种常见做法，各有局限。
+
+自己 `new RabbitTemplate(connectionFactory)`：连接工厂是共享的，但 yaml 中 `spring.rabbitmq.template.*` 这部分配置不会自动应用，`mandatory`、各类后置处理器都需要逐项补充。
+
+在注入的 bean 上直接修改：这种方式看起来更自然，但受一个限制——`confirm` 回调和 `returns` 回调各自只能设置一次，第二次设置会抛出异常：
+
+```
+IllegalStateException: Only one ConfirmCallback is supported by each RabbitTemplate
+```
+
+它不会覆盖之前的设置，而是直接失败。因此如果公共模块已经为这个共享模板注册过回调，业务代码再注册一次会导致应用启动失败。
+
+### 使用 `RabbitTemplateCustomizer`
+
+```java
+@Configuration
+public class RabbitCustomizerConfig {
+
+    @Bean
+    public RabbitTemplateCustomizer rabbitTemplateCustomizer(MessageConverter messageConverter) {
+        return template -> {
+            // 此时 template 已经应用了 yaml 中的 template.* 配置
+            // 这里只补充 yaml 无法表达的定制
+
+            // 1. 消息转换器
+            template.setMessageConverter(messageConverter);
+
+            // 2. 确认回调
+            template.setConfirmCallback((correlationData, ack, cause) -> {
+                if (!ack) {
+                    // 处理未到达 exchange 的消息
+                }
+            });
+
+            // 3. 退回回调
+            template.setReturnsCallback(returned -> {
+                // 处理路由失败的消息
+            });
+
+            // 4. 全局持久化
+            template.setBeforePublishPostProcessors(message -> {
+                message.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+                return message;
+            });
+        };
+    }
+}
+```
+
+`RabbitTemplateCustomizer` 是 Spring Boot 提供的函数式回调接口，用于对自动配置生成的 `RabbitTemplate` 做附加的、非侵入式的定制。它的作用是在不覆盖默认 `RabbitTemplate` bean 的前提下添加配置，从而保留 `application.yml` 中 `spring.rabbitmq.template.*` 的所有设置。这是它相对于上述两种做法更合适的原因。
+
+### 常用定制说明
+
+#### setMessageConverter
+
+默认转换器是 JDK 序列化，要求对象实现 `Serializable`，消息体在管理界面中也不可读。换成 JSON 之后可读且跨语言，代价是消费端需要配置同样的转换器。
+
+如果消息中包含 `LocalDateTime`，可以通过自定义 `ObjectMapper` 调整时间格式：
+
+```java
+ObjectMapper om = new ObjectMapper();
+om.registerModule(new JavaTimeModule());
+om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+template.setMessageConverter(new Jackson2JsonMessageConverter(om));
+```
+
+`new Jackson2JsonMessageConverter()` 使用的默认 `ObjectMapper` 已经注册了 `JavaTimeModule`，往返转换不会报错。区别在于输出的格式：默认情况下 `LocalDateTime` 被写成数组
+
+```json
+{"id":9,"name":"params","createdAt":[2026,9,23,14,0]}
+```
+
+加上 `disable(WRITE_DATES_AS_TIMESTAMPS)` 之后输出 ISO-8601 字符串
+
+```json
+{"id":9,"name":"params","createdAt":"2026-09-23T14:00"}
+```
+
+如果消息需要被其他语言消费，或希望管理界面中更易读，按上面的方式配置。
+
+#### setConfirmCallback
+
+触发时机：消息发送到 broker 后，broker 异步返回确认结果时触发。
+
+| 参数 | 类型 | 含义 |
+| --- | --- | --- |
+| `correlationData` | `CorrelationData` | 发送消息时传入的关联数据对象，可用于定位具体是哪条消息。可能为 `null`（如果发送时没传） |
+| `ack` | `boolean` | `true` 表示 broker 已收到消息（到达 exchange）；`false` 表示 broker 未收到或处理失败 |
+| `cause` | `String` | `ack=false` 时的失败原因；`ack=true` 时为 `null` |
+
+`CorrelationData` 的常用方法：
+
+```java
+correlationData.getId();          // 发送时设置的消息唯一 ID
+correlationData.getFuture();      // 获取确认结果的 CompletableFuture（较新版本）
+correlationData.getReturned();    // 获取退回的消息（ReturnedMessage，如果被退回）
+```
+
+需要注意 `ack=true` 只代表消息到达了交换机。当消息不可路由时，confirm 回调依然是 `ack=true`、`cause` 为 `null`，失败信息只体现在 returns 回调中。因此不能仅凭 `ack` 判断投递成功。
+
+#### setReturnsCallback
+
+触发时机：broker 通过 `basic.return` 把消息退回给生产者，Spring AMQP 接收到退回消息后触发。
+
+参数类型是 `ReturnedMessage`，它封装了退回消息及其元信息：
+
+| 方法 | 返回类型 | 含义 |
+| --- | --- | --- |
+| `getMessage()` | `Message` | 被退回的消息对象，包含消息体和消息属性 |
+| `getReplyCode()` | `int` | broker 返回的响应码，通常是 `312` |
+| `getReplyText()` | `String` | 响应文本，通常是 `NO_ROUTE` |
+| `getExchange()` | `String` | 消息发送时指定的交换机名 |
+| `getRoutingKey()` | `String` | 消息发送时用的 routingKey |
+
+`getMessage()` 上的常用方法：
+
+```java
+returned.getMessage().getBody();                          // 消息体（byte[]）
+returned.getMessage().getMessageProperties();             // 消息属性
+returned.getMessage().getMessageProperties().getHeader("traceId");  // 自定义 header
+```
+
+confirm 回调只能从消息属性中获取 `correlationId`，如果希望 returns 回调也能定位到具体记录，发送时显式设置一次：
+
+```java
+rabbitTemplate.convertAndSend(exchange, routingKey, payload,
+        message -> {
+            message.getMessageProperties().setCorrelationId(messageId);
+            return message;
+        },
+        new CorrelationData(messageId));
+```
+
+#### setBeforePublishPostProcessors
+
+这是一个全局的发送前处理钩子，所有经过该模板发出的消息都会先经过它。最典型的用法是全局设置持久化：
+
+```java
+template.setBeforePublishPostProcessors(message -> {
+    message.getMessageProperties().setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+    return message;
+});
+```
+
+在这里添加的 header，消费端通过 `@Header` / `@Headers` 可以读取到。
+
+## 发消息
+
+### 基础
+
+```java
+rabbitTemplate.convertAndSend(
+        "product.event.exchange",   // 交换机
+        "product.created",          // routingKey
+        message                     // 消息体 Object
+);
+```
+
+`convertAndSend` 会用模板上的 `MessageConverter` 把对象转换成消息体，并补上默认的消息属性。这个方法是异步的：正常返回只代表消息交给了客户端，不代表 broker 已收到，也不代表已进入队列。确认投递结果需要依靠前面介绍的 confirm 与 returns 回调。
+
+### 其他常用的参数搭配
+
+```java
+// 带 CorrelationData，用于 confirm 回调定位消息
+rabbitTemplate.convertAndSend(exchange, routingKey, message, correlationData);
+
+// 带 MessagePostProcessor，设置消息属性
+rabbitTemplate.convertAndSend(exchange, routingKey, message, msg -> {
+    msg.getMessageProperties().setExpiration("10000");
+    return msg;
+});
+```
+
+`CorrelationData` 用于给消息附加一个业务标识，它的 `id` 会随确认结果回到 `setConfirmCallback`，是异步确认场景下定位消息的方式。
+
+`MessagePostProcessor` 是消息发送前的处理器，可以修改消息属性，最常用的是设置过期时间。它也常用于携带元数据，这些元数据消费端可以直接读取：
+
+```java
+rabbitTemplate.convertAndSend(
+        "product.event.exchange",   // 快递公司（交换机）
+        "product.created",          // 快递单号规则（routingKey）
+        event,                      // 包裹里的东西（消息体）
+        message -> {
+            message.getMessageProperties().setHeader("traceId", "T-123");   // 贴个标签
+            message.getMessageProperties().setHeader("tenantId", "T001");   // 再贴个标签
+            return message;
+        }
+);
+```
+
+`setExpiration` 设置的是单条消息的 TTL，单位毫秒。它与队列级的 `x-message-ttl` 是两个层级：队列级的对进入该队列的所有消息生效，单条级的只影响这一条；两者同时存在时取较小值。
+
+消息 TTL 有一个需要了解的机制：RabbitMQ 只在消息到达队头时检查它是否过期。队列积压时，排在后面的消息即使已经过期也不会被移走，需要先轮到队头位置。因此在有积压的队列上，过期消息的实际清理时间会晚于配置值。
+
+另外，管理界面中队列的 `messages` 数字来自统计数据库，默认每 5 秒写入一次，短时间内会有滞后。需要用实时值时，可以使用 AMQP 的 `queueDeclarePassive(...).getMessageCount()`。
+
+### convertAndSend 与 send 的区别，以及 MessageBuilder
+
+`convertAndSend` 负责"对象 → 消息"的转换；`send` 要求自行构造 `Message`，不做任何转换：
+
+```java
+Message message = MessageBuilder
+        .withBody("hello".getBytes(StandardCharsets.UTF_8))
+        .setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN)
+        .build();
+
+rabbitTemplate.send(exchange, routingKey, message);
+```
+
+`send` 适用于需要精确控制消息体字节和 content-type 的场景，例如发送纯文本、发送预序列化的二进制，或与只接受特定格式的外部系统对接。用 `convertAndSend` 发送字符串时会被 JSON 转换器加上引号变成 `"hello"`，而 `send` 配合 `MessageBuilder` 可以保证消费端收到的就是 `hello`，content-type 为 `text/plain`。
+
+当容器中配置的是 `Jackson2JsonMessageConverter` 时，它收到 `text/plain` 的消息会输出一条提示日志：`Could not convert incoming message with content-type [text/plain], 'json' keyword missing.` 这条日志不影响投递。
+
+## 消息监听
+
+### 基础
+
+监听单个队列：
+
+```java
+@Component
+@Slf4j
+public class ProductConsumer {
+
+    @RabbitListener(queues = "product.event.queue")
+    public void onMessage(ProductEvent event) {
+        log.info("收到消息: {}", event);
+    }
+}
+```
+
+一个方法也可以同时监听多个队列，几个队列的消息都进入同一个方法：
+
+```java
+@RabbitListener(queues = {"queue1", "queue2", "queue3"})
+public void onMessage(ProductEvent event) {
+    // 三个队列的消息都进这里
+}
+```
+
+这两种写法适用于 `acknowledge-mode` 为 `auto` 的情况。如果配置为 `manual`，方法中需要显式确认，相关内容见下一节。
+
+### 方法参数
+
+监听方法可以接收多个参数，Spring 会完成解包：
+
+```java
+@RabbitListener(queues = "product.event.queue")
+public void onMessage(
+        ProductEvent event,              // 消息体（反序列化后的对象），必须与消息里的一致
+        Message message,                 // 原始 Message，含 body 和 properties
+        Channel channel,                 // AMQP Channel，手动 ack 用
+        @Header("traceId") String traceId,                    // 指定 header
+        @Headers Map<String, Object> headers,                 // 所有 header
+        @Payload ProductEvent payload,                        // 显式标记消息体
+        @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag     // 投递标签
+) {
+    // ...
+}
+```
+
+这些参数的内容都可以从 `Message` 中取到，Spring 只是把它们拆开以便直接使用。
+
+投递标签需要写成 `@Header(AmqpHeaders.DELIVERY_TAG)`。`AmqpHeaders.DELIVERY_TAG` 是一个常量而非注解，直接放在参数位置不构成合法语法，无法通过编译。
+
+另外，同时声明 `ProductEvent event` 与 `@Payload ProductEvent payload` 不会报错，Spring 会把同一个消息体对象注入给这两个参数，但这样写没有实际意义，保留一个即可。
+
+### channel 与手动 ack
+
+`acknowledge-mode: manual` 时这个参数才会用到。`none` 或 `auto` 下容器会自行处理确认。
+
+手动 ack 的典型写法是根据异常类型决定消息的去向：
+
+```java
+@RabbitListener(queues = "product.queue")
+public void onMessage(ProductEvent event, Message message, Channel channel) throws IOException {
+    long tag = message.getMessageProperties().getDeliveryTag();
+    try {
+        // 业务处理
+        handle(event);
+        channel.basicAck(tag, false);
+    } catch (BusinessException e) {
+        // 业务异常，不重新入队，进死信
+        channel.basicNack(tag, false, false);
+    } catch (Exception e) {
+        // 系统异常，重新入队重试
+        channel.basicNack(tag, false, true);
+    }
+}
+```
+
+| 方法 | 含义 |
+| --- | --- |
+| `basicAck(tag, multiple)` | 确认，消息从队列删除 |
+| `basicNack(tag, multiple, requeue)` | 拒收，`requeue=true` 重新入队，`false` 进死信或丢弃 |
+| `basicReject(tag, requeue)` | 拒收单条，不支持批量 |
+
+三个参数的含义：
+
+- `tag`：消息的投递标签，`long` 类型，唯一标识当前 Channel 上的一次投递，通过 `message.getMessageProperties().getDeliveryTag()` 获取。
+- `multiple`：是否批量处理。`true` 表示把 tag 小于等于该值的未确认消息一并处理。
+- `requeue`：消息被拒绝后是否重新放回队列。
+
+关于 `requeue=true`，它会把消息立即放回队头，没有退避。如果这条消息无论如何处理都失败，就会形成持续重投：消费者满负荷空转、日志快速增长。broker 对重投次数没有上限。
+
+同时需要注意，yaml 中的 `default-requeue-rejected: false` 不作用于代码中显式调用的 `basicNack(..., true)`。该配置只影响"监听方法抛出异常、由容器决定是否重新入队"的场景。
+
+因此 `requeue=true` 适合偶发抖动、能够很快恢复的情况。需要重试时，更合适的做法是使用 TTL 加死信队列实现退避，或者使用 Spring 的重试机制并配合 `default-requeue-rejected: false` 把失败消息导出。
+
+另外两种情况：
+
+- 队列配置了 DLX 时，`basicNack(tag, false, false)` 和 `basicReject(tag, false)` 的行为一致，消息都进入死信队列，`x-death` 的 `reason` 都是 `rejected`。
+- 队列没有配置 DLX 时，`basicNack(tag, false, false)` 的结果是直接丢弃，不重投也不留记录。表格中"进死信或丢弃"取决于队列是否配置了 DLX。
+
+### `@RabbitListener` 注解属性
+
+| 属性 | 说明 |
+| --- | --- |
+| `queues` | 监听的队列名，可多个 |
+| `containerFactory` | 指定监听容器工厂 |
+| `bindings` | 声明队列、交换机、绑定 |
+| `concurrency` | 消费者线程数（覆盖 yaml） |
+| `autoStartup` | 是否随应用启动，默认 true |
+| `id` | 监听器 ID，便于管理 |
+| `ackMode` | 覆盖 yaml 的 ack 模式 |
+| `queuesToDeclare` | 只声明队列，不写 `@Bean` |
+| `errorHandler` | 方法级异常处理器 |
+
+`bindings` 相当于把 `@Bean` 方式的声明搬到注解上，声明与绑定一步完成，适合消费者自身可以决定拓扑的场景：
+
+```java
+@RabbitListener(bindings = @QueueBinding(
+        value = @Queue(value = "product.event.queue", durable = "true"),
+        exchange = @Exchange(value = "product.event.exchange", type = "topic"),
+        key = "product.*"))
+public void onMessage(ProductEvent event) {
+    // ...
+}
+```
+
+`queuesToDeclare` 只声明队列，不涉及交换机与绑定：
+
+```java
+@RabbitListener(queuesToDeclare = @Queue(value = "product.event.queue", durable = "true"))
+public void onMessage(ProductEvent event) {
+    // ...
+}
+```
+
+这里用到的 `@Queue` 与 `@Exchange` 是 `org.springframework.amqp.rabbit.annotation` 包下的注解，与前面声明 `@Bean` 时使用的 `org.springframework.amqp.core.Queue` 类同名。如果同一个类里已经导入了 core 包的 `Queue`，注解里的 `@Queue` 会解析到错误的类型，需要用全限定名区分。
+
+`errorHandler` 指定方法级的 `RabbitListenerErrorHandler`，它的执行顺序在容器级 `ErrorHandler` 之前。监听方法抛出异常时先由它处理：正常返回（例如 `return null`）则异常到此结束，容器级 `ErrorHandler` 不会被调用，消息按正常流程确认；重新抛出异常，容器级 `ErrorHandler` 才会接手，消息按容器策略处理——`auto` 模式下不 ack，并按 `default-requeue-rejected` 决定是否重新入队。因此方法级 `errorHandler` 可以通过吞掉异常来屏蔽容器级的处理。
+
+### 关于自定义容器工厂
+
+`containerFactory` 指定自己创建的 `SimpleRabbitListenerContainerFactory` 时，需要注意它不会自动继承 yaml 中的 `listener.simple.*` 配置，也拿不到容器里的 `MessageConverter` bean——Spring Boot 的配置只应用于自动配置的那个工厂。自定义工厂需要自行处理：
+
+```java
+@Bean
+public SimpleRabbitListenerContainerFactory myFactory(
+        SimpleRabbitListenerContainerFactoryConfigurer configurer,
+        ConnectionFactory connectionFactory,
+        MessageConverter jsonMessageConverter) {
+    SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+    configurer.configure(factory, connectionFactory);   // 应用 yaml 中的 listener.simple.* 配置
+    factory.setMessageConverter(jsonMessageConverter);  // 容器里的转换器需要自己设置
+    return factory;
+}
+```
+
+如果只 `new` 出工厂并设置 `ConnectionFactory`，那么 ack 模式、prefetch、concurrency、retry 都会退回默认值，消息转换器也会退回 JDK 序列化。
+
+### 消费端与发送端使用相同的转换器
+
+发送端使用 `Jackson2JsonMessageConverter` 时，消费端也需要配置同样的转换器。消费端没有配置时，默认的 `SimpleMessageConverter` 会把 `contentType: application/json` 的消息体原样作为 `byte[]` 返回。此时：
+
+- 监听方法接收 `Message` 参数可以正常拿到消息，但需要自行反序列化；
+- 监听方法声明具体类型（例如 `ProductEvent`）时，转换失败并抛出 `MessageConversionException: Cannot convert from [[B] to [...]`。
+
+在公共模块中把 `MessageConverter` 声明为 bean，可以让发送端与监听容器都使用它。需要注意该 bean 必须声明为 `static`：`RabbitConfig` 需要注入 `RabbitTemplate`，而 `RabbitTemplate` 的创建过程中会去容器中查找 `MessageConverter`，如果该 bean 由非静态方法提供，就会形成循环依赖导致启动失败。
+
+## 小结
+
+- RabbitMQ 的模型由交换机、队列、绑定三者构成，消息先到交换机，再按绑定规则路由到队列。
+- 死信队列是普通队列的一种用法，通过在业务队列上配置 `x-dead-letter-exchange` 实现；`x-death` header 记录了死信原因与次数。
+- `confirm` 回调的 `ack=true` 表示消息到达交换机，不可路由的消息同样会返回 `ack=true`，因此需要 `publisher-returns` 配合 `mandatory` 一起判断投递结果。
+- `manual` 模式下必须在监听方法中执行确认；`requeue=true` 没有退避与次数上限，`requeue=false` 的最终去向取决于队列是否配置了 DLX。
+- `RabbitTemplate` 的 confirm 与 returns 回调各只有一个槽位，定制共享模板更适合使用 `RabbitTemplateCustomizer`。
+- 发送端与消费端需要配置相同的 `MessageConverter`。
+23:[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"RabbitMQ 在 Spring Boot 中的完整使用\",\"item\":\"https://www.lxpavilion.top/article/219\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"RabbitMQ 在 Spring Boot 中的完整使用\",\"headline\":\"RabbitMQ 在 Spring Boot 中的完整使用\",\"description\":\"从交换机、绑定、队列三个基本概念讲起，梳理 Spring Boot 中 RabbitMQ 的 yaml 配置、拓扑声明、RabbitTemplate 的定制与使用、消息发送与监听，以及手动确认和死信队列的配合方式。\",\"datePublished\":\"2026-09-23T16:49:23.394224\",\"dateCreated\":\"2026-09-23T16:49:23.394224\",\"dateModified\":\"2026-09-23T16:50:27.055882\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/783.jpeg\"}"}}],["$","$L2b",null,{"params":"$@2c","articleTitle":"RabbitMQ 在 Spring Boot 中的完整使用","initialContent":"$2d"}]]
+2c:{"id":"219"}
+28:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+2e:I[27201,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+26:null
+2a:[["$","title","0",{"children":"RabbitMQ 在 Spring Boot 中的完整使用 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"从交换机、绑定、队列三个基本概念讲起，梳理 Spring Boot 中 RabbitMQ 的 yaml 配置、拓扑声明、RabbitTemplate 的定制与使用、消息发送与监听，以及手动确认和死信队列的配合方式。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/219/"}],["$","meta","5",{"property":"og:title","content":"RabbitMQ 在 Spring Boot 中的完整使用 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"从交换机、绑定、队列三个基本概念讲起，梳理 Spring Boot 中 RabbitMQ 的 yaml 配置、拓扑声明、RabbitTemplate 的定制与使用、消息发送与监听，以及手动确认和死信队列的配合方式。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/783.jpeg"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L2e","15",{}]]

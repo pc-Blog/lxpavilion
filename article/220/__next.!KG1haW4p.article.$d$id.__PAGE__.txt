@@ -1,0 +1,345 @@
+1:"$Sreact.fragment"
+2:I[17467,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/0xrzn2mdpvkvi.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+4:T4bd7,## 一、一次删除跨三个服务
+
+设三个服务：商品服务 A 保存商品主体数据，优惠服务 B 和文件服务 C 分别保存这个商品的附属数据。删除由 A 发起，A 删掉本地数据后调用 B 和 C 的删除接口。
+
+两次远程调用都成功，数据一致；都失败，A 回滚本地事务后也一致。不一致出现在一成一败：B 的删除已经提交，C 的调用超时失败。此时 A 可以回滚本地数据，B 也可以回滚自己尚未提交的事务，但 C 那边无论删没删，A 都已经失去了对它的控制。
+
+根因在于事务的原子性依赖一个能覆盖所有参与者的资源管理器。单库事务里这个角色是数据库连接——同一条连接上的 SQL 要么一起提交要么一起回滚。跨服务之后，每个服务各自持有一条连接、各自提交，没有任何一个资源管理器能同时管住三条连接。A 的 `rollback` 只作用于自己那条连接。
+
+远程调用返回成功，意味着对方已经提交。这一点是后面所有方案的出发点：**跨服务的操作一旦提交就无法撤销，只能补偿。**
+
+## 二、强一致性路线：Seata
+
+Seata 的做法是引入一个事务协调器（TC，即 Seata Server），把跨服务的多个本地事务纳入一个全局事务。业务发起方开启全局事务时从 TC 拿到一个全局唯一的事务 ID（XID），这个 XID 通过调用链一路透传到下游服务，下游每个本地事务作为"分支事务"注册到 TC 上。所有分支执行完后由发起方向 TC 发起全局提交或全局回滚，TC 再逐个通知各分支。
+
+以最常用的 AT 模式为例，分支侧的机制是拦截业务 SQL、解析出修改前后的数据镜像（before image / after image），连同行主键一起写进业务库的 `undo_log` 表，然后**提交本地事务**并释放本地锁，但全局锁由 TC 持有到全局事务结束。二阶段如果是全局提交，各分支异步删除 `undo_log` 即可；如果是全局回滚，分支用 `undo_log` 里的 before image 把数据改回去。
+
+这里有一个常被忽略的细节：AT 模式一阶段就提交了本地事务，所以它并不是"所有分支都先不提交、等协调者发话"的经典两阶段提交。真正不提前提交的是 XA 模式，代价是锁一直持有到二阶段，吞吐更低。AT 模式用"提前提交 + 全局锁隔离 + undo_log 补偿"换取了更短的锁持有时间，因此它的隔离级别默认是读未提交——分支提交之后、全局回滚之前，中间状态对其他事务是可见的，需要读已提交语义时要额外加 `@GlobalLock` 配合 `select for update`。
+
+接入成本主要体现在三处：需要独立部署和维护 TC；每个参与方的库都要加 `undo_log` 表并接入 SDK；调用链上要透传 XID。它的适用场景是链路较短、对中间态零容忍、且能接受全局锁带来的吞吐下降的核心操作，比如资金类业务。把它用在一次删除上，收益和成本不成比例。
+
+## 三、最终一致性路线：RabbitMQ 的基本做法与它的窗口
+
+另一条路允许中间态存在，只要求最终收敛。做法是把"远程要做的删除"从一次同步调用改成一条消息：A 删除本地数据，同时向 MQ 发一条删除消息；B 和 C 各自监听这条消息，收到后删自己的数据。消费失败有重投机制，重投到成功为止。
+
+这条路线不需要协调器，也不需要全局锁，中间态就是"消息还在重投，B 删了 C 没删"。它解决的是一类具体问题：**消息投递成功之后，消费端内部的异常。** 比如 B 的数据库正在重启，消费时抛异常，消息被重投，等 B 恢复后处理成功。
+
+但把"发消息"直接写进业务事务，会留下一个方向相反的窗口。`@Transactional` 的回滚范围只覆盖当前数据库连接上的 SQL，发消息不走这条连接，不在回滚范围内。于是：
+
+```java
+@Transactional
+public void removeSpuInfo(List<Long> spuIds) {
+    // 业务数据的删除
+    // ...
+
+    // 这一行不在事务范围内
+    rabbitTemplate.convertAndSend("product-event-exchange", "product.deleted", to);
+
+    // 后面的步骤失败，本地事务回滚
+    someLaterStep();
+}
+```
+
+消息发出去的一瞬间 broker 就把它投给了消费者，消费者开始删；而本地事务随后因为 `someLaterStep()` 失败而回滚。结果是本地数据还在，远程已经删了——不一致的方向和手工调用相反，性质完全一样。
+
+把发送挪到方法最后也躲不开，只是把窗口缩小：事务提交发生在方法返回时，而发送语句在提交之前，两者之间始终隔着"发送成功、提交失败"这一段。
+
+反方向还有一个窗口：本地事务提交成功，进程在提交之后、发送之前被 kill 掉。消息从未发出，远程永远不会删，而且没有任何地方记录过"这里本该发一条消息"。这个窗口比前一个更危险，因为它是静默的——不会报错，只会一直不一致下去。
+
+两个窗口的根源相同：**数据库事务和消息投递是两个独立的资源，没有一个共同的事务边界能把它们绑在一起。**
+
+## 四、本地消息表：把"要发消息"变成一条数据库记录
+
+本地消息表（outbox）的思路是改变发送时机：不在事务里发消息，而是在事务里**记录一条待发的消息**。
+
+业务数据的删除和这条消息记录的 insert 在同一个库、同一个事务里，于是要么一起提交、要么一起回滚。事务提交成功就意味着两件事同时成立——数据删了，且库里躺着一条待投递的消息。没有中间态，也没有"本该发一条消息"这种只存在于内存里的事实。
+
+表结构只需几个字段：
+
+```sql
+CREATE TABLE `mq_message` (
+  `message_id`     char(32)     NOT NULL COMMENT '同时作为 MQ 的 CorrelationData id',
+  `content`        text                  COMMENT '消息体 JSON',
+  `to_exchange`    varchar(255),
+  `routing_key`    varchar(255),
+  `class_type`     varchar(255)          COMMENT '消息体全限定类名，重投时反序列化用',
+  `message_status` int DEFAULT 0         COMMENT '0-待投递 1-已发送 2-错误抵达',
+  `create_time`    datetime,
+  `update_time`    datetime,
+  PRIMARY KEY (`message_id`),
+  KEY `idx_status_create_time` (`message_status`, `create_time`)
+);
+```
+
+`routing_key` 这一列不能省。只有交换机名是发不出去消息的，而重投是由定时任务发起的，那时没有业务上下文可以推断路由键。`class_type` 存全限定类名，是为了让重投能把 JSON 反序列化回对象。
+
+写入和投递分开在两处：
+
+```java
+@Transactional
+public void removeSpuInfo(List<Long> spuIds) {
+    // 1. 业务数据的删除（多张表的 delete）
+    // ...
+
+    // 2. 同一个事务里落一条待投递消息
+    String messageId = mqMessageService.savePending(
+            RabbitMQConfig.PRODUCT_EVENT_EXCHANGE,
+            RabbitMQConfig.PRODUCT_DELETED_ROUTING_KEY,
+            new ProductDeletedTo(existingSpuIds, skuIds, imageUrls));
+
+    // 3. 提交之后再投递
+    if (TransactionSynchronizationManager.isSynchronizationActive()) {
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                mqMessageSender.send(messageId);
+            }
+        });
+    } else {
+        mqMessageSender.send(messageId);
+    }
+}
+```
+
+第 3 步用 `afterCommit` 而不是直接调用，是为了让投递严格发生在提交之后。事务回滚时 `afterCommit` 不执行，消息记录也跟着回滚，不会出现"远程删了、本地没删"。
+
+投递结果由 broker 的回调决定，不由 `convertAndSend` 的返回决定。发送是异步的，方法正常返回只代表消息交给了客户端：
+
+```java
+private void onConfirm(CorrelationData correlationData, boolean ack, String cause) {
+    String messageId = correlationData.getId();
+    if (ack) {
+        mqMessageService.markSent(messageId);           // 0 → 1
+    } else {
+        mqMessageService.markError(messageId, "broker nack: " + cause);   // → 2
+    }
+}
+```
+
+状态机只有三个状态：`0 待投递`、`1 已发送`、`2 错误抵达`。语义上只需要区分两件事——还要不要再投一次，以及为什么没成功。
+
+兜底的是一个定时任务，它扫出状态为 0 或 2、且创建时间已满一定间隔的记录重投：
+
+```java
+@Scheduled(fixedDelay = 60_000, initialDelay = 60_000)
+public void resendPending() {
+    // 只捞创建满 1 分钟的记录：刚提交的那条正由 afterCommit 投递，
+    // 和它抢同一条只会产生一次无谓的重复投递
+    int count = mqMessageSender.resendPending(RESEND_BATCH);
+    if (count > 0) {
+        log.info("重投本地消息表的待投递消息 {} 条", count);
+    }
+}
+```
+
+到这里，第三节的两个窗口都被堵住了。窗口一"消息早发"：消息在提交后才发，事务回滚时记录一起回滚，消息不会出去。窗口二"消息漏发"：进程在提交后挂掉，记录还在库里且状态为 0，定时任务会把它捡起来重投。
+
+剩下唯一的窗口是"broker 已确认，但本地状态还没改回 1 就崩了"。这个窗口关不掉，也不需要关——它导致的后果是**重复投递而不是消息丢失**。这是 at-least-once 语义，重复由消费端幂等兜住。
+
+还有一个语义边界要划清：状态 1 的含义是"broker 收下了"，不是"消费端处理完了"。消息进了 broker 之后，可靠性由 broker 的持久化和消费端的 ack 接手。要做到"消费完成"，得再加一轮消费端回执，成本高一个量级，通常不值得。
+
+## 五、消费端的幂等
+
+at-least-once 必然带来重复，来源不止一处：定时任务和 `afterCommit` 可能投递同一条；broker 确认后本地状态未更新时进程崩溃会导致重投；消费端处理完但 ack 丢失，消息也会重投。所以消费逻辑必须可重复执行。
+
+最省事的是业务本身天然幂等。删除操作就属于这一类：`DELETE FROM t WHERE id = ?` 删一条不存在的记录返回影响行数 0，不报错；对象存储的 `removeObject` 删一个不存在的 key 同样返回成功。项目里 coupon 侧清理优惠数据就是两条纯 DELETE，天然幂等，因此没有建去重表。
+
+需要去重时，常规做法是用 `message_id` 建一张去重表并在处理前先 insert，主键冲突说明已处理过，直接跳过。另一种更轻的做法是把幂等条件写进更新语句本身，用前置状态做约束：
+
+```java
+// 条件里带 status = 0：重复执行时影响行数为 0，不会二次生效
+this.update(new LambdaUpdateWrapper<MqMessageEntity>()
+        .eq(MqMessageEntity::getMessageId, messageId)
+        .eq(MqMessageEntity::getMessageStatus, PENDING.getCode())
+        .set(MqMessageEntity::getMessageStatus, SENT.getCode()));
+```
+
+去重表有一个容易踩的点：它的键必须能唯一标识"业务事件"，而不是消息实例。同一次业务变更如果被重新生成了消息，`message_id` 是新的，去重表挡不住，只有用业务主键才能识别出这是同一件事。
+
+## 六、死信队列：给重试一个出口
+
+消费失败之后怎么处理，直接决定这套机制是可靠还是危险。
+
+把消息塞回队列重投是最直观的做法，`basicReject(tag, requeue=true)` 和 `basicNack(tag, false, true)` 都是这个效果。它的问题是把消息塞回**队头**并立即重投：没有退避、没有上限、没有出口。一条永远处理失败的消息会让消费者陷入死循环，日志刷满，而且完全静默——没有任何地方能看出有一条消息卡住了。
+
+合理的方式是让失败路径也走队列，用死信交换机加 TTL 组成延迟重试：
+
+```
+业务队列 ──消费失败 basicNack(requeue=false)──> DLX
+                                                │
+                                                ▼
+                                    重试队列（TTL 1 分钟）
+                                                │ 到期死信
+                                                ▼
+                                    回到业务交换机 ──> 业务队列（下一轮）
+```
+
+业务队列声明时挂上自己的 DLX；重试队列不设消费者，只设 `x-message-ttl`，消息在里面躺够时间后按 `x-dead-letter-*` 死信回业务交换机，于是又回到业务队列：
+
+```java
+@Bean
+public Queue productDeletedQueue() {
+    Map<String, Object> args = new HashMap<>();
+    args.put("x-dead-letter-exchange", PRODUCT_DELETED_DLX);
+    args.put("x-dead-letter-routing-key", RETRY_ROUTING_KEY);
+    return new Queue(PRODUCT_DELETED_QUEUE, true, false, false, args);
+}
+
+@Bean
+public Queue productDeletedRetryQueue() {
+    Map<String, Object> args = new HashMap<>();
+    args.put("x-dead-letter-exchange", PRODUCT_EVENT_EXCHANGE);      // 回到业务交换机
+    args.put("x-dead-letter-routing-key", PRODUCT_DELETED_ROUTING_KEY);
+    args.put("x-message-ttl", 60_000);                               // 躺 1 分钟
+    return new Queue(PRODUCT_DELETED_RETRY_QUEUE, true, false, false, args);
+}
+```
+
+这样每轮重试之间至少有 1 分钟间隔，足以熬过数据库重启、依赖服务抖动这类短暂故障。
+
+重试次数不能记在消费端内存里——服务重启就丢了。broker 会把"这条消息被死信过几次"写进消息头 `x-death`，并且是持久化的，重启不丢。它的结构是一个数组，元素形如 `{queue, reason, count, exchange, routing-keys, time}`。这里有个细节：一次重试会在数组里留下两条记录，业务队列一条（`reason=rejected`），重试队列一条（`reason=expired`），所以必须按队列名过滤后累加，不能直接取 `x-death[0].count`：
+
+```java
+public static int attemptCount(Message message, String queue) {
+    Object xDeath = message.getMessageProperties().getHeader("x-death");
+    if (!(xDeath instanceof List<?> deaths)) {
+        return 0;
+    }
+    int count = 0;
+    for (Object death : deaths) {
+        if (death instanceof Map<?, ?> entry
+                && queue.equals(entry.get("queue"))
+                && entry.get("count") instanceof Long times) {
+            count += times;
+        }
+    }
+    return count;
+}
+```
+
+监听器据此决定是继续重试还是收进死信队列：
+
+```java
+@RabbitHandler
+public void onProductDeleted(ProductDeletedTo to, Message message, Channel channel) throws IOException {
+    long deliveryTag = message.getMessageProperties().getDeliveryTag();
+    try {
+        productCleanupService.cleanupProduct(to.getSpuIds(), to.getSkuIds());
+        channel.basicAck(deliveryTag, false);
+    } catch (Exception e) {
+        int retried = MqRetryUtils.attemptCount(message, PRODUCT_DELETED_QUEUE);
+        if (retried >= MAX_RETRY) {
+            // 到上限：投到死信队列让人看见，别再无限打转
+            rabbitTemplate.convertAndSend(PRODUCT_DELETED_DLX, DLQ_ROUTING_KEY, to);
+            channel.basicAck(deliveryTag, false);
+        } else {
+            // requeue=false：交给队列自己的 DLX → 重试队列延迟 1 分钟
+            channel.basicNack(deliveryTag, false, false);
+        }
+    }
+}
+```
+
+死信队列不挂任何消费者，消息进去就停在那里等人处理。它的价值在于把"重试"这件事从无限循环变成有限次尝试加一个明确的终点：能自愈的故障在重试中恢复，不能自愈的故障（数据问题、代码 bug、永远删不掉的地址）被保留下来而不是被丢弃。
+
+需要注意，重试上限不是越高越好。能靠重试解决的通常是一两次就解决了，走满三四次还在失败，基本可以判定不是抖动而是数据或代码问题，继续重试只是延迟暴露。
+
+## 七、完整链路
+
+把上面的部分合起来，商品删除这条链路是这样的：
+
+```
+product 服务
+  事务开始
+    删除 7 张表的商品数据
+    insert 一条 mq_message（状态 0，含交换机、路由键、消息体、类名）
+  事务提交
+    afterCommit → 投递到 product-event-exchange，routing key = product.deleted
+    broker confirm(ack) → 状态 0 改 1
+
+coupon 服务                         third-party 服务
+  coupon.product.deleted.queue        thirdparty.product.deleted.queue
+    消费成功 → basicAck                 消费成功 → basicAck
+    消费失败 → nack → DLX → 重试队列     消费失败 → nack → DLX → 重试队列
+    重试满 3 次 → coupon...dlq          重试满 3 次 → thirdparty...dlq
+
+兜底：product 的定时任务每分钟扫状态 0/2 的记录重投
+```
+
+有两个设计取舍值得单独说明。
+
+**队列和绑定由消费方自己声明，product 只声明交换机。** 这样 product 不需要知道存在哪些消费者，以后新增一个消费者不用改 product 的代码。代价是如果某个消费者从未启动过，它的队列和绑定就不存在，消息到了交换机之后不可路由。这种情况下 broker 照样会 ack，消息会被直接丢弃——`ack=true` 只代表"交换机收下了"，不代表"有队列接"。要兜住这个缺口，需要开启 `publisher-returns` 并设置模板的 `mandatory=true`，让不可路由的消息被退回：
+
+```java
+private void onReturn(ReturnedMessage returned) {
+    String messageId = returned.getMessage().getMessageProperties().getCorrelationId();
+    mqMessageService.markError(messageId, "消息不可路由: exchange=" + returned.getExchange()
+            + ", routingKey=" + returned.getRoutingKey()
+            + ", replyCode=" + returned.getReplyCode());
+}
+```
+
+退回后状态变成 2（错误抵达），定时任务持续重投，等消费方起来、队列和绑定建好之后自然就投进去了。confirm 和 returns 必须分别处理，只处理 confirm 会把"消息已被丢弃"误判成"发送成功"。
+
+**每个消费方各自一个队列。** coupon 和 third-party 都绑在同一个交换机上，各自监听自己的队列，互不阻塞——coupon 挂了不影响清理文件，反过来也一样。如果共用一个队列，两个服务就成了竞争消费者，同一条消息只会被其中一个处理，清优惠和清文件必然漏掉一个。
+
+## 收尾
+
+三条连接、三个数据库，没有一个资源管理器能同时管住它们，这是分布式事务问题的全部起点。Seata 用协调器和补偿日志把跨服务操作重新组织成一个全局事务，代价是全局锁、额外组件和每个库的 `undo_log`。RabbitMQ 这条路放弃中间态的一致性，只保证最终收敛，代价转移到了消息的可靠投递和消费端的幂等上。
+
+本地消息表解决的是"可靠投递"这一半：把消息记录和业务数据放进同一个事务，让"数据改了"和"有一条消息要发"成为同一个原子事实，剩下的交给提交后投递和定时重投。幂等解决的是另一半：at-least-once 消不掉重复，只能在消费端把重复执行变成无害操作。死信队列则是给重试划定边界，让无法自愈的失败停在一个人能看到的地方，而不是消失在无限循环里。
+b:X
+10:X
+10:C
+0:{"buildId":"SqV7kjmPxBylln7j9aB74","data":[{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"RabbitMQ 实现微服务分布式事务\",\"item\":\"https://www.lxpavilion.top/article/220\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"RabbitMQ 实现微服务分布式事务\",\"headline\":\"RabbitMQ 实现微服务分布式事务\",\"description\":\"三个微服务的一次删除，一个远程成功一个远程失败，本地回滚后数据就对不上了。文章先说明 Seata 全局事务方案的原理与适用边界，再展开 RabbitMQ 最终一致性的完整流程：为什么直接在事务里发消息仍有窗口，本地消息表如何用同一事务消除窗口，提交后投递与定时重投如何配合，以及消费端幂等与死信队列为什么是必需的。\",\"datePublished\":\"2026-09-23T16:49:25.655465\",\"dateCreated\":\"2026-09-23T16:49:25.655465\",\"dateModified\":\"2026-09-23T16:50:45.891688\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/783.jpeg\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"RabbitMQ 实现微服务分布式事务","initialContent":"$4"}]],["$L5","$L6","$L7","$L8"],"$L9"]}],"isPartial":"$@a","staleTime":"$b","varyParams":null},{"rsc":"$Lc","isPartial":"$@d","staleTime":"$b","varyParams":null},{"rsc":"$Le","isPartial":"$@f","staleTime":"$b","varyParams":"$10"},{"rsc":"$L11","isPartial":"$@12","staleTime":"$b","varyParams":"$10"},{"rsc":"$L13","isPartial":"$@14","staleTime":"$b","varyParams":null},{"rsc":"$L15","isPartial":"$@16","staleTime":"$b","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@17","rootVaryParams":null,"needsRuntimeRequest":"$@18"}
+19:I[97367,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+1a:"$Sreact.suspense"
+1c:I[97367,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+1d:I[97367,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+1e:I[27201,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+1f:I[39756,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+20:I[37457,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+21:I[39756,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+27:I[18233,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js"],"default"]
+28:I[34858,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js"],"default"]
+29:I[23191,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/109z71992pbyo.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+2a:I[26908,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+2b:I[54774,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2c:I[79617,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2d:I[22464,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2e:I[3799,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2f:I[56499,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+30:I[61421,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+31:I[6521,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+32:I[8123,["/_next/static/chunks/0psyl9v--p-ak.js","/_next/static/chunks/17y8-kabk8se9.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/0bdci7hcq17mj.css","style"]
+3:{"id":"220"}
+5:["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true}]
+6:["$","script","script-1",{"src":"/_next/static/chunks/0xrzn2mdpvkvi.js","async":true}]
+7:["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true}]
+8:["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true}]
+9:["$","$L19",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@1b"}]}]
+c:["$","$1","h",{"children":[null,["$","$L1c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L1d",null,{"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"RabbitMQ 实现微服务分布式事务 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"三个微服务的一次删除，一个远程成功一个远程失败，本地回滚后数据就对不上了。文章先说明 Seata 全局事务方案的原理与适用边界，再展开 RabbitMQ 最终一致性的完整流程：为什么直接在事务里发消息仍有窗口，本地消息表如何用同一事务消除窗口，提交后投递与定时重投如何配合，以及消费端幂等与死信队列为什么是必需的。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/220/"}],["$","meta","5",{"property":"og:title","content":"RabbitMQ 实现微服务分布式事务 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"三个微服务的一次删除，一个远程成功一个远程失败，本地回滚后数据就对不上了。文章先说明 Seata 全局事务方案的原理与适用边界，再展开 RabbitMQ 最终一致性的完整流程：为什么直接在事务里发消息仍有窗口，本地消息表如何用同一事务消除窗口，提交后投递与定时重投如何配合，以及消费端幂等与死信队列为什么是必需的。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/783.jpeg"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","15",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+e:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+11:["$","$L21",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L22"]}],"$L23","$L24","$L25"]}]]}],[],null],"children":"$L26"}]
+13:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/109z71992pbyo.js","async":true}]],[["$","$L27",null,{}],["$","$L28",null,{"children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L29",null,{"children":["$","$L20",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+15:["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/0bdci7hcq17mj.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/0psyl9v--p-ak.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/17y8-kabk8se9.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2a",null,{"children":[["$","$L2b",null,{}],["$","$L2c",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L2d",null,{}],["$","$L2e",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L2f",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L30",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","$L31",null,{}],["$","$L32",null,{}]]}],["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]]}]}]]}]]}]
+1b:null
+22:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+23:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+24:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+25:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+26:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+18:true
+b:300
+b:C
+17:0
+d:"$undefined"
+f:"$undefined"
+14:"$undefined"
+12:"$undefined"
+16:"$undefined"
+a:"$undefined"

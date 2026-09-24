@@ -1,15 +1,15 @@
 [
   {
+    "series": "Spring开发日志",
+    "count": 5,
+    "coverImage": "/data/media/783.jpeg",
+    "summary": "三个微服务的一次删除，一个远程成功一个远程失败，本地回滚后数据就对不上了。文章先说明 Seata 全局事务方案的原理与适用边界，再展开 RabbitMQ 最终一致性的完整流程：为什么直接在事务里发消息仍有窗口，本地消息表如何用同一事务消除窗口，提交后投递与定时重投如何配合，以及消费端幂等与死信队列为什么是必需的。"
+  },
+  {
     "series": "DeepSeek Harness 体验",
     "count": 9,
     "coverImage": "/data/media/779.png",
     "summary": "DeepSeek Harness 的 Command Code 插件不止一个，功能差得挺远。这篇讲我最后选的那个（@mars-sea/dsh-commandcode-provider）：它把实时模型目录、联网搜索、多账户轮换和用量面板收进同一个包，Go 套餐也能用。附带安装配置步骤，以及双传输和搜索端点的原理拆解。"
-  },
-  {
-    "series": "Spring开发日志",
-    "count": 2,
-    "coverImage": "/data/media/783.jpeg",
-    "summary": "手动 new 一个 QdrantVectorStore 并配置 initializeSchema(true)，集合却始终建不出来，写入时报 collection doesn't exist。这篇顺着源码找到根因：建集合的逻辑不在 build() 里，而在只有 Spring 容器才会调用的 afterPropertiesSet() 回调上，并给出三种修法。"
   },
   {
     "series": "Rust学习笔记",
