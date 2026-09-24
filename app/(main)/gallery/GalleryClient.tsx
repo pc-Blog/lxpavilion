@@ -7,6 +7,8 @@ import { getPublishedList, getPhotosByAlbum } from "@/lib/api/album";
 import Loading from "@/app/_components/common/Loading";
 import Portal from "@/app/_components/common/Portal";
 import { assetUrl } from "@/lib/asset-url";
+import { downloadPhotosAsZip } from "@/lib/download-gallery";
+import { showSuccessToast, showErrorToast } from "@/lib/toast";
 
 /* ── PhotoCard ── */
 function PhotoCard({ photo, index, onClick }: { photo: Photo; index: number; onClick: () => void }) {
@@ -60,6 +62,30 @@ function AlbumCard({
   const covers = photos.slice(0, 3).reverse();
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
+  const [downloading, setDownloading] = useState(false);
+
+  // 下载当前相册（分类）的全部照片
+  const handleDownloadAll = useCallback(async () => {
+    if (downloading || photos.length === 0) return;
+    setDownloading(true);
+    try {
+      const res = await downloadPhotosAsZip({
+        albumTitle: album.title,
+        urls: photos.map((p) => p.url),
+      });
+      if (res.success === 0) {
+        showErrorToast("下载失败", `${res.total} 张照片都没能取到`);
+      } else if (res.failed > 0) {
+        showSuccessToast(`已下载 ${res.success} 张，${res.failed} 张失败`);
+      } else {
+        showSuccessToast(`已下载 ${res.success} 张`);
+      }
+    } catch (e) {
+      showErrorToast("下载失败", e instanceof Error ? e.message : undefined);
+    } finally {
+      setDownloading(false);
+    }
+  }, [album.title, downloading, photos]);
 
   useEffect(() => {
     if (isExpanded && contentRef.current) {
@@ -75,7 +101,7 @@ function AlbumCard({
       <div className="relative px-4 pt-4 pb-3 md:px-6 md:pt-6 md:pb-4">
         {/* 堆叠照片 */}
         <motion.div
-          className="relative h-36 md:h-48 mx-auto max-w-[200px] md:max-w-[260px]"
+          className="group/stack relative h-36 md:h-48 mx-auto max-w-[200px] md:max-w-[260px]"
           initial="rest"
           animate={isExpanded ? "hover" : "rest"}
           whileHover="hover"
@@ -99,6 +125,26 @@ function AlbumCard({
           <div className="absolute -bottom-2 right-0 z-20 px-2 py-0.5 md:px-2.5 rounded-full bg-sky-500 text-white text-[10px] md:text-xs font-bold shadow-lg shadow-sky-500/30">
             {photos.length} 张
           </div>
+
+          {/* 下载整册：进入相册后才出现，悬浮封面时滑入 */}
+          {isExpanded && (
+            <button
+              type="button"
+              disabled={downloading || photos.length === 0}
+              onClick={(e) => { e.stopPropagation(); handleDownloadAll(); }}
+              aria-label="下载全部照片"
+              title="下载全部照片"
+              className={`group/btn absolute top-0 right-0 z-30 flex items-center justify-center p-1.5 md:p-2 rounded-xl border backdrop-blur-md transition-all duration-300 ease-out bg-gradient-to-br from-white/75 to-white/45 dark:from-slate-800/75 dark:to-slate-800/45 border-white/60 dark:border-white/10 shadow-lg shadow-slate-900/15 text-slate-500 dark:text-slate-300 hover:scale-110 hover:from-indigo-500/30 hover:to-indigo-400/15 hover:border-indigo-300/70 hover:text-indigo-600 hover:shadow-indigo-500/40 dark:hover:from-indigo-500/40 dark:hover:to-indigo-400/20 dark:hover:border-indigo-400/50 dark:hover:text-indigo-300 disabled:cursor-not-allowed disabled:hover:scale-100 ${downloading ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1 group-hover/stack:opacity-100 group-hover/stack:translate-y-0"}`}
+            >
+              {downloading ? (
+                <span className="block w-3.5 h-3.5 md:w-4 md:h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <svg className="w-3.5 h-3.5 md:w-4 md:h-4 transition-transform duration-300 group-hover/btn:translate-y-[2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
+                </svg>
+              )}
+            </button>
+          )}
         </motion.div>
 
         <div className="mt-4 md:mt-6 text-center">
