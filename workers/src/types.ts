@@ -20,14 +20,6 @@ export interface Env {
   RSS_MAX_ARTICLES?: string;
   HOT_MAX_ARTICLES?: string;
 
-  // GitHub App 评论系统
-  GITHUB_APP_ID: string;
-  GITHUB_APP_PRIVATE_KEY: string;
-  GITHUB_INSTALLATION_ID: string;
-  GITHUB_REPO_OWNER: string;
-  GITHUB_REPO_NAME: string;
-  GITHUB_DISCUSSION_CATEGORY_ID: string;
-
   // Resend 邮件发送
   RESEND_API_KEY: string;
   EMAIL_FROM_NAME?: string;

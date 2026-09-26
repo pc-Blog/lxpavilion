@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuthStore } from "@/stores/authStore";
-import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -108,9 +107,9 @@ interface Reaction {
 }
 
 interface CommentData {
-  nodeId: string; content: string; author: Author;
+  nodeId: number; content: string; author: Author;
   createdAt: string; lastEditedAt: string | null; deletedAt: string | null;
-  replyToId: string | null;
+  replyToId: number | null;
   reactions: Reaction[]; upvoteCount: number; viewerHasUpvoted: boolean;
   replies: CommentData[];
 }
@@ -122,21 +121,45 @@ interface ListResponse {
 
 /* ── API ── */
 
-/** 从 localStorage 检查当前游客是否拥有某条评论 */
-function isGuestOwner(nodeId: string): boolean {
-  if (typeof window === "undefined") return false;
+/** 编辑/删除窗口：1 小时（与服务端一致） */
+const EDIT_WINDOW_MS = 60 * 60 * 1000;
+
+/**
+ * 游客自己的评论 id 记录。
+ *
+ * 游客没有身份，服务端无从校验归属，只能由浏览器记住「我发过哪几条」。
+ * 存 { id: 过期时间戳 }，超过 1 小时自动失效清理。
+ */
+const GUEST_IDS_KEY = "guestCommentIds";
+
+function readGuestIds(): Record<string, number> {
+  if (typeof window === "undefined") return {};
   try {
-    const ids: string[] = JSON.parse(localStorage.getItem("guestCommentIds") || "[]");
-    return ids.includes(nodeId);
-  } catch { return false; }
+    const raw = JSON.parse(localStorage.getItem(GUEST_IDS_KEY) || "{}");
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+    // 顺手清理过期项
+    const now = Date.now();
+    const fresh: Record<string, number> = {};
+    for (const [k, v] of Object.entries(raw)) {
+      if (typeof v === "number" && v > now) fresh[k] = v;
+    }
+    return fresh;
+  } catch { return {}; }
 }
 
-function genId(): string {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-  });
+/** 记录一条「本人（游客）刚发布的评论」，1 小时后失效 */
+function rememberGuestComment(nodeId: number) {
+  if (typeof window === "undefined") return;
+  const ids = readGuestIds();
+  ids[String(nodeId)] = Date.now() + EDIT_WINDOW_MS;
+  localStorage.setItem(GUEST_IDS_KEY, JSON.stringify(ids));
+}
+
+/** 游客是否还能管理这条评论（在窗口内且是本浏览器发的） */
+function isGuestOwner(nodeId: number): boolean {
+  const ids = readGuestIds();
+  const exp = ids[String(nodeId)];
+  return typeof exp === "number" && exp > Date.now();
 }
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
@@ -145,18 +168,31 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     // token 已过期 → 清理登录态
     useAuthStore.getState().logout();
   }
-  const guestSession = localStorage.getItem("guestSession");
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   const finalToken = localStorage.getItem("token");
-  if (finalToken) {
-    headers["Authorization"] = `Bearer ${finalToken}`;
-  } else if (guestSession) {
-    headers["X-Guest-Session"] = guestSession;
-  }
+  if (finalToken) headers["Authorization"] = `Bearer ${finalToken}`;
   const res = await fetch(`${WORKER_API}${path}`, { headers, ...options });
   const json = await res.json();
   if (json.code !== 1) throw new Error(json.msg || "请求失败");
   return json.data as T;
+}
+
+/**
+ * 能否编辑/删除这条评论。
+ *
+ * 登录用户：本人发的，且在 1 小时内。
+ * 游客：本浏览器发过（localStorage 有记录），且在 1 小时内。
+ * 服务端对游客只校验时间窗口，这里的判断只决定按钮显不显示。
+ */
+function canManageComment(
+  nodeId: number,
+  authorId: number,
+  createdAt: string,
+  userId: number | undefined,
+): boolean {
+  if (Date.now() - new Date(createdAt).getTime() >= EDIT_WINDOW_MS) return false;
+  if (userId !== undefined) return userId === authorId;
+  return isGuestOwner(nodeId);
 }
 
 /* ── 时间 ── */
@@ -318,8 +354,8 @@ function Editor({
 function ReactionBar({
   subjectId, reactions, onToggle, disabled,
 }: {
-  subjectId: string; reactions: Reaction[];
-  onToggle: (id: string, r: string) => Promise<void>;
+  subjectId: number; reactions: Reaction[];
+  onToggle: (id: number, r: string) => Promise<void>;
   disabled: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -389,10 +425,10 @@ function UpvoteBtn({ count, active, disabled, onClick }: {
 
 function ReplyItem({ reply, onReaction, onUpvote, onEdit, onDelete }: {
   reply: CommentData;
-  onReaction: (id: string, r: string) => Promise<void>;
-  onUpvote: (id: string) => Promise<void>;
-  onEdit: (id: string, c: string) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
+  onReaction: (id: number, r: string) => Promise<void>;
+  onUpvote: (id: number) => Promise<void>;
+  onEdit: (id: number, c: string) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
 }) {
   const { user } = useAuthStore();
   const [editing, setEditing] = useState(false);
@@ -426,7 +462,7 @@ function ReplyItem({ reply, onReaction, onUpvote, onEdit, onDelete }: {
         <div className="flex items-center gap-1 mt-1 flex-wrap">
           <UpvoteBtn count={reply.upvoteCount} active={reply.viewerHasUpvoted} disabled={!user} onClick={() => onUpvote(reply.nodeId)} />
           <ReactionBar subjectId={reply.nodeId} reactions={reply.reactions} onToggle={onReaction} disabled={!user} />
-          {Date.now() - new Date(reply.createdAt).getTime() < 3600000 && (user?.id === reply.author.id || (reply.author.id === 0 && user?.nickname === reply.author.nickname) || (!user && isGuestOwner(reply.nodeId))) && (
+          {canManageComment(reply.nodeId, reply.author.id, reply.createdAt, user?.id) && (
             <div className="flex gap-1 ml-auto">
               <button onClick={() => setEditing(true)} className="text-[11px] text-slate-400 hover:text-indigo-500 px-1.5 py-0.5">编辑</button>
               {confirmDelete ? (
@@ -451,11 +487,11 @@ function ReplyItem({ reply, onReaction, onUpvote, onEdit, onDelete }: {
 
 function CommentCard({ comment, onReply, onEdit, onDelete, onReaction, onUpvote }: {
   comment: CommentData;
-  onReply: (parentId: string, c: string) => Promise<void>;
-  onEdit: (id: string, c: string) => Promise<void>;
-  onDelete: (id: string, replyIds?: string[]) => Promise<void>;
-  onReaction: (id: string, r: string) => Promise<void>;
-  onUpvote: (id: string) => Promise<void>;
+  onReply: (parentId: number, c: string) => Promise<void>;
+  onEdit: (id: number, c: string) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
+  onReaction: (id: number, r: string) => Promise<void>;
+  onUpvote: (id: number) => Promise<void>;
 }) {
   const { user } = useAuthStore();
   const [showReplyForm, setShowReplyForm] = useState(false);
@@ -512,11 +548,9 @@ function CommentCard({ comment, onReply, onEdit, onDelete, onReaction, onUpvote 
           <ReactionBar subjectId={comment.nodeId} reactions={comment.reactions} onToggle={onReaction} disabled={!user} />
 
           <div className="flex gap-1 ml-auto">
-            {(user || isGuestOwner(comment.nodeId)) && (
-              <button onClick={() => { setShowReplyForm(!showReplyForm); setEditing(false); }}
-                className="text-xs text-slate-400 hover:text-indigo-500 transition-colors px-2 py-1">回复</button>
-            )}
-            {Date.now() - new Date(comment.createdAt).getTime() < 3600000 && (user?.id === comment.author.id || (comment.author.id === 0 && user?.nickname === comment.author.nickname) || (!user && isGuestOwner(comment.nodeId))) && (
+            <button onClick={() => { setShowReplyForm(!showReplyForm); setEditing(false); }}
+              className="text-xs text-slate-400 hover:text-indigo-500 transition-colors px-2 py-1">回复</button>
+            {canManageComment(comment.nodeId, comment.author.id, comment.createdAt, user?.id) && (
               <>
                 <button onClick={() => { setEditing(true); setShowReplyForm(false); }}
                   className="text-xs text-slate-400 hover:text-indigo-500 transition-colors px-2 py-1">编辑</button>
@@ -587,13 +621,7 @@ export default function CommentSection({ path }: CommentSectionProps) {
   const [sortBy, setSortBy] = useState<"oldest" | "newest">("newest");
   const [submitting, setSubmitting] = useState(false);
 
-  // 游客会话
-  const [guestSession] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    let s = localStorage.getItem("guestSession");
-    if (!s) { s = genId(); localStorage.setItem("guestSession", s); }
-    return s;
-  });
+  // 游客昵称（仅用于发评论时提交，不作为身份）
   const [guestNickname, setGuestNickname] = useState(() => {
     if (typeof window === "undefined") return "";
     return localStorage.getItem("guestNickname") || "";
@@ -617,32 +645,22 @@ export default function CommentSection({ path }: CommentSectionProps) {
 
   const handleSubmit = async (content: string) => {
     if (submitting) return;
+    if (!isLoggedIn && !guestNickname.trim()) return;
     setSubmitting(true);
     try {
       const body: Record<string, unknown> = { path, content };
-      if (!isLoggedIn && guestSession) {
-        if (!guestNickname.trim()) { setSubmitting(false); return; }
-        body.nickname = guestNickname.trim();
-      }
+      if (!isLoggedIn) body.nickname = guestNickname.trim();
       const newComment = await apiFetch<CommentData>("/comment", { method: "POST", body: JSON.stringify(body) });
-      if (!isLoggedIn && guestSession) {
-        const ids: string[] = JSON.parse(localStorage.getItem("guestCommentIds") || "[]");
-        ids.push(newComment.nodeId);
-        localStorage.setItem("guestCommentIds", JSON.stringify(ids));
-      }
+      if (!isLoggedIn) rememberGuestComment(newComment.nodeId);
       setData((prev) => prev ? { ...prev, comments: sortBy === "newest" ? [newComment, ...prev.comments] : [...prev.comments, newComment] } : prev);
     } finally { setSubmitting(false); }
   };
 
-  const handleReply = async (replyToId: string, content: string) => {
+  const handleReply = async (replyToId: number, content: string) => {
     const body: Record<string, unknown> = { path, content, replyToId };
-    if (!isLoggedIn && guestSession) body.nickname = guestNickname.trim();
+    if (!isLoggedIn) body.nickname = guestNickname.trim();
     const newReply = await apiFetch<CommentData>("/comment", { method: "POST", body: JSON.stringify(body) });
-    if (!isLoggedIn && guestSession) {
-      const ids: string[] = JSON.parse(localStorage.getItem("guestCommentIds") || "[]");
-      ids.push(newReply.nodeId);
-      localStorage.setItem("guestCommentIds", JSON.stringify(ids));
-    }
+    if (!isLoggedIn) rememberGuestComment(newReply.nodeId);
     setData((prev) => {
       if (!prev) return prev;
       const addTo = (c: CommentData) => c.nodeId === replyToId ? { ...c, replies: [...c.replies, newReply] } : c;
@@ -650,7 +668,7 @@ export default function CommentSection({ path }: CommentSectionProps) {
     });
   };
 
-  const handleEdit = async (nodeId: string, content: string) => {
+  const handleEdit = async (nodeId: number, content: string) => {
     const oldData = data;
     setData((prev) => {
       if (!prev) return prev;
@@ -663,13 +681,11 @@ export default function CommentSection({ path }: CommentSectionProps) {
       };
     });
     try {
-      const patchBody: Record<string, string> = { content };
-      if (!isLoggedIn && guestSession) patchBody.nickname = guestNickname;
-      await apiFetch(`/comment/${nodeId}`, { method: "PATCH", body: JSON.stringify(patchBody) });
+      await apiFetch(`/comment/${nodeId}`, { method: "PATCH", body: JSON.stringify({ content }) });
     } catch { setData(oldData); }
   };
 
-  const handleDelete = async (nodeId: string) => {
+  const handleDelete = async (nodeId: number) => {
     // 乐观更新（从列表中移除）
     const oldData = data;
     setData((prev) => {
@@ -686,7 +702,7 @@ export default function CommentSection({ path }: CommentSectionProps) {
     catch { setData(oldData); }
   };
 
-  const handleReaction = async (subjectId: string, reaction: string) => {
+  const handleReaction = async (subjectId: number, reaction: string) => {
     // 乐观更新
     setData((prev) => {
       if (!prev) return prev;
@@ -702,13 +718,12 @@ export default function CommentSection({ path }: CommentSectionProps) {
             ? { ...c, reactions: toggle(c.reactions) }
             : { ...c, replies: c.replies.map((r) => r.nodeId === subjectId ? { ...r, reactions: toggle(r.reactions) } : r) }
         ),
-        discussionReactions: subjectId === prev.discussionId ? toggle(prev.discussionReactions) : prev.discussionReactions,
       };
     });
     try { await apiFetch("/comment/reaction", { method: "POST", body: JSON.stringify({ subjectId, reaction }) }); } catch { refresh(); }
   };
 
-  const handleUpvote = async (subjectId: string) => {
+  const handleUpvote = async (subjectId: number) => {
     // 乐观更新
     setData((prev) => {
       if (!prev) return prev;
@@ -752,28 +767,11 @@ export default function CommentSection({ path }: CommentSectionProps) {
         )}
       </div>
 
-      {/* Discussion 反应栏 */}
-      {data && data.discussionReactions && data.discussionReactions.some((r) => r.count > 0) && (
-        <div className="text-center py-3">
-          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
-            反应 ({data.discussionReactions.reduce((s, r) => s + r.count, 0)})
-          </h4>
-          <div className="flex items-center justify-center gap-1">
-            <ReactionBar
-              subjectId={data.discussionId || ""}
-              reactions={data.discussionReactions}
-              onToggle={handleReaction}
-              disabled={!isLoggedIn}
-            />
-          </div>
-        </div>
-      )}
-
       {/* 顶部发表框 */}
       <div className="glass-card !rounded-2xl p-5 mb-4">
         {isLoggedIn ? (
           <Editor placeholder="写下你的评论..." submitLabel="发表评论" onSubmit={handleSubmit} loading={submitting} />
-        ) : guestSession ? (
+        ) : (
           <div>
             <input
               type="text"
@@ -784,12 +782,6 @@ export default function CommentSection({ path }: CommentSectionProps) {
               maxLength={20}
             />
             <Editor placeholder="写下你的评论..." submitLabel="发表评论" onSubmit={handleSubmit} loading={submitting} />
-          </div>
-        ) : (
-          <div className="text-center">
-            <p className="text-sm text-slate-400 dark:text-slate-500">
-              请 <Link href="/auth/login" className="text-indigo-500 hover:underline font-bold">登录</Link> 后发表评论
-            </p>
           </div>
         )}
       </div>
