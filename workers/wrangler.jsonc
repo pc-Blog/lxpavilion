@@ -133,28 +133,6 @@
     // GitHub OAuth 回调地址（需在 GitHub App 配置中设为相同值）
 
     "FRONTEND_URL": "https://www.lxpavilion.top",
-    // 前端首页地址（CORS 跨域白名单、OAuth 跳转用）
-
-    // ★ GitHub App（用于 Giscus 评论系统） ★
-    "GITHUB_APP_ID": "3753438",
-    // GitHub App ID（用于生成 GitHub 安装 token，操作 Discussion API）
-
-    "GITHUB_INSTALLATION_ID": "142872893",
-    // GitHub App 的安装 ID（安装到仓库后的 ID）
-
-    "GITHUB_REPO_OWNER": "pc-Blog",
-    // 存放评论的 GitHub 仓库所有者
-
-    "GITHUB_REPO_NAME": "lxpavilion",
-    // 存放评论的 GitHub 仓库名称
-
-    "GITHUB_DISCUSSION_CATEGORY_ID": "DIC_kwDOSk99g84C9uoJ",
-    // Discussion 分类 ID（在 GitHub 仓库 Discussions 页面 URL 中可找到）
-
-    // ★ GitHub App 私钥（用于 JWT 签名，连接 GitHub API） ★
-    "GITHUB_APP_PRIVATE_KEY": "【必填】你的 GitHub App 私钥（PEM 格式，\\\\n 替换换行符保持单行）",
-    // 从 GitHub App 设置页面生成的私钥（PEM 格式）
-    // \n 是换行符，保持单行字符串即可
-    // 注意：fork 后必须替换为自己的 GitHub App 私钥
+    // 前端首页地址（CORS 跨域白名单、邮件链接、OAuth 跳转用）
   }
 }

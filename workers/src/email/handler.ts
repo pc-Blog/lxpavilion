@@ -70,7 +70,7 @@ export async function handleEmail(
 
   // 发件人名称
   const fromName = parsed.from?.name || "";
-  const toName = env.EMAIL_FROM_NAME || "";
+  const toName = env.EMAIL_FROM_NAME;
 
   // ── 2. 获取转发目标地址 ──
   const forwardTo = await getForwardEmail(env);

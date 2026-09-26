@@ -83,7 +83,6 @@ function formatUser(row: Record<string, unknown>): Record<string, unknown> {
 async function sendEmail(env: Env, to: string, subject: string, text: string, html?: string) {
   const fromAddr = env.NOTIFY_FROM_ADDRESS;
   const fromName = env.EMAIL_FROM_NAME;
-  if (!fromAddr || !fromName) return;
   await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { "Authorization": `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
@@ -185,7 +184,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       // 发送通知（不阻塞响应）
       if (email) {
         const now = new Date().toISOString().replace("T", " ").slice(0, 19);
-        await sendEmail(env, env.NOTIFY_TO_ADDRESS || "", "栏轩阁 - 新用户注册",
+        await sendEmail(env, env.NOTIFY_TO_ADDRESS, "栏轩阁 - 新用户注册",
           `新用户注册：${username}\n邮箱：${email}`,
           adminNotifyTpl
             .replace(/\{\{TYPE\}\}/g, "新用户注册")
@@ -274,7 +273,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       await env.DB.prepare(
         "UPDATE user SET login_time = datetime('now') WHERE id = ?"
       ).bind(row.id).run();
-      const frontendUrl = env.FRONTEND_URL || "https://www.lxpavilion.top";
+      const frontendUrl = env.FRONTEND_URL;
       return Response.redirect(`${frontendUrl}/auth/callback?token=${token}`, 302);
     }
 
@@ -416,7 +415,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
 
       if (user) {
         const now = new Date().toISOString().replace("T", " ").slice(0, 19);
-        await sendEmail(env, env.NOTIFY_TO_ADDRESS || "", "栏轩阁 - 用户注销",
+        await sendEmail(env, env.NOTIFY_TO_ADDRESS, "栏轩阁 - 用户注销",
           `用户注销：${user.username}${user.email ? `\n邮箱：${user.email}` : ""}`,
           adminNotifyTpl
             .replace(/\{\{TYPE\}\}/g, "用户注销")
@@ -460,9 +459,6 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       // 通过 sendNotify 发送邮件（同步等待结果用于错误处理）
       const fromName = env.EMAIL_FROM_NAME;
       const fromAddr = env.NOTIFY_FROM_ADDRESS;
-      if (!fromName || !fromAddr) {
-        return respond(null, "邮件服务未配置", 0, origin);
-      }
       try {
         const res = await fetch("https://api.resend.com/emails", {
           method: "POST",

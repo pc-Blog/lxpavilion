@@ -14,10 +14,7 @@ import { renderRssEmail } from "./template";
 import type { Article } from "./template";
 
 const FEED_URL = "https://www.lxpavilion.top/feed.xml";
-const FROM_EMAIL = "notify@lxpavilion.top";
-const FROM_NAME = "ppc";
 const CAMPAIGN_NAME = "栏轩·阁｜本周技术速递";
-const DEFAULT_MAX_ARTICLES = 3;
 
 // ── RSS 解析 ──
 
@@ -97,7 +94,7 @@ async function pushViaResend(
     return;
   }
 
-  const fromName = env.EMAIL_FROM_NAME || FROM_NAME;
+  const fromName = env.EMAIL_FROM_NAME;
   const fromAddr = env.NOTIFY_FROM_ADDRESS;
 
   // Resend Batch 一次最多 100 封
@@ -176,7 +173,7 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
   }
 
   // 3. 筛选未推送过的文章
-  const maxArticles = Number(env.RSS_MAX_ARTICLES) || DEFAULT_MAX_ARTICLES;
+  const maxArticles = Number(env.RSS_MAX_ARTICLES);
 
   const newArticles = allArticles
     .filter((a) => {

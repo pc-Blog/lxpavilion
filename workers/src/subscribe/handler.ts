@@ -23,7 +23,7 @@ async function sendViaResend(
   subject: string,
   html: string,
 ): Promise<void> {
-  const fromName = env.EMAIL_FROM_NAME || "ppc";
+  const fromName = env.EMAIL_FROM_NAME;
   const fromAddr = env.NOTIFY_FROM_ADDRESS;
 
   try {

@@ -7,29 +7,30 @@ export interface Env {
   GITHUB_CLIENT_ID?: string;
   GITHUB_CLIENT_SECRET?: string;
   GITHUB_REDIRECT_URI?: string;
-  FRONTEND_URL?: string;
+  FRONTEND_URL: string;
   CF_API_TOKEN: string;
   CF_ZONE_ID: string;
   CSDN_USER?: string;
   JUEJIN_USER_ID?: string;
   CNBLOGS_BLOGAPP?: string;
 
-  // 邮件转发目标（环境变量，运行时只读）
+  // 邮件转发目标：不配则不转发（功能降级，非必填）
   FORWARD_EMAIL?: string;
 
-  RSS_MAX_ARTICLES?: string;
-  HOT_MAX_ARTICLES?: string;
+  // 推送数量上限
+  RSS_MAX_ARTICLES: string;
+  HOT_MAX_ARTICLES: string;
 
   // Resend 邮件发送
   RESEND_API_KEY: string;
-  EMAIL_FROM_NAME?: string;
-  EMAIL_FROM_ADDRESS?: string;
+  EMAIL_FROM_NAME: string;
+  EMAIL_FROM_ADDRESS: string;
 
   // 自动通知专用发件地址（notify@lxpavilion.top）
-  NOTIFY_FROM_ADDRESS?: string;
+  NOTIFY_FROM_ADDRESS: string;
 
   // 管理员通知收件地址（msg@lxpavilion.top）
-  NOTIFY_TO_ADDRESS?: string;
+  NOTIFY_TO_ADDRESS: string;
 
   // 管理接口 Token
   ADMIN_TOKEN: string;

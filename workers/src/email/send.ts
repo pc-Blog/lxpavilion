@@ -16,12 +16,9 @@ export async function handleSend(
   const body: { to?: string; subject?: string; text?: string; toName?: string } =
     request.method === "POST" ? await request.json() : {};
 
-  // 检查发件人配置
+  // 发件人配置
   const fromName = env.EMAIL_FROM_NAME;
   const fromAddr = env.EMAIL_FROM_ADDRESS;
-  if (!fromName || !fromAddr) {
-    return respond(null, "发件人未配置（EMAIL_FROM_NAME / EMAIL_FROM_ADDRESS）", 0, origin);
-  }
 
   if (!body.to) {
     return respond(null, "缺少收件人地址（to）", 0, origin);

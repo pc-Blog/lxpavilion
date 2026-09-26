@@ -14,10 +14,7 @@ import type { HotItem } from "./template";
 // ── 常量 ──
 
 const HOTSPOT_URL = "https://hotspot.lxpavilion.top/report.json";
-const FROM_EMAIL = "notify@lxpavilion.top";
-const FROM_NAME = "ppc";
 const CAMPAIGN_NAME = "栏轩·阁｜今日技术热点";
-const DEFAULT_MAX_ARTICLES = 10;
 const MAX_PER_KEYWORD = 2;
 
 // ── URL 哈希（用于去重） ──
@@ -142,7 +139,7 @@ async function pushViaResend(
     return;
   }
 
-  const fromName = env.EMAIL_FROM_NAME || FROM_NAME;
+  const fromName = env.EMAIL_FROM_NAME;
   const fromAddr = env.NOTIFY_FROM_ADDRESS;
 
   const batchSize = 100;
@@ -240,7 +237,7 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   }
 
   // 4. 轮询选择：每个关键词最多取 2 条，按日期偏移轮转取数
-  const maxArticles = Number(env.HOT_MAX_ARTICLES) || DEFAULT_MAX_ARTICLES;
+  const maxArticles = Number(env.HOT_MAX_ARTICLES);
 
   const cappedGroups = filteredGroups.map((g) => ({
     keyword: g.keyword,

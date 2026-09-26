@@ -12,10 +12,14 @@
  * 编辑/删除窗口：1 小时（前后端一致，后端按 create_time 校验）
  *
  * Emoji 反应、点赞存 D1，subject_id 指向 comment.id
+ *
+ * 邮件通知：新评论通知管理员；回复时若被回复者有邮箱则额外通知他。
+ *           通知失败不影响评论写入。
  */
 
 import { respond } from "../utils/response";
 import { verifyJwt } from "../utils/jwt";
+import notificationTpl from "./notification.html";
 import type { Env } from "../types";
 
 /* ── 模块级初始化（Worker 冷启动时执行一次） ── */
@@ -46,6 +50,167 @@ type Reaction = (typeof REACTIONS)[number];
 
 /** 编辑/删除窗口：1 小时（毫秒） */
 const EDIT_WINDOW_MS = 60 * 60 * 1000;
+
+/* ── 邮件通知 ── */
+
+/** HTML 转义，避免评论内容里的标签破坏邮件结构 */
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/** 页面路径 → 可点击的完整地址 */
+function pageUrl(env: Env, path: string): string {
+  const base = env.FRONTEND_URL.replace(/\/+$/, "");
+  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+/** 格式化为本地可读时间（东八区） */
+function formatTime(d: Date): string {
+  const t = new Date(d.getTime() + 8 * 60 * 60 * 1000);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${t.getUTCFullYear()}-${p(t.getUTCMonth() + 1)}-${p(t.getUTCDate())} ${p(t.getUTCHours())}:${p(t.getUTCMinutes())}`;
+}
+
+/** 通过 Resend 发信 */
+async function sendMail(env: Env, to: string, subject: string, html: string): Promise<void> {
+  const fromAddr = env.NOTIFY_FROM_ADDRESS;
+  const fromName = env.EMAIL_FROM_NAME;
+  if (!to) return;
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ from: `${fromName} <${fromAddr}>`, to: [to], subject, html }),
+  });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    console.error("评论通知发送失败", {
+      module: "comment",
+      action: "notify_failed",
+      status: res.status,
+      detail: detail.slice(0, 200),
+    });
+  }
+}
+
+/** 渲染通知邮件 HTML */
+function renderNotification(env: Env, opts: {
+  title: string;
+  subtitle: string;
+  author: string;
+  path: string;
+  content: string;
+  quoted?: { author: string; content: string } | null;
+}): string {
+  const url = escapeHtml(pageUrl(env, opts.path));
+  // 被回复原文区块：非回复场景传空串，模板里的占位行会被整段移除
+  const quotedRow = opts.quoted
+    ? `
+                <tr>
+                  <td style="padding: 14px 0;">
+                    <p style="font-family: 'Inter', sans-serif; color: #A0A0A0; font-size: 11px; margin: 0 0 8px; letter-spacing: 1px; text-transform: uppercase;">被回复的内容 · ${escapeHtml(opts.quoted.author)}</p>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                      style="background-color: #35304A; border-radius: 8px; border-left: 3px solid #8B5CF6;">
+                      <tr>
+                        <td style="padding: 16px 18px;">
+                          <p style="font-family: 'Inter', sans-serif; color: #B8B4C8; font-size: 14px; line-height: 1.65; margin: 0; white-space: pre-wrap;">${escapeHtml(opts.quoted.content)}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>`
+    : "";
+
+  return notificationTpl
+    .replace(/\{\{TITLE\}\}/g, escapeHtml(opts.title))
+    .replace(/\{\{SUBTITLE\}\}/g, escapeHtml(opts.subtitle))
+    .replace(/\{\{AUTHOR\}\}/g, escapeHtml(opts.author))
+    .replace(/\{\{PAGE_PATH\}\}/g, escapeHtml(opts.path))
+    .replace(/\{\{PAGE_URL\}\}/g, url)
+    .replace(/\{\{CONTENT\}\}/g, escapeHtml(opts.content).slice(0, 4000))
+    .replace(/\{\{QUOTED_ROW\}\}/g, quotedRow)
+    .replace(/\{\{TIME\}\}/g, formatTime(new Date()));
+}
+
+/**
+ * 发送评论通知。
+ *
+ * 1. 始终通知管理员（NOTIFY_TO_ADDRESS）
+ * 2. 若是回复，且被回复者有邮箱、且不是自己回复自己 → 也通知他
+ *
+ * 全部失败均静默（调用方 await 后会 catch），不影响评论本身。
+ */
+async function notifyComment(
+  env: Env,
+  opts: {
+    path: string;
+    content: string;
+    authorId: number;
+    authorName: string;
+    parent: { userId: number; content: string } | null;
+  },
+): Promise<void> {
+  const tasks: Promise<void>[] = [];
+
+  // ── 管理员通知 ──
+  const adminTo = env.NOTIFY_TO_ADDRESS;
+  if (adminTo) {
+    const isReply = opts.parent !== null;
+    tasks.push(
+      sendMail(
+        env,
+        adminTo,
+        isReply ? `栏轩阁 - ${opts.authorName} 回复了评论` : `栏轩阁 - ${opts.authorName} 发表了评论`,
+        renderNotification(env, {
+          title: isReply ? "新回复通知" : "新评论通知",
+          subtitle: "博客评论系统实时通知",
+          author: opts.authorName,
+          path: opts.path,
+          content: opts.content,
+          quoted: null,
+        }),
+      ),
+    );
+  }
+
+  // ── 被回复人通知 ──
+  const parent = opts.parent;
+  if (parent && parent.userId !== opts.authorId) {
+    const target = await env.DB
+      .prepare("SELECT nickname, username, email FROM user WHERE id = ? AND deleted = 0")
+      .bind(parent.userId)
+      .first<{ nickname: string | null; username: string; email: string | null }>();
+
+    const to = target?.email?.trim();
+    if (to) {
+      tasks.push(
+        sendMail(
+          env,
+          to,
+          `栏轩阁 - ${opts.authorName} 回复了你的评论`,
+          renderNotification(env, {
+            title: "有人回复了你",
+            subtitle: "博客评论回复通知",
+            author: opts.authorName,
+            path: opts.path,
+            content: opts.content,
+            quoted: { author: target?.nickname || target?.username || "匿名", content: parent.content },
+          }),
+        ),
+      );
+    }
+  }
+
+  await Promise.allSettled(tasks);
+}
 
 /* ── 通用工具 ── */
 
@@ -496,15 +661,17 @@ export async function handleComment(request: Request, env: Env, origin: string |
         if (authorId === null) return respond(null, "创建游客记录失败", 0, origin);
       }
 
-      // 回复：校验父评论存在且同属该 path
+      // 回复：校验父评论存在且同属该 path（同时取出父评论作者与内容，供邮件通知用）
       let parentId: number | null = null;
+      let parentInfo: { userId: number; content: string } | null = null;
       if (body.replyToId) {
         const parent = await env.DB
-          .prepare("SELECT id FROM comment WHERE id = ? AND path = ? AND deleted = 0")
+          .prepare("SELECT id, user_id, content FROM comment WHERE id = ? AND path = ? AND deleted = 0")
           .bind(body.replyToId, body.path)
-          .first<{ id: number }>();
+          .first<{ id: number; user_id: number; content: string }>();
         if (!parent) return respond(null, "父评论不存在", 0, origin);
         parentId = parent.id;
+        parentInfo = { userId: parent.user_id, content: parent.content };
       }
 
       const content = body.content.trim();
@@ -522,12 +689,29 @@ export async function handleComment(request: Request, env: Env, origin: string |
         .bind(authorId)
         .first<{ id: number; nickname: string | null; avatar: string | null; username: string }>();
 
+      const authorName = author?.nickname || author?.username || "Anonymous";
+
+      // 邮件通知：失败不影响评论写入，故单独 catch
+      await notifyComment(env, {
+        path: body.path,
+        content,
+        authorId,
+        authorName,
+        parent: parentInfo,
+      }).catch((e) => {
+        console.error("评论通知异常", {
+          module: "comment",
+          action: "notify_error",
+          error: e instanceof Error ? e.message : String(e),
+        });
+      });
+
       const vo: CommentVO = {
         nodeId: inserted.id,
         content,
         author: {
           id: authorId,
-          nickname: author?.nickname || author?.username || "Anonymous",
+          nickname: authorName,
           avatar: author?.avatar || "",
         },
         createdAt: normalizeTime(inserted.create_time),
