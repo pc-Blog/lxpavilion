@@ -6,6 +6,7 @@
  *   GET /api/sync/views               — 文章浏览数（全量）
  *   GET /api/sync/emails?since=ISO    — 邮件归档
  *   GET /api/sync/subscribers?since=  — 订阅者
+ *   GET /api/sync/comments?since=     — 评论
  *   GET /api/sync/reactions?since=    — 评论反应
  *   GET /api/sync/upvotes?since=      — 评论点赞
  *   GET /api/sync/push-logs?since=    — 推送记录
@@ -74,6 +75,12 @@ export async function handleSync(
   // ── GET /api/sync/subscribers ──
   if (url.pathname === "/api/sync/subscribers") {
     const rows = await querySince(env.DB, "subscribers", "created_at", since);
+    return respond(rows, "ok", 1, origin);
+  }
+
+  // ── GET /api/sync/comments ──
+  if (url.pathname === "/api/sync/comments") {
+    const rows = await querySince(env.DB, "comment", "create_time", since);
     return respond(rows, "ok", 1, origin);
   }
 

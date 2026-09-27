@@ -15,6 +15,7 @@ interface TableData {
 const TABLE_DEFS: Record<string, { label: string; pageKey: string; columns: string[] }> = {
   emails:     { label: "邮件归档",     pageKey: "email",     columns: ["id", "fromAddr", "subject", "createdAt"] },
   subscribers: { label: "邮件订阅者",   pageKey: "subscriber", columns: ["id", "email", "groupName", "createdAt"] },
+  comments:   { label: "评论",         pageKey: "comment",  columns: ["id", "path", "parentId", "userId", "content", "deleted", "createTime"] },
   reactions:  { label: "评论反应",     pageKey: "reaction",  columns: ["id", "subjectId", "userId", "reaction", "createdAt"] },
   upvotes:    { label: "评论点赞",     pageKey: "upvote",    columns: ["id", "subjectId", "userId", "createdAt"] },
   "push-logs":{ label: "推送记录",     pageKey: "push-log",  columns: ["id", "pushedAt", "articleCount", "groupName", "status"] },
