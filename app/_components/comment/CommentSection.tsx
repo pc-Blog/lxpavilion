@@ -108,7 +108,7 @@ interface Reaction {
 
 interface CommentData {
   nodeId: number; content: string; author: Author;
-  createdAt: string; lastEditedAt: string | null; deletedAt: string | null;
+  createdAt: string; lastEditedAt: string | null;
   replyToId: number | null;
   reactions: Reaction[]; upvoteCount: number; viewerHasUpvoted: boolean;
   replies: CommentData[];
@@ -435,8 +435,6 @@ function ReplyItem({ reply, onReaction, onUpvote, onEdit, onDelete }: {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  if (reply.deletedAt) return <p className="text-xs text-slate-400 italic py-2">该回复已被删除</p>;
-
   return (
     <div className="py-2">
       <div className="flex items-center gap-2">
@@ -502,10 +500,6 @@ function CommentCard({ comment, onReply, onEdit, onDelete, onReaction, onUpvote 
   const [replyCount, setReplyCount] = useState(2);
   const [expanded, setExpanded] = useState(false);
   const isLong = comment.content.length > 400;
-
-  if (comment.deletedAt) return (
-    <div className="glass-card !rounded-2xl p-4"><p className="text-sm text-slate-400 italic">该评论已被删除</p></div>
-  );
 
   return (
     <div className="glass-card !rounded-2xl p-4 hover:shadow-[0_0_30px_rgba(99,102,241,0.35),0_0_60px_rgba(99,102,241,0.15)] dark:hover:shadow-[0_0_30px_rgba(129,140,248,0.3),0_0_60px_rgba(129,140,248,0.12)]">
@@ -738,7 +732,7 @@ export default function CommentSection({ path }: CommentSectionProps) {
     try { await apiFetch("/comment/upvote", { method: "POST", body: JSON.stringify({ subjectId }) }); } catch { refresh(); }
   };
 
-  const totalCount = data?.comments.reduce((s, c) => c.deletedAt ? s : s + 1 + c.replies.filter((r) => !r.deletedAt).length, 0) ?? 0;
+  const totalCount = data?.comments.reduce((s, c) => s + 1 + c.replies.length, 0) ?? 0;
 
   // 本地排序
   const sortedComments = data?.comments ? [...data.comments].sort((a, b) =>

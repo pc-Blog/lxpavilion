@@ -19,6 +19,7 @@
 
 import { respond } from "../utils/response";
 import { verifyJwt } from "../utils/jwt";
+import { nowCst } from "../utils/datetime";
 import notificationTpl from "./notification.html";
 import type { Env } from "../types";
 
@@ -67,13 +68,6 @@ function escapeHtml(s: string): string {
 function pageUrl(env: Env, path: string): string {
   const base = env.FRONTEND_URL.replace(/\/+$/, "");
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
-}
-
-/** 格式化为本地可读时间（东八区） */
-function formatTime(d: Date): string {
-  const t = new Date(d.getTime() + 8 * 60 * 60 * 1000);
-  const p = (n: number) => String(n).padStart(2, "0");
-  return `${t.getUTCFullYear()}-${p(t.getUTCMonth() + 1)}-${p(t.getUTCDate())} ${p(t.getUTCHours())}:${p(t.getUTCMinutes())}`;
 }
 
 /** 通过 Resend 发信 */
@@ -137,7 +131,7 @@ function renderNotification(env: Env, opts: {
     .replace(/\{\{PAGE_URL\}\}/g, url)
     .replace(/\{\{CONTENT\}\}/g, escapeHtml(opts.content).slice(0, 4000))
     .replace(/\{\{QUOTED_ROW\}\}/g, quotedRow)
-    .replace(/\{\{TIME\}\}/g, formatTime(new Date()));
+    .replace(/\{\{TIME\}\}/g, nowCst());
 }
 
 /**
@@ -222,13 +216,11 @@ function genGuestUsername(): string {
 }
 
 /**
- * D1 的 datetime('now') 返回 "YYYY-MM-DD HH:MM:SS"（UTC 无时区标记），
- * 直接交给前端 new Date() 会被当本地时间解析，需补成 ISO。
- * 迁移导入的数据本身是 ISO，原样返回。
+ * D1 统一存 "yyyy-MM-dd HH:mm:ss"（UTC，datetime('now') 的原生格式），
+ * 补成 ISO 后交给前端 new Date()，否则会被当本地时间解析。
  */
 function normalizeTime(s: string | null): string {
   if (!s) return "";
-  if (s.includes("T")) return s;
   return s.replace(" ", "T") + "Z";
 }
 
@@ -364,7 +356,6 @@ interface CommentRow {
   parent_id: number | null;
   user_id: number;
   content: string;
-  deleted: number;
   create_time: string;
   update_time: string;
   author_nickname: string | null;
@@ -385,7 +376,6 @@ interface CommentVO {
   author: AuthorVO;
   createdAt: string;
   lastEditedAt: string | null;
-  deletedAt: string | null;
   replyToId: number | null;
   reactions: ReactionGroup[];
   upvoteCount: number;
@@ -399,7 +389,6 @@ function toVo(
   upvotes: Map<number, UpvoteData>,
 ): CommentVO {
   const uv = upvotes.get(row.id) || { upvoteCount: 0, viewerHasUpvoted: false };
-  const isDeleted = row.deleted === 1;
   const createdAt = normalizeTime(row.create_time);
   const updateTime = normalizeTime(row.update_time);
 
@@ -408,7 +397,7 @@ function toVo(
 
   return {
     nodeId: row.id,
-    content: isDeleted ? "" : row.content,
+    content: row.content,
     author: {
       id: row.user_id,
       nickname,
@@ -417,8 +406,6 @@ function toVo(
     createdAt,
     // 编辑过才有 lastEditedAt；未编辑时 update_time === create_time
     lastEditedAt: updateTime && updateTime !== createdAt ? updateTime : null,
-    // 已删除才有 deletedAt（前端靠它渲染「该评论已被删除」）
-    deletedAt: isDeleted ? updateTime : null,
     replyToId: row.parent_id,
     reactions: reactions.get(row.id) || [],
     upvoteCount: uv.upvoteCount,
@@ -499,10 +486,10 @@ export async function handleComment(request: Request, env: Env, origin: string |
       const userId = await resolveUserId(request, env);
 
       const rows = await env.DB.prepare(
-        `SELECT c.id, c.path, c.parent_id, c.user_id, c.content, c.deleted, c.create_time, c.update_time,
+        `SELECT c.id, c.path, c.parent_id, c.user_id, c.content, c.create_time, c.update_time,
                 u.nickname AS author_nickname, u.avatar AS author_avatar, u.username AS author_username
          FROM comment c LEFT JOIN user u ON u.id = c.user_id
-         WHERE c.path = ? ORDER BY c.create_time ASC`,
+         WHERE c.path = ? AND c.deleted = 0 ORDER BY c.create_time ASC`,
       ).bind(path).all<CommentRow>();
 
       const all = rows.results;
@@ -523,7 +510,7 @@ export async function handleComment(request: Request, env: Env, origin: string |
       for (const r of all) {
         if (r.parent_id !== null) {
           const parent = byId.get(r.parent_id);
-          // 父评论不在本列表（已删或数据异常）→ 跳过，避免产生看不见的孤儿
+          // 父评论不在本列表（数据异常）→ 跳过，避免产生看不见的孤儿
           if (!parent) continue;
           parent.replies.push(toVo(r, reactionMap, upvoteMap));
         }
@@ -716,7 +703,6 @@ export async function handleComment(request: Request, env: Env, origin: string |
         },
         createdAt: normalizeTime(inserted.create_time),
         lastEditedAt: null,
-        deletedAt: null,
         replyToId: parentId,
         reactions: REACTIONS.map((r) => ({ reaction: r, count: 0, viewerHasReacted: false })),
         upvoteCount: 0,
