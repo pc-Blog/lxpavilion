@@ -1,45 +1,28 @@
 /**
- * 数据同步接口 — 供 Java 后端定时拉取 D1 数据做备份归档
+ * 数据同步接口 — 供 Java 后端拉取 D1 数据做备份归档
  *
- * 所有接口：
- *   GET /api/sync/users?since=ISO     — 用户
- *   GET /api/sync/views               — 文章浏览数（全量）
- *   GET /api/sync/emails?since=ISO    — 邮件归档
- *   GET /api/sync/subscribers?since=  — 订阅者
- *   GET /api/sync/comments?since=     — 评论
- *   GET /api/sync/reactions?since=    — 评论反应
- *   GET /api/sync/upvotes?since=      — 评论点赞
- *   GET /api/sync/push-logs?since=    — 推送记录
- *
- * 参数：
- *   since — ISO 时间字符串（可选），不传则返回全量数据
+ * 所有接口都返回整表数据，后端每次清空镜像表后全量覆盖，因此不接受 since 之类的增量参数：
+ *   GET /api/sync/users        — 用户
+ *   GET /api/sync/views        — 文章浏览数
+ *   GET /api/sync/emails       — 邮件归档
+ *   GET /api/sync/subscribers  — 订阅者
+ *   GET /api/sync/comments     — 评论
+ *   GET /api/sync/reactions    — 评论反应
+ *   GET /api/sync/upvotes      — 评论点赞
+ *   GET /api/sync/push-logs    — 推送记录
  */
 
 import type { Env } from "../types";
 import { respond } from "../utils/response";
 
-function getSince(url: URL): string | null {
-  const s = url.searchParams.get("since");
-  return s && s.length > 0 ? s : null;
-}
-
-/** 通用查询：按时间字段增量查询 */
-async function querySince(
+/** 整表查询，按时间字段升序返回 */
+async function selectAll(
   db: D1Database,
   table: string,
   timeField: string,
-  since: string | null,
-  orderBy = "ASC",
 ): Promise<unknown[]> {
-  if (since) {
-    const stmt = db.prepare(
-      `SELECT * FROM ${table} WHERE ${timeField} >= ? ORDER BY ${timeField} ${orderBy}`,
-    );
-    const { results } = await stmt.bind(since).all();
-    return results;
-  }
   const { results } = await db.prepare(
-    `SELECT * FROM ${table} ORDER BY ${timeField} ${orderBy}`,
+    `SELECT * FROM ${table} ORDER BY ${timeField} ASC`,
   ).all();
   return results;
 }
@@ -50,56 +33,45 @@ export async function handleSync(
   origin: string | null,
 ): Promise<Response> {
   const url = new URL(request.url);
-  const since = getSince(url);
 
   // ── GET /api/sync/users ──
   if (url.pathname === "/api/sync/users") {
-    const rows = await querySince(env.DB, "user", "update_time", since);
-    return respond(rows, "ok", 1, origin);
+    return respond(await selectAll(env.DB, "user", "update_time"), "ok", 1, origin);
   }
 
-  // ── GET /api/sync/views（全量，数据量小）──
+  // ── GET /api/sync/views ──
   if (url.pathname === "/api/sync/views") {
-    const { results } = await env.DB.prepare(
-      "SELECT * FROM article_view ORDER BY updated_at ASC",
-    ).all();
-    return respond(results, "ok", 1, origin);
+    return respond(await selectAll(env.DB, "article_view", "updated_at"), "ok", 1, origin);
   }
 
   // ── GET /api/sync/emails ──
   if (url.pathname === "/api/sync/emails") {
-    const rows = await querySince(env.DB, "emails", "created_at", since);
-    return respond(rows, "ok", 1, origin);
+    return respond(await selectAll(env.DB, "emails", "created_at"), "ok", 1, origin);
   }
 
   // ── GET /api/sync/subscribers ──
   if (url.pathname === "/api/sync/subscribers") {
-    const rows = await querySince(env.DB, "subscribers", "created_at", since);
-    return respond(rows, "ok", 1, origin);
+    return respond(await selectAll(env.DB, "subscribers", "created_at"), "ok", 1, origin);
   }
 
   // ── GET /api/sync/comments ──
   if (url.pathname === "/api/sync/comments") {
-    const rows = await querySince(env.DB, "comment", "create_time", since);
-    return respond(rows, "ok", 1, origin);
+    return respond(await selectAll(env.DB, "comment", "create_time"), "ok", 1, origin);
   }
 
   // ── GET /api/sync/reactions ──
   if (url.pathname === "/api/sync/reactions") {
-    const rows = await querySince(env.DB, "comment_reaction", "created_at", since);
-    return respond(rows, "ok", 1, origin);
+    return respond(await selectAll(env.DB, "comment_reaction", "created_at"), "ok", 1, origin);
   }
 
   // ── GET /api/sync/upvotes ──
   if (url.pathname === "/api/sync/upvotes") {
-    const rows = await querySince(env.DB, "comment_upvote", "created_at", since);
-    return respond(rows, "ok", 1, origin);
+    return respond(await selectAll(env.DB, "comment_upvote", "created_at"), "ok", 1, origin);
   }
 
   // ── GET /api/sync/push-logs ──
   if (url.pathname === "/api/sync/push-logs") {
-    const rows = await querySince(env.DB, "push_logs", "pushed_at", since);
-    return respond(rows, "ok", 1, origin);
+    return respond(await selectAll(env.DB, "push_logs", "pushed_at"), "ok", 1, origin);
   }
 
   return respond(null, "Not Found", 0, origin);
