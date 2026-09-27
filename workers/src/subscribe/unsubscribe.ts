@@ -7,6 +7,7 @@
 
 import type { Env } from "../types";
 import { respond } from "../utils/response";
+import { nowCst } from "../utils/datetime";
 import tpl from "./unsubscribe.html";
 import notifyTpl from "./unsubscribe-notification.html";
 
@@ -132,8 +133,7 @@ export async function handleUnsubscribe(
           .all<{ count: number }>();
         const total = results?.[0]?.count ?? 0;
 
-        const now = new Date();
-        const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+        const time = nowCst();
         const groupLabel = GROUP_MAP[group] || group;
 
         const html = notifyTpl

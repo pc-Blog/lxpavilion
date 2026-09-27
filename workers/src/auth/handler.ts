@@ -1,4 +1,5 @@
 import { respond } from "../utils/response";
+import { nowCst } from "../utils/datetime";
 import type { Env } from "../types";
 import bcrypt from "bcryptjs";
 
@@ -183,14 +184,13 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
 
       // 发送通知（不阻塞响应）
       if (email) {
-        const now = new Date().toISOString().replace("T", " ").slice(0, 19);
         await sendEmail(env, env.NOTIFY_TO_ADDRESS, "栏轩阁 - 新用户注册",
           `新用户注册：${username}\n邮箱：${email}`,
           adminNotifyTpl
             .replace(/\{\{TYPE\}\}/g, "新用户注册")
             .replace(/\{\{USERNAME\}\}/g, username)
             .replace(/\{\{EMAIL\}\}/g, email)
-            .replace(/\{\{TIME\}\}/g, now));
+            .replace(/\{\{TIME\}\}/g, nowCst()));
         await sendEmail(env, email, "欢迎注册栏轩阁", `欢迎注册栏轩阁，你的账号「${username}」已创建成功。`, welcomeTpl.replace(/\{\{USERNAME\}\}/g, username));
       }
 
@@ -414,14 +414,13 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       ).bind(Number(payload.sub)).run();
 
       if (user) {
-        const now = new Date().toISOString().replace("T", " ").slice(0, 19);
         await sendEmail(env, env.NOTIFY_TO_ADDRESS, "栏轩阁 - 用户注销",
           `用户注销：${user.username}${user.email ? `\n邮箱：${user.email}` : ""}`,
           adminNotifyTpl
             .replace(/\{\{TYPE\}\}/g, "用户注销")
             .replace(/\{\{USERNAME\}\}/g, user.username)
             .replace(/\{\{EMAIL\}\}/g, user.email || "-")
-            .replace(/\{\{TIME\}\}/g, now));
+            .replace(/\{\{TIME\}\}/g, nowCst()));
         if (user.email) {
           await sendEmail(env, user.email, "栏轩阁 - 账号已注销", `你的栏轩阁账号「${user.username}」已注销。`, deletedTpl.replace(/\{\{USERNAME\}\}/g, user.username));
         }

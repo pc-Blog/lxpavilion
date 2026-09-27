@@ -1,4 +1,5 @@
 import { respond } from "../utils/response";
+import { nowCst } from "../utils/datetime";
 import type { Env } from "../types";
 
 // ── 欢迎邮件模板 ──
@@ -80,8 +81,7 @@ async function sendAdminNotification(
       .all<{ count: number }>();
     const total = results?.[0]?.count ?? 0;
 
-    const now = new Date();
-    const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    const time = nowCst();
     const html = adminTpl
       .replace(/\{\{EMAIL\}\}/g, email)
       .replace(/\{\{SERVICE\}\}/g, `${groupLabel}（${groupName}）`)
