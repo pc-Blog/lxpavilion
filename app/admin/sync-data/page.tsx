@@ -13,13 +13,13 @@ interface TableData {
 }
 
 const TABLE_DEFS: Record<string, { label: string; pageKey: string; columns: string[] }> = {
-  emails:     { label: "邮件归档",     pageKey: "email",     columns: ["id", "fromAddr", "subject", "createdAt"] },
+  emails:     { label: "邮件归档",     pageKey: "email",     columns: ["id", "direction", "fromAddr", "fromName", "subject", "createdAt"] },
   subscribers: { label: "邮件订阅者",   pageKey: "subscriber", columns: ["id", "email", "groupName", "createdAt"] },
   comments:   { label: "评论",         pageKey: "comment",  columns: ["id", "path", "parentId", "userId", "content", "deleted", "createTime"] },
   reactions:  { label: "评论反应",     pageKey: "reaction",  columns: ["id", "subjectId", "userId", "reaction", "createdAt"] },
   upvotes:    { label: "评论点赞",     pageKey: "upvote",    columns: ["id", "subjectId", "userId", "createdAt"] },
   "push-logs":{ label: "推送记录",     pageKey: "push-log",  columns: ["id", "pushedAt", "articleCount", "groupName", "status"] },
-  users:      { label: "用户",         pageKey: "user",      columns: ["id", "username", "nickname", "email", "githubId", "createTime"] },
+  users:      { label: "用户",         pageKey: "user",      columns: ["id", "username", "nickname", "email", "githubId", "deleted", "loginTime", "createTime"] },
 };
 
 function formatTime(iso: string): string {
@@ -66,11 +66,11 @@ export default function SyncDataPage() {
     setTables((prev) => ({ ...prev, ...results }));
   };
 
-  const handleSync = async (overwrite = false) => {
+  const handleSync = async () => {
     setSyncing(true);
     setResult(null);
     try {
-      const res: Record<string, { data: { table: string; fetched: number } }> = await api.post(`/sync/all${overwrite ? "?overwrite=true" : ""}`) as unknown as Record<string, { data: { table: string; fetched: number } }>;
+      const res: Record<string, { data: { table: string; fetched: number } }> = await api.post("/sync/all") as unknown as Record<string, { data: { table: string; fetched: number } }>;
       const parts = Object.values(res).map((v) => `${v.data.table}: ${v.data.fetched}条`);
       setResult(`✅ 同步完成 — ${parts.join(" | ")}`);
       loadStatus();
@@ -98,15 +98,10 @@ export default function SyncDataPage() {
 
       {/* 同步按钮 */}
       <div className="flex gap-3 mb-6">
-        <button onClick={() => handleSync(false)} disabled={syncing}
-          className="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2">
-          {syncing && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
-          {syncing ? "同步中..." : "增量同步"}
-        </button>
-        <button onClick={() => handleSync(true)} disabled={syncing}
+        <button onClick={handleSync} disabled={syncing}
           className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2">
           {syncing && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
-          {syncing ? "同步中..." : "全量覆盖"}
+          {syncing ? "同步中..." : "同步"}
         </button>
         <button onClick={handleRefresh} disabled={refreshing}
           className="px-5 py-2.5 bg-white/40 dark:bg-slate-800/40 text-slate-600 dark:text-slate-300 text-sm font-bold rounded-xl border border-white/40 dark:border-white/10 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-colors disabled:opacity-50 flex items-center gap-2">
