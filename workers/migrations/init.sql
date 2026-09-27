@@ -21,10 +21,7 @@ CREATE TABLE IF NOT EXISTS user (
   update_time         TEXT DEFAULT (datetime('now')),
   avatar              TEXT,
   email               TEXT,
-  login_time          TEXT,
-  github_token        TEXT,
-  github_refresh_token TEXT,
-  github_token_expires_at TEXT
+  login_time          TEXT
 );
 
 -- ── 浏览数 ──
@@ -102,11 +99,6 @@ CREATE TABLE IF NOT EXISTS emails (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_emails_message_id ON emails(message_id);
-
--- ── 系统设置 ──
-
--- ── 系统设置（已废弃）
--- forward_email → 环境变量 FORWARD_EMAIL
 
 -- ── 邮件订阅者 ──
 

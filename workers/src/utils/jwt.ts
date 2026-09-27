@@ -26,7 +26,6 @@ async function hmacSha256(secret: string, data: string): Promise<string> {
 export interface JwtPayload {
   sub: string;
   username: string;
-  github_token?: string;
   iat: number;
   exp: number;
 }

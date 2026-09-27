@@ -215,13 +215,10 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
         headers: { "Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded", "User-Agent": "blog-api/1.0" },
         body: new URLSearchParams({ client_id: env.GITHUB_CLIENT_ID, client_secret: env.GITHUB_CLIENT_SECRET ?? "", code, redirect_uri: env.GITHUB_REDIRECT_URI ?? "" }),
       });
-      const tokenJson = await tokenResp.json() as { access_token?: string; refresh_token?: string; expires_in?: number; error_description?: string };
+      const tokenJson = await tokenResp.json() as { access_token?: string; error_description?: string };
       if (!tokenJson.access_token) return respond(null, tokenJson.error_description || "GitHub 授权失败", 0, origin);
 
-      // 2. 计算 token 过期时间（存时间戳方便判断）
-      const tokenExpiresAt = tokenJson.expires_in ? String(Date.now() + tokenJson.expires_in * 1000) : null;
-
-      // 获取 GitHub 用户信息
+      // 2. 获取 GitHub 用户信息
       const userResp = await fetch("https://api.github.com/user", {
         headers: { "Authorization": `Bearer ${tokenJson.access_token}`, "Accept": "application/json", "User-Agent": "blog-api/1.0" },
       });
@@ -240,15 +237,7 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
         } catch { /* 获取邮箱失败不影响登录 */ }
       }
 
-      // 3. 确保 token 列存在
-      for (const col of ["github_token", "github_refresh_token", "github_token_expires_at"]) {
-        await env.DB.prepare(`ALTER TABLE user ADD COLUMN ${col} TEXT`).run().catch(() => {});
-      }
-
-      // 确保 email 列存在
-      await env.DB.prepare("ALTER TABLE user ADD COLUMN email TEXT").run().catch(() => {});
-
-      // 4. 查找或创建用户
+      // 3. 查找或创建用户
       const ghAvatar = ghUser.avatar_url ?? null;
       let row = await env.DB.prepare(
         "SELECT id, username, nickname, avatar FROM user WHERE github_id = ? AND deleted = 0"
@@ -257,13 +246,13 @@ export async function handleAuth(request: Request, env: Env, origin: string | nu
       if (!row) {
         const username = `gh_${ghUser.login}`;
         const result = await env.DB.prepare(
-          "INSERT INTO user (username, password, nickname, github_id, avatar, email, github_token, github_refresh_token, github_token_expires_at) VALUES (?, '', ?, ?, ?, ?, ?, ?, ?)"
-        ).bind(username, ghUser.login, String(ghUser.id), ghAvatar, ghEmail, tokenJson.access_token, tokenJson.refresh_token || null, tokenExpiresAt).run();
+          "INSERT INTO user (username, password, nickname, github_id, avatar, email) VALUES (?, '', ?, ?, ?, ?)"
+        ).bind(username, ghUser.login, String(ghUser.id), ghAvatar, ghEmail).run();
         row = { id: Number(result.meta.last_row_id), username, nickname: ghUser.login, avatar: ghAvatar };
       } else {
         await env.DB.prepare(
-          "UPDATE user SET nickname = ?, avatar = ?, email = ?, github_token = ?, github_refresh_token = ?, github_token_expires_at = ?, update_time = datetime('now') WHERE id = ?"
-        ).bind(ghUser.login, ghAvatar, ghEmail, tokenJson.access_token, tokenJson.refresh_token || null, tokenExpiresAt, row.id).run();
+          "UPDATE user SET nickname = ?, avatar = ?, email = ?, update_time = datetime('now') WHERE id = ?"
+        ).bind(ghUser.login, ghAvatar, ghEmail, row.id).run();
         row.nickname = ghUser.login;
         row.avatar = ghAvatar;
       }
