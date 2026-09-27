@@ -8,6 +8,7 @@
 
 import type { Env } from "../types";
 import { respond } from "../utils/response";
+import { insertPushLog, readPushedHashes } from "../utils/push-log";
 import { renderHotEmail } from "./template";
 import type { HotItem } from "./template";
 
@@ -88,26 +89,10 @@ function flattenAndGroup(report: HotspotReport): KeywordGroup[] {
   return groups;
 }
 
-// ── 获取已推送的 URL 哈希 ──
+// ── 获取已推送的 URL 哈希（该分组最新一行，已丢弃过期条目） ──
 
 async function getPushedHashes(env: Env): Promise<Set<string>> {
-  const rows = await env.DB
-    .prepare(
-      `SELECT article_ids FROM push_logs
-       WHERE status = 'success' AND group_name = 'hot-topics'`,
-    )
-    .all<{ article_ids: string }>();
-
-  const hashes = new Set<string>();
-  for (const row of rows.results || []) {
-    if (row.article_ids) {
-      try {
-        const ids = JSON.parse(row.article_ids) as string[];
-        ids.forEach((id) => hashes.add(id));
-      } catch { /* 跳过格式异常 */ }
-    }
-  }
-  return hashes;
+  return readPushedHashes(env.DB, "hot-topics");
 }
 
 // ── 从 D1 获取 Hotspot 分组的订阅者数 ──
@@ -184,20 +169,19 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   const report = await fetchHotspotReport();
   if (!report) {
     console.error("热点推送报告为空", { module: "hot_push", action: "report_empty" });
-    const result = await env.DB.prepare(
-      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
-       VALUES (0, 0, 'hot-topics', 'failed', 'fetch report.json failed')`,
-    ).run();
-    return { id: result.meta.last_row_id, status: "failed" };
+    const id = await insertPushLog(env.DB, {
+      group: "hot-topics", status: "failed", articleCount: 0, subscriberCount: 0,
+      errorMsg: "fetch report.json failed",
+    });
+    return { id, status: "failed" };
   }
 
   if (!report.results || report.results.length === 0) {
     console.warn("热点报告无结果", { module: "hot_push", action: "no_results" });
-    const result = await env.DB.prepare(
-      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
-       VALUES (0, 0, 'hot-topics', 'skipped')`,
-    ).run();
-    return { id: result.meta.last_row_id, status: "skipped" };
+    const id = await insertPushLog(env.DB, {
+      group: "hot-topics", status: "skipped", articleCount: 0, subscriberCount: 0,
+    });
+    return { id, status: "skipped" };
   }
 
   // 2. 展平并分组
@@ -206,11 +190,10 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
 
   if (flatItems.length === 0) {
     console.warn("热点报告无热点条目", { module: "hot_push", action: "no_items" });
-    const result = await env.DB.prepare(
-      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
-       VALUES (0, 0, 'hot-topics', 'skipped')`,
-    ).run();
-    return { id: result.meta.last_row_id, status: "skipped" };
+    const id = await insertPushLog(env.DB, {
+      group: "hot-topics", status: "skipped", articleCount: 0, subscriberCount: 0,
+    });
+    return { id, status: "skipped" };
   }
 
   // 3. 去重
@@ -229,11 +212,10 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
 
   if (totalFresh === 0) {
     console.log("热点推送无新条目", { module: "hot_push", action: "all_pushed" });
-    const result = await env.DB.prepare(
-      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
-       VALUES (0, 0, 'hot-topics', 'skipped')`,
-    ).run();
-    return { id: result.meta.last_row_id, status: "skipped" };
+    const id = await insertPushLog(env.DB, {
+      group: "hot-topics", status: "skipped", articleCount: 0, subscriberCount: 0,
+    });
+    return { id, status: "skipped" };
   }
 
   // 4. 轮询选择：每个关键词最多取 2 条，按日期偏移轮转取数
@@ -307,22 +289,22 @@ export async function handleHotPush(env: Env): Promise<PushResult | null> {
   } catch (e) {
     const errMsg = (e as Error).message;
     console.error("热点推送失败", { module: "hot_push", action: "push_failed", error: errMsg });
-    const result = await env.DB.prepare(
-      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
-       VALUES (?, 0, 'hot-topics', 'failed', ?)`,
-    ).bind(finalCount, errMsg).run();
-    return { id: result.meta.last_row_id, status: "failed" };
+    const id = await insertPushLog(env.DB, {
+      group: "hot-topics", status: "failed", articleCount: finalCount,
+      subscriberCount: 0, errorMsg: errMsg,
+    });
+    return { id, status: "failed" };
   }
 
   // 6. 记录推送日志
   const subscriberCount = await getSubscriberCount(env);
 
-  const result = await env.DB.prepare(
-    `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, article_ids)
-     VALUES (?, ?, 'hot-topics', 'success', ?)`,
-  ).bind(finalCount, subscriberCount, JSON.stringify(selectedHashes)).run();
+  const id = await insertPushLog(env.DB, {
+    group: "hot-topics", status: "success", articleCount: finalCount,
+    subscriberCount, articleIds: selectedHashes,
+  });
 
-  console.log("热点推送完成", { module: "hot_push", action: "done", items: finalCount, subscribers: subscriberCount, logId: result.meta.last_row_id });
+  console.log("热点推送完成", { module: "hot_push", action: "done", items: finalCount, subscribers: subscriberCount, logId: id });
 
-  return { id: result.meta.last_row_id, status: "success" };
+  return { id, status: "success" };
 }

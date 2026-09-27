@@ -10,6 +10,7 @@
 
 import type { Env } from "../types";
 import { respond } from "../utils/response";
+import { insertPushLog, readArticleStartId } from "../utils/push-log";
 import { renderRssEmail } from "./template";
 import type { Article } from "./template";
 
@@ -147,48 +148,32 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
   const allArticles = await fetchRssArticles();
   if (allArticles.length === 0) {
     console.warn("RSS 推送无文章", { module: "rss_push", action: "feed_empty" });
-    const result = await env.DB.prepare(
-      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
-       VALUES (0, 0, 'article', 'failed', 'feed empty')`,
-    ).run();
-    return { id: result.meta.last_row_id, status: "failed" };
+    const id = await insertPushLog(env.DB, {
+      group: "article", status: "failed", articleCount: 0, subscriberCount: 0,
+      errorMsg: "feed empty",
+    });
+    return { id, status: "failed" };
   }
 
-  // 2. 收集已推送过的文章 ID
-  const pushedRows = await env.DB
-    .prepare(
-      `SELECT article_ids FROM push_logs
-       WHERE status = 'success' AND group_name = 'article'`,
-    )
-    .all<{ article_ids: string }>();
+  // 2. 取该分组最新一行记录的推送起点（最后推送的文章 id）
+  const startId = await readArticleStartId(env.DB, "article");
 
-  const pushedIds = new Set<number>();
-  for (const row of pushedRows.results || []) {
-    if (row.article_ids) {
-      try {
-        const ids = JSON.parse(row.article_ids) as number[];
-        ids.forEach((id) => pushedIds.add(id));
-      } catch { /* 跳过格式异常的数据 */ }
-    }
-  }
-
-  // 3. 筛选未推送过的文章
+  // 3. 筛选未推送过的文章：id 大于起点
   const maxArticles = Number(env.RSS_MAX_ARTICLES);
 
   const newArticles = allArticles
     .filter((a) => {
       const id = extractArticleId(a.link);
-      return id !== null && !pushedIds.has(id);
+      return id !== null && id > startId;
     })
     .slice(0, maxArticles);
 
   if (newArticles.length === 0) {
     console.log("RSS 推送无新文章", { module: "rss_push", action: "no_new_articles" });
-    const result = await env.DB.prepare(
-      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status)
-       VALUES (0, 0, 'article', 'skipped')`,
-    ).run();
-    return { id: result.meta.last_row_id, status: "skipped" };
+    const id = await insertPushLog(env.DB, {
+      group: "article", status: "skipped", articleCount: 0, subscriberCount: 0,
+    });
+    return { id, status: "skipped" };
   }
 
   console.log("RSS 推送新文章", { module: "rss_push", action: "new_articles", count: newArticles.length, titles: newArticles.map(a => a.title) });
@@ -202,25 +187,25 @@ export async function handleRssPush(env: Env): Promise<PushResult | null> {
   } catch (e) {
     const errMsg = (e as Error).message;
     console.error("RSS 推送失败", { module: "rss_push", action: "push_failed", error: errMsg });
-    const result = await env.DB.prepare(
-      `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, error_msg)
-       VALUES (?, 0, 'article', 'failed', ?)`,
-    ).bind(newArticles.length, errMsg).run();
-    return { id: result.meta.last_row_id, status: "failed" };
+    const id = await insertPushLog(env.DB, {
+      group: "article", status: "failed", articleCount: newArticles.length,
+      subscriberCount: 0, errorMsg: errMsg,
+    });
+    return { id, status: "failed" };
   }
 
-  // 6. 记录推送日志
+  // 6. 记录推送日志（article 只存本次推送的 id）
   const subscriberCount = await getSubscriberCount(env);
   const newArticleIds = newArticles
     .map((a) => extractArticleId(a.link))
     .filter((id): id is number => id !== null);
 
-  const result = await env.DB.prepare(
-    `INSERT INTO push_logs (article_count, subscriber_count, group_name, status, article_ids)
-     VALUES (?, ?, 'article', 'success', ?)`,
-  ).bind(newArticles.length, subscriberCount, JSON.stringify(newArticleIds)).run();
+  const id = await insertPushLog(env.DB, {
+    group: "article", status: "success", articleCount: newArticles.length,
+    subscriberCount, articleIds: newArticleIds,
+  });
 
-  console.log("RSS 推送完成", { module: "rss_push", action: "done", articles: newArticles.length, subscribers: subscriberCount, logId: result.meta.last_row_id });
+  console.log("RSS 推送完成", { module: "rss_push", action: "done", articles: newArticles.length, subscribers: subscriberCount, logId: id });
 
-  return { id: result.meta.last_row_id, status: "success" };
+  return { id, status: "success" };
 }
