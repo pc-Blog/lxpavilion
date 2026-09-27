@@ -112,7 +112,10 @@ CREATE TABLE IF NOT EXISTS subscribers (
 
 CREATE INDEX IF NOT EXISTS idx_subscribers_email ON subscribers(email);
 
--- ── RSS 推送记录 ──
+-- ── 推送记录 ──
+--   article_ids  article 分组存新推送的 id（JSON 数组）
+--                hot-topics 分组存累积的「url哈希:推送时间」列表，用于跨次去重
+--   每分组只保留最近 10 条，更早的记录由写入方（src/utils/push-log.ts）清理
 
 CREATE TABLE IF NOT EXISTS push_logs (
   id               INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -122,7 +125,6 @@ CREATE TABLE IF NOT EXISTS push_logs (
   group_name       TEXT NOT NULL DEFAULT 'article',
   status           TEXT NOT NULL DEFAULT 'success',
   error_msg        TEXT,
-  articles_end_date TEXT,
   article_ids      TEXT DEFAULT ''
 );
 
