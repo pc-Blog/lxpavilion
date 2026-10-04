@@ -1,6 +1,49 @@
 {
-  "total": 116,
+  "total": 117,
   "rows": [
+    {
+      "categoryId": 45,
+      "categoryName": "工具教程",
+      "coverImage": "/data/media/2066.png",
+      "createdAt": "2026-09-28T09:19:56.37904",
+      "id": 222,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": null,
+      "summary": "dbx 是一款 Apache-2.0 开源的轻量数据库客户端，Windows 在线安装包约 25MB，可直连 MySQL、PostgreSQL、openGauss、Redis、Cloudflare D1、Qdrant、Neo4j 等 100+ 种数据库与数据系统，省去为每种库单独装一套客户端。本文给出可核验的体积与版本数据、与 DataGrip 的取舍边界，以及桌面版、Docker、CLI 三种入口的适用场景。",
+      "tags": [
+        {
+          "id": 39,
+          "name": "Redis"
+        },
+        {
+          "id": 66,
+          "name": "Mysql"
+        },
+        {
+          "id": 67,
+          "name": "OpenGauss"
+        },
+        {
+          "id": 77,
+          "name": "Qdrant"
+        },
+        {
+          "id": 83,
+          "name": "Neo4J"
+        },
+        {
+          "id": 84,
+          "name": "Elasticsearch"
+        },
+        {
+          "id": 28,
+          "name": "Cloudflare"
+        }
+      ],
+      "title": "推荐一款开源数据库客户端 dbx：约 25MB 连通 100+ 种数据库",
+      "updateTime": "2026-09-28T09:22:41.496832"
+    },
     {
       "categoryId": 40,
       "categoryName": "后端",

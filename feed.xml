@@ -8,6 +8,22 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[推荐一款开源数据库客户端 dbx：约 25MB 连通 100+ 种数据库]]></title>
+      <link>https://www.lxpavilion.top/article/222/</link>
+      <guid>https://www.lxpavilion.top/article/222/</guid>
+      <pubDate>Mon, 28 Sep 2026 09:19:56 GMT</pubDate>
+      <description><![CDATA[dbx 是一款 Apache-2.0 开源的轻量数据库客户端，Windows 在线安装包约 25MB，可直连 MySQL、PostgreSQL、openGauss、Redis、Cloudflare D1、Qdrant、Neo4j 等 100+ 种数据库与数据系统，省去为每种库单独装一套客户端。本文给出可核验的体积与版本数据、与 DataGrip 的取舍边界，以及桌面版、Docker、CLI 三种入口的适用场景。]]></description>
+      <category>工具教程</category>
+      <tag>Redis</tag>
+      <tag>Mysql</tag>
+      <tag>OpenGauss</tag>
+      <tag>Qdrant</tag>
+      <tag>Neo4J</tag>
+      <tag>Elasticsearch</tag>
+      <tag>Cloudflare</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[RabbitMQ 实现微服务分布式事务]]></title>
       <link>https://www.lxpavilion.top/article/220/</link>
       <guid>https://www.lxpavilion.top/article/220/</guid>
@@ -221,17 +237,6 @@
       <category>工具教程</category>
       <tag>AI应用</tag>
       <tag>Ai编程</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Rust学习笔记：Tauri实战——用Rust + Web技术构建桌面应用]]></title>
-      <link>https://www.lxpavilion.top/article/169/</link>
-      <guid>https://www.lxpavilion.top/article/169/</guid>
-      <pubDate>Thu, 06 Aug 2026 02:41:32 GMT</pubDate>
-      <description><![CDATA[Tauri v2 桌面应用完整工程实践：搭建多文件项目、tauri.conf.json 配置、Rust 后端命令对接、前端 JS 调用 invoke API、前后端数据通信全流程。从零到跑通，踩过的坑一次讲清。]]></description>
-      <category>学习笔记</category>
-      <tag>Rust</tag>
-      <tag>JetBrains</tag>
       <author>ppc</author>
     </item>
   </channel>

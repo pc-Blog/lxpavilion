@@ -1,5 +1,5 @@
 {
-  "articleCount": 116,
+  "articleCount": 117,
   "projectCount": 2,
   "skillCount": 8,
   "timelineCount": 7,
@@ -7,29 +7,29 @@
     {
       "id": 206,
       "title": "DeepSeek Harness 创建 skill 指南：结构、安装、使用",
-      "viewCount": 32
+      "viewCount": 41
+    },
+    {
+      "id": 170,
+      "title": "豆包开启学生认证，大学生可享 2.5 倍免费额度、专业版 38 元/月",
+      "viewCount": 26
     },
     {
       "id": 61,
       "title": "别再靠猜了：给 Cloudflare Worker 加上日志，问题一眼就知道",
+      "viewCount": 23
+    },
+    {
+      "id": 205,
+      "title": "在 DeepSeek Harness 里养一只桌面宠物：dsh-pet 插件分享",
+      "viewCount": 21
+    },
+    {
+      "id": 215,
+      "title": "DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度",
       "viewCount": 20
-    },
-    {
-      "id": 53,
-      "title": "别让你的域名邮箱 \"裸奔\"！3 分钟添上专属头像",
-      "viewCount": 15
-    },
-    {
-      "id": 51,
-      "title": "免费订阅服务升级：MailerLite 完全指南（与 Buttondown 对比）",
-      "viewCount": 12
-    },
-    {
-      "id": 49,
-      "title": "选择cloudflare，给我的博客带来了什么",
-      "viewCount": 12
     }
   ],
-  "totalViews": 355,
-  "commentCount": 5
+  "totalViews": 515,
+  "commentCount": 6
 }
