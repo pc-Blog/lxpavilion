@@ -7,7 +7,10 @@
   "id": 220,
   "isPinned": 0,
   "isPublished": 1,
-  "next": null,
+  "next": {
+    "id": 222,
+    "title": "推荐一款开源数据库客户端 dbx：约 25MB 连通 100+ 种数据库"
+  },
   "prev": {
     "id": 219,
     "title": "RabbitMQ 在 Spring Boot 中的完整使用"
