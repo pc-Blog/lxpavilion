@@ -12,6 +12,7 @@ import { siteConfig } from "@/lib/siteConfig";
 import { defaultOgImage, SITE_KEYWORDS, SITE_URL } from "@/lib/seo";
 import BackgroundSlider from "@/app/_components/layout/BackgroundSwitcher";
 import AuthSessionRenewer from "@/app/_components/layout/AuthSessionRenewer";
+import DiaryReminder from "@/app/_components/common/DiaryReminder";
 
 const geistSans = localFont({
   src: "../public/fonts/geist-latin.woff2",
@@ -89,6 +90,7 @@ export default function RootLayout({
         <ThemeProvider>
           <SplashScreen />
           <AuthSessionRenewer />
+          <DiaryReminder />
           <div id="app-mount-root" className="flex-1 flex flex-col min-h-0 transition-opacity duration-1000">
             {/* Background layers */}
             <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
