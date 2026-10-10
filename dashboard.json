@@ -1,5 +1,5 @@
 {
-  "articleCount": 117,
+  "articleCount": 118,
   "projectCount": 2,
   "skillCount": 8,
   "timelineCount": 7,
@@ -12,24 +12,24 @@
     {
       "id": 170,
       "title": "豆包开启学生认证，大学生可享 2.5 倍免费额度、专业版 38 元/月",
-      "viewCount": 26
+      "viewCount": 28
     },
     {
       "id": 61,
       "title": "别再靠猜了：给 Cloudflare Worker 加上日志，问题一眼就知道",
+      "viewCount": 24
+    },
+    {
+      "id": 215,
+      "title": "DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度",
       "viewCount": 23
     },
     {
       "id": 205,
       "title": "在 DeepSeek Harness 里养一只桌面宠物：dsh-pet 插件分享",
       "viewCount": 21
-    },
-    {
-      "id": 215,
-      "title": "DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度",
-      "viewCount": 20
     }
   ],
-  "totalViews": 515,
+  "totalViews": 529,
   "commentCount": 6
 }
