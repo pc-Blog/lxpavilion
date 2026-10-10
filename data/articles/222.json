@@ -7,7 +7,10 @@
   "id": 222,
   "isPinned": 0,
   "isPublished": 1,
-  "next": null,
+  "next": {
+    "id": 223,
+    "title": "腾讯企业邮配置个人域名邮箱：DNS 解析步骤与别名限制"
+  },
   "prev": {
     "id": 220,
     "title": "RabbitMQ 实现微服务分布式事务"

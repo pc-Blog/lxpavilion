@@ -8,6 +8,18 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[腾讯企业邮配置个人域名邮箱：DNS 解析步骤与别名限制]]></title>
+      <link>https://www.lxpavilion.top/article/223/</link>
+      <guid>https://www.lxpavilion.top/article/223/</guid>
+      <pubDate>Fri, 09 Oct 2026 11:02:07 GMT</pubDate>
+      <description><![CDATA[用腾讯企业邮给个人域名开通邮箱的完整配置流程：需要添加哪几类 DNS 记录、后台几步配完、SPF 记录要怎么合并，以及别名数量上限和全收功能需付费这两个使用上的约束。]]></description>
+      <category>技术教程</category>
+      <tag>邮件</tag>
+      <tag>Cloudflare</tag>
+      <tag>域名</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[推荐一款开源数据库客户端 dbx：约 25MB 连通 100+ 种数据库]]></title>
       <link>https://www.lxpavilion.top/article/222/</link>
       <guid>https://www.lxpavilion.top/article/222/</guid>
@@ -226,17 +238,6 @@
       <description><![CDATA[DeepSeek Harness（dsh）是 DeepSeek AI 开源的智能体框架，以“一切皆插件”为核心理念，由 Cordis 驱动。本文从环境准备、安装启动、端口配置、四种内置模式，到常用操作与插件系统，带你从零上手这款可高度定制的 Agent 开发平台，并分享官方插件源码这一最佳学习资料。]]></description>
       <category>Ai编程</category>
       
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[豆包开启学生认证，大学生可享 2.5 倍免费额度、专业版 38 元/月]]></title>
-      <link>https://www.lxpavilion.top/article/170/</link>
-      <guid>https://www.lxpavilion.top/article/170/</guid>
-      <pubDate>Wed, 12 Aug 2026 22:41:55 GMT</pubDate>
-      <description><![CDATA[豆包于 2026 年 8 月 12 日正式开启学生认证，全国在校大学生完成认证即可领取 2.5 倍免费使用额度，并以 38 元/月学生特惠价订阅原价 68 元/月的专业版标准套餐。本文整理优惠详情、认证前置条件、两种领取方法及注意事项。]]></description>
-      <category>工具教程</category>
-      <tag>AI应用</tag>
-      <tag>Ai编程</tag>
       <author>ppc</author>
     </item>
   </channel>
