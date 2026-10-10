@@ -184,7 +184,7 @@ export default function Live2DWidget() {
     }
     return msg;
   };
-  const githubRef = useRef(`https://github.com/${siteConfig.repo}`);
+  const githubRef = useRef(`https://${siteConfig.github}`);
   const loaded = useRef(false);
   const currentModel = useRef<string | null>(null);
   const pioRef = useRef<any>(null);
@@ -436,9 +436,7 @@ export default function Live2DWidget() {
     getAbout().then((about) => {
       loadConfig(about);
       if (siteConfig.github) {
-        githubRef.current = siteConfig.github;
-        const pio = window.pio_reference as any;
-        if (pio?.config?.content) pio.config.content.link = siteConfig.github;
+        githubRef.current = `https://${siteConfig.github}`;
       }
     }).catch(() => {});
 
