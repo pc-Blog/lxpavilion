@@ -1,6 +1,111 @@
 {
-  "total": 118,
+  "total": 121,
   "rows": [
+    {
+      "categoryId": 37,
+      "categoryName": "Ai编程",
+      "coverImage": "/data/media/779.png",
+      "createdAt": "2026-11-01T10:03:13.893705",
+      "id": 227,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "DeepSeek Harness 体验",
+      "summary": "DSH 等 AI 智能体在 Windows 上反复撞上 && 无法解析、curl 参数不匹配，根源是执行器默认指向 Windows PowerShell 5.1，而模型按 PowerShell 7 的语法写命令。文中给出工具 issue 证据与一条命令切换到 7 的方法。",
+      "tags": [
+        {
+          "id": 88,
+          "name": "DSH"
+        },
+        {
+          "id": 32,
+          "name": "Claude Code"
+        },
+        {
+          "id": 89,
+          "name": "Windows"
+        },
+        {
+          "id": 90,
+          "name": "故障排查"
+        },
+        {
+          "id": 96,
+          "name": "PowerShell"
+        }
+      ],
+      "title": "AI 智能体在 Windows 反复报错的原因：PowerShell 5.1 与 PowerShell 7 的错配",
+      "updateTime": "2026-11-01T10:03:42.10467"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2268.png",
+      "createdAt": "2026-10-19T17:42:43.203103",
+      "id": 226,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": null,
+      "summary": "Sentinel 是面向分布式服务的流量治理组件，负责限流、熔断降级与系统自适应保护。与只做旁路观测的链路追踪不同，它直接决定请求放行还是拒绝。本文给出控制台的 Docker 编排、两个必需的 Maven 依赖、规则持久化到 Nacos 的完整配置，并逐个说明实时监控、簇点链路与四类规则弹窗怎么读、怎么填。",
+      "tags": [
+        {
+          "id": 62,
+          "name": "Docker"
+        },
+        {
+          "id": 74,
+          "name": "Spring Boot"
+        },
+        {
+          "id": 94,
+          "name": "微服务"
+        },
+        {
+          "id": 95,
+          "name": "Sentinel"
+        }
+      ],
+      "title": "Sentinel 限流教程：Docker 部署控制台、Spring Boot 接入与规则页面使用",
+      "updateTime": "2026-10-19T17:42:50.119936"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2258.png",
+      "createdAt": "2026-10-19T14:06:49.672296",
+      "id": 225,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": null,
+      "summary": "Zipkin 是分布式追踪系统，只负责收集、存储与展示，埋点在应用侧由 Brave 完成。本文以谷粒商城为例，逐项说明 Docker 部署参数，给出 Spring Boot 3.5 的完整配置项与默认值，介绍 Find a Trace、瀑布图与 Dependencies 三个页面的用法，并指出两个容易配错的配置点。",
+      "tags": [
+        {
+          "id": 62,
+          "name": "Docker"
+        },
+        {
+          "id": 74,
+          "name": "Spring Boot"
+        },
+        {
+          "id": 90,
+          "name": "故障排查"
+        },
+        {
+          "id": 92,
+          "name": "Zipkin"
+        },
+        {
+          "id": 93,
+          "name": "链路追踪"
+        },
+        {
+          "id": 94,
+          "name": "微服务"
+        }
+      ],
+      "title": "Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用",
+      "updateTime": "2026-10-19T14:06:49.673461"
+    },
     {
       "categoryId": 41,
       "categoryName": "技术教程",
