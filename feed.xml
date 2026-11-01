@@ -8,6 +8,48 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[AI 智能体在 Windows 反复报错的原因：PowerShell 5.1 与 PowerShell 7 的错配]]></title>
+      <link>https://www.lxpavilion.top/article/227/</link>
+      <guid>https://www.lxpavilion.top/article/227/</guid>
+      <pubDate>Sun, 01 Nov 2026 10:03:13 GMT</pubDate>
+      <description><![CDATA[DSH 等 AI 智能体在 Windows 上反复撞上 && 无法解析、curl 参数不匹配，根源是执行器默认指向 Windows PowerShell 5.1，而模型按 PowerShell 7 的语法写命令。文中给出工具 issue 证据与一条命令切换到 7 的方法。]]></description>
+      <category>Ai编程</category>
+      <tag>DSH</tag>
+      <tag>Claude Code</tag>
+      <tag>Windows</tag>
+      <tag>故障排查</tag>
+      <tag>PowerShell</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Sentinel 限流教程：Docker 部署控制台、Spring Boot 接入与规则页面使用]]></title>
+      <link>https://www.lxpavilion.top/article/226/</link>
+      <guid>https://www.lxpavilion.top/article/226/</guid>
+      <pubDate>Mon, 19 Oct 2026 17:42:43 GMT</pubDate>
+      <description><![CDATA[Sentinel 是面向分布式服务的流量治理组件，负责限流、熔断降级与系统自适应保护。与只做旁路观测的链路追踪不同，它直接决定请求放行还是拒绝。本文给出控制台的 Docker 编排、两个必需的 Maven 依赖、规则持久化到 Nacos 的完整配置，并逐个说明实时监控、簇点链路与四类规则弹窗怎么读、怎么填。]]></description>
+      <category>技术教程</category>
+      <tag>Docker</tag>
+      <tag>Spring Boot</tag>
+      <tag>微服务</tag>
+      <tag>Sentinel</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用]]></title>
+      <link>https://www.lxpavilion.top/article/225/</link>
+      <guid>https://www.lxpavilion.top/article/225/</guid>
+      <pubDate>Mon, 19 Oct 2026 14:06:49 GMT</pubDate>
+      <description><![CDATA[Zipkin 是分布式追踪系统，只负责收集、存储与展示，埋点在应用侧由 Brave 完成。本文以谷粒商城为例，逐项说明 Docker 部署参数，给出 Spring Boot 3.5 的完整配置项与默认值，介绍 Find a Trace、瀑布图与 Dependencies 三个页面的用法，并指出两个容易配错的配置点。]]></description>
+      <category>技术教程</category>
+      <tag>Docker</tag>
+      <tag>Spring Boot</tag>
+      <tag>故障排查</tag>
+      <tag>Zipkin</tag>
+      <tag>链路追踪</tag>
+      <tag>微服务</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[腾讯企业邮配置个人域名邮箱：DNS 解析步骤与别名限制]]></title>
       <link>https://www.lxpavilion.top/article/223/</link>
       <guid>https://www.lxpavilion.top/article/223/</guid>
@@ -204,40 +246,6 @@
       <tag>AI应用</tag>
       <tag>Ai编程</tag>
       <tag>deepseek</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[在 DeepSeek Harness 里养一只桌面宠物：dsh-pet 插件分享]]></title>
-      <link>https://www.lxpavilion.top/article/205/</link>
-      <guid>https://www.lxpavilion.top/article/205/</guid>
-      <pubDate>Fri, 14 Aug 2026 17:33:29 GMT</pubDate>
-      <description><![CDATA[dsh-pet 是一个开源的 DeepSeek Harness 桌面宠物插件：25 个手绘风格动画、链式随机行为、屏幕漫游、点击拖拽交互，安装即用。本文介绍它的功能设计、安装方法，以及从提示词到透明动画的开源素材链。]]></description>
-      <category>工具教程</category>
-      <tag>AI应用</tag>
-      <tag>Ai编程</tag>
-      <tag>deepseek</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DeepSeek Harness 插件开发实战：从设计理念到 npm 发布]]></title>
-      <link>https://www.lxpavilion.top/article/204/</link>
-      <guid>https://www.lxpavilion.top/article/204/</guid>
-      <pubDate>Fri, 14 Aug 2026 17:13:20 GMT</pubDate>
-      <description><![CDATA[从“一切皆插件”的设计理念出发，本文带你完整走一遍 DeepSeek Harness 插件开发的实战路径：插件架构组成、安装与编写、AI 可调用工具、自定义 Web UI，再到 npm 发布上线，并附实战踩坑记录。]]></description>
-      <category>Ai编程</category>
-      <tag>AI应用</tag>
-      <tag>Ai编程</tag>
-      <tag>deepseek</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DeepSeek Harness 上手指南：一切皆插件的 AI 智能体框架]]></title>
-      <link>https://www.lxpavilion.top/article/203/</link>
-      <guid>https://www.lxpavilion.top/article/203/</guid>
-      <pubDate>Fri, 14 Aug 2026 17:10:00 GMT</pubDate>
-      <description><![CDATA[DeepSeek Harness（dsh）是 DeepSeek AI 开源的智能体框架，以“一切皆插件”为核心理念，由 Cordis 驱动。本文从环境准备、安装启动、端口配置、四种内置模式，到常用操作与插件系统，带你从零上手这款可高度定制的 Agent 开发平台，并分享官方插件源码这一最佳学习资料。]]></description>
-      <category>Ai编程</category>
-      
       <author>ppc</author>
     </item>
   </channel>

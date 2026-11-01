@@ -1,0 +1,41 @@
+{
+  "categoryId": 37,
+  "categoryName": "Ai编程",
+  "content": "## 现象：命令被反复重写\n\n在 DSH 里让智能体执行串联命令，返回的常常是：\n\n```text\nThe token '&&' is not a valid statement separator in this version.\n```\n\n换成 `;` 能过，但下一轮它又写出 `cmd1 && cmd2`，同一段对话里反复重写。另一类报错看着像命令写错，实为 `curl`、`wget` 被别名指向 `Invoke-WebRequest`，`curl -s URL` 因此报参数不匹配，真正的 `curl.exe` 就在 `System32` 下。\n\n共同点是：报错文本描述的是 Windows PowerShell 5.1 的语法或别名限制，而不是命令逻辑有错。智能体复述原因时往往只说“当前版本不支持该语法”，不指明版本，用户便以为命令写错了。\n\n## Windows 出厂只带 PowerShell 5.1\n\nWindows PowerShell 5.1 在 Windows 10、Windows 11 与 Server 2016 及更高版本中默认安装，没有任何 Windows 版本自带 PowerShell 7。原因是 5.1 属系统组件、生命周期绑在系统上（Server 2022 支持到 2031 年），而 7 是跑在 .NET 上的独立应用。\n\n| 系统 | 出厂自带引擎 |\n| --- | --- |\n| Windows 10 / 11（21H2 至 25H2） | Windows PowerShell 5.1 |\n| Windows Server 2016 / 2019 / 2022 / 2025 | Windows PowerShell 5.1 |\n| 任何版本自带 PowerShell 7 | 无 |\n\n测试机为 Windows 11 25H2、build 26200，`System32\\WindowsPowerShell` 下只有 `v1.0` 一个目录。\n\n## AI 工具按 PowerShell 7 的语法写命令\n\n模型语料里 POSIX 与 PowerShell 7 的写法占多数，执行器落在 5.1 上，两边假设就对不上。\n\n| 工具 | 记录 | 现象 |\n| --- | --- | --- |\n| Claude Code | #83928 | PowerShell 工具走 5.1，“模型按 POSIX 与 PowerShell 7 的习惯生成语法，5.1 跑不了” |\n| Gemini CLI | #20773 | `&&` 触发 ParserError，“阻断大量 Windows 用户的核心功能” |\n| Gemini CLI | #27097 | `run_shell_command` 硬编码 `powershell.exe`，提示词要求改也无效 |\n| Cursor | 论坛 151887 | 包装脚本在 5.1 上 ParserError，回退旧版终端才恢复 |\n| Cursor | 论坛 143405 | 官方承认是已知问题，“尤其影响非英文区域设置”，成因是编码 |\n\n反向证据也存在：Copilot CLI #411 有用户要求“支持 5.1”，同一项目 #1680 却因 `pwsh.exe` 硬编码六处，导致没装 7 的机器完全不可用。可见问题不是版本优劣，而是执行器与模型语法的错配方向。\n\nDSH 的处理是候选链：`Program Files\\PowerShell\\7\\pwsh.exe`、`PATH` 中的 `pwsh.exe`、最后 `System32\\WindowsPowerShell\\v1.0\\powershell.exe`，即 7 优先、5.1 兜底，并在每条命令前注入 UTF-8 设置，规避 5.1 的 OEM 代码页问题。官方讨论 #5220 指出这种静默回退的代价：“工具照常工作，但行为语义变成 5.1，用户和 agent 无法把行为与文档不一致归因到 shell 版本。”\n\n两种引擎的实际差异：\n\n| 写法 | Windows PowerShell 5.1 | PowerShell 7 |\n| --- | --- | --- |\n| `cmd1 && cmd2` | 解析失败，整条不执行 | 正常串联 |\n| `$a ?? \"默认值\"` | 不支持 | 支持 |\n| `curl -s URL` | 命中别名，参数不匹配 | 调用真正的 curl.exe |\n| 原生程序输出 | OEM 代码页，中文易乱码 | 默认 UTF-8 |\n\n## 切换：一条命令\n\n```powershell\nwinget install --id Microsoft.PowerShell --source winget --installer-type wix\n```\n\n`--installer-type wix` 不能省。PowerShell 7 从 7.6.0 起，winget 默认装 MSIX，而 MSIX 版的 `$PSHOME` 只读、不支持 Remoting，入口还藏在 `WindowsApps` 下。MSI 版落在 `C:\\Program Files\\PowerShell\\7`，正好是 DSH 的第一候选。\n\n| 用途 | Windows PowerShell 5.1 | PowerShell 7（MSI） |\n| --- | --- | --- |\n| 可执行文件 | `System32\\WindowsPowerShell\\v1.0\\powershell.exe` | `Program Files\\PowerShell\\7\\pwsh.exe` |\n| 系统级模块 | `Program Files\\WindowsPowerShell\\Modules` | `Program Files\\PowerShell\\Modules` |\n| 用户级模块与 profile | `文档\\WindowsPowerShell\\` | `文档\\PowerShell\\` |\n\n装完看四项：`PSEdition` 从 Desktop 变 Core、`$PSHOME` 指向 `Program Files\\PowerShell\\7`、`Get-Command curl` 从 Alias 变 Application、`a && b` 能正常输出。然后重启 DSH，它在启动时缓存执行器路径，不重启仍用 5.1。\n\n## 结语\n\n三件事叠在一起：Windows 只带 5.1、模型按 7 的语法写命令、工具把执行器写死。安装 PowerShell 7 解决了前两件之间的落差，5.1 原样保留、随时可退；但硬编码 `powershell.exe` 的工具（Gemini CLI 至今如此）依旧走 5.1，只能等上游。判断一个 AI 工具是否可靠，看它探测执行器的那几行代码，比看宣传更有用。",
+  "coverImage": "/data/media/779.png",
+  "createdAt": "2026-11-01T10:03:13.893705",
+  "id": 227,
+  "isPinned": 0,
+  "isPublished": 1,
+  "next": null,
+  "prev": {
+    "id": 226,
+    "title": "Sentinel 限流教程：Docker 部署控制台、Spring Boot 接入与规则页面使用"
+  },
+  "series": "DeepSeek Harness 体验",
+  "summary": "DSH 等 AI 智能体在 Windows 上反复撞上 && 无法解析、curl 参数不匹配，根源是执行器默认指向 Windows PowerShell 5.1，而模型按 PowerShell 7 的语法写命令。文中给出工具 issue 证据与一条命令切换到 7 的方法。",
+  "tags": [
+    {
+      "id": 88,
+      "name": "DSH"
+    },
+    {
+      "id": 32,
+      "name": "Claude Code"
+    },
+    {
+      "id": 89,
+      "name": "Windows"
+    },
+    {
+      "id": 90,
+      "name": "故障排查"
+    },
+    {
+      "id": 96,
+      "name": "PowerShell"
+    }
+  ],
+  "title": "AI 智能体在 Windows 反复报错的原因：PowerShell 5.1 与 PowerShell 7 的错配",
+  "updateTime": "2026-11-01T10:03:42.10467"
+}

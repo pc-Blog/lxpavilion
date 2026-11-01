@@ -7,7 +7,10 @@
   "id": 223,
   "isPinned": 0,
   "isPublished": 1,
-  "next": null,
+  "next": {
+    "id": 225,
+    "title": "Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用"
+  },
   "prev": {
     "id": 222,
     "title": "推荐一款开源数据库客户端 dbx：约 25MB 连通 100+ 种数据库"

@@ -1,0 +1,408 @@
+1:"$Sreact.fragment"
+2:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+3:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+4:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+5:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+6:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+7:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+8:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+9:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+a:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+b:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+16:I[68027,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default",1]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+:HL["/_next/static/media/geist_latin-s.p.0wgildi0cnwt9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/geist_mono_latin-s.p.0w5z4e7s8jfe5.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/noto_serif_sc_latin-s.p.2xkduggpvd1-n.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+14:X
+0:{"P":null,"c":["","article","225",""],"q":"","i":false,"f":[[["",{"children":["(main)",{"children":["article",{"children":[["id","225","d",[]],{"children":["__PAGE__",{},"$undefined","$undefined",4608]},"$undefined","$undefined",4608]},"$undefined","$undefined",4612]},"$undefined","$undefined",4616]},"$undefined","$undefined",4632],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{}],["$","$L5",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L6",null,{}],["$","$L7",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L8",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L9",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],"$Lc"]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],"$Ld","$Le"]}],"$Lf"]}]}]]}]]}],{"children":["$L10",{"children":["$L11",{"children":["$L12",{"children":["$L13",{},null,false,null]},null,false,"$14"]},null,false,"$14"]},null,false,null]},null,false,null],"$L15",false]],"m":"$undefined","G":["$16",["$L17","$L18"]],"S":true,"h":null,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"64pWEVC-RSk5D-exIsXfh"}
+19:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1a:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1b:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1c:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1d:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+1e:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+25:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+26:"$Sreact.suspense"
+28:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+2a:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+c:["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]
+d:["$","$L19",null,{}]
+e:["$","$L1a",null,{}]
+f:["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]
+10:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true,"nonce":"$undefined"}]],[["$","$L1b",null,{}],["$","$L1c",null,{"children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L1d",null,{"children":["$","$Lb",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$c:props:style","children":["$","h2",null,{"style":"$c:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+11:["$","$L1e",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L1f"]}],"$L20","$L21","$L22"]}]]}],[],null],"children":"$L23"}]
+12:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+13:["$","$1","c",{"children":["$L24",[["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true,"nonce":"$undefined"}]],["$","$L25",null,{"children":["$","$26",null,{"name":"Next.MetadataOutlet","children":"$@27"}]}]]}]
+15:["$","$1","h",{"children":[null,["$","$L28",null,{"children":"$L29"}],["$","div",null,{"hidden":true,"children":["$","$L2a",null,{"children":["$","$26",null,{"name":"Next.Metadata","children":"$L2b"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+17:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+18:["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+14:C
+1f:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+20:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+21:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+22:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+23:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+2c:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+2e:T62b2,# 概述
+
+Zipkin 是一个分布式追踪系统。它给每一次请求发一个全局唯一的 traceId，让这个请求穿过所有微服务时都带着它，然后把散落在各个服务里的执行记录重新拼成一条完整的调用链 —— 这一次请求走了哪些服务、每一跳花了多久、死在哪一步，都能在这一条链上看出来。
+
+它由三块组成：
+
+| 部分 | 干什么 |
+|---|---|
+| 收集 | 各服务把执行记录上报给它 |
+| 存储 | 存下来 |
+| 展示 | Web UI：调用链瀑布图 + 服务依赖拓扑图 |
+
+有一个认知需要先建立：**Zipkin 自己不做埋点**。它只是一个「收集 + 存储 + 展示」的后端，真正记录数据的是应用侧的库 —— Java 生态里承担这件事的是 Brave。只把 Zipkin 容器跑起来、不在应用里接上报，那个 UI 会永远是空的。这是初次接触时最常见的一个误解，后面的依赖与配置两节都是围绕它展开的。
+
+Trace 与 Span 这套术语出自 Google 在 2010 年发表的 Dapper 论文，Zipkin 是 Twitter 在 2012 年开源出来的实现，也是这套模型最早的开源落地。
+
+# 优点和使用场景
+
+| 优点 | 具体是什么意思 |
+|---|---|
+| 定位故障快 | 接口报错时，不用挨个服务翻日志，点开一条 trace 直接看到是哪一跳抛的异常 |
+| 找性能瓶颈 | 「下单要 3 秒」—— 瀑布图直接告诉你这 3 秒被哪个环节吃掉了 |
+| 跨服务因果关联 | 7 个服务的日志本来互不相干（order 说「调 ware 失败」、ware 说「参数不合法」，这是同一次请求吗？）。有了 traceId，散落的记录能拼回一条链 |
+| 侵入性低 | 大部分埋点由框架自动完成（HTTP、JDBC、Redis、MQ），业务代码一行不用改；Feign 等少数入口需要额外依赖，见「java安装依赖」 |
+| 几乎不影响业务性能 | span 是异步批量上报的，不会阻塞用户请求 |
+| 模型简单、易理解 | 只有 Trace 和 Span 两个概念，比 Jaeger / SkyWalking 轻得多 |
+| 自动画架构图 | 依赖拓扑图是从真实调用数据推出来的，不是手画的 —— 不会过时、不会写错 |
+| 生态开放 | 是追踪领域的「通用后端」，OpenTelemetry 等标准都能往它发数据 |
+
+落到具体场景上，它解决的问题集中在四类。接口报错时定位是哪一跳抛的异常；接口变慢时把总耗时拆开，看是业务代码、数据库还是网络往返吃掉的；确认一次改造之后链路是不是真的通了 —— 调用方发出了 CLIENT span、被调方有没有对应的 SERVER span，这两件事都出现才算通；以及梳理服务之间到底谁在调谁，服务加到十几个之后，靠记忆和手画图很容易失真。
+
+它不覆盖的部分同样需要知道。日志的采集与检索归 ELK、Loki；QPS、错误率这类指标与告警归 Prometheus 或 Sentinel；限流、熔断、降级归 Sentinel；慢 SQL 的自动发现与优化建议归专业 APM。用一句话定位：Zipkin 是单次请求的 X 光片，不是全身体检报告。
+
+# 使用及背景
+
+谷粒商城是一个 Spring Cloud 微服务商城，网关是唯一的业务入口，服务之间通过 Feign 互相调用。
+
+这种结构下，一次「下单」请求的路径是这样的：
+
+```
+浏览器 → 网关 → order → cart（取购物车）
+                    → product（查 SKU）
+                    → ware（算运费、锁库存）
+                    → coupon（核销优惠券）
+                    → member（加积分、成长值）
+                    → MySQL / Redis / RabbitMQ
+```
+
+问题也随之而来。日志散在七个容器里，用户报「下单失败」时得挨个翻；更麻烦的是日志之间没有共享的身份标识，order 的日志里写着「调 ware 失败」，ware 的日志里写着「参数不合法」，这两条是不是同一次请求触发的，光看日志答不上来。性能问题同样无解，「下单要 3 秒」这 3 秒是网关、是 order、还是 ware，只能靠猜。
+
+Zipkin 就是来解决这两个问题的：给每一次请求一个全局唯一的 traceId，让它在所有服务之间传递，散落的执行记录就能被重新拼回一条链。下面的部署、接入与配置，都是围绕「让谷粒商城产生并上报这些数据」展开。
+
+# docker安装
+
+```yaml
+gl-zipkin:
+  image: openzipkin/zipkin:3.6.1
+  container_name: gl-zipkin
+  restart: unless-stopped
+  ports:
+    - "59411:9411"      # Zipkin UI 和 API 端口
+  environment:
+    - STORAGE_TYPE=mem  # 使用内存存储（开发环境）
+    # 必须带 ExitOnOutOfMemoryError：OOM 时立刻退出交给 restart 拉起，否则会带着坏线程装死
+    - JAVA_OPTS=-Xms256m -Xmx256m -XX:+ExitOnOutOfMemoryError
+  mem_limit: 768m
+  networks:
+    - GrainMall-network
+```
+
+这段配置里每一项的作用如下。
+
+| 配置项 | 值 | 说明 |
+|---|---|---|
+| `image` | `openzipkin/zipkin:3.6.1` | 镜像与版本 |
+| `container_name` | `gl-zipkin` | 容器名，容器之间按服务名互访 |
+| `restart` | `unless-stopped` | 容器退出后自动拉起 |
+| `ports` | `59411:9411` | 宿主机 59411 映射到容器 9411，UI 与 API 共用此端口 |
+| `STORAGE_TYPE` | `mem` | span 的存储方式 |
+| `JAVA_OPTS` | `-Xms256m -Xmx256m -XX:+ExitOnOutOfMemoryError` | JVM 堆大小与 OOM 行为 |
+| `mem_limit` | `768m` | 容器内存上限 |
+| `networks` | `GrainMall-network` | 与其他服务同一个自定义网络 |
+
+`STORAGE_TYPE` 决定 span 存在哪里。`mem` 是内存存储，数据放在 JVM 堆里，容器重启即清空，只适合开发环境；生产环境要换成 `elasticsearch`、`mysql` 或 `cassandra` 这类外部存储，历史数据才留得住。
+
+`JAVA_OPTS` 里有两件事。`-Xms` 与 `-Xmx` 设定堆的初始值与上限，官方入口脚本 `docker/start-zipkin` 对 `mem` 存储给的默认值是 `-Xms160m -Xmx160m -XX:+ExitOnOutOfMemoryError`，这里给到 256m 是留了些余量。`-XX:+ExitOnOutOfMemoryError` 让 JVM 在堆耗尽时立即退出，而不是带着已经不可用的线程继续运行，它与 `restart: unless-stopped` 配合，把一次 OOM 变成「退出 → 自动拉起 → 恢复」的过程。两者需要同时存在：只有前者没有后者是快速失败但不再启动，只有后者没有前者则进程不会退出，重启策略永远不被触发。
+
+`mem_limit` 是容器级内存上限，和堆上限是两件事。`-Xmx` 只管堆，Zipkin 还有堆外开销：armeria 收 span 用的直接内存、线程栈、Metaspace、JIT 代码缓存，实际占用的物理内存会明显超过 `-Xmx`。给容器留出比堆更大的额度，才能避免它与其他容器抢内存。
+
+这个镜像内置了 `HEALTHCHECK`，执行 `docker-healthcheck`，间隔 5 秒、超时 5 秒、启动宽限 30 秒。脚本探测 `/health`，并带上 `--header=b3:0` 让健康检查请求本身不被追踪。`/health` 的返回可以直接用来确认状态：
+
+```json
+{
+  "status" : "UP",
+  "zipkin" : {
+    "status" : "UP",
+    "details" : {
+      "InMemoryStorage{}" : { "status" : "UP" }
+    }
+  }
+}
+```
+
+`docker compose` 里其他服务对 Zipkin 的依赖条件写的是 `service_started` 而不是 `service_healthy`，这是有意的：追踪只是旁路，Zipkin 未就绪时业务应当照常启动，span 丢了只打一条 WARN。改成 `service_healthy` 等于让一个可观测性组件成为整个技术栈的启动闸门。
+
+# java安装依赖
+
+```xml
+<!-- Brave 桥接器（用于 Zipkin） -->
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-tracing-bridge-brave</artifactId>
+</dependency>
+
+<!-- Zipkin 上报器 -->
+<dependency>
+  <groupId>io.zipkin.reporter2</groupId>
+  <artifactId>zipkin-reporter-brave</artifactId>
+</dependency>
+
+<!-- Feign 埋点。spring-cloud-starter-openfeign 不会传递依赖它，必须显式声明 -->
+<dependency>
+  <groupId>io.github.openfeign</groupId>
+  <artifactId>feign-micrometer</artifactId>
+  <version>13.6</version>
+</dependency>
+```
+
+前面强调过 Zipkin 只负责收集，采集这件事发生在应用侧，这三个依赖就是补上采集与上报的环节。前两个不写版本号，由 Spring Boot 的 BOM 统一管理；`feign-micrometer` 的版本要与工程里实际解析出的 `feign-core` 对齐，当前是 13.6，可用 `mvn dependency:tree` 核对。当前工程是 Spring Boot 3.5.5、Java 21。
+
+它们的分工是清楚的。`micrometer-tracing-bridge-brave` 负责「用谁来追踪」—— 把 Micrometer Tracing 的 API 接到 Brave 实现上；`zipkin-reporter-brave` 负责「往哪送」—— 把 Brave 产生的 span 上报给 Zipkin；`feign-micrometer` 补上 Feign 这个调用入口的埋点。Micrometer Tracing 是 Spring Boot 3 的新一代抽象，替代的是已经停止维护的 Spring Cloud Sleuth。
+
+这三个依赖放在 `common` 模块里，而不是各个服务里各写一份。原因是所有业务服务都依赖 `common`，放一份就能让网关和全部业务服务同时具备追踪能力，也保证了埋点方式完全一致。
+
+## Feign 为什么需要单独加依赖
+
+依赖加上、配置打开之后，大部分埋点由框架自动完成：进来的 HTTP 请求、JDBC 查询、Redis 操作、RabbitMQ 收发都会被包成 span，业务代码不需要改动。Feign 是例外 —— Spring Cloud OpenFeign 的 `MicrometerConfiguration` 要创建的 `MicrometerObservationCapability` 来自 `feign-micrometer`，而 `spring-cloud-starter-openfeign` 不传递依赖它，所以不显式声明就完全不产生 span。
+
+漏掉它的后果不只是少几个 span：调用方没有 CLIENT span，拓扑图上看不到业务服务之间的调用；更麻烦的是 **traceId 不会被注入到出站请求头**，下游会把请求当成全新请求另起一条根 trace，整条链路在每一次 Feign 调用处断开，采样决策也会在每一跳独立做。
+
+验证办法很直接：跑一次完整的核心业务链路，看 Zipkin 里是不是一条 trace 覆盖了从网关到所有下游服务。补上依赖之后，一次下单的样子是：
+
+```
+SERVER gateway  http get /api/order/**                          53597us  [ROOT]
+└─ CLIENT gateway  http get                                     49152us
+   └─ SERVER order  http get /order/front/jwt/confirm           45827us
+      ├─ CLIENT order  http get                                 14898us
+      │  └─ SERVER member  /member/trade/growth/level           12934us
+      └─ CLIENT order  http get                                  7746us
+         └─ SERVER member  /member/trade/integration/balance     5536us
+```
+
+# 配置
+
+```yaml
+management:
+  tracing:
+    sampling:
+      probability: 0.1  # 采样率
+    propagation:
+      produce: B3  # 出站用 B3（Zipkin 原生格式）
+      consume:  # 入站三种都认，避免非 Brave 调用方（W3C traceparent）在网关这一跳断链
+        - B3
+        - B3_MULTI
+        - W3C
+  zipkin:
+    tracing:
+      endpoint: http://${zipkin.url}:${zipkin.port}/api/v2/spans  # 正确地址
+      encoding: PROTO3  # 上报体积与序列化开销均低于默认的 JSON
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+## 参数说明
+
+这段配置分两组。`management.tracing.*` 管追踪本身，`management.zipkin.tracing.*` 管往 Zipkin 上报这一路。
+
+| 属性 | 默认值 | 作用 |
+|---|---|---|
+| `management.tracing.enabled` | `true` | 追踪总开关，关掉则埋点、传播、上报全停 |
+| `management.tracing.sampling.probability` | `0.1` | 采样率，取值 0.0 到 1.0 |
+| `management.tracing.propagation.produce` | `[W3C]` | 出站时用什么格式交换 traceId |
+| `management.tracing.propagation.consume` | `[W3C, B3, B3_MULTI]` | 入站时认哪些格式 |
+| `management.tracing.propagation.type` | — | 同时设置 produce 与 consume，设了它就会覆盖上面两个 |
+| `management.zipkin.tracing.endpoint` | `http://localhost:9411/api/v2/spans` | span 往哪 POST |
+| `management.zipkin.tracing.encoding` | `[JSON]` | POST body 的编码，可选 JSON / PROTO3 |
+| `management.zipkin.tracing.connect-timeout` | `1s` | 建连超时 |
+| `management.zipkin.tracing.read-timeout` | `10s` | 读超时 |
+| `management.zipkin.tracing.export.enabled` | `true` | 是否启用 Zipkin 上报 |
+
+采样率这一项值得单独说。Spring Boot 的默认值是 0.1，也就是每十次请求完整记录一次。采样决策在链路入口做一次，再通过 `X-B3-Sampled` 头传给下游，保证一条 trace 要么全记、要么全不记。上报的数据量与采样率成正比，调高之前需要按实际流量估算 Zipkin 的存储与内存开销。本工程用 0.1，实测发 100 次请求，Zipkin 收到 10 条 trace。
+
+`endpoint` 这一项没有默认值可用。默认的 `http://localhost:9411/api/v2/spans` 在容器里是废的 —— 容器内部没有服务监听 9411。这里配的 `${zipkin.url}:${zipkin.port}` 会被解析成 `gl-zipkin:9411`，是容器名加容器内端口，不是宿主机映射的 59411。
+
+## 两个容易配错的地方
+
+`management.zipkin.tracing.*` 是 Spring Boot 3.5 的前缀，更新的版本迁到了 `management.tracing.export.zipkin.*`。照着新版文档配到 3.5 上，属性会静默失效 —— Spring Boot 对未知属性不报错，只是忽略，配置看起来写了、实际没生效。
+
+`management.tracing.brave.span-joining-supported` 的说明是「客户端与服务端 span 共享 spanId」，官方默认值为 `false`。它与放宽的 `consume` 互斥：同时启用会让应用启动失败，报 `incompatible values: [management.tracing.propagation.consume, management.tracing.brave.span-joining-supported]`，原因是共享 span 要求传播格式支持合并，而 W3C 不支持。把 `consume` 收窄回 B3 之后应用可以启动，但本工程的埋点路径走的是 Micrometer 的 `WebMvcObservationFilter`，不是 Brave 自己的 HTTP 处理器，负责合并的 `joinSpan` 不会被调用，该属性不产生效果，因此配置里没有采用。
+
+# 进入页面
+
+浏览器打开 `http://localhost:59411`，进入 Zipkin 的 Lens 界面。
+
+![image.png](/data/media/2251.png)
+
+顶部是两个页签：`Find a trace` 查调用链、`Dependencies` 看服务依赖拓扑。右上角有一个按 traceId 直接搜的输入框，已经拿到 traceId 时从那里跳最快。搜索区在左上角，只有一个 `+` 按钮用来添加查询条件，条件没加之前中间显示的是提示语 —— 也就是截图里的空状态。
+
+这里配置的是内存存储（`STORAGE_TYPE=mem`），容器一重启数据就清空，所以刚打开时什么都没有。要看到内容，得先让谷粒商城产生流量：走一遍下单、支付、查订单这类操作，Zipkin 才会陆续收到 span。
+
+# Find a Trace
+
+选好条件点 `RUN QUERY`，结果以列表形式返回。
+
+![image.png](/data/media/2253.png)
+
+列表有四列，含义分别是：
+
+| 列 | 含义 |
+|---|---|
+| Root | 这条 trace 的根 span，格式是「服务名: 操作名」，一眼看出请求从哪进来、打到哪个路由 |
+| Start Time | 发生时间，括号里是精确到毫秒的时间戳 |
+| Spans | 这条 trace 包含几个 span |
+| Duration | 总耗时，后面那根横条是相对长度，用来快速比较 |
+
+根 span 下面那排彩色标签是这条 trace 涉及的服务与各自的 span 数，比如 `gateway (2)`、`order (1)` 表示网关贡献两个 span、order 一个。最右侧的 `SHOW` 按钮进入详情页。列表上方还有 `EXPAND ALL` / `COLLAPSE ALL` 用来展开折叠所有行，以及 `Service filters` 按服务过滤。
+
+这张截图正好是补 `feign-micrometer` 之前的状态，从 `Spans` 列就能看出来：`gateway: http get /api/order/**` 那几条有 3 个 span，而 `coupon: http post /coupon/trade/promotion/sku-bounds`、`member: http post /member/trade/growth/comment-grant`、`order: http get /order/order/status/{ordersn}` 这些都只有 1 个 span —— 它们是断裂的根 trace，各自独立，串不到一起。
+
+查询条件通过左上角的 `+` 添加，常用的有 Service Name、Span Name、Lookback（时间窗口）、Min Duration / Max Duration（耗时区间）、Annotations Query（按 tag 查，比如填 `error` 只看失败的）。有两个地方容易误判：`lookback` 默认只有十五分钟，查不到时先确认窗口是不是太小；采样率是 0.1，**查不到某条请求不代表它没有发生，只代表它没被采样**。
+
+# 查看详情
+
+在列表里点 `SHOW` 进入某一条 trace 的详情页。
+
+![image.png](/data/media/2254.png)
+
+顶部一行是这条 trace 的概要：`Duration 45.317ms` 是总耗时，`Services 2` 表示涉及两个服务，`Total Spans 3` 是 span 总数，`Trace ID` 是那串全局唯一的标识 —— 拿到它就能在任何地方直接搜到这条链。右上角的 `SPAN TABLE` 按钮切换成平铺表视图。
+
+页面主体是瀑布图，纵向表示调用深度，横向表示耗时。截图里这条是「网关 → order」的退换货申请列表请求：
+
+```
+gateway: http get /api/order/**                    45.317ms   Span ID 52ab9fa98852afe0   Parent none
+└─ gateway: http get                               23.882ms   Span ID b680b16596daf7ef
+   └─ order: http get /order/orderreturnapply/list  21.062ms  Span ID bba85b12f6ca5bee
+```
+
+读法是从外往里、从大到小。根 span 是网关的 SERVER span，`45.317ms` 就是用户实际等待的时间；它的子 span 是网关发出的 CLIENT span，`23.882ms` 是网关把请求转发出去并等待响应的耗时，两者相减得到的 `21.435ms` 是网关自身处理的开销，包括路由匹配、过滤器、Sentinel 拦截器这些；再往下是 order 的 SERVER span，`21.062ms` 是 order 真正处理请求的时间，它与网关 CLIENT span 的差值 `2.820ms` 就是网络往返加序列化的开销。
+
+这套减法就是 Zipkin 的核心用法：不是看有没有报错，而是把总耗时一层层拆开，定位到具体是哪一段。排查顺序也固定，先看哪个 span 的条最长，再看它的子 span，逐层往下，直到找到那个「自己很长、子 span 都不长」的节点，问题就在那里。
+
+瀑布图右侧是这个 span 的详情面板。上半部分是标识信息 —— `Service name`、`Span name`、`Span ID`、`Parent ID`，`Parent ID` 显示 `none` 说明它是根 span。中间是 `Annotation`，也就是带时间戳的事件点：截图里 `0ms` 处是 `Server Start`、`45.317ms` 处是 `Server Finish`，地址都是 `172.20.0.21 (gateway)`，把这段耗时的起止点标了出来。下半部分是 `Tags`：
+
+```
+exception   none
+http.url    /api/order/orderreturnapply/list
+method      GET
+outcome     SUCCESS
+status      200
+uri         /api/order/**
+```
+
+这些 tag 是排查时最直接的依据。`status` 与 `exception` 直接反映这一跳成功还是失败，失败时 `exception` 不再是 `none`，点开就能看到异常信息，这正是前面「定位故障快」那条优点的具体形态。`http.url` 是实际请求地址，`uri` 是匹配到的路由模板，两者不一致说明走的是通配路由 —— 截图里 `http.url` 是 `/api/order/orderreturnapply/list`，而 `uri` 是 `/api/order/**`。`method` 与 `outcome` 分别是请求方法和框架对结果的归类。
+
+# 侧边栏（Span Table）
+
+详情页右上角的 `SPAN TABLE` 会把这条 trace 里的所有 span 平铺成一张表。
+
+![image.png](/data/media/2255.png)
+
+列是 `Span ID`、`Service name`、`Span name`、`Start time`、`Duration`，相当于把瀑布图那棵树拉平成一行一个 span。截图这条 trace 的三行是：
+
+| Span ID | Service name | Span name | Duration |
+|---|---|---|---|
+| 52ab9fa98852afe0 | gateway | http get /api/order/** | 45.317ms |
+| b680b16596daf7ef | gateway | http get | 23.882ms |
+| bba85b12f6ca5bee | order | http get /order/orderreturnapply/list | 21.062ms |
+
+它的用处是核对「该上报的有没有上报」。瀑布图看的是层级与相对耗时，但要确认某个服务到底有没有产生 span、一共几个、Span ID 分别是什么，平铺表比在树里一个个点更直接。判断链路有没有断也是看这张表最快 —— 如果一次跨服务调用只列出调用方一行、没有被调方，说明那一跳的埋点没生效，正是前面 Feign 那一节讲的情况。
+
+# Dependencies
+
+依赖拓扑页展示的是服务之间的调用关系，数据同样来自真实上报的 span。
+
+补 `feign-micrometer` 之前，图是这样的：
+
+![image.png](/data/media/2256.png)
+
+只有四个节点、三条边，而且全部从网关出发 —— 一个星形，看不出业务服务之间谁调谁。原因是 Feign 调用没有产生 CLIENT span，order 调 cart、调 member 这些关系根本没有数据可画。
+
+补上依赖之后，同样的入口流量，图变成了这样：
+
+![image.png](/data/media/2257.png)
+
+节点增加到六个，出现了 `order → cart`、`order → member`、`cart → product` 这些业务服务之间的边。对应的原始数据是：
+
+```json
+[
+  { "parent": "gateway", "child": "product", "callCount": 21 },
+  { "parent": "gateway", "child": "order",   "callCount": 9  },
+  { "parent": "order",   "child": "cart",    "callCount": 3  },
+  { "parent": "order",   "child": "member",  "callCount": 3  },
+  { "parent": "gateway", "child": "seckill", "callCount": 1  },
+  { "parent": "cart",    "child": "product", "callCount": 1  }
+]
+```
+
+Zipkin 聚合所有 span，看谁调了谁，再按调用次数加权，画成拓扑图。图中箭头方向就是调用方向，边上的数字是这段时间内的调用次数，当前共有八个服务在上报数据。这张图的价值在于它是从实际调用数据推出来的，不是手画的：没被调用过的依赖不会出现在图上，服务改名或下线也会自动反映出来，所以它不会过时，也不会像手画的架构图那样写错。
+
+需要注意的是，依赖图只能反映「被追踪到的调用」。图上没有某个服务，可能是它压根没被调用，也可能是它没接入埋点 —— 后者正是上面第一张图只剩星形的原因。
+
+# 使用接口
+
+图形化页面是日常使用的主要方式，接口主要用于脚本化查询。Zipkin 的 UI 和 API 共用同一个端口，常用端点有四个。
+
+| 端点 | 返回 | 必填参数 |
+|---|---|---|
+| `/api/v2/services` | 上报过 span 的服务名数组 | — |
+| `/api/v2/traces` | 聚合后的 trace（数组的数组） | `serviceName` |
+| `/api/v2/spans` | 原始 span 列表 | `serviceName` |
+| `/api/v2/dependencies` | 服务依赖边 | `endTs` |
+
+通用参数里有两个单位不一致的地方：`minDuration` 与 `maxDuration` 的单位是**微秒**，而 `endTs` 与 `lookback` 的单位是**毫秒**。另外 `dependencies` 端点的 `endTs` 是必填的，缺了会直接返回 `Mandatory parameter/header/attribute is missing: endTs`，而 `traces` 端点不填 `endTs` 也能用。
+
+几个可直接使用的查询：
+
+```
+# 有哪些服务在上报
+http://localhost:59411/api/v2/services
+
+# gateway 最近 30 分钟、耗时超过 100ms 的 trace
+http://localhost:59411/api/v2/traces?serviceName=gateway&minDuration=100000&lookback=1800000&limit=50
+
+# 只看失败的那些
+http://localhost:59411/api/v2/traces?serviceName=order&annotationQuery=error&lookback=3600000&limit=50
+
+# 服务依赖拓扑
+http://localhost:59411/api/v2/dependencies?endTs=1750000000000&lookback=86400000
+```
+
+实测还发现一个差异：同一时刻 `/api/v2/spans` 返回的条数与 `/api/v2/traces` 并不一致，前者返回 1 条时后者返回了 7 条。需要统计「发生了多少次调用」时用 `traces`，`spans` 的返回结构不适合直接计数。
+
+# 这套东西的边界
+
+把整个链路跑通之后，有几条边界值得记住，它们决定了这套东西能信到什么程度。
+
+采样率决定了数据是抽样而不是全量。0.1 意味着九成的请求不会留下任何 trace，所以「在 Zipkin 里搜不到」不能作为「请求没发生」的证据，这是排查时最容易走偏的地方。要排查一个具体问题，临时把采样率调到 1.0 再复现，比在抽样数据里大海捞针可靠。
+
+内存存储决定了数据会丢。`STORAGE_TYPE=mem` 把 span 全放在 JVM 堆里，容器一重启历史就清空。它适合开发环境快速验证，不适合当作事后追溯的依据 —— 真要留证据，得在查到 trace 之后把 JSON 导出，或者把存储换成 Elasticsearch 这类外部存储。
+
+上报是旁路，失败不会影响业务。这一点让追踪可以放心接入，也意味着它出问题时不会波及线上，只是链路数据在丢，因此定期看一眼 `/health` 与 Zipkin 收到的 span 数量是有必要的。
+
+还有一处容易被忽略的是配置的单一来源问题。采样率这类值如果同时写在 yaml 和容器环境变量里，看 yaml 的人会得到错误印象，而实际生效的是环境变量。这类「两处配置、一处生效」的状态比配错值更难发现，改配置时顺手把冗余的那处清掉。
+24:[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用\",\"item\":\"https://www.lxpavilion.top/article/225\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用\",\"headline\":\"Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用\",\"description\":\"Zipkin 是分布式追踪系统，只负责收集、存储与展示，埋点在应用侧由 Brave 完成。本文以谷粒商城为例，逐项说明 Docker 部署参数，给出 Spring Boot 3.5 的完整配置项与默认值，介绍 Find a Trace、瀑布图与 Dependencies 三个页面的用法，并指出两个容易配错的配置点。\",\"datePublished\":\"2026-10-19T14:06:49.672296\",\"dateCreated\":\"2026-10-19T14:06:49.672296\",\"dateModified\":\"2026-10-19T14:06:49.673461\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2258.png\"}"}}],["$","$L2c",null,{"params":"$@2d","articleTitle":"Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用","initialContent":"$2e"}]]
+2d:{"id":"225"}
+29:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+2f:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+27:null
+2b:[["$","title","0",{"children":"Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"Zipkin 是分布式追踪系统，只负责收集、存储与展示，埋点在应用侧由 Brave 完成。本文以谷粒商城为例，逐项说明 Docker 部署参数，给出 Spring Boot 3.5 的完整配置项与默认值，介绍 Find a Trace、瀑布图与 Dependencies 三个页面的用法，并指出两个容易配错的配置点。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/225/"}],["$","meta","5",{"property":"og:title","content":"Zipkin 链路追踪教程：Docker 部署、Spring Boot 接入与页面使用 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"Zipkin 是分布式追踪系统，只负责收集、存储与展示，埋点在应用侧由 Brave 完成。本文以谷粒商城为例，逐项说明 Docker 部署参数，给出 Spring Boot 3.5 的完整配置项与默认值，介绍 Find a Trace、瀑布图与 Dependencies 三个页面的用法，并指出两个容易配错的配置点。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2258.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L2f","15",{}]]
