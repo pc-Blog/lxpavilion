@@ -1,0 +1,469 @@
+1:"$Sreact.fragment"
+2:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+3:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+4:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+5:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+6:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+7:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+8:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+9:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+a:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+b:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+16:I[68027,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default",1]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+:HL["/_next/static/media/geist_latin-s.p.0wgildi0cnwt9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/geist_mono_latin-s.p.0w5z4e7s8jfe5.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/noto_serif_sc_latin-s.p.2xkduggpvd1-n.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+14:X
+0:{"P":null,"c":["","article","228",""],"q":"","i":false,"f":[[["",{"children":["(main)",{"children":["article",{"children":[["id","228","d",[]],{"children":["__PAGE__",{},"$undefined","$undefined",4608]},"$undefined","$undefined",4608]},"$undefined","$undefined",4612]},"$undefined","$undefined",4616]},"$undefined","$undefined",4632],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{}],["$","$L5",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L6",null,{}],["$","$L7",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L8",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L9",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],"$Lc"]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],"$Ld","$Le"]}],"$Lf"]}]}]]}]]}],{"children":["$L10",{"children":["$L11",{"children":["$L12",{"children":["$L13",{},null,false,null]},null,false,"$14"]},null,false,"$14"]},null,false,null]},null,false,null],"$L15",false]],"m":"$undefined","G":["$16",["$L17","$L18"]],"S":true,"h":null,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"22kaSeckt0Y6-cFisFvD_"}
+19:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1a:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1b:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1c:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1d:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+1e:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+25:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+26:"$Sreact.suspense"
+28:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+2a:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+c:["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]
+d:["$","$L19",null,{}]
+e:["$","$L1a",null,{}]
+f:["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]
+10:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true,"nonce":"$undefined"}]],[["$","$L1b",null,{}],["$","$L1c",null,{"children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L1d",null,{"children":["$","$Lb",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$c:props:style","children":["$","h2",null,{"style":"$c:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+11:["$","$L1e",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L1f"]}],"$L20","$L21","$L22"]}]]}],[],null],"children":"$L23"}]
+12:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+13:["$","$1","c",{"children":["$L24",[["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true,"nonce":"$undefined"}]],["$","$L25",null,{"children":["$","$26",null,{"name":"Next.MetadataOutlet","children":"$@27"}]}]]}]
+15:["$","$1","h",{"children":[null,["$","$L28",null,{"children":"$L29"}],["$","div",null,{"hidden":true,"children":["$","$L2a",null,{"children":["$","$26",null,{"name":"Next.Metadata","children":"$L2b"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+17:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+18:["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+14:C
+1f:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+20:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+21:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+22:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+23:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+2c:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+2e:T708a,# 概述
+
+**Nacos** 全称 **Na**ming and **Co**nfiguration **S**ervice，即动态服务发现与配置管理平台，由阿里开源，是 Spring Cloud Alibaba 体系里的核心基础设施。它用一个组件同时承担两件事：服务的注册发现，以及配置的集中管理与推送。放在微服务架构里，它既是“通讯录”，也是“配置分发中心”。
+
+注册中心这一侧解决的问题很具体。服务提供者启动时把自己的 IP、端口、元数据写进 Nacos，消费者订阅服务名，拿到实例列表后本地缓存；实例上线、下线、健康状态变化时，Nacos 主动推送变更，调用方不用轮询。临时实例靠客户端心跳保活，心跳超时即被剔除；持久实例由服务端主动探测。一致性上，临时实例走 AP 模式（Distro 协议，可用性优先），持久实例和配置数据走 CP 模式（Raft，一致性优先），这是它比只支持 AP 的 Eureka 和只支持 CP 的 ZooKeeper 灵活的地方。
+
+配置中心这一侧解决的是“配置改一次就要重新打包发布”的问题。配置按命名空间、分组、Data ID 三层定位，客户端启动时拉取并持续监听，服务端一改，客户端秒级收到并刷新，配合 Spring 的刷新机制可以做到不重启生效。配置还带版本历史，可以回滚。
+
+# 背景
+
+在一个微服务项目里，Nacos 通常同时扮演两个角色：所有业务服务向它注册，网关按服务名做负载均衡路由；各服务的配置从它拉取，需要动态调整的参数放在它这里统一管理。这套组合替代了早期 Eureka 加 Spring Cloud Config 加 Bus 的三件套，部署和接入都更简单。下面的内容不讨论具体业务系统的设计，只围绕 Nacos 本身的安装、接入和使用展开。
+
+# Docker 安装
+
+单机部署最省事的方式是用 Docker Compose 起一个 Nacos 容器，并让它用外部 MySQL 持久化。这样容器重建不会丢配置，也方便后续观察数据库里的表结构。下面是完整的服务定义：
+
+```yaml
+gl-nacos:
+  image: nacos/nacos-server:latest
+  container_name: gl-nacos
+  restart: unless-stopped
+  environment:
+    - MODE=standalone                    # 单机模式
+    - NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123456789
+    - NACOS_AUTH_IDENTITY_KEY=nacos
+    - NACOS_AUTH_IDENTITY_VALUE=nacos
+    - SPRING_DATASOURCE_PLATFORM=mysql   # 使用MySQL持久化
+    - MYSQL_SERVICE_HOST=gl-mysql        # MySQL主机
+    - MYSQL_SERVICE_PORT=3306            # MySQL端口
+    - MYSQL_SERVICE_DB_NAME=nacos        # 数据库名
+    - MYSQL_SERVICE_USER=root            # 用户名
+    - MYSQL_SERVICE_PASSWORD=root        # 密码
+    - MYSQL_DATABASE_NUM=1               # 数据库数量
+    - JVM_XMS=512m                       # JVM初始内存
+    - JVM_XMX=512m                       # JVM最大内存
+  healthcheck:
+    test: ["CMD", "bash", "-c", "curl -fs http://localhost:8848/nacos/v1/ns/operator/metrics | grep -q UP && exec 3<>/dev/tcp/127.0.0.1/9848"]
+    interval: 10s
+    timeout: 5s
+    retries: 30
+    start_period: 60s
+  volumes:
+    - /volume/GrainMall/nacos/log:/home/nacos/logs
+  ports:
+    - "58080:8080"
+    - "58848:8848"
+    - "59848:9848"
+  networks:
+    - GrainMall-network
+  depends_on:
+    gl-mysql:
+      condition: service_healthy
+```
+
+字段可以分成四组看。第一组是运行模式与内存：`MODE=standalone` 表示单机模式，`JVM_XMS` 和 `JVM_XMX` 限制堆内存，512m 是演示环境的常用下限，生产一般从 1g 起。第二组是持久化：`SPRING_DATASOURCE_PLATFORM=mysql` 加上 `MYSQL_SERVICE_*` 五个变量，让 Nacos 把配置和服务元数据写进外部 MySQL，而不是内置的 Derby。第三组是鉴权：`NACOS_AUTH_TOKEN` 和两个 identity 变量用于开启鉴权后的身份校验，演示环境可以保留默认值，生产必须换掉。第四组是端口与依赖：8848 是主端口，9848 是客户端 gRPC 端口，8080 是 3.x 之后独立出来的控制台端口；`depends_on` 让 Nacos 等 MySQL 健康后再启动，避免连不上库导致上下文刷新失败。
+
+健康检查这一行值得单独说明。Nacos 3.x 已经移除了 `/nacos/v1/console/health/readiness` 这个探活接口，直接探它只会得到 404，所以这里改用 8848 上实测可用的 naming metrics 接口判断 `UP`，同时用 `/dev/tcp` 探测 9848。之所以必须探 9848，是因为客户端注册走的就是这个 gRPC 端口，它没有监听时，服务注册会直接以 `NacosException: Client not connected, current status:STARTING` 终止启动，而容器本身看起来还是健康的。
+
+端口映射要特别注意版本差异。Nacos 2.x 的控制台挂在 8848 的 `/nacos` 路径下，访问 `http://localhost:8848/nacos` 就能打开；3.x 把控制台拆成了独立的 8080 服务，8848 只保留 API。所以浏览器要打开的是 `http://localhost:58080/`，访问 58848 只会得到一个 404，这不是部署失败，而是端口用错了。
+
+## 一个容易踩的坑：3.2 之后的缺表报错
+
+用 `latest` 标签拉镜像时，镜像会悄悄升级到新版本，而数据库 schema 不会跟着变。升级到 3.2 之后，控制台会出现这样的报错：
+
+```text
+PreparedStatementCallback; bad SQL grammar
+[SELECT count(*) FROM ai_resource WHERE namespace_id = ? AND type = ?]
+```
+
+`ai_resource` 是 Nacos 3.2 新增的 AI 资源表，旧版 schema 里没有这张表，所以控制台一打开查询就报 SQL 语法错误。官方升级手册的流程是“先升级数据库 schema，再升级服务”，修复时按这个顺序做：先从正在运行的容器里取出与镜像版本严格对应的 schema 文件（`/home/nacos/conf/mysql-schema.sql`），再备份并重建 `nacos` 库，最后把新 schema 导入。新版本还额外带了 `ai_resource_version` 和 `pipeline_execution` 两张表，只补 `ai_resource` 一张并不够。
+
+重建之前可以先确认库里没有业务数据。用 `SHOW TABLES` 和逐表 `COUNT(*)` 查一遍，如果 `config_info`、`his_config_info` 都是 0 行，只有 `users`、`roles`、`tenant_info` 各有 1 行，那这些是 Nacos 建库时自带的初始化数据，重建后会自动恢复，删库没有业务损失。反过来，如果已经有配置，就不能整库重建，只能从 schema 文件里提取缺失表的建表语句单独执行，避免误删。
+
+# 依赖引入
+
+服务端依赖集中在公共模块里声明，业务服务通过依赖公共模块继承，避免每个服务重复写一遍：
+
+```xml
+<dependencies>
+
+    <!-- Nacos 服务注册与发现 -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        <version>2023.0.1.0</version>
+    </dependency>
+
+    <!-- Nacos 配置中心 -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        <version>2023.0.1.0</version>
+    </dependency>
+
+    <!-- Sentinel 客户端（流控/熔断/降级） -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        <version>2023.0.1.0</version>
+    </dependency>
+
+    <!-- Sentinel 规则持久化到 Nacos；starter 只带装配层，不带实现类，这行必须单独加 -->
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-datasource-nacos</artifactId>
+        <version>1.8.6</version>
+    </dependency>
+
+</dependencies>
+```
+
+四个依赖的分工很清楚：`nacos-discovery` 负责注册与发现，`nacos-config` 负责配置拉取与监听，`spring-cloud-starter-alibaba-sentinel` 是流控客户端，`sentinel-datasource-nacos` 让 Sentinel 的规则能从 Nacos 读取。最后这个容易漏：只引 Sentinel starter 时，规则持久化需要的 `NacosDataSource` 实现类并不在包里，运行到规则加载那一步才会报找不到类。
+
+版本上要注意，这三个 starter 是 2023.0.1.0，对应 Spring Cloud Alibaba 2023 线。如果项目同时升级了 Spring Boot 和 Spring Cloud，这个组合就属于“手工对齐”而不是官方配套，能跑，但升级任意一方前都要先验证。后台管理如果还是 Java 8 加 Spring Boot 2.6 的老技术栈，它引的 `nacos-discovery` 版本会是 2021.0.5.0，两套客户端注册到同一个 Nacos 服务端没有问题，Nacos 兼容不同版本的客户端协议。
+
+# yaml 配置
+
+客户端侧的配置量很小，核心就这几行：
+
+```yaml
+spring:
+  application:
+    name: gulimall-product
+  config:
+    import:
+      # optional：Nacos 没起来也能启动
+      - optional:nacos:${spring.application.name}.yaml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        namespace: public
+```
+
+`spring.application.name` 不只是服务名，它同时决定了注册到 Nacos 的服务标识、配置的 Data ID 前缀。`spring.config.import` 是 Spring Boot 2.4 之后替代 `bootstrap.yml` 的机制，写成 `nacos:` 前缀表示从 Nacos 拉配置。`optional:` 前缀表示这份配置可以不存在：Nacos 没启动、或者配置还没建，服务依然能启动，只是用本地值。这个前缀对本地开发很关键，否则启动顺序会变成“必须先起 Nacos 再起服务”。
+
+`discovery` 和 `config` 两个节点下的 `server-addr` 都是 Nacos 地址，但分别作用于注册和配置。`file-extension: yaml` 决定 Data ID 的后缀，也决定 Nacos 按 YAML 解析配置内容。`group` 和 `namespace` 是配置的隔离维度，默认分别是 `DEFAULT_GROUP` 和 `public`。
+
+Data ID 不是随便起的，它由客户端按规则拼出来。上面的写法等价于 `dataId = ${spring.application.name}.yaml`，服务名是 `gulimall-product` 时，客户端拉的就是 `gulimall-product.yaml`。如果在 import 里显式带 group 参数，比如 `optional:nacos:${spring.application.name}.yaml?group=gulimall`，Group 就取 URL 里的值；namespace 则从 `spring.cloud.nacos.config.namespace` 读取。三者合起来构成定位一个配置的完整坐标：namespace、group、dataId，客户端日志里的 `[subscribe] order.yaml+gulimall+gulimall` 就是这三个值。
+
+本地配置和 Nacos 配置同时存在时，后导入的优先级更高。`spring.config.import` 列表里，后面的条目覆盖前面的条目，所以把本地默认值放在前面、Nacos 配置放在后面，就能实现“本地兜底、Nacos 覆盖”的效果。理解这一点，后面排查“改了 Nacos 为什么不生效”时就不会先怀疑配置中心，而是先看导入顺序和 key 名。
+
+# 网关
+
+网关本身不属于 Nacos，但它和 Nacos 的关系最紧密：路由里写的 `lb://order`，`lb` 背后的实例列表就来自 Nacos 的注册中心。网关能通，说明服务注册成功；网关报 `503 no servers available`，说明 Nacos 里没有可用实例。所以这一节放在 Nacos 教程里，讲的是“Nacos 注册中心怎么被网关消费”。
+
+## 网关格外的配置
+
+网关模块需要额外引入负载均衡和网关本体，以及 Sentinel 的网关适配：
+
+```xml
+<dependencies>
+    <!-- 1. 公共模块：传递 Nacos 注册/配置、Sentinel 客户端 -->
+    <dependency>
+        <groupId>fun.gulimall</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <!-- 2. 负载均衡：lb:// 路由的底层支撑 -->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+    </dependency>
+
+    <!-- 3. Servlet Web 容器：MVC 版网关需要 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- 4. 网关本体（注意是 server-webmvc 版） -->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-gateway-server-webmvc</artifactId>
+    </dependency>
+
+    <!-- 5. Sentinel 网关集成（进阶：网关层流控） -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
+        <version>2023.0.1.0</version>
+    </dependency>
+</dependencies>
+```
+
+这里有个容易混淆的点：Spring Cloud Gateway 有两套实现，传统的 WebFlux 版和新的 MVC 版。MVC 版跑在 Servlet 栈上，配置前缀是 `spring.cloud.gateway.server.webmvc.routes`，过滤器写普通 `OncePerRequestFilter`；WebFlux 版的前缀是 `spring.cloud.gateway.routes`，过滤器是 `GlobalFilter`。照着旧教程写 WebFlux 的配置，启动不会报错，但路由一条都不生效。上面引入的 `spring-cloud-starter-gateway-server-webmvc` 和 `starter-web` 就是 MVC 版的组合。
+
+## yaml 配置
+
+除了 Nacos 相关的配置，网关还有一套路由配置：
+
+```yaml
+spring:
+  application:
+    name: gateway                # ① 服务名，同时是 Nacos 的 dataId
+  config:
+    import:
+      - optional:classpath:application-common.yaml   # ② 继承公共配置
+  cloud:
+    gateway:
+      server:
+        webmvc:                  # ③ MVC 版特有前缀
+          routes:                # ④ 路由列表
+            - id: order-route
+              uri: lb://order
+              predicates:
+                - Path=/api/order/**
+              filters:
+                - RewritePath=/api/(?<segment>.*),/$\{segment}
+            # ... 其余路由
+            - id: admin-route    # ⑤ 兜底路由必须放最后
+              uri: lb://renren-fast
+              predicates:
+                - Path=/api/**
+              filters:
+                - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+```
+
+一条路由有四个要素。`id` 是路由唯一标识，日志和排查时用来定位。`uri` 是目标地址，`lb://服务名` 表示交给 Spring Cloud LoadBalancer 从 Nacos 拿实例列表再挑一个，而不是写死 IP。`predicates` 是匹配条件，多个条件是“并且”关系。`filters` 是转发前后的加工，`RewritePath` 把 `/api/order/front/list` 重写成 `/order/front/list`，剥掉前端统一前缀，因为后端服务自己不认识 `/api`。
+
+路由按声明顺序匹配，不是“最具体优先”。如果把 `Path=/api/**` 这条兜底路由写在前面，它会抢走 `/api/order/**`、`/api/search/**` 等所有请求，全部转发到后台服务，表现就是 401 或者 404。所以通配路由必须放最后，所有具体路由写在它前面。这个坑在日志里很难直接看出来，排查时先看请求路径是不是被通配路由截走了。
+
+`RewritePath` 的语法值得单独提一句：`/api/(?<segment>.*),/$\{segment}` 用命名捕获组把 `/api` 后面的部分取出来，替换到目标路径里。YAML 里 `$` 后面紧跟 `{` 会被当成占位符解析，所以必须写成 `$\{segment}` 转义。等价的效果也可以用 `StripPrefix=1` 实现，但 `RewritePath` 更灵活，可以改成不同的前缀，比如后台的 `/renren-fast/${segment}`。
+
+## 断言（predicates）
+
+断言决定“什么请求走这条路由”。常用的几类如下：
+
+| 断言 | 作用 | 示例 |
+|---|---|---|
+| `Path` | 按路径匹配，最常用 | `Path=/api/order/**` |
+| `Method` | 按 HTTP 方法匹配 | `Method=POST` |
+| `Host` | 按域名匹配 | `Host=auth.example.com` |
+| `Header` | 按请求头匹配，常用于灰度 | `Header=X-Env, gray` |
+| `Query` | 按查询参数匹配 | `Query=debug,true` |
+| `Cookie` | 按 Cookie 匹配 | `Cookie=sessionId, abc` |
+| `After` / `Before` / `Between` | 按时间窗口匹配，适合限时活动 | `Between=2026-11-01T00:00:00+08:00,2026-11-12T00:00:00+08:00` |
+| `RemoteAddr` | 按来源 IP 匹配，适合内网放行 | `RemoteAddr=192.168.0.0/16` |
+| `Weight` | 按权重分流，适合灰度发布 | `Weight=group1, 80` |
+
+多个断言是“并且”语义，需要“或者”就拆成多条路由。`Host` 路由和 `Path` 路由的适用场景不同：SPA 的 fetch 请求 Host 是 `localhost:53000`，永远匹配不到 `Host=auth.example.com` 这种规则，只有整页跳转或服务端回调才会带上业务域名。
+
+## 过滤器（filters）
+
+过滤器决定“转发前后做什么”。常用项如下：
+
+| 过滤器 | 作用 | 示例 |
+|---|---|---|
+| `RewritePath` | 重写路径，剥前缀或换前缀 | `RewritePath=/api/(?<segment>.*),/$\{segment}` |
+| `StripPrefix` | 去掉前 N 段路径 | `StripPrefix=1` |
+| `PrefixPath` | 加前缀 | `PrefixPath=/api` |
+| `SetPath` | 直接设置路径模板 | `SetPath=/product/{segment}` |
+| `AddRequestHeader` | 加请求头 | `AddRequestHeader=X-Gateway, true` |
+| `RemoveRequestHeader` | 删请求头，防伪造 | `RemoveRequestHeader=X-User-Id` |
+| `SetRequestHeader` | 覆盖请求头 | `SetRequestHeader=X-Trace, ${traceId}` |
+| `AddResponseHeader` | 加响应头 | `AddResponseHeader=X-Response-From, gateway` |
+| `DedupeResponseHeader` | 去重响应头，跨域头重复时用 | `DedupeResponseHeader=Access-Control-Allow-Origin` |
+| `RedirectTo` | 重定向 | `RedirectTo=302, https://example.com` |
+| `SetStatus` | 固定返回状态码 | `SetStatus=401` |
+
+过滤器按声明顺序执行，`RewritePath` 和 `StripPrefix` 混用时要小心双重裁剪。跨域相关的响应头如果网关和下游服务都加了，会出现重复，这时用 `DedupeResponseHeader` 去重。
+
+## 与代码结合
+
+实际项目里经常有这种需求：转发请求时执行一段代码，取出某个数据，塞进请求头传给下游。典型场景是登录校验：网关解析前端带来的 JWT，校验通过后把用户 ID、租户 ID 写进内部请求头，下游服务直接从请求头取身份，不再重复解析。这类需求有两种实现方式。
+
+### 方法一：Servlet Filter
+
+MVC 版网关本质是 Servlet 应用，最直接的做法是写一个 `OncePerRequestFilter`：
+
+```java
+@Component
+public class TenantHeaderFilter extends OncePerRequestFilter {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain chain) throws ServletException, IOException {
+        // 在这里执行任意代码：解析 JWT、查 Redis、调服务……
+        String tenantId = resolveTenant(request);
+
+        // 包装请求，把数据塞进头（并屏蔽客户端伪造的同名头）
+        chain.doFilter(new HeaderWrapper(request, tenantId), response);
+    }
+}
+```
+
+这个写法不依赖网关的任何扩展点，本质是请求预处理的通用手段，任何 Servlet 应用都能用。优点是简单、全局生效，能写任意同步代码，查库、调服务都不受限；缺点是它不感知路由，所有请求都会经过，也不能按路由开关。示例里的 `HeaderWrapper` 是关键细节：它在包装请求时把客户端传的同名头抹掉，只保留网关写入的值，否则任何人加一个 `X-Tenant-Id` 头就能冒充身份。
+
+### 方法二：自定义 HandlerFilterFunction 加 YAML 声明
+
+官方推荐的扩展方式是写一个返回 `HandlerFilterFunction` 的静态方法，再注册成过滤器工厂，最后在 YAML 里按名字引用：
+
+```java
+public class TenantFilterFunctions {
+
+    public static HandlerFilterFunction<ServerResponse, ServerResponse> addTenantHeader(String headerName) {
+        return (request, next) -> {
+            // 取数逻辑：解析 JWT、查 Redis、调服务……
+            String tenantId = resolveTenantId(request);
+
+            ServerRequest modified = ServerRequest.from(request)
+                    .header(headerName, tenantId)
+                    .build();
+
+            return next.handle(modified);
+        };
+    }
+}
+```
+
+注册时需要继承 `SimpleFilterSupplier` 并声明成 Bean：
+
+```java
+@Configuration
+class FilterConfiguration {
+    @Bean
+    public SimpleFilterSupplier tenantFilterSupplier() {
+        return new SimpleFilterSupplier(TenantFilterFunctions.class);
+    }
+}
+```
+
+之后就能在路由的 `filters` 里按方法名引用，参数通过 `args` 传入：
+
+```yaml
+- id: order-route
+  uri: lb://order
+  predicates:
+    - Path=/api/order/**
+  filters:
+    - RewritePath=/api/(?<segment>.*),/$\{segment}
+    - name: addTenantHeader
+      args:
+        headerName: X-Tenant-Id
+```
+
+两种方式的选择标准很实际：如果逻辑对所有请求都要生效（比如统一登录校验、客户端 IP 注入），用 Servlet Filter 更省事；如果只对部分路由生效、需要按路由配参数，用 `HandlerFilterFunction` 更规范。要注意 MVC 版和 WebFlux 版的 API 完全不同，WebFlux 用的是 `ServerWebExchange` 和 `GlobalFilter`，照抄会编译不过。
+
+# 配置中心
+
+## 为什么需要配置中心
+
+代码里已经有 `application.yml`，为什么还要把配置搬到 Nacos？因为本地配置文件有三个绕不过去的局限：改一个限流阈值要重新打包、重新构建镜像、重启服务；多实例部署时要逐个改、逐个重启；改错了没有版本记录，只能翻 Git 历史再走一次发布。配置中心把这三件事变成“控制台改一下、客户端秒级生效、历史版本可回滚”。
+
+## 进入页面
+
+![image.png](/data/media/2271.png)
+
+这是 Nacos 新版本的控制台首页，默认落在 AI 注册中心的 Skill 管理页。3.x 加入了 AI 资源管理相关的能力，Skill 管理页显示共有 174 个内置 Skill，这些与配置中心无关，不用管。左侧菜单里的“配置管理”和“服务管理”才是日常使用频率最高的两块。
+
+## 创建命名空间
+
+命名空间是 Nacos 最外层的隔离单元，用来隔离环境（开发、测试、生产）或租户。服务注册和配置读取都可以指定命名空间，彼此不会串。它对应 Java 配置里的 `spring.cloud.nacos.config.namespace` 和 `spring.cloud.nacos.discovery.namespace`。
+
+![image.png](/data/media/2274.png)
+
+命名空间列表默认只有 public 一个，它带着 2263 条配置，这些是 Nacos 内置的 AI 资源数据，不是业务配置；截图时刚删掉一个测试命名空间，顶部的成功提示还在。业务使用的命名空间需要单独新建。
+
+![image.png](/data/media/2277.png)
+
+创建弹窗里有三个字段：命名空间名称、命名空间 ID 和描述。名称是给人看的展示名，可以随便起；ID 是唯一标识，Java 配置里填的是 ID，不是名称。如果 ID 留空，Nacos 会自动生成一串 UUID。
+
+这里有一个必须注意的细节：因为客户端配置里写的是 namespace ID，如果创建时留空自动生成 UUID，Java 里就得填那串 UUID；填错或者填成名称，客户端就找不到命名空间，配置拉不到。而且因为用了 `optional:`，拉不到不会报错，服务静默使用本地值，排查起来很费时间。所以创建时直接把 ID 手动填成业务名（比如 `gulimall`），Java 里也配 `gulimall`，两边一致，可读性最好。ID 一旦创建就不能修改，填错只能删了重建。
+
+## 查看注册的服务
+
+![image.png](/data/media/2278.png)
+
+服务列表在“服务管理”下，能看到服务名、分组、集群数、IP 数、健康实例数，还有一列“触发保护阈值”，表示实例数低于阈值时保护机制是否已经生效；点进服务还能看到每个实例的 IP、端口、权重和元数据。这里要注意命名空间：如果服务注册时没有显式配置 `discovery.namespace`，它们会落在默认的 `public` 空间，而不是配置中心用的业务空间。两边的命名空间可以不同，但统一之后控制台不用来回切换，权限模型也更简单。服务列表为空通常有两个原因：服务没启动，或者 Nacos 重启过——默认的临时实例存在内存里，Nacos 一重启就清空，服务不重启不会重新注册。
+
+## 添加配置
+
+![image.png](/data/media/2279.png)
+
+新建配置的必填项是 Data ID、Group 和配置内容，配置格式选 YAML；描述、归属应用、标签都是可选项，可以留空。Data ID 不是随便起的，它由客户端按 `${spring.application.name}.${file-extension}` 拼出来，服务名是 `order`、格式是 yaml 时，Data ID 就是 `order.yaml`。Group 要和 YAML 里 `spring.cloud.nacos.config.group` 一致，默认是 `DEFAULT_GROUP`，改成业务分组后两边必须同步。配置格式决定 Nacos 如何解析内容，选错会导致解析失败。配置内容就是一段 YAML，随便写个键值对就能用来验证，比如 `app.demo: hello-nacos`。
+
+发布之后，订阅了这份配置的服务会立刻收到推送。验证是否成功，最直接的办法是看客户端日志：
+
+```text
+Ack server push request, request = ConfigChangeNotifyRequest
+[data-received] dataId=order.yaml, group=gulimall, tenant=gulimall, content=app:
+[Nacos Config] Load config[dataId=order.yaml, group=gulimall] success
+Refresh keys changed: [app.demo]
+```
+
+这四行分别对应四件事：服务端推送到达、客户端收到内容、配置加载成功、环境里的 `app.demo` 被标记为已变更。看到最后一行，说明配置已经进入 Spring 的 Environment，后续代码里通过 `@Value` 或 `@ConfigurationProperties` 就能读到。如果日志里完全没有这些记录，先检查 Data ID、Group、命名空间三个值是否和客户端配置一致。
+
+## 配置的常用操作
+
+### 动态刷新
+
+![image.png](/data/media/2280.png)
+
+改完配置点发布，会先弹出确认框，左侧是当前已发布内容、右侧是待发布内容，逐行标出差异，确认后才真正提交。发布后客户端会收到推送并刷新 Environment，服务不需要重启。日志里会再次出现 `Refresh keys changed`，本地快照也会同步更新。这里要区分两种读配置的写法：`@Value("${app.demo}")` 注入的普通 Bean 不会自动更新，因为值在 Bean 创建时就固定了；类上加 `@RefreshScope` 后，刷新时这个 Bean 会被销毁重建，值才会变；`@ConfigurationProperties` 绑定的配置类则会自动重新绑定，不需要额外注解。选哪种写法取决于这个配置是否需要热更新，以及改动的频率。
+
+### 版本回滚
+
+![image.png](/data/media/2281.png)
+
+每次发布，Nacos 都会在历史表里追加一条记录，包含内容、md5、操作类型、操作人和时间。配置列表里点“历史版本”就能看到全部记录，每条都带发布类型、操作人和最后更新时间，可以查看某一版的内容、和当前版本做对比，也可以回滚。回滚的本质不是“激活旧记录”，而是把旧版本的内容**再发布一次**，所以回滚之后版本号继续递增，历史记录只增不减。回滚是全局生效的，所有订阅该 Data ID 的客户端都会刷新，不能只对某个实例回滚——那是灰度发布的能力。
+
+## 其他知识点
+
+本地快照是客户端侧的机制：客户端每次拿到配置，都会在本地磁盘写一份副本。它存在业务服务自己的容器里，不在 Nacos 容器里。路径形如 `~/nacos/config/fixed-{服务端地址}_{端口}_{namespace}/snapshot-tenant/{namespace}/{group}/{dataId}`，内容是明文 YAML。
+
+快照的作用是让服务在 Nacos 不可用时也能启动：客户端启动先读本地快照，再尝试向服务端拉最新配置，拉不到就继续用快照，日志里会有连接失败的告警。这也解释了为什么配置要用 `optional:`——即使 Nacos 完全挂掉，服务依然能起来。和快照容易混淆的是 failover：快照是客户端自动写的缓存，failover 是人工放的本地文件，后者优先级更高，会覆盖服务端的值，通常用于应急。
+
+快照在容器里，容器重建就会丢失，下次启动重新从 Nacos 拉，不影响正确性。排查“配置明明改了但服务还是旧值”时，可以删掉快照再重启，强制重新拉取。
+
+# 结语
+
+Nacos 的两个能力——注册发现和配置管理——在接入层面都不复杂，真正容易出问题的是那些“不报错”的细节：控制台端口从 8848 挪到了 8080，命名空间填的是 ID 而不是名称，Data ID 由客户端拼接而不是随意命名，`optional:` 让配置拉取失败静默降级。把这些点先想清楚，再去看服务列表和配置列表，大部分“明明配了却不生效”的问题都能在几分钟内定位。
+24:[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战\",\"item\":\"https://www.lxpavilion.top/article/228\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战\",\"headline\":\"Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战\",\"description\":\"以 Docker Compose 部署 Nacos 3.x 为起点，依次完成依赖引入、YAML 配置、网关接入与配置中心实战：创建命名空间、发布配置、观察动态刷新日志、用历史版本回滚、理解客户端本地快照。文中记录了 3.2 版本缺表报错和命名空间 ID 填错的排查过程，配置可直接照做。\",\"datePublished\":\"2026-11-03T11:03:36.32661\",\"dateCreated\":\"2026-11-03T11:03:36.32661\",\"dateModified\":\"2026-11-03T11:03:36.334875\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2282.png\"}"}}],["$","$L2c",null,{"params":"$@2d","articleTitle":"Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战","initialContent":"$2e"}]]
+2d:{"id":"228"}
+29:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+2f:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+27:null
+2b:[["$","title","0",{"children":"Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"以 Docker Compose 部署 Nacos 3.x 为起点，依次完成依赖引入、YAML 配置、网关接入与配置中心实战：创建命名空间、发布配置、观察动态刷新日志、用历史版本回滚、理解客户端本地快照。文中记录了 3.2 版本缺表报错和命名空间 ID 填错的排查过程，配置可直接照做。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/228/"}],["$","meta","5",{"property":"og:title","content":"Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"以 Docker Compose 部署 Nacos 3.x 为起点，依次完成依赖引入、YAML 配置、网关接入与配置中心实战：创建命名空间、发布配置、观察动态刷新日志、用历史版本回滚、理解客户端本地快照。文中记录了 3.2 版本缺表报错和命名空间 ID 填错的排查过程，配置可直接照做。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2282.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L2f","15",{}]]

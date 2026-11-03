@@ -1,6 +1,37 @@
 {
-  "total": 121,
+  "total": 122,
   "rows": [
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2282.png",
+      "createdAt": "2026-11-03T11:03:36.32661",
+      "id": 228,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": null,
+      "summary": "以 Docker Compose 部署 Nacos 3.x 为起点，依次完成依赖引入、YAML 配置、网关接入与配置中心实战：创建命名空间、发布配置、观察动态刷新日志、用历史版本回滚、理解客户端本地快照。文中记录了 3.2 版本缺表报错和命名空间 ID 填错的排查过程，配置可直接照做。",
+      "tags": [
+        {
+          "id": 62,
+          "name": "Docker"
+        },
+        {
+          "id": 74,
+          "name": "Spring Boot"
+        },
+        {
+          "id": 94,
+          "name": "微服务"
+        },
+        {
+          "id": 97,
+          "name": "Nacos"
+        }
+      ],
+      "title": "Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战",
+      "updateTime": "2026-11-03T11:03:36.334875"
+    },
     {
       "categoryId": 37,
       "categoryName": "Ai编程",

@@ -1,6 +1,13 @@
 {
-  "total": 64,
+  "total": 65,
   "rows": [
+    {
+      "createTime": "2026-11-03T10:54:07.455796",
+      "deleted": 0,
+      "id": 97,
+      "name": "Nacos",
+      "updateTime": "2026-11-03T10:54:07.455903"
+    },
     {
       "createTime": "2026-10-22T18:14:48.17988",
       "deleted": 0,

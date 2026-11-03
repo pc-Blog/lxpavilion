@@ -8,6 +8,19 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战]]></title>
+      <link>https://www.lxpavilion.top/article/228/</link>
+      <guid>https://www.lxpavilion.top/article/228/</guid>
+      <pubDate>Tue, 03 Nov 2026 11:03:36 GMT</pubDate>
+      <description><![CDATA[以 Docker Compose 部署 Nacos 3.x 为起点，依次完成依赖引入、YAML 配置、网关接入与配置中心实战：创建命名空间、发布配置、观察动态刷新日志、用历史版本回滚、理解客户端本地快照。文中记录了 3.2 版本缺表报错和命名空间 ID 填错的排查过程，配置可直接照做。]]></description>
+      <category>技术教程</category>
+      <tag>Docker</tag>
+      <tag>Spring Boot</tag>
+      <tag>微服务</tag>
+      <tag>Nacos</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[AI 智能体在 Windows 反复报错的原因：PowerShell 5.1 与 PowerShell 7 的错配]]></title>
       <link>https://www.lxpavilion.top/article/227/</link>
       <guid>https://www.lxpavilion.top/article/227/</guid>
@@ -230,18 +243,6 @@
       <guid>https://www.lxpavilion.top/article/207/</guid>
       <pubDate>Sat, 15 Aug 2026 01:47:12 GMT</pubDate>
       <description><![CDATA[试用 DeepSeek Harness 时，我发现它写入文件前会检查文件是否被外部修改，版本不一致就拒绝写入。用同样的指令实测 Claude Code、Trae 和 Codex，发现只有 DSH 会拦下覆盖。本文记录这个发现、背后的机制与多工具对比结果。]]></description>
-      <category>Ai编程</category>
-      <tag>AI应用</tag>
-      <tag>Ai编程</tag>
-      <tag>deepseek</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DeepSeek Harness 创建 skill 指南：结构、安装、使用]]></title>
-      <link>https://www.lxpavilion.top/article/206/</link>
-      <guid>https://www.lxpavilion.top/article/206/</guid>
-      <pubDate>Sat, 15 Aug 2026 01:46:13 GMT</pubDate>
-      <description><![CDATA[手把手教你在 DeepSeek Harness 中创建 skill：SKILL.md 结构、安装位置、两种调用方式。重点分享一个真实踩坑——frontmatter 里的冒号+空格会让 skill 被静默丢弃，表现为目录为空、工具报 unknown，附完整排查过程与避坑清单。]]></description>
       <category>Ai编程</category>
       <tag>AI应用</tag>
       <tag>Ai编程</tag>
