@@ -1,6 +1,33 @@
 {
-  "total": 122,
+  "total": 123,
   "rows": [
+    {
+      "categoryId": 45,
+      "categoryName": "工具教程",
+      "coverImage": "/data/media/2295.png",
+      "createdAt": "2026-11-04T09:58:59.142971",
+      "id": 229,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": null,
+      "summary": "在 Windows 上用 VMware Workstation 17 安装 Linux Mint Cinnamon 的完整步骤，包含镜像校验、客户机配置、引导菜单与安装器选项。重点记录实际遇到的四个故障：EOL 版本导致软件源 404、Easy Install 不适用于 Mint、挂起状态使硬件设置不可修改、首次启动 Cinnamon 崩溃进入回退模式，并给出各自的判断依据与处理命令。",
+      "tags": [
+        {
+          "id": 63,
+          "name": "Linux"
+        },
+        {
+          "id": 89,
+          "name": "Windows"
+        },
+        {
+          "id": 90,
+          "name": "故障排查"
+        }
+      ],
+      "title": "VMware Workstation 17 安装 Linux Mint Cinnamon 完整步骤与四个坑",
+      "updateTime": "2026-11-04T10:01:47.977406"
+    },
     {
       "categoryId": 41,
       "categoryName": "技术教程",

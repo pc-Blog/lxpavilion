@@ -8,6 +8,18 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[VMware Workstation 17 安装 Linux Mint Cinnamon 完整步骤与四个坑]]></title>
+      <link>https://www.lxpavilion.top/article/229/</link>
+      <guid>https://www.lxpavilion.top/article/229/</guid>
+      <pubDate>Wed, 04 Nov 2026 09:58:59 GMT</pubDate>
+      <description><![CDATA[在 Windows 上用 VMware Workstation 17 安装 Linux Mint Cinnamon 的完整步骤，包含镜像校验、客户机配置、引导菜单与安装器选项。重点记录实际遇到的四个故障：EOL 版本导致软件源 404、Easy Install 不适用于 Mint、挂起状态使硬件设置不可修改、首次启动 Cinnamon 崩溃进入回退模式，并给出各自的判断依据与处理命令。]]></description>
+      <category>工具教程</category>
+      <tag>Linux</tag>
+      <tag>Windows</tag>
+      <tag>故障排查</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战]]></title>
       <link>https://www.lxpavilion.top/article/228/</link>
       <guid>https://www.lxpavilion.top/article/228/</guid>
@@ -231,18 +243,6 @@
       <guid>https://www.lxpavilion.top/article/208/</guid>
       <pubDate>Sat, 15 Aug 2026 01:47:39 GMT</pubDate>
       <description><![CDATA[DeepSeek 涨价后，我把 DeepSeek Harness 的主对话模型切到了 opencode，却意外发现联网搜索仍在消耗 DeepSeek 额度。本文记录这次切换的实测体验，扒一下联网搜索的真实机制，确认 opencode 是否支持替换搜索供应商，并附上几条实际可行的处理方案。]]></description>
-      <category>Ai编程</category>
-      <tag>AI应用</tag>
-      <tag>Ai编程</tag>
-      <tag>deepseek</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DeepSeek Harness 试用发现：AI 会不会覆盖你手动改的文件？]]></title>
-      <link>https://www.lxpavilion.top/article/207/</link>
-      <guid>https://www.lxpavilion.top/article/207/</guid>
-      <pubDate>Sat, 15 Aug 2026 01:47:12 GMT</pubDate>
-      <description><![CDATA[试用 DeepSeek Harness 时，我发现它写入文件前会检查文件是否被外部修改，版本不一致就拒绝写入。用同样的指令实测 Claude Code、Trae 和 Codex，发现只有 DSH 会拦下覆盖。本文记录这个发现、背后的机制与多工具对比结果。]]></description>
       <category>Ai编程</category>
       <tag>AI应用</tag>
       <tag>Ai编程</tag>
