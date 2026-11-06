@@ -1,0 +1,33 @@
+{
+  "categoryId": 45,
+  "categoryName": "工具教程",
+  "content": "在 Windows 上准备一台可随时丢弃的 Linux 桌面，最省事的路径是 VMware Workstation 加 Linux Mint。安装本身没有难度，但从选镜像到首次进入桌面，有四处会卡住。以下按操作顺序记录，每一步都标注了对应的界面与验证方式。\n\n## 选择镜像与校验\n\nLinux Mint 官网的下载页给出的是镜像列表与 torrent，实际文件仍从镜像站获取，因此直接使用国内镜像通常更快。清华 TUNA 的目录按版本分层：\n\n[Index of /linuxmint-cd/stable/ | 清华大学开源软件镜像站](https://mirrors.tuna.tsinghua.edu.cn/linuxmint-cd/stable/)\n\n进入目标版本目录后有三个 ISO，分别对应 Cinnamon、Mate、Xfce 三种桌面。三者使用不同的窗口管理器，Cinnamon 使用 Muffin。若后续需要验证的行为与窗口管理有关，只能用 Cinnamon 版，换另外两个版本得到的结论不具备可比性。\n\n镜像大小约 2.9 GiB。下载完成后先校验，避免安装到一半才发现文件损坏：\n\n```powershell\ncertutil -hashfile .\\linuxmint-22.3-cinnamon-64bit.iso SHA256\n```\n\n输出与同目录 `sha256sum.txt` 中对应行一致即可。\n\n**第一个坑是版本号。** 目录列表里 19.3 到 22.3 都在，很容易点进靠前的旧版本。以 20.3 为例，其哈希可以与官方校验文件完全一致、文件无损，但该版本已 EOL，Ubuntu 基础源被迁移到 `old-releases.ubuntu.com`，随后执行 `apt update` 会返回大量 404，安装 `open-vm-tools` 前必须先把 `/etc/apt/sources.list` 里的源地址改掉。版本号在向导与引导菜单里也会显示，确认成本很低，值得先看一眼。\n\n## 新建虚拟机\n\nVMware 中「文件 → 新建虚拟机」，第一屏保持「典型」，自定义配置没有必要。\n\n![image.png](/data/media/2283.png)\n\n第二屏是整个流程中唯一不能按默认走的地方：选**「稍后安装操作系统」**，不要选上面两项。\n\n如果在这一屏指定 ISO，VMware 会把安装过程接管为 Easy Install，按 Ubuntu 的方式做无人值守安装。Mint 的安装器不属于该流程，实测会在中途停住，或者由 VMware 自行填入用户名与密码。选「稍后安装」只创建一台空硬盘虚拟机，安装完全交给 Mint 自己的安装器，可控性更高。\n\n这一屏还会暴露一个历史遗留项：下拉框里显示的 `D:\\Source\\softwave\\操作系统\\CentOS-7-x86_64-DVD-2...` 是此前创建 CentOS 虚拟机时留下的记录，对应目录已不存在，因此下方提示「无法读取此文件」。该提示不影响后续步骤，也不需要在这里处理，因为一在此处挂载 ISO 就会回到 Easy Install 的分支。\n\n![image.png](/data/media/2284.png)\n\n第三屏的客户机操作系统选 **Linux → Ubuntu 64 位**。Mint 基于 Ubuntu，该模板提供的硬件组合与实际系统一致。\n\n![image.png](/data/media/2285.png)\n\n## 挂载 ISO 与硬件配置\n\n在最后一屏点「自定义硬件」，完成以下设置。\n\n**CD/DVD**：连接方式选「使用 ISO 映像文件」，指定下载的镜像。这是挂载镜像的实际位置，与第二屏的选项互不影响。\n\n![image.png](/data/media/2286.png)\n\n**内存与磁盘**：内存 4 GB，磁盘 40 GB。系统本身约占 12 GB，剩余空间留给 Node、Electron 与依赖。磁盘选择「拆分成多个文件」，不勾「立即分配磁盘空间」，实际占用随写入增长。\n\n打印机与声卡可以直接移除。设备越少，虚拟机的硬件配置越容易核对。\n\n完成前的汇总页需要确认三项：名称与位置、磁盘容量、内存与 CPU 核数。\n\n![image.png](/data/media/2287.png)\n\n## 启动与安装\n\n开机后进入 Mint 引导菜单，默认项 `Start Linux Mint` 即正确入口。\n\n![image.png](/data/media/2288.png)\n\n该界面底部提示 `Press [Tab] to edit options`。按到 Tab 会进入启动参数编辑模式，屏幕显示完整的 `initrd=/casper/initrd.lz quiet splash --` 命令行并停在那里，外观与卡死相似。此时按 Esc 可返回菜单，直接回车也能按当前参数继续引导，两种操作都不会破坏系统。\n\n进入 Live 桌面后，双击桌面的 **Install Linux Mint** 启动安装器，也就是截图中标注的位置。\n\n![image.png](/data/media/2290.png)\n\n安装器中有四处需要明确选择：语言与键盘不影响系统行为，按习惯选即可；安装类型选「清除整个磁盘并安装 Linux Mint」，虚拟机内没有其他数据，不需要手动分区；时区填 Shanghai；用户名避免使用中文，部分脚本的路径处理会因此出错。\n\n安装结束会提示重启，并显示 `Please remove the installation medium, then press ENTER`。此时应先在虚拟机设置中断开光驱再回车，否则会重新从 ISO 引导，进入的还是 Live 桌面。判断是否真的装好，可以看虚拟机目录的体积：安装完成后若干 `.vmdk` 分段会增长到数 GB，总占用约 12 GB 以上。\n\n## 进入系统\n\n首次进入桌面会弹出欢迎窗口，右下角显示版本号，可据此确认实际安装的版本与预期一致。\n\n![image.png](/data/media/2291.png)\n\n## 清理光驱设置\n\n系统安装完成后该 ISO 不再需要。修改光驱设置时，两个勾选框可能呈灰色且「移除」按钮不可点：\n\n![image.png](/data/media/2289.png)\n\n**第二个坑是电源状态。** 该现象的原因是虚拟机处于挂起而非关机。挂起时 VMware 会锁定硬件设置，所有设备相关的控件都不可用，容易被误判为软件故障或权限问题。判断方法很简单：虚拟机目录中存在数 GB 的 `.vmem` 内存镜像文件，而不存在 `vmware-vmx` 进程，即说明处于挂起状态。通过「虚拟机 → 电源 → 关机」彻底关机后，设置即可修改。\n\n将连接方式改为「使用物理驱动器」后，下一次开机通常会弹出：\n\n![image.png](/data/media/2292.png)\n\n提示原文为「无法连接虚拟设备 sata0:1，因为主机上没有相应的设备。您要在每次开启此虚拟机时都尝试连接此虚拟设备吗？」。原因是主机没有光驱，该设备无法建立连接。选择「否」，表示不再尝试连接，后续开机不再询问；选择「是」则每次开机都会弹一次。要彻底消除该提示，在关机状态下将 CD/DVD 设备整体移除，而不只是切换连接方式。\n\n## Cinnamon 崩溃与回退模式\n\n另一种首次启动可能出现的情况是 Cinnamon 崩溃：\n\n![image.png](/data/media/2293.png)\n\n对话框标题为「Cinnamon 已经崩溃」，正文说明「您目前正以回退模式运行」。这是虚拟机中未安装 VMware 工具时的常见现象：窗口管理器拿不到显卡驱动，合成器在启动阶段崩溃。它不是安装失败，系统与文件均完好。\n\n处理方式是先点「确定」让 Cinnamon 重启一次，随后安装 VMware 工具，使显示驱动（vmwgfx）就位：\n\n```bash\nsudo apt update\nsudo apt install -y open-vm-tools open-vm-tools-desktop\nsudo reboot\n```\n\n若重启后仍然崩溃，可在虚拟机设置的「显示」中反转「加速 3D 图形」选项。启用 3D 加速但缺少对应驱动时，比纯软件渲染更容易触发崩溃；必要时同时提高显存。回退模式下桌面仍可使用，只是缺少动画与部分合成效果。\n\n安装工具后应确认会话类型与窗口管理器，这两项决定后续在该环境中得到的结论是否有效：\n\n```bash\necho $XDG_SESSION_TYPE   # 期望输出 x11\nwmctrl -m                # 未安装则先 sudo apt install wmctrl，期望显示 Muffin\n```\n\n## 完成状态\n\n调整分辨率为 1920×1080、面板高度 40px 后，桌面环境即达到目标配置。\n\n![image.png](/data/media/2294.png)\n\n此时应立即创建 VMware 快照。虚拟机的一切都保存在一个目录内，后续操作出错可直接回滚到该状态，比重装更快；需要备份时复制整个目录即可，但必须在关机状态下复制，运行或挂起中复制得到的镜像并不完整。\n\n## 四个问题的对照\n\n| 现象 | 实际原因 | 处理 |\n| --- | --- | --- |\n| `apt update` 大量 404 | 镜像为 EOL 版本，基础源已迁移 | 改用当前稳定版，或把源指向 `old-releases.ubuntu.com` |\n| 安装中途停住或用户名被预设 | 指定 ISO 触发了 Easy Install | 向导中选「稍后安装操作系统」 |\n| 硬件设置灰显、无法移除设备 | 虚拟机处于挂起状态，硬件配置被锁定 | 「虚拟机 → 电源 → 关机」后修改 |\n| 开机弹「无法连接虚拟设备 sata0:1」 | 主机无光驱，设备连接失败 | 选「否」，或在关机状态移除该设备 |\n| Cinnamon 崩溃、进入回退模式 | 未安装 VMware 工具，缺少显示驱动 | 安装 `open-vm-tools` 与 `open-vm-tools-desktop` |\n\n还有一处与排障无关但影响结论适用范围：虚拟机没有 GPU 直通，帧率、渲染开销、拖拽响应这类指标在该环境下的数值不具备参考价值。若目的是验证布局、窗口行为或安装流程，虚拟机足够；若涉及性能与手感，需要真机或带显卡直通的环境。\n",
+  "coverImage": "/data/media/2295.png",
+  "createdAt": "2026-11-04T09:58:59.142971",
+  "id": 229,
+  "isPinned": 0,
+  "isPublished": 1,
+  "next": null,
+  "prev": {
+    "id": 228,
+    "title": "Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战"
+  },
+  "series": null,
+  "summary": "在 Windows 上用 VMware Workstation 17 安装 Linux Mint Cinnamon 的完整步骤，包含镜像校验、客户机配置、引导菜单与安装器选项。重点记录实际遇到的四个故障：EOL 版本导致软件源 404、Easy Install 不适用于 Mint、挂起状态使硬件设置不可修改、首次启动 Cinnamon 崩溃进入回退模式，并给出各自的判断依据与处理命令。",
+  "tags": [
+    {
+      "id": 63,
+      "name": "Linux"
+    },
+    {
+      "id": 89,
+      "name": "Windows"
+    },
+    {
+      "id": 90,
+      "name": "故障排查"
+    }
+  ],
+  "title": "VMware Workstation 17 安装 Linux Mint Cinnamon 完整步骤与四个坑",
+  "updateTime": "2026-11-04T10:01:47.977406"
+}
