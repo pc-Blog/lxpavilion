@@ -1,0 +1,709 @@
+1:"$Sreact.fragment"
+2:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+4:Ta49e,Java 的集合框架在类型上分成两棵互不相交的树：一棵以 `Iterable` 为根，向下分出 `Collection` 与 `List`、`Set`、`Queue`；另一棵是独立的 `Map`，存键值对，不属于 `Collection`。这个划分不是历史遗留的随意结果，而是两种访问模型的边界——前者回答“如何把元素一个个取出来”，后者回答“给定一个键，如何找到对应的值”。迭代器无法自然地表达后者，因为一次取出的单位是键值对，而不是一个可顺序消费的元素。
+
+两棵树都遵循同一种分层：接口定义语义，实现类决定数据结构与并发策略。接口只说“有序”“不重复”“按下标取”“先进先出”，至于底层是数组、链表还是红黑树，`get` 是 O(1) 还是 O(n)，接口一个字都没写。把这两层混在一起看，就会把 `ArrayList` 的扩容细节当成 `List` 的规范，也会误以为 `TreeSet` 的去重和 `HashSet` 是同一套机制。
+
+下面按根接口、三个分支、具体实现、工具类的顺序展开，重点放在“为什么这样设计”以及这些设计在什么条件下会失效。
+
+## 集合体系结构
+
+```
+Iterable
+ └── Collection
+      ├── List：有序、可重复、有索引
+      │    ├── ArrayList
+      │    ├── LinkedList
+      │    ├── Vector（古老，线程安全）
+      │    └── CopyOnWriteArrayList（JUC）
+      ├── Set：不重复
+      │    ├── HashSet（基于 HashMap）
+      │    ├── LinkedHashSet（插入有序）
+      │    └── TreeSet（排序）
+      └── Queue / Deque
+           ├── LinkedList
+           ├── ArrayDeque
+           └── PriorityQueue
+
+Map：键值对，不属于 Collection
+ ├── HashMap
+ ├── LinkedHashMap
+ ├── TreeMap
+ ├── Hashtable（古老，线程安全）
+ └── ConcurrentHashMap（JUC）
+```
+
+三条分支的“增量”各有侧重：`List` 追加了索引；`Set` 一个抽象方法都没加，只把“元素唯一”写成语义约束；`Queue` 追加了队头操作和两套失败语义。`Map` 在类型上与 `Collection` 平行，它不实现 `Iterable`，所以不能直接 for-each，只能通过 `keySet`、`values`、`entrySet` 三个视图间接遍历。
+
+## Iterable 与 for-each 的语法糖
+
+```java
+public interface Iterable<T> {
+    Iterator<T> iterator();
+
+    default void forEach(Consumer<? super T> action) {
+        Objects.requireNonNull(action);
+        for (T t : this) {
+            action.accept(t);
+        }
+    }
+
+    default Spliterator<T> spliterator() { ... }   // JDK8
+}
+```
+
+`iterator()` 是唯一的抽象方法，`forEach` 与 `spliterator` 都是 JDK8 补上的 default 方法。形式上 `Iterable` 满足函数式接口的定义——只有一个抽象方法——实际很少把它当作 lambda 的目标类型，因为它的抽象方法是“返回一个迭代器”，而不是“接收一个参数做点什么”。
+
+for-each 是语法糖，JLS 规定了两种展开方式：表达式类型是数组时，编译器生成下标循环；类型是 `Iterable` 时，改写成 `Iterator` 循环。这解释了两件事：数组的 for-each 不产生迭代器对象，也拿不到 `remove`；集合的 for-each 与手写迭代器完全等价，包括异常行为。
+
+default 的 `forEach` 内部写的就是 `for (T t : this)`，和手写循环没有区别，只是把“遍历 + 消费”打包成一次调用。JDK8 之前没有这个方法，只能自己写循环或者用迭代器。
+
+这也解释了遍历时删除为什么会失败。`ArrayList` 的迭代器在每次 `next()` 里比较 `modCount` 与 `expectedModCount`，集合的 `add`、`remove` 会让 `modCount` 自增，下一次 `next()` 就抛 `ConcurrentModificationException`。for-each 的循环变量只是 `next()` 返回值的副本，对变量赋值或调用 `remove` 都不作用于集合本身，删除只能走 `it.remove()`。
+
+### Iterator
+
+```java
+public interface Iterator<E> {
+    boolean hasNext();          // 是否还有元素
+    E next();                   // 返回下一个元素，并移动游标
+    default void remove() {     // 删除 next 返回的元素
+        throw new UnsupportedOperationException("remove");
+    }
+    default void forEachRemaining(Consumer<? super E> action) {   // JDK8
+        Objects.requireNonNull(action);
+        while (hasNext())
+            action.accept(next());
+    }
+}
+```
+
+三个方法构成“询问—取值—可选删除”的协议。`remove` 的默认实现直接抛异常：接口只规定“可以删除”，是否支持由实现决定。`ArrayList` 的迭代器支持删除，`Arrays.asList` 返回的固定长度列表不支持，`remove` 会走默认实现抛 `UnsupportedOperationException`。
+
+`for (String s : list)` 在字节码层面等价于：
+
+```java
+for (Iterator<String> it = list.iterator(); it.hasNext(); ) {
+    String s = it.next();
+    System.out.println(s);
+}
+```
+
+`forEachRemaining` 从当前游标一直消费到底，游标停在末尾，之后 `hasNext()` 返回 false。它适合“前几个元素单独处理、剩下的批量处理”这种场景：
+
+```java
+List<String> list = List.of("a", "b", "c", "d");
+
+Iterator<String> it = list.iterator();
+System.out.println(it.next());      // a，游标到 b
+
+it.forEachRemaining(s -> System.out.println("剩余: " + s));
+// 剩余: b
+// 剩余: c
+// 剩余: d
+
+System.out.println(it.hasNext());   // false
+```
+
+### Spliterator
+
+并行流的前提是数据源能被切成若干段交给不同线程，而 `Iterator` 只有 `hasNext` 和 `next`，没有“切分”的概念，一个迭代器只能被一个线程推着往前走。`Spliterator`（splitable iterator）在遍历之外加了 `trySplit()`：它尝试把当前范围对半切开，返回负责其中一半的新 `Spliterator`，调用者保留另一半；切不动（元素太少或数据源不可分割）时返回 null。多个线程各拿一个独立实例并行处理，互不干扰。
+
+| 对比维度 | Iterator | Spliterator |
+|---|---|---|
+| 核心能力 | 单向遍历 | 遍历 + 分割（`trySplit`） |
+| 并行支持 | 不支持 | 原生支持并行流 |
+| 元素数量 | 始终未知 | 可通过 `estimateSize()` 获取估算值，或通过 `getExactSizeIfKnown()` 获取精确值 |
+| 元信息 | 无 | 携带特性（Characteristics），如是否有序、是否有界，供 Stream 做优化决策 |
+| 遍历协议 | `hasNext()` + `next()` 两步 | `tryAdvance(Consumer)` 一步完成，把“判断 + 消费”合并 |
+
+特性是一组位掩码常量。常量由 `Spliterator` 接口统一定义，具体返回哪些组合由每个集合的 `Spliterator` 实现类决定，而这些特性怎么被使用由 Stream 框架决定。
+
+```java
+Iterable<Integer> list = List.of(1, 2, 3, 4, 5, 6);
+Spliterator<Integer> spliterator = list.spliterator();
+System.out.println("Characteristics: " + spliterator.characteristics());
+System.out.println("Estimated size: " + spliterator.estimateSize());
+```
+
+```
+Characteristics: 16464
+Estimated size: 6
+```
+
+16464 拆成二进制是 `0b100000001010000`，只有三位为 1：`ORDERED`（16）、`SIZED`（64）、`SUBSIZED`（16384）。这正好对应 `List` 的语义——有稳定的遍历顺序、大小已知、切分后的子段大小也可知。值得注意的是，即使是 `List.of` 返回的不可变列表，特性里也没有 `IMMUTABLE`，因为 `List` 的默认 `spliterator()` 只声明了这三项，实现类不额外声明就不会出现。特性位完全取决于实现，不能靠经验猜。
+
+| 特性 | 常量值 | 含义（源码级） | 对 Stream 与性能的影响 |
+|---|---|---|---|
+| `DISTINCT` | 1 | 元素互不相同，不存在 `x.equals(y)` 为 true 的一对元素 | `distinct()` 可跳过实际比较，直接相信已经唯一。`Set` 常见，`List` 不保证 |
+| `SORTED` | 4 | 遍历顺序遵循已定义的排序顺序（自然序或 Comparator） | `sorted()` 变成空操作；`min()` / `max()` 可取首尾。`TreeSet` / `TreeMap` 带此特性 |
+| `ORDERED` | 16 | 元素有确定的 encounter order，每次遍历顺序一致 | `findFirst()` 结果可预期；`limit()` / `skip()` 语义正确；无序源上 `findFirst()` 可能退化为 `findAny()` |
+| `SIZED` | 64 | `estimateSize()` 返回精确数量，不是估算 | `count()` 可直接返回 size，完全不遍历。中间操作如 `filter` 可能丢弃 `SIZED`，优化随之失效 |
+| `NONNULL` | 256 | 源保证遍历到的元素不为 null | 可省略部分 null 检查，主要出现在并发集合与队列 |
+| `IMMUTABLE` | 1024 | 源在结构上不可修改，遍历期间不会发生结构变化 | 遍历无需做并发修改检查。注意它描述的是“遍历期间结构不变”，不是“集合 API 不可变” |
+| `CONCURRENT` | 4096 | 源可被多线程安全并发修改，无需外部同步 | 迭代器弱一致，不抛 CME。顶层 Spliterator 通常不与 `SIZED` 同时出现，因为并发修改后 size 可能变化 |
+| `SUBSIZED` | 16384 | `trySplit()` 产生的所有子 Spliterator 都同时是 `SIZED` 和 `SUBSIZED` | 并行流切分后每个子任务的工作量可精确估算，划分更均衡。`SUBSIZED` 蕴含 `SIZED` |
+
+遍历协议上，`tryAdvance` 把“判断还有没有”和“取一个出来”合成一步，返回 boolean：
+
+```java
+Iterable<Integer> list = List.of(1, 2, 3, 4, 5, 6);
+Spliterator<Integer> spliterator = list.spliterator();
+System.out.println("单次遍历结果：");
+spliterator.tryAdvance(System.out::println);
+System.out.println("多次遍历剩余：");
+spliterator.forEachRemaining(System.out::println);
+```
+
+```
+单次遍历结果：
+1
+多次遍历剩余：
+2
+3
+4
+5
+6
+```
+
+语义与迭代器的 `next()` 一致：消费掉的元素不会再次出现。切分则把剩下的范围分成两半，原实例保留后一半，返回值负责前一半：
+
+```java
+Iterable<Integer> list = List.of(1, 2, 3, 4, 5, 6);
+Spliterator<Integer> spliterator = list.spliterator();
+Spliterator<Integer> prefix = spliterator.trySplit();
+System.out.println("Original estimate size: " + spliterator.estimateSize());
+spliterator.forEachRemaining(System.out::println);
+System.out.println("Prefix estimate size: " + prefix.estimateSize());
+prefix.forEachRemaining(System.out::println);
+```
+
+```
+Original estimate size: 3
+4
+5
+6
+Prefix estimate size: 3
+1
+2
+3
+```
+
+切出来的是前缀，这是 `List` 实现的行为，不是接口约定；换一种数据结构，切分点、切分粒度甚至能否切分都可能不同。
+
+## Collection：三个分支的共同底座
+
+`Collection` 是容器根接口，`List`、`Set`、`Queue` 都从它派生，增删查、大小、遍历这些通用操作在它这里一次定义完。
+
+```java
+int size();                             // 元素个数
+boolean isEmpty();                      // 是否为空
+boolean contains(Object o);             // 是否包含
+boolean containsAll(Collection<?> c);   // 是否包含另一集合全部元素
+
+boolean add(E e);                       // 添加一个
+boolean remove(Object o);               // 删除一个
+boolean addAll(Collection<? extends E> c);   // 批量添加
+boolean removeAll(Collection<?> c);          // 删除与 c 的交集元素
+boolean retainAll(Collection<?> c);          // 只保留与 c 的交集
+void clear();                                // 清空
+default boolean removeIf(Predicate<? super E> filter);   // JDK8
+
+Iterator<E> iterator();                 // 迭代器
+Object[] toArray();                     // 转 Object 数组
+<T> T[] toArray(T[] a);                 // 转指定类型数组
+default void forEach(Consumer<? super E> action);   // JDK8
+default Stream<E> stream();                          // JDK8
+```
+
+`remove("a")` 只删除第一个匹配的元素，不会清除两个；批量删除用 `removeIf` 更直接。`removeIf` 是 default 方法，默认实现用 `iterator()` 配合 `remove()`，所以对不支持删除的实现会抛异常。
+
+`toArray(T[] a)` 存在的理由是泛型擦除。运行时拿不到 `E` 的类型，`Object[]` 没法直接转成 `String[]`，只能由调用者把目标类型的数组传进来，方法内部用 `a.getClass()` 拿到运行时组件类型再创建新数组：
+
+```java
+public <T> T[] toArray(T[] a) {
+    if (a.length < size)
+        // 新建一个运行时类型和 a 相同的数组，长度 size
+        return (T[]) Arrays.copyOf(elementData, size, a.getClass());
+
+    System.arraycopy(elementData, 0, a, 0, size);
+    if (a.length > size)
+        a[size] = null;   // 关键细节
+    return a;
+}
+```
+
+数组够长时元素被拷进 `a`，末尾多出来的位置写 null，这样调用者能根据 null 判断有效元素的边界，也是“传入空数组 `new String[0]` 更省事”这一惯用法的来源。元素搬运用 `System.arraycopy`，这是 native 方法，按内存块复制，比逐个赋值快，`Arrays.copyOf` 内部走的也是它。
+
+## List、Set、Queue 与 Deque 的接口增量
+
+### List：索引与视图
+
+```java
+public interface List<E> extends Collection<E> {
+
+    // ===== 索引访问（List 独有）=====
+    E get(int index);                        // 按索引取元素
+    E set(int index, E element);             // 替换指定位置元素，返回旧值
+    void add(int index, E element);          // 在指定位置插入，后面元素后移
+    E remove(int index);                     // 按索引删除并返回被删元素
+    int indexOf(Object o);                   // 第一次出现的索引，找不到返回 -1
+    int lastIndexOf(Object o);               // 最后一次出现的索引，找不到返回 -1
+
+    // ===== 区间视图（List 独有）=====
+    List<E> subList(int fromIndex, int toIndex);   // 返回 [from, to) 的视图，不是拷贝
+
+    // ===== 迭代器增强（List 独有）=====
+    ListIterator<E> listIterator();          // 双向迭代器
+    ListIterator<E> listIterator(int index); // 从指定位置开始的双向迭代器
+
+    // ===== 批量/函数式（JDK8）=====
+    default void replaceAll(UnaryOperator<E> operator);
+    default void sort(Comparator<? super E> c);
+
+    // ===== 静态工厂（JDK9）=====
+    static <E> List<E> of(E... elements);    // 返回不可变 List，不允许 null
+}
+```
+
+`get` 的复杂度不由接口保证。`ArrayList` 是 O(1)，`LinkedList` 要遍历到该位置，是 O(n)，所以对 `LinkedList` 用下标循环是最常见的性能事故。
+
+`remove(int)` 与 `remove(Object)` 构成重载，`list.remove(1)` 删的是下标 1，要删元素 1 得写 `list.remove(Integer.valueOf(1))`。自动装箱让这个坑格外隐蔽，改类型、改字面量都可能让重载解析换到另一条路径上。
+
+`subList` 返回的是视图，内部持有原列表的引用和偏移量。对子列表的修改会写回原列表；反过来，只要对原列表做了结构性修改（增删），子列表的任何访问都会抛 `ConcurrentModificationException`。要一份独立副本，必须显式 `new ArrayList<>(list.subList(a, b))`。
+
+`List.of` 返回的是不可变集合，实现是 `java.util.ImmutableCollections` 里的一系列包私有类，按元素个数分成 `List12`、`ListN` 等，空列表复用同一个实例。分类的意义在于字段数固定、不用额外数组，空间和访问速度都更优。它不接受 null，连 `contains(null)` 都会抛 `NullPointerException`。
+
+### Set：只加约束，不加方法
+
+```java
+public interface Set<E> extends Collection<E> {
+
+    // Set 没有新增抽象方法，只是对 Collection 加语义约束：
+    // 1. 元素不重复（靠 equals/hashCode 或 compareTo/compare）
+    // 2. 最多一个 null（具体实现决定）
+
+    static <E> Set<E> of(E... elements);   // JDK9，不可变，元素不能重复，不允许 null
+}
+```
+
+`add`、`contains`、`remove` 都是 `Collection` 已经定义的，`Set` 只是要求实现类保证元素唯一。去重规则因此完全落在实现上：`HashSet` 用 `hashCode` 定位加 `equals` 比较，`TreeSet` 用 `compare` 的结果是否为 0。两种规则的边界并不重合，一个类可以 `equals` 返回 false 却在 `TreeSet` 里被判为重复。
+
+`Set.of` 在构造时就会检查重复，同样的元素传两次直接 `IllegalArgumentException`，不会等到运行时才暴露。
+
+### Queue：两套失败语义
+
+```java
+public interface Queue<E> extends Collection<E> {
+
+    // 插入队尾
+    boolean offer(E e);      // 入队，失败返回 false（推荐）
+    boolean add(E e);        // 入队，失败抛 IllegalStateException
+
+    // 删除队头
+    E poll();                // 出队并返回队头，空队列返回 null（推荐）
+    E remove();              // 出队并返回队头，空队列抛 NoSuchElementException
+
+    // 查看队头
+    E peek();                // 查看队头不移除，空队列返回 null（推荐）
+    E element();             // 查看队头不移除，空队列抛 NoSuchElementException
+}
+```
+
+| 操作 | 失败抛异常 | 失败返回特殊值 |
+|---|---|---|
+| 插入 | `add(e)` | `offer(e)` → false |
+| 删除 | `remove()` | `poll()` → null |
+| 查看 | `element()` | `peek()` → null |
+
+两套 API 的差别只在“满了或空了怎么办”。有界队列（比如 `ArrayBlockingQueue`）满时，`offer` 返回 false 可以直接放进条件判断，`add` 抛异常则要把控制流交给 catch。`poll` 用 null 表示空，因此 `Queue` 的实现通常不允许 null 元素，`ArrayDeque` 就直接拒绝 null——否则“空”和“元素本身是 null”无法区分。这条约束在并发容器上更严格，`ConcurrentHashMap` 不允许 null key 和 null value，也是同样的二义性问题。
+
+### Deque：两端都能进出
+
+```java
+public interface Deque<E> extends Queue<E> {
+
+    void addFirst(E e);          // 头插，失败抛异常
+    boolean offerFirst(E e);     // 头插，失败返回 false
+    void addLast(E e);           // 尾插，失败抛异常
+    boolean offerLast(E e);      // 尾插，失败返回 false
+
+    E removeFirst();             // 删头并返回，空则抛异常
+    E pollFirst();               // 删头并返回，空则返回 null
+    E removeLast();              // 删尾并返回，空则抛异常
+    E pollLast();                // 删尾并返回，空则返回 null
+
+    E getFirst();                // 看头不移除，空则抛异常
+    E peekFirst();               // 看头不移除，空则返回 null
+    E getLast();                 // 看尾不移除，空则抛异常
+    E peekLast();                // 看尾不移除，空则返回 null
+
+    boolean removeFirstOccurrence(Object o);   // 从头找第一个 o 删除
+    boolean removeLastOccurrence(Object o);    // 从尾找第一个 o 删除
+
+    void push(E e);              // 等价 addFirst，压栈
+    E pop();                     // 等价 removeFirst，弹栈，空则抛异常
+
+    Iterator<E> descendingIterator();   // 从尾到头迭代
+}
+```
+
+`push` / `pop` 只是 `addFirst` / `removeFirst` 的别名，所以 `Deque` 天然可以当栈用。用 `ArrayDeque` 代替 `Stack` 的理由很实在：`Stack` 继承 `Vector`，每个方法都带 `synchronized`，单线程下白白付出锁开销；`ArrayDeque` 是环形数组，头尾操作都是 O(1) 均摊。
+
+## List 的四种实现
+
+`List` 的四个实现覆盖了同一组接口在不同数据结构与并发模型下的做法：数组、链表、同步数组、写时复制数组。它们的 `add`、`get`、`remove` 语义完全一致，差别只体现在复杂度、内存占用和线程安全边界上。
+
+### ArrayList
+
+底层是动态数组 `Object[] elementData`。默认容量 10，但不是一创建就分配，而是第一次 `add` 时才把空数组换成长度 10 的数组（JDK8 起）。
+
+扩容时 `newCapacity = oldCapacity + (oldCapacity >> 1)`，即 1.5 倍，通过 `Arrays.copyOf` 创建新数组并拷贝。1.5 倍是空间与拷贝次数的折中：倍数太小，扩容频繁；倍数太大，尾部浪费多。按 1.5 倍增长，插入 n 个元素的拷贝总量是 O(n)，均摊到每次是 O(1)。
+
+`elementData` 和 `size` 都不是 volatile，`add` 是“读 size → 写 elementData[size] → size + 1”三步，两个线程可能读到同一个 size，写进同一个下标，造成元素覆盖；也可能先自增再写入，造成 size 虚高而元素为 null。扩容时替换数组引用，另一个线程还可能继续往旧数组里写。并发场景要么换 `CopyOnWriteArrayList`，要么 `Collections.synchronizedList` 加外部同步，要么直接换并发容器。
+
+按下标访问 O(1)，末尾追加均摊 O(1)，中间插入和删除要移动元素，是 O(n)。
+
+### LinkedList
+
+双向链表，节点 `Node` 持有 `prev`、`next`、`item` 三个引用。它同时实现 `List` 和 `Deque`，所以既可以按下标访问，也可以当头尾队列和栈用。
+
+头尾操作 O(1)，按下标访问 O(n)，而且内部会从离目标更近的一端开始走，命中中间位置时最慢。每个节点除了元素还要存两个引用加对象头，内存开销明显高于数组；节点分散在堆上，遍历时缓存命中率差。作为队列，`ArrayDeque` 通常比它快，因为环形数组没有节点分配和指针跳转。
+
+### Vector
+
+方法级 `synchronized` 的动态数组，扩容默认 2 倍。问题有三个：锁是全局的，所有读写串行，并发度只有 1；扩容倍数大，浪费空间；复合操作并不原子，`if (!vector.contains(element)) vector.add(element)` 在判断和添加之间可能被其他线程插入，逻辑依然会错。
+
+它基本被 `CopyOnWriteArrayList` 或 `Collections.synchronizedList` 替代。继承它的 `Stack` 同样不推荐，理由与上面 `Deque` 一节相同。
+
+### CopyOnWriteArrayList
+
+用 `Object[]` 存元素，但数组引用被 `volatile` 修饰，另有一个 `final transient ReentrantLock lock` 保护所有写操作。写一次的过程是：
+
+1. 加锁（`lock.lock()`）。
+2. 复制一份全新的数组，长度加一。
+3. 在新数组上执行添加。
+4. 把 volatile 数组的引用指向新数组（`setArray(newElements)`）。
+5. 解锁。
+
+删除同理，先加锁、复制，在新数组上删完再替换引用。读操作不加锁，直接读当前引用，所以读性能接近普通数组。
+
+迭代器是快照：创建时捕获当时的数组引用，之后即使写操作把引用换掉了，迭代器仍然遍历旧数组。旧数组只要还被迭代器引用就不会被回收，因此遍历期间不会抛 `ConcurrentModificationException`，也看不到遍历开始后的新写入。
+
+代价同样来自“写时复制”：每次写都要复制整个数组，写操作是 O(n) 且要额外分配一倍内存；多个线程同时写会被锁串行化；读到的数据只能保证最终一致，不保证实时。适合监听器列表、路由表、配置快照这类读远多于写、且能接受短暂不一致的场景。
+
+## Set 的三种实现
+
+`HashSet` 内部就是一个 `HashMap`，元素当 key，value 是一个静态常量 `PRESENT`。`add` 的实现是 `return map.put(e, PRESENT) == null`，`put` 返回 null 说明这个 key 之前不存在，也就添加成功。
+
+去重靠 `hashCode` 定位桶、`equals` 比较，所以自定义类型必须同时正确重写这两个方法。它允许一个 null（`HashMap` 允许 null key），不保证顺序——无序指的是“顺序不可预期”，不是“随机”，同一个对象在两次运行中的遍历顺序通常稳定，但不要依赖它。
+
+`LinkedHashSet` 继承 `HashSet`，构造时把内部的 `HashMap` 换成 `LinkedHashMap`。节点在哈希桶之外多了 `before` / `after` 两条引用，维护一条按插入顺序串起来的双向链表，所以遍历顺序与插入顺序一致，重复插入不会改变位置。代价是每个节点多两个引用，增删时要维护链表，性能略低于 `HashSet`。
+
+`TreeSet` 内部是 `TreeMap`，红黑树。排序按元素的 `Comparable` 自然序，或在构造时传入 `Comparator`。去重看 `compareTo` / `compare` 是否返回 0，而不是 `equals`——这是它与 `HashSet` 最本质的差别。自然排序下不允许 null，`add(null)` 会在比较时抛 `NullPointerException`。增删查都是 O(log n)，额外提供了 `first`、`last`、`headSet`、`tailSet`、`subSet` 这些有序操作，这是 `HashSet` 给不了的。
+
+## Map 接口
+
+`Map` 存键值对，一个 key 最多映射一个 value，key 唯一、value 可重复。它不属于 `Collection` 体系，是与之平行的独立接口。
+
+```java
+int size();                              // 键值对数量
+boolean isEmpty();                       // 是否不包含任何键值对
+boolean containsKey(Object key);         // 是否包含指定 key
+boolean containsValue(Object value);     // 是否包含至少一个指定 value
+V get(Object key);                       // 返回 key 映射的 value，不存在返回 null
+
+V put(K key, V value);      // 添加/覆盖键值对，返回旧 value；无旧值返回 null
+V remove(Object key);       // 删除指定 key 的映射，返回被删 value；不存在返回 null
+void putAll(Map<? extends K, ? extends V> m);
+void clear();
+
+Set<K> keySet();                          // 所有 key 的 Set 视图
+Collection<V> values();                   // 所有 value 的 Collection 视图
+Set<Map.Entry<K, V>> entrySet();          // 所有键值对的 Set 视图
+```
+
+三个视图方法返回的都是视图，不是拷贝。修改 Map 会影响视图，反过来视图上的删除也会写回 Map。视图通常不支持添加：`keySet()` 和 `values()` 调 `add` 抛 `UnsupportedOperationException`；`entrySet()` 的元素可以 `setValue` 修改原 Map 的 value，但不能 `add` 或 `remove`。
+
+`Map.Entry` 是 `Map` 内部的嵌套接口，代表一个键值对：
+
+```java
+public interface Map<K, V> {
+    interface Entry<K, V> {
+        K getKey();
+        V getValue();
+        V setValue(V value);
+    }
+}
+```
+
+`Map` 的 `equals` 和 `hashCode` 都有明确契约：两个 Map 相等，当且仅当它们的 `entrySet` 相同；`hashCode` 等于所有 `Entry` 的 `hashCode` 之和，而单个 `Entry` 的 `hashCode` 是 `key.hashCode() ^ value.hashCode()`。这套契约让 Map 可以安全地作为另一个 Map 的 key 或放进 Set。
+
+容器类的 `equals` 契约并不统一，这点值得单独记一笔。`List` 规定“大小相同且对应位置元素相等”，`Set` 规定“大小相同且互相包含”，两者都是内容比较。`Queue` 没有规定基于内容的 `equals`，`LinkedList` 因为同时是 `List`，走的是 List 规则；`ArrayDeque` 和 `PriorityQueue` 没有重写 `equals`，用的是 `Object.equals`，即引用比较——两个内容完全相同的 `ArrayDeque` 调 `equals` 返回 false。
+
+三种遍历方式：
+
+```java
+// 1. keySet 遍历（每次 get 多一次查找，效率略低）
+for (K key : map.keySet()) { V v = map.get(key); }
+
+// 2. entrySet 遍历（推荐，一次拿到 key 和 value）
+for (Map.Entry<K, V> e : map.entrySet()) { K k = e.getKey(); V v = e.getValue(); }
+
+// 3. forEach（JDK8）
+map.forEach((k, v) -> { ... });
+```
+
+`keySet` 方式每次都要用 key 重新算 hash 再查一次桶，`HashMap` 上多一次查找成本；`entrySet` 一次拿到整对，`TreeMap` 上差别更明显，因为每次 `get` 都要走一遍红黑树。JDK8 的 `forEach` 是 default 方法，内部就是遍历 `entrySet`，写法更短，代价一样。
+
+Map 还提供了一批基于读改写的 default 方法，它们把“先查再写”的样板代码收进接口：
+
+```java
+default V getOrDefault(Object key, V defaultValue);
+// key 存在且 value 非 null → 返回 value；否则返回 defaultValue
+
+default V putIfAbsent(K key, V value);
+// key 不存在或映射为 null → 放入 value，返回 null
+// key 已存在且 value 非 null → 不覆盖，返回现有 value
+
+default boolean remove(Object key, Object value);
+// 仅当 key 当前映射的 value 与给定 value 相等时才删除
+
+default V replace(K key, V value);
+// key 存在（且映射非 null）→ 用新 value 替换，返回旧 value
+
+default boolean replace(K key, V oldValue, V newValue);
+// 仅当当前 value 与 oldValue 相等时才替换
+
+default void forEach(BiConsumer<? super K, ? super V> action);
+default void replaceAll(BiFunction<? super K, ? super V, ? extends V> function);
+
+default V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction);
+// 用函数根据 key 和当前 value 算新 value；新值为 null 则删除该 key
+
+default V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction);
+// key 不存在或映射为 null → 计算并放入；已存在且非 null → 直接返回现有值
+
+default V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction);
+// 仅当 key 存在且 value 非 null 时计算；新值为 null 则删除该 key
+
+default V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction);
+// key 不存在或映射为 null → 放入给定 value
+// 已存在且非 null → 用 remappingFunction(旧 value, 新 value) 合并；合并结果为 null 则删除该 key
+```
+
+三个“计算型”方法（`compute`、`computeIfAbsent`、`computeIfPresent`）在结构上是一回事：把“读当前值、算新值、写回”合成一次调用。`Map<K, List<V>>` 这种多值结构里，`computeIfAbsent(k, x -> new ArrayList<>()).add(v)` 省掉了判空和初始化两段代码。`merge` 则是计数和累加的惯用法：`map.merge(word, 1, Integer::sum)`。
+
+需要留意的是，这些方法在接口里都是 default，默认实现由 `get`、`put`、`remove` 组合而成，本身不具备原子性——两个线程同时 `computeIfAbsent` 可能都算出值、都执行写入。`ConcurrentHashMap` 重写了这些方法，把检查和写入放进同一个桶锁或 CAS 里，并发下才真正可用。在 `HashMap` 上，这些方法只是让代码更紧凑，不会带来任何线程安全。
+
+`Map.of()` 与 `List.of()` 一样，返回 `java.util.ImmutableCollections` 中的包私有内部类，不是 `HashMap`。最多 10 对键值、key 和 value 都不允许 null、重复 key 在构造时抛 `IllegalArgumentException`；超过 10 对用 `Map.ofEntries`。
+
+## HashMap
+
+JDK8 的结构是数组 + 链表 + 红黑树，数组叫 `table`，元素是 `Node`。冲突少时用链表，链表长度达到 8 且数组容量不小于 64 时转成红黑树，树节点数降到 6 时退回链表。JDK7 是数组 + 链表，插入用头插法；JDK8 改成尾插法。
+
+```java
+static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // 默认容量 16，必须是 2 的幂
+static final float DEFAULT_LOAD_FACTOR = 0.75f;     // 负载因子 0.75，扩容阈值 = 容量 × 0.75
+static final int TREEIFY_THRESHOLD = 8;             // 树化阈值 8
+static final int UNTREEIFY_THRESHOLD = 6;           // 退化阈值 6，留缓冲防抖动
+static final int MIN_TREEIFY_CAPACITY = 64;         // 容量不足 64 时优先扩容而不是树化
+```
+
+`put` 的流程：
+
+1. 计算 key 的 hash：`(h = key.hashCode()) ^ (h >>> 16)`，高 16 位异或低 16 位，这一步叫扰动函数。
+2. `table` 为空则先初始化。
+3. 用 `(n - 1) & hash` 计算下标。
+4. 桶为空，直接放新节点。
+5. 桶不为空：头节点 key 相同则覆盖；是树节点则走红黑树插入；是链表则尾插遍历，找到相同 key 覆盖，没找到插入尾部；插入后链表长度达到 8 且容量不足 64，先扩容。
+6. 插入后 `++size`，超过阈值 `capacity * loadFactor` 就扩容。
+
+扰动函数存在的原因是下标只用了 hash 的低位。`table` 长度通常很小，`(n - 1) & hash` 只保留最低的几位，hash 高位的差异被丢弃；把高 16 位异或到低位上，让高位信息也参与桶的选择，冲突率下降。
+
+容量必须是 2 的幂，理由有三条。取模运算慢，`(n - 1) & hash` 在 n 是 2 的幂时与 `hash % n` 等价，但快得多。n - 1 的低位全是 1，能让 hash 的低位充分参与运算，不会出现某些位永远为 0 的情况。扩容成 2 倍后，元素要么留在原位置，要么移动到“原位置 + oldCap”，判断依据是 `hash & oldCap` 是否为 0——因为新参与下标计算的那一位正好是 oldCap，不需要重新计算 hash，一次遍历就能把链表拆成两段（低位链和高位链）。
+
+负载因子取 0.75 是空间与冲突的折中。太高，桶里堆积严重，查找变慢；太低，数组利用率差、扩容频繁。JDK 源码注释里给过一个估算：hash 均匀分布时，链表长度达到 8 的概率约为 6×10⁻⁸，所以树化阈值定在 8，正常使用几乎不会触发树化。容量不足 64 时优先扩容，是因为小表扩容的收益比树化更大；退化阈值取 6 而不是 8，是为了留出缓冲，避免在 7 和 8 之间来回转换。
+
+线程不安全的表现分两个版本。JDK7 是头插法，并发扩容时两个线程同时迁移同一条链，可能把链表接成环，之后 `get` 落到环上就是死循环，CPU 跑满。JDK8 改成尾插法，成环的条件没有了，但依然会出现数据覆盖、元素丢失、`size` 不准——两个线程同时写同一个空桶，后写的覆盖先写的；并发扩容时一个线程可能读到迁移到一半的 `table`。并发场景直接用 `ConcurrentHashMap`，不要指望 `Collections.synchronizedMap` 兼顾性能。
+
+## 其他 Map 实现
+
+`HashMap` 之外还有三类常用实现，差别分别落在并发、顺序和排序上。它们多半是在 `HashMap` 的骨架外挂一层结构，所以理解了 `HashMap` 的桶、哈希和扩容，这几类的代价也能直接推算出来。
+
+### ConcurrentHashMap
+
+JDK7 用分段锁：整个 Map 分成多个 `Segment`，每个 `Segment` 继承 `ReentrantLock`，锁粒度是段，不同段可以并发写，并发度等于段数，默认 16。
+
+JDK8 取消了 `Segment`，结构向 `HashMap` 靠拢：数组 + 链表 + 红黑树，锁粒度降到桶的头节点。空桶插入用 CAS，不阻塞；桶非空时用 `synchronized` 锁住头节点，只影响这一个桶。读操作不加锁，靠 `volatile` 保证可见性。扩容时支持多线程协助迁移，一个线程迁移一部分，其他线程通过 `helpTransfer` 加入。`size` 用 `baseCount` 加 `CounterCell[]` 分散计数，避免所有线程争抢同一个计数器。
+
+它不允许 null key 和 null value。原因在并发语义：`get` 返回 null 时，无法区分“key 不存在”和“key 存在但值为 null”，而 `containsKey` 的补充检查在两次调用之间可能被其他线程改变，结论不可靠。直接把 null 禁掉，二义性就不存在了。
+
+### LinkedHashMap
+
+继承 `HashMap`，节点额外维护 `before` / `after` 双向链表记录顺序。默认按插入顺序遍历；构造时传 `accessOrder = true` 变成访问顺序，`get` 和 `put` 都会把命中的节点移到链表尾部。这是实现 LRU 缓存的基础：重写 `removeEldestEntry`，在容量超限时返回 true，最久未访问的节点（链表头）就被淘汰。
+
+### TreeMap
+
+红黑树实现，按 key 排序。key 必须可比较：实现 `Comparable`，或者在构造时传 `Comparator`。增删查 O(log n)，支持 `subMap`、`headMap`、`tailMap` 这类范围查询，返回的同样是视图。自然排序下不允许 null key，`put(null, v)` 在比较时抛 `NullPointerException`。
+
+## 工具类与包装
+
+`Arrays` 与 `Collections` 是两个纯静态工具类，前者围绕数组，后者围绕集合的通用操作。它们本身不存数据，容易出问题的地方集中在“返回的是视图或包装对象”上——看起来像一个普通容器，行为却受制于背后的原数据。
+
+### Arrays
+
+`Arrays.asList` 返回的是 `Arrays` 的内部类 `ArrayList`，不是 `java.util.ArrayList`。它直接引用传入的数组，没有拷贝，长度固定：`set` 可以，`add` / `remove` 抛 `UnsupportedOperationException`；改元素会影响原数组，反过来也一样。想要可变列表就 `new ArrayList<>(Arrays.asList(...))`。
+
+```java
+Arrays.sort(int[] arr);                        // 基本类型，双轴快排
+Arrays.sort(Object[] arr);                     // 对象，TimSort（稳定）
+Arrays.sort(arr, Comparator.reverseOrder());   // 自定义比较器
+Arrays.sort(arr, 1, 5);                        // 部分排序 [1,5)
+```
+
+基本类型用双轴快排，不稳定但快；对象用 TimSort，稳定，代价是额外空间。需要保留相等元素的原始顺序时，这一点决定了能不能用基本类型数组。
+
+```java
+int[] b = Arrays.copyOf(a, 10);          // 拷贝到长度 10，多出补 0
+int[] c = Arrays.copyOfRange(a, 2, 5);   // 拷贝 [2,5)
+
+Arrays.fill(arr, 0);            // 全部填 0
+Arrays.fill(arr, 2, 5, 9);      // [2,5) 填 9
+
+Arrays.equals(a, b);        // 一维数组内容比较
+Arrays.deepEquals(a, b);    // 多维数组递归比较
+Arrays.hashCode(arr);
+Arrays.deepHashCode(arr2D);
+
+Arrays.toString(arr);        // 一维
+Arrays.deepToString(arr2D);  // 多维
+```
+
+`copyOf` 和 `copyOfRange` 底层是 `System.arraycopy`，浅拷贝：元素是对象时只复制引用，新旧数组指向同一批对象。
+
+`equals` 与 `deepEquals` 的差别在嵌套层级：
+
+```java
+int[][] a = {{1, 2}, {3, 4}};
+int[][] b = {{1, 2}, {3, 4}};
+
+Arrays.equals(a, b);      // false
+Arrays.deepEquals(a, b);  // true
+```
+
+`equals` 只比较一层。对 `Object[]` 来说元素用 `equals` 比较，而数组的 `equals` 是引用比较，所以内层数组内容相同但引用不同，结果就是 false。`deepEquals` 递归往里比，直到比到非数组元素，所以二维数组要它才对。
+
+打印同理。`Arrays.toString(a)` 对二维数组只会输出每个内层数组的 `toString`，即 `[[I@1b6d3586, [I@4554617c]` 这样的哈希值；`Arrays.deepToString(a)` 才会打出 `[[1, 2], [3, 4]]`。直接 `arr.toString()` 连内容都不给，只给 `[I@1b6d3586`。
+
+```java
+Arrays.stream(arr).sum();
+Arrays.stream(arr).boxed().collect(Collectors.toList());
+```
+
+`Arrays.stream` 把数组转成流，基本类型数组走 `IntStream` 这类特化流，`boxed()` 之后才能收集成 `List<Integer>`。
+
+### Collections
+
+```java
+Collections.sort(list);                            // 自然排序
+Collections.sort(list, Comparator.reverseOrder()); // 自定义
+```
+
+JDK8 之后 `List` 有了默认方法 `sort`，内部也是把元素转成数组排序再写回。`Collections.sort` 是旧 API，本质委托给 `List.sort`，新代码直接用 `list.sort(...)` 更直接，也少一层静态调用。
+
+```java
+Collections.binarySearch(sortedList, key);   // 要求有序
+Collections.max(list);
+Collections.min(list, comparator);
+Collections.frequency(list, obj);            // 出现次数
+
+Collections.reverse(list);        // 反转
+Collections.shuffle(list);        // 随机打乱
+Collections.swap(list, i, j);     // 交换两个位置
+Collections.rotate(list, 2);      // 旋转
+```
+
+`binarySearch` 的前提是有序，传无序列表的结果没有意义。`max` / `min` 在不传比较器时要求元素实现 `Comparable`，传了比较器就完全按比较器的逻辑走，与 `Comparable` 无关。
+
+`rotate` 把整个列表循环移动 `distance` 个位置，移出边界的元素从另一头绕回来，distance 为负数则反向移动。
+
+线程安全包装返回的是 `Collections` 内部的包装类，所有方法在同一个互斥锁上同步：
+
+```java
+List<T> syncList = Collections.synchronizedList(new ArrayList<>());
+Map<K,V> syncMap = Collections.synchronizedMap(new HashMap<>());
+Set<T> syncSet = Collections.synchronizedSet(new HashSet<>());
+```
+
+单次方法调用是安全的，复合操作不是。遍历必须自己加同步块包住整个循环，否则其他线程的结构性修改仍会触发 `ConcurrentModificationException`。
+
+```java
+List<T> unmod = Collections.unmodifiableList(list);
+Map<K,V> unmodMap = Collections.unmodifiableMap(map);
+```
+
+`unmodifiableXxx` 返回的是只读视图，原集合可变则视图内容跟着变，它挡住的只是“通过视图修改”。`List.of` 返回的是独立的不可变集合，底层数据不与外部共享，且拒绝 null。要真正防止后续改动，用后者；要临时对外暴露只读入口，用前者更省内存。
+
+## 按访问模式反推实现
+
+把这些类放在一起看，选择依据其实只有三条：访问模式、读写比例与并发要求、内存与 GC 成本。
+
+随机下标读多写少，`ArrayList` 几乎是默认答案；频繁在头尾增删，`ArrayDeque` 比 `LinkedList` 更合适，后者只在需要按下标访问又经常在中间插入删改时才有优势；需要去重且不关心顺序，`HashSet`；需要固定遍历顺序，`LinkedHashSet`；需要排序和范围查询，`TreeSet` 或 `TreeMap`；需要 LRU，`LinkedHashMap` 打开 `accessOrder`；并发读远多于写，`CopyOnWriteArrayList`；并发读写都有，`ConcurrentHashMap`。
+
+剩下的判断更微妙。`subList`、`keySet`、`values`、`entrySet` 返回的都是视图，视图的生命周期与原容器绑定，跨线程传递或长期持有之前要想清楚失效条件。`Arrays.asList` 与 `List.of` 都是“看起来像 List 但行为受限”的东西，一个长度固定、一个完全不可变，把二者当普通 `ArrayList` 用，出错往往发生在运行期而不是编译期。
+
+接口给的只是语义承诺，真正决定性能的是实现类和构造参数。大多数“集合用错了”的问题，不是接口选错，而是把接口的承诺当成了实现的保证：以为 `List.get` 一定是 O(1)，以为 `Set` 一定有顺序，以为 `Map` 的 `computeIfAbsent` 天然线程安全。把这几个默认假设逐个拆掉，框架的行为就都能推出来了。
+b:X
+10:X
+10:C
+0:{"buildId":"C9c09TEEYu21IVru8MmZS","data":[{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Java 集合框架：从 Iterable 到 HashMap 的接口契约、扩容策略与并发取舍\",\"item\":\"https://www.lxpavilion.top/article/244\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Java 集合框架：从 Iterable 到 HashMap 的接口契约、扩容策略与并发取舍\",\"headline\":\"Java 集合框架：从 Iterable 到 HashMap 的接口契约、扩容策略与并发取舍\",\"description\":\"从 Iterable、Collection 到 Map 梳理 Java 集合框架：for-each 的语法糖本质、Spliterator 的可分割设计、List/Set/Queue 的接口增量，以及 ArrayList 扩容、HashMap 树化与并发容器锁粒度演进背后的取舍。\",\"datePublished\":\"2026-11-13T08:26:50.688929\",\"dateCreated\":\"2026-11-13T08:26:50.688929\",\"dateModified\":\"2026-11-13T08:27:24.5776\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2296.png\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"Java 集合框架：从 Iterable 到 HashMap 的接口契约、扩容策略与并发取舍","initialContent":"$4"}]],["$L5","$L6","$L7","$L8"],"$L9"]}],"isPartial":"$@a","staleTime":"$b","varyParams":null},{"rsc":"$Lc","isPartial":"$@d","staleTime":"$b","varyParams":null},{"rsc":"$Le","isPartial":"$@f","staleTime":"$b","varyParams":"$10"},{"rsc":"$L11","isPartial":"$@12","staleTime":"$b","varyParams":"$10"},{"rsc":"$L13","isPartial":"$@14","staleTime":"$b","varyParams":null},{"rsc":"$L15","isPartial":"$@16","staleTime":"$b","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@17","rootVaryParams":null,"needsRuntimeRequest":"$@18"}
+19:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+1a:"$Sreact.suspense"
+1c:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+1d:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+1e:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+1f:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+20:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+21:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+27:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+28:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+29:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+2a:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+2b:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2c:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2d:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2e:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2f:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+30:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+31:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+32:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+33:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+3:{"id":"244"}
+5:["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true}]
+6:["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true}]
+7:["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true}]
+8:["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true}]
+9:["$","$L19",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@1b"}]}]
+c:["$","$1","h",{"children":[null,["$","$L1c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L1d",null,{"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Java 集合框架：从 Iterable 到 HashMap 的接口契约、扩容策略与并发取舍 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"从 Iterable、Collection 到 Map 梳理 Java 集合框架：for-each 的语法糖本质、Spliterator 的可分割设计、List/Set/Queue 的接口增量，以及 ArrayList 扩容、HashMap 树化与并发容器锁粒度演进背后的取舍。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/244/"}],["$","meta","5",{"property":"og:title","content":"Java 集合框架：从 Iterable 到 HashMap 的接口契约、扩容策略与并发取舍 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"从 Iterable、Collection 到 Map 梳理 Java 集合框架：for-each 的语法糖本质、Spliterator 的可分割设计、List/Set/Queue 的接口增量，以及 ArrayList 扩容、HashMap 树化与并发容器锁粒度演进背后的取舍。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2296.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","15",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+e:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+11:["$","$L21",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L22"]}],"$L23","$L24","$L25"]}]]}],[],null],"children":"$L26"}]
+13:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true}]],[["$","$L27",null,{}],["$","$L28",null,{"children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L29",null,{"children":["$","$L20",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+15:["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2a",null,{"children":[["$","$L2b",null,{}],["$","$L2c",null,{}],["$","$L2d",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L2e",null,{}],["$","$L2f",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L30",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L31",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","$L32",null,{}],["$","$L33",null,{}]]}],["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]]}]}]]}]]}]
+1b:null
+22:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+23:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+24:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+25:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+26:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+18:true
+b:300
+b:C
+17:0
+d:"$undefined"
+f:"$undefined"
+14:"$undefined"
+12:"$undefined"
+16:"$undefined"
+a:"$undefined"

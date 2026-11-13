@@ -1,0 +1,169 @@
+1:"$Sreact.fragment"
+2:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+4:T1c86,注解和反射能解决“声明”和“按名字调用”的问题，但要自动给一批方法加上日志、事务、权限，光靠它们还得在每个调用点手写反射调用，或者把每个类都改一遍。动态代理把“调用”这一层整个接管：调用方拿到的是代理对象，接口上的每个方法一被调用，就先进入 `InvocationHandler.invoke`，由它决定执行什么增强、什么时候把调用转给真实对象、返回什么。
+
+调用方仍然按接口编程，感知不到手里是代理；增强逻辑收在一个类里，业务代码不用改。这也是它比手工反射更适合做通用扩展的原因——反射负责“能找到方法”，代理负责“每次调用都经过这里”。
+
+## 代理对象接管了什么
+
+代理对象和真实对象实现同一个接口。调用方声明的是接口类型，实际拿到的是运行期生成的代理类实例，类名以 `$Proxy` 开头，由 `Proxy.newProxyInstance` 动态创建。代理类实现了传入的所有接口，每个方法体都只做一件事：把调用转给 handler 的 `invoke`。代理代码不需要知道接口里有哪些方法，接口加方法也不用改它。
+
+## InvocationHandler：唯一的扩展点
+
+`InvocationHandler` 是 JDK 动态代理的调用处理器接口，代理对象上的所有方法调用都会被转发到它的 `invoke` 方法。整个接口只有一个方法要重写。
+
+```java
+public interface InvocationHandler {
+    Object invoke(Object proxy, Method method, Object[] args) throws Throwable;
+}
+```
+
+三个参数各有分工。`proxy` 是代理对象本身，它在 `invoke` 里几乎用不到——对 `proxy` 调用任何方法都会再次进入 `invoke`，形成递归。`method` 是被调用的方法，`method.getName()` 能拿到方法名，`method.getParameterTypes()` 能拿到签名，据此做分支或拼日志。`args` 是实参数组，无参方法时为 `null`，基本类型实参在数组里是装箱后的包装类型。返回值会成为调用方最终拿到的结果，方法本身返回 `void` 时返回 `null` 即可。
+
+它位于代理对象和真实目标之间，是拦截层。常见的写法是先做增强，再 `method.invoke(target, args)` 把调用转发给真实对象，收尾逻辑放在转发之后；也可以根据条件不转发，直接返回默认值或者抛异常——权限校验失败时就是这样处理的。
+
+## Proxy.newProxyInstance 的三个参数
+
+创建代理的入口是 `Proxy` 类的静态方法：
+
+```java
+Proxy.newProxyInstance(
+        User.class.getClassLoader(),
+        new Class<?>[]{User.class},
+        new LogHandler(target)
+);
+```
+
+第一个参数是类加载器，生成的代理类由它定义，通常传接口的类加载器。第二个是接口数组，代理类会实现其中全部接口。第三个是调用处理器，通常持有真实目标；每个代理对象可以有独立的 handler，也可以共用一个无状态的 handler。
+
+返回值类型是 `Object`，使用时要强转成接口类型。三个参数都不能为 `null`，接口数组里也必须全是接口——把 `UserImpl.class` 传进去会抛 `IllegalArgumentException`。原因在生成方式：代理类是通过 `implements` 这些接口来“变成”目标类型的，而它本身必须继承 `java.lang.reflect.Proxy`，Java 又只允许单继承，所以再继承一个业务类这条路走不通。想同时具备多个类型，只能靠接口。
+
+## 完整示例
+
+```java
+import java.lang.reflect.*;
+
+interface User {
+    void say();
+}
+
+class UserImpl implements User {
+    @Override
+    public void say() {
+        System.out.println("say");
+    }
+}
+
+class LogHandler implements InvocationHandler {
+    private final Object target;
+
+    LogHandler(Object target) {
+        this.target = target;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println("before " + method.getName());
+        Object result = method.invoke(target, args);
+        System.out.println("after " + method.getName());
+        return result;
+    }
+}
+
+public class Demo {
+    // 静态工厂，外部直接 Demo.newUser()
+    public static User newUser() {
+        User target = new UserImpl();
+        return (User) Proxy.newProxyInstance(
+                User.class.getClassLoader(),
+                new Class<?>[]{User.class},   // 这里必须是接口
+                new LogHandler(target)
+        );
+    }
+
+    public static void main(String[] args) {
+        User user = newUser();
+        user.say();   // 走代理，打印 before/after
+    }
+}
+```
+
+接口 `User` 定义契约，`UserImpl` 是真实目标，`LogHandler` 持有 target 并在 `invoke` 里前后各打印一行，`newUser` 把“创建真实对象、生成代理、绑定处理器”三步封在工厂里。`main` 里的 `user` 声明类型是接口，实际是代理实例，`user.say()` 不会直接进 `UserImpl.say()`。
+
+## 运行效果
+
+```
+before say
+say
+after say
+```
+
+三行的顺序就是调用链：调用方 → 代理 → `invoke` 前半段 → 真实方法 → `invoke` 后半段。真实方法只执行一次，前后各一次增强。把 `invoke` 里那行 `method.invoke(target, args)` 去掉、直接 `return null`，`say` 就不再打印——代理完全可以决定要不要放行。
+
+还有一个能直接观察到的细节：`user.getClass().getName()` 打印出来不是 `UserImpl`，而是 `$Proxy0` 之类的名字。代理类和目标类没有继承关系，它们只是实现了同一个接口。
+
+## 几个容易踩的点
+
+`invoke` 的 `proxy` 参数容易误用。在 `invoke` 里调用 `proxy.toString()` 打日志，会再次进入 `invoke`，再打印、再进入，直到 `StackOverflowError`。日志里需要对象信息时用 `target` 或 `method.getDeclaringClass()`，不要碰 `proxy`。另外 `equals`、`hashCode`、`toString` 也会被拦截，因为代理类重写了它们并转给 `invoke`，写 handler 时如果按方法名做分支，要把这三个考虑进去。
+
+`method.invoke` 抛出的异常不会原样冒出来，而是被包成 `InvocationTargetException`，这也是 `invoke` 声明 `throws Throwable` 的原因。要按业务异常处理，得先 `getCause()` 拆包再判断；直接往外抛，调用方看到的是包装后的异常，栈里多一层反射帧，日志里的根因不好找。
+
+## 总结
+
+JDK 动态代理用 `Proxy.newProxyInstance` 在运行期生成实现指定接口的代理类，把接口上的所有方法调用统一转进 `InvocationHandler.invoke`，所以只能代理接口，类加载器、接口数组和处理器一个都不能少。`invoke` 里用 `method.invoke(target, args)` 转发，别碰 `proxy` 参数，目标方法抛出的异常会包成 `InvocationTargetException`。
+
+动态代理的价值不在“代理”这个词，而在调用入口被收拢成了一个方法。一个接口的几十个方法，增强逻辑只写一遍；换日志实现、加权限校验，改的是 handler，不是业务类。代价是只能围着接口做文章，以及每次调用多一层转发。只要调用方按接口编程，这层转发就是透明的——Spring 的事务代理、MyBatis 的 Mapper 接口，都是在这套机制上继续往上搭。
+b:X
+10:X
+10:C
+0:{"buildId":"C9c09TEEYu21IVru8MmZS","data":[{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Java 动态代理入门：InvocationHandler 与 Proxy 的用法\",\"item\":\"https://www.lxpavilion.top/article/231\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Java 动态代理入门：InvocationHandler 与 Proxy 的用法\",\"headline\":\"Java 动态代理入门：InvocationHandler 与 Proxy 的用法\",\"description\":\"JDK 动态代理把代理对象上的每一次方法调用都转进 InvocationHandler.invoke，日志、事务、权限这类横切逻辑得以集中在一处。文章用一段可运行的示例讲清 Proxy.newProxyInstance 的三个参数、invoke 的三个入参、方法执行效果，以及只能代理接口这条限制的由来。\",\"datePublished\":\"2026-11-10T09:14:00.178229\",\"dateCreated\":\"2026-11-10T09:14:00.178229\",\"dateModified\":\"2026-11-10T09:16:41.469471\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2296.png\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"Java 动态代理入门：InvocationHandler 与 Proxy 的用法","initialContent":"$4"}]],["$L5","$L6","$L7","$L8"],"$L9"]}],"isPartial":"$@a","staleTime":"$b","varyParams":null},{"rsc":"$Lc","isPartial":"$@d","staleTime":"$b","varyParams":null},{"rsc":"$Le","isPartial":"$@f","staleTime":"$b","varyParams":"$10"},{"rsc":"$L11","isPartial":"$@12","staleTime":"$b","varyParams":"$10"},{"rsc":"$L13","isPartial":"$@14","staleTime":"$b","varyParams":null},{"rsc":"$L15","isPartial":"$@16","staleTime":"$b","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@17","rootVaryParams":null,"needsRuntimeRequest":"$@18"}
+19:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+1a:"$Sreact.suspense"
+1c:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+1d:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+1e:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+1f:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+20:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+21:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+27:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+28:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+29:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+2a:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+2b:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2c:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2d:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2e:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2f:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+30:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+31:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+32:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+33:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+3:{"id":"231"}
+5:["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true}]
+6:["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true}]
+7:["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true}]
+8:["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true}]
+9:["$","$L19",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@1b"}]}]
+c:["$","$1","h",{"children":[null,["$","$L1c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L1d",null,{"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Java 动态代理入门：InvocationHandler 与 Proxy 的用法 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"JDK 动态代理把代理对象上的每一次方法调用都转进 InvocationHandler.invoke，日志、事务、权限这类横切逻辑得以集中在一处。文章用一段可运行的示例讲清 Proxy.newProxyInstance 的三个参数、invoke 的三个入参、方法执行效果，以及只能代理接口这条限制的由来。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/231/"}],["$","meta","5",{"property":"og:title","content":"Java 动态代理入门：InvocationHandler 与 Proxy 的用法 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"JDK 动态代理把代理对象上的每一次方法调用都转进 InvocationHandler.invoke，日志、事务、权限这类横切逻辑得以集中在一处。文章用一段可运行的示例讲清 Proxy.newProxyInstance 的三个参数、invoke 的三个入参、方法执行效果，以及只能代理接口这条限制的由来。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2296.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","15",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+e:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+11:["$","$L21",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L22"]}],"$L23","$L24","$L25"]}]]}],[],null],"children":"$L26"}]
+13:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true}]],[["$","$L27",null,{}],["$","$L28",null,{"children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L29",null,{"children":["$","$L20",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+15:["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2a",null,{"children":[["$","$L2b",null,{}],["$","$L2c",null,{}],["$","$L2d",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L2e",null,{}],["$","$L2f",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L30",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L31",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","$L32",null,{}],["$","$L33",null,{}]]}],["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]]}]}]]}]]}]
+1b:null
+22:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+23:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+24:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+25:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+26:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+18:true
+b:300
+b:C
+17:0
+d:"$undefined"
+f:"$undefined"
+14:"$undefined"
+12:"$undefined"
+16:"$undefined"
+a:"$undefined"

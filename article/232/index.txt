@@ -1,0 +1,334 @@
+1:"$Sreact.fragment"
+2:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+3:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+4:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+5:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+6:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+7:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+8:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+9:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+a:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+b:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+16:I[68027,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default",1]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+:HL["/_next/static/media/geist_latin-s.p.0wgildi0cnwt9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/geist_mono_latin-s.p.0w5z4e7s8jfe5.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/noto_serif_sc_latin-s.p.2xkduggpvd1-n.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+14:X
+0:{"P":null,"c":["","article","232",""],"q":"","i":false,"f":[[["",{"children":["(main)",{"children":["article",{"children":[["id","232","d",[]],{"children":["__PAGE__",{},"$undefined","$undefined",4608]},"$undefined","$undefined",4608]},"$undefined","$undefined",4612]},"$undefined","$undefined",4616]},"$undefined","$undefined",4632],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{}],["$","$L5",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L6",null,{}],["$","$L7",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L8",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L9",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],"$Lc"]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],"$Ld","$Le"]}],"$Lf"]}]}]]}]]}],{"children":["$L10",{"children":["$L11",{"children":["$L12",{"children":["$L13",{},null,false,null]},null,false,"$14"]},null,false,"$14"]},null,false,null]},null,false,null],"$L15",false]],"m":"$undefined","G":["$16",["$L17","$L18"]],"S":true,"h":null,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"C9c09TEEYu21IVru8MmZS"}
+19:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1a:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1b:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1c:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1d:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+1e:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+25:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+26:"$Sreact.suspense"
+28:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+2a:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+c:["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]
+d:["$","$L19",null,{}]
+e:["$","$L1a",null,{}]
+f:["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]
+10:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true,"nonce":"$undefined"}]],[["$","$L1b",null,{}],["$","$L1c",null,{"children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L1d",null,{"children":["$","$Lb",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$c:props:style","children":["$","h2",null,{"style":"$c:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+11:["$","$L1e",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L1f"]}],"$L20","$L21","$L22"]}]]}],[],null],"children":"$L23"}]
+12:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+13:["$","$1","c",{"children":["$L24",[["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true,"nonce":"$undefined"}]],["$","$L25",null,{"children":["$","$26",null,{"name":"Next.MetadataOutlet","children":"$@27"}]}]]}]
+15:["$","$1","h",{"children":[null,["$","$L28",null,{"children":"$L29"}],["$","div",null,{"hidden":true,"children":["$","$L2a",null,{"children":["$","$26",null,{"name":"Next.Metadata","children":"$L2b"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+17:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+18:["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+14:C
+1f:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+20:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+21:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+22:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+23:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+2c:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+2e:T3604,`count++` 只有一行，实际是读值、加一、写回三步。两个线程同时执行时，可能都读到 10，各自加一写回去，内存里最终只留下 11，一次增量被覆盖。锁要做的事就是把这三步包成不可分割的整体，同一时刻只允许一个线程进入这段代码。
+
+Java 有两套常用方案。`synchronized` 是关键字，加锁解锁由 JVM 负责，进出代码块自动完成；`java.util.concurrent.locks` 下是显式锁，`ReentrantLock` 用得最多，多了超时、可中断和公平策略。两者保证互斥的思路一样，使用边界差别不小。
+
+## synchronized 入门
+
+```java
+public class Main {
+    static int count = 0;
+
+    static synchronized void increment() {
+        count++;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Runnable task = () -> {
+            for (int i = 0; i < 100000; i++) {
+                increment();
+            }
+        };
+
+        Thread t1 = new Thread(task);
+        Thread t2 = new Thread(task);
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+
+        System.out.println("count = " + count);
+    }
+}
+```
+
+两个线程各跑十万次，输出稳定在 200000。`static synchronized` 锁的是 `Main.class`，两个线程抢的是同一把锁，`count++` 的三步不会交叉。把 `synchronized` 去掉，输出通常会小于 200000，差额就是被覆盖掉的增量；少多少取决于线程调度，每次运行都可能不同，这也是并发问题难以复现的原因。
+
+## 锁的是对象，不是方法
+
+`synchronized` 写在方法或代码块上，互斥性却来自“同一个监视器对象”。每个对象有一把内置锁，线程进入同步区域前要先拿到它，离开时释放。决定成败的不是有没有写关键字，而是几个线程是不是在抢同一个对象。
+
+### 修饰实例方法
+
+锁是 `this`。同一个实例上的同步实例方法共用这把锁，多个线程访问同一个对象时才会排队。
+
+```java
+class Test {
+    synchronized void increment() {
+        Main.count++;
+    }
+}
+
+public class Main {
+    static int count = 0;
+
+    public static void main(String[] args) throws InterruptedException {
+        Test test = new Test();     // 两个线程共用这个实例
+        Runnable task = () -> {
+            for (int i = 0; i < 100000; i++) {
+                test.increment();
+            }
+        };
+
+        Thread t1 = new Thread(task);
+        Thread t2 = new Thread(task);
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+
+        System.out.println("count = " + count);
+    }
+}
+```
+
+这样写结果是 200000。把实例化挪进循环，情况就变了：
+
+```java
+Runnable task = () -> {
+    for (int i = 0; i < 100000; i++) {
+        Test test = new Test();   // 每次迭代都是新对象
+        test.increment();
+    }
+};
+```
+
+每个线程每次迭代都建一个 `Test`，锁的是各自的 `this`，两把锁各管各的，`count++` 又退回非原子状态，结果小于 200000。这是“锁对象必须共享”最直接的例子：`synchronized` 写对了，对象不是同一个，互斥就不存在。锁对象通常声明成字段并加 `final`，原因也在这里——临时 new 出来的对象起不到任何作用。
+
+### 修饰静态方法
+
+锁的是类的 `Class` 对象，`static synchronized` 等价于 `synchronized (Main.class)`。同一个类加载器下这个对象只有一份，所以两个线程即使持有不同实例、甚至根本没有实例，也会互斥。入门示例里两个线程都调 `increment()`，靠的就是这一点。
+
+### 修饰代码块
+
+括号里写任意对象，锁的就是它。临界区可以缩到真正需要的几行，不必把整个方法串行化；锁对象也能自己选，避免锁 `this` 时把不相干的同步方法一起拖下水。
+
+```java
+public class Demo3 {
+    private int count = 0;
+    private final Object lock = new Object();
+
+    public void increment() {
+        synchronized (lock) {
+            count++;
+        }
+    }
+}
+```
+
+`lock` 是什么对象都行，关键是所有线程拿到的是同一个引用。`final` 在这里不是风格问题，引用一变，锁就换了。
+
+在同步块里给锁对象重新赋值，是这个问题最常见的形态。假设锁对象是一个没有 `final` 的字段：
+
+```java
+static Object lock = new Object();
+
+Runnable task = () -> {
+    for (int i = 0; i < 100000; i++) {
+        synchronized (lock) {
+            lock = new Object();   // 每次迭代换一把锁
+            count++;
+        }
+    }
+};
+```
+
+块内赋值不会改变已经进入的监视器——`synchronized (lock)` 在进入时对表达式求值一次，当前这一轮仍然锁在旧对象上；但下一轮读到的就是新对象，另一线程可能还拿着旧对象，从第二次迭代起互斥就断了。
+
+更隐蔽的是锁一个会变的值。把计数器声明成 `Integer` 字段，直接拿它当锁：
+
+```java
+Integer count = 0;   // 类字段
+
+Runnable task = () -> {
+    for (int i = 0; i < 100000; i++) {
+        synchronized (count) {
+            count++;   // 拆箱、加一、再装箱，count 指向新对象
+        }
+    }
+};
+```
+
+`count` 是引用类型，`synchronized` 能编译；但 `count++` 走的是拆箱、加一、装箱，每次都给 `count` 赋一个新的 `Integer`，锁对象跟着换。小整数还有缓存（-128 到 127），前一百多次可能恰好锁在同一个缓存对象上，看起来“有时候管用”，之后各锁各的。锁 `String`、`Integer` 这类不可变或带缓存的对象都有同样的问题，锁对象用专门的 `final Object` 最稳。
+
+## 等待与通知：wait 与 notify
+
+线程拿到锁之后，可能发现条件不满足，缓冲区满了、队列空了，这时需要先让出锁去等，等别的线程把条件改好再回来。`wait` 和 `notify` 就是这套机制的原语，前提是双方都在同一个对象的锁上。
+
+调用 `obj.wait()` 有四条规则。当前线程必须持有 `obj` 的锁，否则抛 `IllegalMonitorStateException`；调用瞬间释放 `obj` 的锁，不是等到方法返回；线程进入 `obj` 的等待队列（WaitSet），状态变成 `WAITING`，交出 CPU；被 `notify` 或 `notifyAll` 唤醒后不会立刻执行，要重新竞争这把锁，抢到了才从 `wait()` 的下一行继续。
+
+因为“被唤醒”和“条件成立”是两件事，`wait` 要放在循环里：
+
+```java
+synchronized (queue) {
+    while (queue.isEmpty()) {
+        queue.wait();
+    }
+    Object item = queue.poll();
+}
+```
+
+被唤醒只是拿到一次重新检查的机会，另一个线程可能先抢到锁又把条件改了回去；JVM 也允许虚假唤醒，唤醒不一定对应一次 `notify`。循环把这两种情况都兜住。
+
+`notify()` 唤醒等待队列里的一个线程，具体是哪个没有保证，不按申请顺序；`notifyAll()` 唤醒全部。被唤醒的线程要和所有想拿这把锁的线程一起竞争，唤醒不等于执行。这也是 `wait`/`notify` 容易写错的原因：谁被叫醒、叫醒后条件还在不在，都得自己兜底。
+
+## ReentrantLock
+
+JDK 5 之后，`java.util.concurrent.locks` 提供了显式锁。`ReentrantLock` 是可重入的互斥锁，和 `synchronized` 一样保证互斥，但加锁解锁要自己写，异常路径必须靠 `finally` 兜住。
+
+```java
+private static final ReentrantLock lock = new ReentrantLock();
+
+Runnable task = () -> {
+    for (int i = 0; i < 100000; i++) {
+        lock.lock();
+        try {
+            count++;
+        } finally {
+            lock.unlock();
+        }
+    }
+};
+```
+
+`lock.lock()` 拿到锁后进入临界区，`finally` 里解锁。和 `synchronized` 最大的区别在“谁负责释放”：JVM 在退出同步块时自动释放，显式锁不会。漏写 `unlock`，其他线程会一直阻塞，编译器也不会提醒。
+
+### 可重入与几个实用方法
+
+可重入指同一个线程可以重复获取已经持有的锁，锁几次就要放几次，少放一次别的线程就进不来。`lock.getHoldCount()` 返回当前线程的持有次数，排查“锁套了几层、有没有漏放”时能直接看到数字。
+
+`tryLock` 是相比 `synchronized` 最实用的增量。`tryLock()` 立刻返回，拿不到就是 `false`，不阻塞；`tryLock(1, TimeUnit.SECONDS)` 最多等 1 秒，超时返回 `false`。它的语义是“最多等这么久，等不到就放弃”，不是“超时后自动解锁”，线程不会被无限期卡住，适合拿不到锁就降级或报错的场景。
+
+`lockInterruptibly()` 让等锁的过程可被 `Thread.interrupt()` 打断，抛 `InterruptedException`；`synchronized` 等锁时不可中断，只能一直等。需要响应取消操作的线程，只能用显式锁。
+
+### 公平锁与非公平锁
+
+构造器传 `true` 得到公平锁，`false` 是默认的非公平锁。公平的意思是严格按申请顺序排队，后来的线程不插队；非公平允许刚到的线程直接尝试抢锁，吞吐更高，代价是队列里的线程可能长时间拿不到。
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        test(false);
+        System.out.println("-----");
+        test(true);
+    }
+
+    static void test(boolean fair) {
+        System.out.println(fair ? "公平锁:" : "非公平锁:");
+        ReentrantLock lock = new ReentrantLock(fair);
+
+        Runnable task = () -> {
+            lock.lock();
+            try {
+                System.out.println(Thread.currentThread().getName() + " got lock");
+            } finally {
+                lock.unlock();
+            }
+        };
+
+        for (int i = 0; i < 5; i++) {
+            new Thread(task, "t" + i).start();
+        }
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+    }
+}
+```
+
+某次运行的输出：
+
+```
+非公平锁:
+t0 got lock
+t3 got lock
+t1 got lock
+t4 got lock
+t2 got lock
+-----
+公平锁:
+t0 got lock
+t1 got lock
+t3 got lock
+t2 got lock
+t4 got lock
+```
+
+这段输出只能说明趋势，线程启动和调度都不保证顺序，多跑几次结果会变。非公平锁下出现乱序更常见，但它也不是每次都乱。公平锁里 t3 排在 t2 前面同样不矛盾：排队看的是线程真正调用 `lock()` 的先后，`start()` 的顺序只决定谁先被创建，谁先开始执行由调度决定。
+
+非公平的插队在代码里只有一行：`NonfairSync.lock()` 开头直接 `compareAndSetState(0, 1)`，抢到就持有。A 释放锁时把 state 置 0 并 `unpark` 队列头的 B，但 B 从被唤醒到真正跑起来要经过操作系统调度，中间有几十微秒到毫秒的空档。这个空档里新来的 D 用 CAS 把 state 从 0 改成 1，直接拿锁；B 醒来发现 `tryAcquire` 失败，只能重新 park。
+
+公平锁多一道检查：state 为 0 时先调 `hasQueuedPredecessors()`，看队列里有没有比自己更早的等待者，有就放弃 CAS、去队尾排队，只有轮到自己（head.next）才允许拿锁。一次判断换来严格顺序，代价是唤醒和上下文切换更频繁，吞吐低于非公平锁。
+
+### 条件队列：Condition
+
+`synchronized` 只有一个等待队列，一套 `wait`/`notify` 服务所有条件；`ReentrantLock` 能通过 `newCondition()` 建多条队列，每条对应一种条件，通知时互不干扰。
+
+```java
+static final ReentrantLock lock = new ReentrantLock();
+static final Condition cond = lock.newCondition();
+```
+
+`await` 和 `signal` 的规则与 `wait`/`notify` 对应：调用前必须持有对应的锁，否则抛 `IllegalMonitorStateException`；`await` 释放锁并进入这条 Condition 的等待队列；`signal` 唤醒其中一个，被唤醒的线程要重新拿锁才能继续。区别在于队列可以按条件拆开，`signal` 只影响自己那条队列，不必把所有人叫醒再让他们重睡。
+
+| 方法 | 作用 | 返回值 |
+|---|---|---|
+| `await()` | 等待，释放锁，被 signal 或中断唤醒 | void |
+| `awaitUninterruptibly()` | 等待，不响应中断 | void |
+| `awaitNanos(long nanos)` | 等待指定纳秒 | 剩余纳秒数 |
+| `await(long time, TimeUnit unit)` | 等待指定时间 | 是否在超时前被唤醒 |
+| `awaitUntil(Date deadline)` | 等到某个时间点 | 是否在超时前被唤醒 |
+| `signal()` | 唤醒一个等待线程 | void |
+| `signalAll()` | 唤醒所有等待线程 | void |
+
+几个方法的分工看返回值就能判断：`awaitNanos` 返回剩余纳秒数，可以据此决定还要不要再等一轮；`await(time, unit)` 和 `awaitUntil` 返回是否在超时前被唤醒；`awaitUninterruptibly` 不响应中断，适合必须等到底的收尾逻辑。
+
+## 总结
+
+`synchronized` 的互斥来自监视器对象：实例方法锁 `this`，静态方法锁 `Class`，代码块锁括号里的引用，锁对象不共享或会变，互斥就不成立；`wait`/`notify` 必须持有同一把锁，被唤醒后要重新竞争并重新检查条件。`ReentrantLock` 多了可重入计数、`tryLock` 限时、可中断等锁和公平策略，代价是手动 `finally` 释放；非公平锁允许新到的线程插队，公平锁按 `lock()` 的先后排队。
+
+选型可以很直接。临界区能在一个方法或代码块里闭合、不需要超时和中断，用 `synchronized`，代码短，释放由 JVM 保证，锁消除、锁粗化这类优化也由 JVM 自己做；需要限时等待、响应中断、公平策略或按条件分开等待，用 `ReentrantLock`，代价是手动释放和更高的出错概率。两个方案共享同一条底线：锁的是对象，所有线程必须争同一个对象。锁 new 在方法里、锁一个会变的字段、锁完忘了放，都是让锁失效的写法。
+24:[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Java 锁入门：synchronized 与 ReentrantLock 的用法\",\"item\":\"https://www.lxpavilion.top/article/232\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Java 锁入门：synchronized 与 ReentrantLock 的用法\",\"headline\":\"Java 锁入门：synchronized 与 ReentrantLock 的用法\",\"description\":\"count++ 不是原子操作，锁把读改写三步捆成一个整体。文章用可运行的计数示例讲清 synchronized 锁 this、锁 Class、锁代码块三种形态与锁对象必须共享的原因，梳理 wait/notify 的握手顺序，再对照 ReentrantLock 的可重入、tryLock、中断与公平锁的排队机制。\",\"datePublished\":\"2026-11-10T09:14:07.617877\",\"dateCreated\":\"2026-11-10T09:14:07.617877\",\"dateModified\":\"2026-11-10T09:16:50.470823\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2296.png\"}"}}],["$","$L2c",null,{"params":"$@2d","articleTitle":"Java 锁入门：synchronized 与 ReentrantLock 的用法","initialContent":"$2e"}]]
+2d:{"id":"232"}
+29:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+2f:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+27:null
+2b:[["$","title","0",{"children":"Java 锁入门：synchronized 与 ReentrantLock 的用法 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"count++ 不是原子操作，锁把读改写三步捆成一个整体。文章用可运行的计数示例讲清 synchronized 锁 this、锁 Class、锁代码块三种形态与锁对象必须共享的原因，梳理 wait/notify 的握手顺序，再对照 ReentrantLock 的可重入、tryLock、中断与公平锁的排队机制。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/232/"}],["$","meta","5",{"property":"og:title","content":"Java 锁入门：synchronized 与 ReentrantLock 的用法 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"count++ 不是原子操作，锁把读改写三步捆成一个整体。文章用可运行的计数示例讲清 synchronized 锁 this、锁 Class、锁代码块三种形态与锁对象必须共享的原因，梳理 wait/notify 的握手顺序，再对照 ReentrantLock 的可重入、tryLock、中断与公平锁的排队机制。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2296.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L2f","15",{}]]

@@ -1,0 +1,224 @@
+1:"$Sreact.fragment"
+2:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+4:T28a3,`native` 是 Java 的关键字，只能修饰方法，表示这个方法没有 Java 方法体，实现由非 Java 语言（通常是 C/C++）提供，运行时通过 JNI 调用本地库。它不改变调用方式，编译出来的仍是一个普通方法，区别在于没有字节码方法体，调用会从 Java 世界跳进本地代码里执行。
+
+把实现交给本地代码，动机通常只有一个：复用已有的 C 库，或者访问 Java 层封装不到的平台能力。代价跟着流程一起出现——库要按平台分别编译、类型要在两套运行环境之间转换、本地代码里的一次空指针就可能直接带走整个 JVM。
+
+## 关键字规则
+
+```java
+public class Demo {
+    public native int add(int a, int b);
+
+    static {
+        System.loadLibrary("demo");
+    }
+}
+```
+
+`add` 没有 `{}`，直接以分号结束。调用方看不出它和普通方法有什么区别，实际执行的是本地库里的 `add`。
+
+语法上有几条硬性限制。它只能修饰方法，不能修饰类、字段或变量；方法必须以 `;` 结尾，不能带方法体；可以和 `static`、`private`、`final`、`synchronized` 搭配，修饰 `synchronized` 时锁在进入本地方法前获取、返回后释放，与普通同步方法一致；不能和 `abstract` 同时使用，一个要求本地实现，一个要求子类实现，语义冲突，编译器会直接报错。
+
+参数和返回值可以是任意 Java 类型，跨界时按 JNI 的类型映射转换，`int` 对应 `jint`，`String` 对应 `jstring`，数组对应 `jarray` 及其子类型。
+
+## JNI 是双向通道
+
+JNI 常被理解成“Java 调 C”，实际是双向的。Java 到 C 这一段是普通调用：Java 调 native 方法，JVM 找到对应的本地函数执行。C 到 Java 这一段靠 `JNIEnv`：本地代码可以调 Java 方法、读写字段、创建对象、抛异常，把结果回传给 Java 层。
+
+`JNIEnv` 在 C 里是指向函数表的指针，所有 JNI 函数都要先解引用，所以 C 代码写成 `(*env)->GetStringUTFChars(...)`；在 C++ 里 `JNIEnv` 被包装成一个类，直接写 `env->GetStringUTFChars(...)` 即可。这也是生成的头文件要加 `extern "C"` 保护的原因：C++ 编译器会按自己的规则改名，而 JVM 只认 C 的符号名。
+
+## 调用流程
+
+1. Java 声明 `native` 方法。
+2. `System.loadLibrary("xxx")` 加载本地库。
+3. JVM 在本地库中查找对应实现并链接。
+4. 调用时，JVM 从 Java 虚拟机栈切换到本地方法栈，进入本地代码执行。
+5. 本地代码通过 `JNIEnv` 操作 Java 对象、调用 Java 方法。
+6. 执行完返回 Java 层。
+
+native 方法没有字节码方法体，所以不按普通 Java 方法那样解释执行，JVM 在第一次调用时解析到本地入口，之后直接跳过去。第 4 步的栈切换是这条链路和纯 Java 调用最本质的差别：线程的执行栈从虚拟机栈换到本地方法栈，本地代码里的崩溃绕过了 Java 的异常机制，直接让整个 JVM 退出。
+
+## 完整示例
+
+下面的示例在 JDK 21 与 MSVC 环境下实际编译并运行通过，输出为 `从 C 返回：Hello, JNI! This is from C.`。
+
+### 1. 编写 Java 类
+
+```java
+public class NativeDemo {
+    // 1. 声明 native 方法：没有方法体
+    public native String sayHello(String name);
+
+    // 2. 加载本地库：库名不带 lib 前缀和 .so/.dll 后缀
+    static {
+        System.loadLibrary("nativedemo");
+    }
+
+    public static void main(String[] args) {
+        NativeDemo demo = new NativeDemo();
+        // 3. 调用 native 方法
+        String result = demo.sayHello("JNI");
+        System.out.println("从 C 返回：" + result);
+    }
+}
+```
+
+`System.loadLibrary` 放在静态块里，保证类初始化时库已经加载。参数只写库名，不带 `lib` 前缀，也不带 `.so` / `.dll` 后缀——JVM 会按平台规则自己补：Linux 找 `libnativedemo.so`，Windows 找 `nativedemo.dll`。
+
+### 2. 生成头文件
+
+```bash
+javac -h . NativeDemo.java
+```
+
+`-h .` 表示在当前目录生成头文件，执行后得到 `NativeDemo.class` 和 `NativeDemo.h` 两个文件。头文件里的函数声明大致是这样：
+
+```c
+JNIEXPORT jstring JNICALL Java_NativeDemo_sayHello
+  (JNIEnv *, jobject, jstring);
+```
+
+命名规则是 `Java_` 加类全名加下划线加方法名，包名里的点替换成下划线。如果类在 `com.example` 包下，函数名就是 `Java_com_example_NativeDemo_sayHello`。有重载方法时，名字后面还要拼上参数类型签名，否则同名函数无法区分。
+
+`-h` 后面必须跟一个已存在的目录。不写 `-h` 时 `javac` 只产出 `.class`，不会生成任何头文件——这不是“生成到别处”，而是根本没有生成。JDK 8 之前用的是 `javah -jni NativeDemo`，之后 `javac -h` 取代了它，JDK 21 里已经移除了 `javah`。
+
+### 3. 编写 C 实现
+
+```c
+#include <jni.h>
+#include <stdio.h>
+#include "NativeDemo.h"
+
+JNIEXPORT jstring JNICALL Java_NativeDemo_sayHello
+  (JNIEnv *env, jobject obj, jstring name) {
+
+    // 把 Java 的 jstring 转成 C 的字符串
+    const char *c_name = (*env)->GetStringUTFChars(env, name, NULL);
+    if (c_name == NULL) {
+        return NULL; // 内存不足
+    }
+
+    // 拼接要返回的字符串
+    char buf[256];
+    snprintf(buf, sizeof(buf), "Hello, %s! This is from C.", c_name);
+
+    // 释放 GetStringUTFChars 占用的内存
+    (*env)->ReleaseStringUTFChars(env, name, c_name);
+
+    // 把 C 字符串转成 Java 的 jstring 返回
+    return (*env)->NewStringUTF(env, buf);
+}
+```
+
+三个参数各有含义。`JNIEnv *env` 是环境指针，所有 JNI 调用都从它出发。`jobject obj` 是调用该方法的 Java 对象，相当于 Java 里的 `this`；如果 native 方法声明成 `static`，这里传的是 `jclass`。`jstring name` 是 `String` 在 JNI 里的映射类型，它和 C 的 `char *` 不是一回事。
+
+`GetStringUTFChars` 把 `jstring` 转成 C 字符串，这一步可能分配内存，所以必须与 `ReleaseStringUTFChars` 成对出现，否则每次调用都漏一块。返回的指针在下一次调用 JNI 函数前都是有效的，这段时间里可以随意读取，但不能写入，也不该超过释放后继续使用。
+
+`NewStringUTF` 把 C 字符串包装成新的 `jstring` 返回。它按修改过的 UTF-8 解释字节，非 ASCII 内容在这里容易出现编码偏差，涉及中文时更稳的做法是先用 Java 的 `String(byte[], charset)` 构造，或改用 `NewString` 配合 `jchar` 数组。`snprintf` 指定了缓冲区大小，拼接过长内容会被截断而不是越界，这是本地代码里必须保留的习惯。
+
+### 4. 编译为 DLL
+
+Windows 下用 MinGW：
+
+```bash
+gcc -shared -o nativedemo.dll NativeDemo.c ^
+    -I"%JAVA_HOME%\include" ^
+    -I"%JAVA_HOME%\include\win32"
+```
+
+两个 `-I` 缺一不可。`jni.h` 在 `include` 目录下，它又依赖平台相关的 `jni_md.h`，后者在 `include\win32`（Linux 是 `include/linux`）。少了第二个，编译会报找不到 `jni_md.h`。
+
+没有 MinGW 时可用 MSVC，命令等价：
+
+```bash
+cl /nologo /utf-8 /LD /Fe:nativedemo.dll NativeDemo.c ^
+   /I"%JAVA_HOME%\include" ^
+   /I"%JAVA_HOME%\include\win32"
+```
+
+`cl` 不在默认 PATH 里，需要先从开发者命令提示符启动，或在脚本里调用 `vcvars64.bat` 初始化环境变量。`/LD` 生成 DLL，`/Fe` 指定输出文件名——不指定时产物名取自源文件名，`cl` 会输出 `NativeDemo.dll`。
+
+`/utf-8` 是这份代码在中文 Windows 上必须加的开关。源文件存成 UTF-8，注释又是中文，而 MSVC 默认按系统代码页（简体中文为 936，即 GBK）解码；UTF-8 的字节被按 GBK 误读后，注释末尾可能拼出 `0x5C`，当成续行符，把下一行 `char buf[256];` 并进注释，编译时报 `error C2065: “buf”: 未声明的标识符`。加上 `/utf-8` 即可，也可以把源文件另存为带 BOM 的 UTF-8，让编译器自己识别。
+
+### 5. 运行
+
+```bash
+java -Djava.library.path=. NativeDemo
+```
+
+DLL 放在当前目录，运行时用 `-Djava.library.path=.` 告诉 JVM 去哪里找。预期输出：
+
+```text
+从 C 返回：Hello, JNI! This is from C.
+```
+
+有一个容易意外的现象：DLL 就在当前目录时，不带这个参数，`java NativeDemo` 同样能加载成功。原因是加载最终落到系统的 `LoadLibrary`，而 Windows 的 DLL 搜索顺序里包含当前目录，库不在 `java.library.path` 里也能被找到。所以在 Windows 上，把库放在工作目录能掩盖“参数没配对”的问题；换到别的目录、或者库被挪走，错误才会暴露成 `UnsatisfiedLinkError`。
+
+库名的大小写也不严格。`System.loadLibrary("nativedemo")` 加载 `NativeDemo.dll` 同样成功，因为 Windows 的文件系统查找不区分大小写。这条只适用于 Windows，Linux 上的 `libnativedemo.so` 必须完全对上。
+
+### 6. `-Djava.library.path` 会覆盖默认值
+
+这个参数是覆盖，不是追加，写了 `.` 之后，原来的默认路径就没了。JDK 21 上默认值是 JDK 自己的 `bin` 目录（例如 `D:\...\jdk-2.1\bin`）。
+
+一般情况下这不会立刻出问题，因为 JVM 自带的本地库（网络、NIO、加密等）走的是启动时的 boot 库路径，不依赖 `java.library.path`。真正受影响的是那些用 `System.loadLibrary` 加载的第三方本地库——数据库驱动、压缩库、序列化加速组件之类，它们默认从 `java.library.path` 里找。覆盖之前想清楚这些依赖是否需要保留，必要时把原路径拼进去：`-Djava.library.path=.;%JAVA_HOME%\bin`。
+
+## 这条链路上的判断
+
+一次完整的调用要经过声明、加载、链接、进入本地栈、类型转换、释放六个环节，任何一环出问题都表现为运行期异常而不是编译错误：库名写错是 `UnsatisfiedLinkError`，头文件路径漏了是编译期 `jni_md.h` 找不到，`jstring` 忘了释放是慢性的内存增长，本地代码越界则直接让 JVM 退出，不带 Java 堆栈。
+
+正因如此，native 适合的场景很窄：要复用现成的 C 库，或确实需要 Java 拿不到的平台能力。纯粹为了“更快”而把逻辑搬到 C 里，通常要先付出版本分发、平台编译、崩溃隔离三份成本，而这三份成本在纯 Java 实现里都不存在。
+b:X
+10:X
+10:C
+0:{"buildId":"C9c09TEEYu21IVru8MmZS","data":[{"rsc":["$","$1","c",{"children":[[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Java native 方法实战：javac -h 生成 JNI 头文件到调用 C 代码的全流程\",\"item\":\"https://www.lxpavilion.top/article/247\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Java native 方法实战：javac -h 生成 JNI 头文件到调用 C 代码的全流程\",\"headline\":\"Java native 方法实战：javac -h 生成 JNI 头文件到调用 C 代码的全流程\",\"description\":\"用一次可运行的最小示例走完 Java 调 C 的全流程：native 的关键字规则、javac -h 生成头文件与命名规则、JNIEnv 与 jstring 的边界转换、Windows 下编译 DLL 的命令，以及 -Djava.library.path 覆盖默认路径后的影响。\",\"datePublished\":\"2026-11-13T10:58:29.505922\",\"dateCreated\":\"2026-11-13T10:58:29.505922\",\"dateModified\":\"2026-11-13T10:58:47.022744\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2296.png\"}"}}],["$","$L2",null,{"params":"$@3","articleTitle":"Java native 方法实战：javac -h 生成 JNI 头文件到调用 C 代码的全流程","initialContent":"$4"}]],["$L5","$L6","$L7","$L8"],"$L9"]}],"isPartial":"$@a","staleTime":"$b","varyParams":null},{"rsc":"$Lc","isPartial":"$@d","staleTime":"$b","varyParams":null},{"rsc":"$Le","isPartial":"$@f","staleTime":"$b","varyParams":"$10"},{"rsc":"$L11","isPartial":"$@12","staleTime":"$b","varyParams":"$10"},{"rsc":"$L13","isPartial":"$@14","staleTime":"$b","varyParams":null},{"rsc":"$L15","isPartial":"$@16","staleTime":"$b","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@17","rootVaryParams":null,"needsRuntimeRequest":"$@18"}
+19:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+1a:"$Sreact.suspense"
+1c:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+1d:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+1e:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+1f:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+20:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+21:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+27:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+28:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+29:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+2a:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+2b:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2c:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2d:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2e:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+2f:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+30:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+31:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+32:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+33:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+3:{"id":"247"}
+5:["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true}]
+6:["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true}]
+7:["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true}]
+8:["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true}]
+9:["$","$L19",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@1b"}]}]
+c:["$","$1","h",{"children":[null,["$","$L1c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L1d",null,{"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Java native 方法实战：javac -h 生成 JNI 头文件到调用 C 代码的全流程 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"用一次可运行的最小示例走完 Java 调 C 的全流程：native 的关键字规则、javac -h 生成头文件与命名规则、JNIEnv 与 jstring 的边界转换、Windows 下编译 DLL 的命令，以及 -Djava.library.path 覆盖默认路径后的影响。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/247/"}],["$","meta","5",{"property":"og:title","content":"Java native 方法实战：javac -h 生成 JNI 头文件到调用 C 代码的全流程 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"用一次可运行的最小示例走完 Java 调 C 的全流程：native 的关键字规则、javac -h 生成头文件与命名规则、JNIEnv 与 jstring 的边界转换、Windows 下编译 DLL 的命令，以及 -Djava.library.path 覆盖默认路径后的影响。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2296.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L1e","15",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+e:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+11:["$","$L21",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L22"]}],"$L23","$L24","$L25"]}]]}],[],null],"children":"$L26"}]
+13:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true}]],[["$","$L27",null,{}],["$","$L28",null,{"children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L29",null,{"children":["$","$L20",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+15:["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2a",null,{"children":[["$","$L2b",null,{}],["$","$L2c",null,{}],["$","$L2d",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L2e",null,{}],["$","$L2f",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L30",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L31",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$13:props:children:1:1:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]]}]}],["$","$L32",null,{}],["$","$L33",null,{}]]}],["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]]}]}]]}]]}]
+1b:null
+22:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+23:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+24:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+25:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+26:["$","$1","c",{"children":[null,["$","$L1f",null,{"parallelRouterKey":"children","template":["$","$L20",null,{}]}]]}]
+18:true
+b:300
+b:C
+17:0
+d:"$undefined"
+f:"$undefined"
+14:"$undefined"
+12:"$undefined"
+16:"$undefined"
+a:"$undefined"

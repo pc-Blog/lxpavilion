@@ -8,6 +8,127 @@
     <atom:link href="https://www.lxpavilion.top/feed.xml" rel="self" type="application/rss+xml"/>
     
     <item>
+      <title><![CDATA[Java 内存结构：栈、堆、方法区与字符串常量池]]></title>
+      <link>https://www.lxpavilion.top/article/249/</link>
+      <guid>https://www.lxpavilion.top/article/249/</guid>
+      <pubDate>Fri, 13 Nov 2026 13:42:11 GMT</pubDate>
+      <description><![CDATA[以 JDK 8 为基准拆解 Java 内存结构：栈存局部变量与引用、堆放对象、方法区存类元数据，并讲清永久代改为元空间、字符串常量池迁入堆之后，s1 == s2 为 false 的原因和 intern() 的地址复用规则。]]></description>
+      <category>学习笔记</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java String 底层原理：不可变、常量池、intern 与 StringBuilder 扩容]]></title>
+      <link>https://www.lxpavilion.top/article/248/</link>
+      <guid>https://www.lxpavilion.top/article/248/</guid>
+      <pubDate>Fri, 13 Nov 2026 13:22:53 GMT</pubDate>
+      <description><![CDATA[从 JDK 9 的 byte[] 加 coder 讲起，拆开 String 不可变的四个支点，算清 new String 到底创建几个对象，解释 intern 在 JDK 7 前后的差异与拼接指令的变化，并给出 StringBuilder 的扩容公式与 length、capacity 的区别。]]></description>
+      <category>学习笔记</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java native 方法实战：javac -h 生成 JNI 头文件到调用 C 代码的全流程]]></title>
+      <link>https://www.lxpavilion.top/article/247/</link>
+      <guid>https://www.lxpavilion.top/article/247/</guid>
+      <pubDate>Fri, 13 Nov 2026 10:58:29 GMT</pubDate>
+      <description><![CDATA[用一次可运行的最小示例走完 Java 调 C 的全流程：native 的关键字规则、javac -h 生成头文件与命名规则、JNIEnv 与 jstring 的边界转换、Windows 下编译 DLL 的命令，以及 -Djava.library.path 覆盖默认路径后的影响。]]></description>
+      <category>学习笔记</category>
+      <tag>Windows</tag>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java Stream 流：惰性求值、短路操作与 Collector 收集器的执行机制]]></title>
+      <link>https://www.lxpavilion.top/article/246/</link>
+      <guid>https://www.lxpavilion.top/article/246/</guid>
+      <pubDate>Fri, 13 Nov 2026 10:25:08 GMT</pubDate>
+      <description><![CDATA[从数据源、中间操作、终端操作的三段结构讲起，解释 Stream 为什么惰性求值、有状态操作如何拖慢并行、Collector 的四个函数各自分工，以及 distinct、sorted、toMap、findFirst 这些常用操作在什么条件下会失效或变慢。]]></description>
+      <category>学习笔记</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java 集合框架：从 Iterable 到 HashMap 的接口契约、扩容策略与并发取舍]]></title>
+      <link>https://www.lxpavilion.top/article/244/</link>
+      <guid>https://www.lxpavilion.top/article/244/</guid>
+      <pubDate>Fri, 13 Nov 2026 08:26:50 GMT</pubDate>
+      <description><![CDATA[从 Iterable、Collection 到 Map 梳理 Java 集合框架：for-each 的语法糖本质、Spliterator 的可分割设计、List/Set/Queue 的接口增量，以及 ArrayList 扩容、HashMap 树化与并发容器锁粒度演进背后的取舍。]]></description>
+      <category>学习笔记</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java Lambda 入门：函数式接口、方法引用与变量捕获]]></title>
+      <link>https://www.lxpavilion.top/article/239/</link>
+      <guid>https://www.lxpavilion.top/article/239/</guid>
+      <pubDate>Tue, 10 Nov 2026 20:28:44 GMT</pubDate>
+      <description><![CDATA[Lambda 不是匿名内部类的语法糖：编译期只留一条 invokedynamic，实现类由 LambdaMetafactory 在运行期生成。文章从同一个接口的三种实现讲起，说明函数式接口与 @FunctionalInterface 的检查、目标类型如何决定 lambda 的含义、四种方法引用的形状差异，以及变量捕获与 this 的规则。]]></description>
+      <category>技术教程</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java 泛型入门：类型擦除、通配符与桥方法]]></title>
+      <link>https://www.lxpavilion.top/article/238/</link>
+      <guid>https://www.lxpavilion.top/article/238/</guid>
+      <pubDate>Tue, 10 Nov 2026 12:06:30 GMT</pubDate>
+      <description><![CDATA[泛型只在编译期存在，运行期类型参数已被擦除。文章从 List<String> 与裸 List 的差别讲起，说明泛型类、接口、方法的写法，拆开擦除带来的六条限制，理清 ? extends 与 ? super 的读写边界，再用 StringNode 的例子走一遍桥方法的调用与 checkcast 兜底。]]></description>
+      <category>技术教程</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java 注解入门：元注解、内置注解与 APT 代码生成]]></title>
+      <link>https://www.lxpavilion.top/article/234/</link>
+      <guid>https://www.lxpavilion.top/article/234/</guid>
+      <pubDate>Tue, 10 Nov 2026 09:14:13 GMT</pubDate>
+      <description><![CDATA[注解本身只是元数据，真正赋予语义的是编译器、APT 处理器或运行期反射。文章从自定义注解的写法讲起，说明 @Retention、@Target、@Inherited、@Repeatable 的边界与 @Override 到 @SafeVarargs 的行为，再拆开 APT 处理器的编写流程和反射读取接口的差异。]]></description>
+      <category>技术教程</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java 线程入门：创建方式、生命周期、volatile 与线程池]]></title>
+      <link>https://www.lxpavilion.top/article/233/</link>
+      <guid>https://www.lxpavilion.top/article/233/</guid>
+      <pubDate>Tue, 10 Nov 2026 09:14:11 GMT</pubDate>
+      <description><![CDATA[线程是 CPU 调度的基本单位，共享堆却各有栈。文章从三种创建方式和六种状态讲起，梳理 start、sleep、join、interrupt 的行为边界，用双重检查锁说明 volatile 的可见性与有序性，再落到 ThreadLocal 的原理和线程池的七个参数、队列、拒绝策略与状态流转。]]></description>
+      <category>技术教程</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java 锁入门：synchronized 与 ReentrantLock 的用法]]></title>
+      <link>https://www.lxpavilion.top/article/232/</link>
+      <guid>https://www.lxpavilion.top/article/232/</guid>
+      <pubDate>Tue, 10 Nov 2026 09:14:07 GMT</pubDate>
+      <description><![CDATA[count++ 不是原子操作，锁把读改写三步捆成一个整体。文章用可运行的计数示例讲清 synchronized 锁 this、锁 Class、锁代码块三种形态与锁对象必须共享的原因，梳理 wait/notify 的握手顺序，再对照 ReentrantLock 的可重入、tryLock、中断与公平锁的排队机制。]]></description>
+      <category>技术教程</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java 动态代理入门：InvocationHandler 与 Proxy 的用法]]></title>
+      <link>https://www.lxpavilion.top/article/231/</link>
+      <guid>https://www.lxpavilion.top/article/231/</guid>
+      <pubDate>Tue, 10 Nov 2026 09:14:00 GMT</pubDate>
+      <description><![CDATA[JDK 动态代理把代理对象上的每一次方法调用都转进 InvocationHandler.invoke，日志、事务、权限这类横切逻辑得以集中在一处。文章用一段可运行的示例讲清 Proxy.newProxyInstance 的三个参数、invoke 的三个入参、方法执行效果，以及只能代理接口这条限制的由来。]]></description>
+      <category>技术教程</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
+      <title><![CDATA[Java 反射入门：从 Class 对象到方法调用的完整示例]]></title>
+      <link>https://www.lxpavilion.top/article/230/</link>
+      <guid>https://www.lxpavilion.top/article/230/</guid>
+      <pubDate>Tue, 10 Nov 2026 09:13:52 GMT</pubDate>
+      <description><![CDATA[Java 反射让程序在运行期拿到类的结构，按类名创建对象、按方法名调用、按字段名读写。文章从 Class 对象的四种获取方式讲起，说明 Constructor、Method、Field 的用法与易错点，并交代 setAccessible 真正做了什么、反射为什么比直接调用慢。]]></description>
+      <category>技术教程</category>
+      <tag>Java</tag>
+      <author>ppc</author>
+    </item>
+    <item>
       <title><![CDATA[VMware Workstation 17 安装 Linux Mint Cinnamon 完整步骤与四个坑]]></title>
       <link>https://www.lxpavilion.top/article/229/</link>
       <guid>https://www.lxpavilion.top/article/229/</guid>
@@ -111,142 +232,6 @@
       <category>后端</category>
       <tag>Spring Boot</tag>
       <tag>RabbitMQ</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[RabbitMQ 在 Spring Boot 中的完整使用]]></title>
-      <link>https://www.lxpavilion.top/article/219/</link>
-      <guid>https://www.lxpavilion.top/article/219/</guid>
-      <pubDate>Wed, 23 Sep 2026 16:49:23 GMT</pubDate>
-      <description><![CDATA[从交换机、绑定、队列三个基本概念讲起，梳理 Spring Boot 中 RabbitMQ 的 yaml 配置、拓扑声明、RabbitTemplate 的定制与使用、消息发送与监听，以及手动确认和死信队列的配合方式。]]></description>
-      <category>后端</category>
-      <tag>Spring Boot</tag>
-      <tag>RabbitMQ</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Spring Boot 事务回滚方法]]></title>
-      <link>https://www.lxpavilion.top/article/218/</link>
-      <guid>https://www.lxpavilion.top/article/218/</guid>
-      <pubDate>Wed, 23 Sep 2026 16:49:12 GMT</pubDate>
-      <description><![CDATA[@Transactional 的回滚范围只覆盖当前数据库连接上的操作，文件删除、远程调用、消息投递都在范围之外。文章分析删库与删文件放在一起时的三种处理方式——写在同一事务方法内、注册 afterCommit、拆分为两个方法，给出各自在回滚与提交两条路径上的结果，并整理严格一致性的实现路径。]]></description>
-      <category>后端</category>
-      <tag>Mysql</tag>
-      <tag>Spring Boot</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Windows 数据使用量页面卡死：1097 个热点档案和 161 MB 的 SRUM 库]]></title>
-      <link>https://www.lxpavilion.top/article/217/</link>
-      <guid>https://www.lxpavilion.top/article/217/</guid>
-      <pubDate>Mon, 14 Sep 2026 10:16:50 GMT</pubDate>
-      <description><![CDATA[设置里的"数据使用量"页面从慢几秒到彻底白屏，排查后发现是手机热点每次连接都随机化网关 MAC，Windows 把它当新网络反复建档案，累计 1097 个，每个档案又在 SRUM 里按应用生成记录，把数据库撑到 161 MB、99601 行，页面查询量随档案数乘 AppId 数暴涨。清掉 1030 个僵尸档案并重建 SRUM 后恢复秒开。]]></description>
-      <category>工具教程</category>
-      <tag>Node</tag>
-      <tag>DSH</tag>
-      <tag>Windows</tag>
-      <tag>故障排查</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DSH 接入 Command Code Go 插件：模型、联网搜索与多账户轮换一次到位]]></title>
-      <link>https://www.lxpavilion.top/article/216/</link>
-      <guid>https://www.lxpavilion.top/article/216/</guid>
-      <pubDate>Sat, 12 Sep 2026 12:27:58 GMT</pubDate>
-      <description><![CDATA[DeepSeek Harness 的 Command Code 插件不止一个，功能差得挺远。这篇讲我最后选的那个（@mars-sea/dsh-commandcode-provider）：它把实时模型目录、联网搜索、多账户轮换和用量面板收进同一个包，Go 套餐也能用。附带安装配置步骤，以及双传输和搜索端点的原理拆解。]]></description>
-      <category>Ai编程</category>
-      <tag>Ai编程</tag>
-      <tag>DSH</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DSH 白嫖指南：接入 Command Code Go、WorkBuddy 与 Trae 的免费额度]]></title>
-      <link>https://www.lxpavilion.top/article/215/</link>
-      <guid>https://www.lxpavilion.top/article/215/</guid>
-      <pubDate>Fri, 11 Sep 2026 21:16:06 GMT</pubDate>
-      <description><![CDATA[DeepSeek Harness 本体只是个框架，能用什么模型取决于你给它接哪家。这篇是我用三个社区插件，把 Command Code Go（1 美元/月给 10 美元额度）、WorkBuddy 和 Trae 的额度接进 DSH 的完整记录，含版本对应关系、API Key 配置，以及 Trae 模型列表加载失败的排查办法。]]></description>
-      <category>Ai编程</category>
-      
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Docker + WSL 挂载踩坑记：同一条命令，为什么挂到了两套文件系统]]></title>
-      <link>https://www.lxpavilion.top/article/214/</link>
-      <guid>https://www.lxpavilion.top/article/214/</guid>
-      <pubDate>Thu, 10 Sep 2026 14:50:35 GMT</pubDate>
-      <description><![CDATA[一套在 WSL 里稳定跑了很久的 docker compose，某次从 Windows PowerShell 执行 up 之后三个容器同时故障：nginx 报 not a directory、postgres 重建了空库、api 连不上数据库。这篇复盘整个排查过程，用一个最小对照实验定位到根因——bind mount 挂到哪套文件系统，只取决于 docker 命令从哪一端执行，并给出可落地的规避办法。]]></description>
-      <category>开发拾遗</category>
-      <tag>WSL</tag>
-      <tag>Docker</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[AI 汉字漂移实录：它为什么总把「学习」写成日语「学習」]]></title>
-      <link>https://www.lxpavilion.top/article/213/</link>
-      <guid>https://www.lxpavilion.top/article/213/</guid>
-      <pubDate>Thu, 10 Sep 2026 14:50:31 GMT</pubDate>
-      <description><![CDATA[把一个笔记路径发给 AI，它稳定地把「学习」写成日语「学習」，换几个模型都复现。这篇从这条路径查起，讲清中日共用同一套汉字编码、假名「の」如何触发语言概率倾斜、再被自回归逐字放大的完整机制，最后给出三个能直接上手的规避办法。]]></description>
-      <category>杂谈</category>
-      <tag>Ai编程</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Spring AI 踩坑记：配了 initializeSchema 为什么不建集合]]></title>
-      <link>https://www.lxpavilion.top/article/212/</link>
-      <guid>https://www.lxpavilion.top/article/212/</guid>
-      <pubDate>Wed, 09 Sep 2026 12:16:23 GMT</pubDate>
-      <description><![CDATA[手动 new 一个 QdrantVectorStore 并配置 initializeSchema(true)，集合却始终建不出来，写入时报 collection doesn't exist。这篇顺着源码找到根因：建集合的逻辑不在 build() 里，而在只有 Spring 容器才会调用的 afterPropertiesSet() 回调上，并给出三种修法。]]></description>
-      <category>开发拾遗</category>
-      <tag>Spring AI</tag>
-      <tag>Qdrant</tag>
-      <tag>向量库</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[Qdrant 连接失败排查记：localhost 为什么把我带到了 IPv6]]></title>
-      <link>https://www.lxpavilion.top/article/211/</link>
-      <guid>https://www.lxpavilion.top/article/211/</guid>
-      <pubDate>Wed, 09 Sep 2026 12:16:10 GMT</pubDate>
-      <description><![CDATA[Spring Boot 项目往 Qdrant 写数据，gRPC 一直报连接失败，浏览器打开控制台却一切正常。这篇记录排查过程：localhost 被解析到了 IPv6 回环 ::1，而 Docker 只把端口发布在 IPv4 上；浏览器、JDBC、OkHttp 都会自动降级，唯独 gRPC 不会。改一行配置就能解决。]]></description>
-      <category>开发拾遗</category>
-      <tag>Spring AI</tag>
-      <tag>Docker</tag>
-      <tag>Qdrant</tag>
-      <tag>向量库</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DSH 沙箱机制拆解：受限令牌为何会掐断 HTTPS 请求]]></title>
-      <link>https://www.lxpavilion.top/article/210/</link>
-      <guid>https://www.lxpavilion.top/article/210/</guid>
-      <pubDate>Tue, 18 Aug 2026 22:44:36 GMT</pubDate>
-      <description><![CDATA[拆解 DeepSeek Harness(DSH) 的三层沙箱架构和三种权限模式，并用一次真实排查说明：沙箱并不隔离网络——是 Windows 受限令牌让 Schannel 取不到 TLS 凭据，才导致所有 HTTPS 请求在受限模式下失败。]]></description>
-      <category>学习笔记</category>
-      
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DSH 记忆模块源码解析：AI 是如何长期记住项目规范的]]></title>
-      <link>https://www.lxpavilion.top/article/209/</link>
-      <guid>https://www.lxpavilion.top/article/209/</guid>
-      <pubDate>Tue, 18 Aug 2026 20:01:47 GMT</pubDate>
-      <description><![CDATA[DeepSeek Harness 把“让 AI 记住”拆成了很多子模块。这篇文章从源码出发，讲清它的记忆存落在哪、以什么形式存，以及 AGENTS.md、CLAUDE.md 是怎么被加载、按什么优先级生效、又是在哪一步注入进上下文的，顺带说清遇到压缩和超预算时它又会怎样。]]></description>
-      <category>Ai编程</category>
-      <tag>AI应用</tag>
-      <tag>Ai编程</tag>
-      <tag>deepseek</tag>
-      <author>ppc</author>
-    </item>
-    <item>
-      <title><![CDATA[DeepSeek Harness 初体验：主模型换到 opencode，联网搜索却绕不开 DeepSeek]]></title>
-      <link>https://www.lxpavilion.top/article/208/</link>
-      <guid>https://www.lxpavilion.top/article/208/</guid>
-      <pubDate>Sat, 15 Aug 2026 01:47:39 GMT</pubDate>
-      <description><![CDATA[DeepSeek 涨价后，我把 DeepSeek Harness 的主对话模型切到了 opencode，却意外发现联网搜索仍在消耗 DeepSeek 额度。本文记录这次切换的实测体验，扒一下联网搜索的真实机制，确认 opencode 是否支持替换搜索供应商，并附上几条实际可行的处理方案。]]></description>
-      <category>Ai编程</category>
-      <tag>AI应用</tag>
-      <tag>Ai编程</tag>
-      <tag>deepseek</tag>
       <author>ppc</author>
     </item>
   </channel>

@@ -1,0 +1,387 @@
+1:"$Sreact.fragment"
+2:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+3:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+4:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+5:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+6:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+7:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+8:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+9:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+a:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+b:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+16:I[68027,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default",1]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+:HL["/_next/static/media/geist_latin-s.p.0wgildi0cnwt9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/geist_mono_latin-s.p.0w5z4e7s8jfe5.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/noto_serif_sc_latin-s.p.2xkduggpvd1-n.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+14:X
+0:{"P":null,"c":["","article","246",""],"q":"","i":false,"f":[[["",{"children":["(main)",{"children":["article",{"children":[["id","246","d",[]],{"children":["__PAGE__",{},"$undefined","$undefined",4608]},"$undefined","$undefined",4608]},"$undefined","$undefined",4612]},"$undefined","$undefined",4616]},"$undefined","$undefined",4632],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{}],["$","$L5",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L6",null,{}],["$","$L7",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L8",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L9",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],"$Lc"]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],"$Ld","$Le"]}],"$Lf"]}]}]]}]]}],{"children":["$L10",{"children":["$L11",{"children":["$L12",{"children":["$L13",{},null,false,null]},null,false,"$14"]},null,false,"$14"]},null,false,null]},null,false,null],"$L15",false]],"m":"$undefined","G":["$16",["$L17","$L18"]],"S":true,"h":null,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"C9c09TEEYu21IVru8MmZS"}
+19:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1a:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1b:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1c:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1d:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+1e:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+25:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+26:"$Sreact.suspense"
+28:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+2a:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+c:["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]
+d:["$","$L19",null,{}]
+e:["$","$L1a",null,{}]
+f:["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]
+10:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true,"nonce":"$undefined"}]],[["$","$L1b",null,{}],["$","$L1c",null,{"children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L1d",null,{"children":["$","$Lb",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$c:props:style","children":["$","h2",null,{"style":"$c:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+11:["$","$L1e",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L1f"]}],"$L20","$L21","$L22"]}]]}],[],null],"children":"$L23"}]
+12:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+13:["$","$1","c",{"children":["$L24",[["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true,"nonce":"$undefined"}]],["$","$L25",null,{"children":["$","$26",null,{"name":"Next.MetadataOutlet","children":"$@27"}]}]]}]
+15:["$","$1","h",{"children":[null,["$","$L28",null,{"children":"$L29"}],["$","div",null,{"hidden":true,"children":["$","$L2a",null,{"children":["$","$26",null,{"name":"Next.Metadata","children":"$L2b"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+17:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+18:["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+14:C
+1f:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+20:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+21:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+22:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+23:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+2c:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+2e:T4eb7,`Stream` 是 Java 8 引入的函数式风格数据处理抽象。它不存元素，只描述一条从数据源到结果的流水线：源提供数据，中间操作声明要做什么变换，终端操作驱动整条管道跑起来。与集合“持有数据、随时可以反复遍历”的定位相反，一个 Stream 实例只对应一次遍历，用完即弃。
+
+“描述而非执行”这个定位带来两个直接后果：组合自由，每个中间操作返回新流，可以任意拼接；执行时机后移，真正的遍历发生在终端操作被调用的那一刻。Stream 的多数行为——惰性、短路、一次性、并行下对顺序的让步——都是这两点的推论。
+
+## 三段结构与惰性
+
+一条流由三部分组成。数据源负责产生元素，可以是集合、数组、`Stream.of`、数值区间、文件行或者一个生成器。中间操作返回新的 Stream，本身不触发遍历，常见的 `filter`、`map`、`sorted`、`distinct`、`limit`、`skip`、`flatMap`、`peek` 都属于这一类。终端操作才真正启动流水线，返回结果或产生副作用，比如 `collect`、`forEach`、`reduce`、`count`、`anyMatch`、`findFirst`、`toArray`。
+
+```java
+Stream.of("a", "b", "c")
+      .filter(s -> {
+          System.out.println("filter " + s);
+          return true;
+      })
+      .map(s -> {
+          System.out.println("map " + s);
+          return s.toUpperCase();
+      });
+// 没有任何输出，因为没有终端操作
+```
+
+这段代码执行完不会打印任何东西，因为中间操作只是把“要做什么”登记下来，没有任何人被要求从源里取元素。补上 `count()` 之后，管道才开始驱动源，`filter` 和 `map` 会按元素逐个执行，输出才会出现。
+
+流的内部结构也对应这个说法。每个中间操作会生成一个 stage，记录源、操作本身和上下游关系，串成一条链；终端操作从链的末端反向组装出一组 sink（处理节点），再把源包成 spliterator 从前往后推。中间操作在这一步之前，只是一堆待执行的回调。
+
+中间操作的顺序因此不是无关紧要的。`filter` 放在 `map` 前面，能先筛掉一批元素，后面的 `map` 就少调用几次；反过来把 `map` 放在前面，每个元素都要先做一次变换再被丢弃。同样的道理，`limit` 放到前面能显著减少工作量。
+
+另一个常被忽视的分类是操作是否“有状态”。`filter`、`map`、`flatMap`、`peek` 逐元素处理，处理完一个就能丢一个；`distinct` 要记住已经出现过的元素，`sorted` 要收齐全部元素才能排序，`limit` 和 `skip` 要维护已处理计数。有状态操作需要跨元素保存状态，并行时要么加同步、要么把整个数据切成段再合并，这是并行流收益被吃掉的主要原因。
+
+终端操作执行之后，流就被消费掉了。对同一个 Stream 实例再调用任何终端操作，抛 `IllegalStateException`，提示流已经被操作或关闭。需要多次遍历，就重新从源创建一次。
+
+## 创建流的入口
+
+```java
+List<Integer> list = new ArrayList<>(Arrays.asList(5, 2, 9, 1, 5, 6));
+
+// 集合
+Stream<Integer> stream = list.stream();
+Stream<Integer> parallel = list.parallelStream();   // 并行流
+
+// 数组
+IntStream intStream = Arrays.stream(new int[]{1, 2, 3, 4, 5});
+Stream<String> of = Stream.of("a", "b");
+
+// 数值流
+IntStream range = IntStream.range(1, 10);           // [1, 10)
+IntStream rangeClosed = IntStream.rangeClosed(1, 10); // [1, 10]
+LongStream longStream = LongStream.of(1L, 2L);
+DoubleStream doubleStream = DoubleStream.of(1.0, 2.0);
+
+// 生成
+Stream<Double> randomStream = Stream.generate(Math::random).limit(10);
+Stream<Integer> iterateStream = Stream.iterate(0, n -> n + 1).limit(10);
+// Java 9+ 三参数 iterate：带上终止条件
+Stream<Integer> bounded = Stream.iterate(0, n -> n < 100, n -> n + 1);
+
+// 文件
+Stream<String> lines = Files.lines(Paths.get("a.txt"));
+
+// 空流
+Stream<Object> empty = Stream.empty();
+
+// builder
+Stream<Object> build = Stream.builder().add("a").add("b").build();
+```
+
+集合是最常见的源，`stream()` 走串行，`parallelStream()` 返回并行流。数组用 `Arrays.stream` 转换，基本类型数组会得到特化流，而不是装箱后的 `Stream<Integer>`。
+
+`IntStream.range` 是半开区间，`rangeClosed` 才包含右端点，这两个方法在写分页、下标循环时很容易混。`Stream.generate` 和两参数的 `Stream.iterate` 产生的是无限流，必须靠 `limit` 截断——或者依赖一个会短路的终端操作，否则永远算不完。JDK9 增加的三参数 `iterate(seed, predicate, f)` 自带终止条件，省掉了单独 `limit`，但两者语义不同：`limit` 按个数截断，`predicate` 按条件终止。
+
+`Files.lines` 的实现包着文件句柄，返回的 Stream 实现 `AutoCloseable`，应该放进 try-with-resources，否则文件描述符要等 GC 才释放。`Stream.empty()` 返回一个没有元素的流，适合在分支里避免返回 null。`builder()` 适合元素个数不定、又不想建中间集合的场景。
+
+## 中间操作
+
+中间操作都返回新的 Stream。同一个流实例不能被操作两次，`filter` 之后再用原来的变量调终端操作，同样会抛 `IllegalStateException`，正确写法是把返回值接住，链式往下走。
+
+### 逐元素变换：filter、map、flatMap
+
+```java
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);
+
+List<Integer> even = nums.stream()
+        .filter(n -> n % 2 == 0)   // 只保留偶数
+        .collect(Collectors.toList());
+// [2, 4, 6]
+
+List<String> names = Arrays.asList("tom", "jack", "lucy");
+List<Integer> lengths = names.stream()
+        .map(String::length)       // 每个字符串转成长度
+        .collect(Collectors.toList());
+// [3, 4, 4]
+```
+
+`filter` 接收 `Predicate`，返回 boolean，false 的元素被丢弃；`map` 接收 `Function`，一对一变换，元素个数不变。两者都是无状态操作，可以逐元素流式处理，不需要缓冲。
+
+`flatMap` 处理“一个元素对应多个元素”的情况：
+
+```java
+List<String> sentences = Arrays.asList("hello world", "java stream");
+
+List<String> words = sentences.stream()
+        .flatMap(s -> Arrays.stream(s.split(" ")))
+        .collect(Collectors.toList());
+// [hello, world, java, stream]
+```
+
+与 `map` 的差别在返回类型：`map(s -> s.split(" "))` 得到的是 `Stream<String[]>`，每个元素是一个数组；`flatMap` 要求函数返回一个 `Stream`，再把所有子流的内容拼成一个 `Stream<String>`。所以 `flatMap` 常被描述成“先映射再扁平化”，实际作用是把嵌套结构拉平一层。
+
+### 去重与排序：distinct、sorted
+
+```java
+List<Integer> nums = Arrays.asList(1, 2, 2, 3, 3, 3, 4);
+
+List<Integer> distinct = nums.stream()
+        .distinct()                // 依赖 equals/hashCode
+        .collect(Collectors.toList());
+// [1, 2, 3, 4]
+```
+
+`distinct` 的判断顺序是先比 `hashCode`，相同再比 `equals`，不是用 `==`，也不是只比 `equals`。这也意味着自定义类型必须正确重写这两个方法，否则去重结果不可预期。实现上它用一个保持插入顺序的集合记已见元素，因此是有状态操作，内存占用与不同元素个数成正比；对有序流，输出的顺序与首次出现的顺序一致。
+
+```java
+List<Integer> nums = Arrays.asList(3, 1, 4, 2);
+
+List<Integer> asc = nums.stream()
+        .sorted()                          // 自然升序
+        .collect(Collectors.toList());     // [1, 2, 3, 4]
+
+List<Integer> desc = nums.stream()
+        .sorted(Comparator.reverseOrder()) // 降序
+        .collect(Collectors.toList());     // [4, 3, 2, 1]
+```
+
+`sorted()` 不带参数时要求元素实现 `Comparable`，否则运行期抛 `ClassCastException`——泛型擦除让这个错误逃过了编译期检查。带 `Comparator` 的版本按比较器排序，与元素是否可比较无关。
+
+排序必须收齐全部元素才能开始，所以 `sorted` 同样是重度的有状态操作。对无限流调用 `sorted` 会永远卡在收集阶段，后面的 `limit` 救不了它，因为 `limit` 等的是排好序的第一个元素，而排序本身没有结束。这是惰性求值与有状态操作叠加时的典型陷阱。
+
+### 截断与窥视：limit、skip、peek
+
+```java
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+
+List<Integer> head = nums.stream().limit(3).collect(Collectors.toList());   // [1, 2, 3]
+List<Integer> tail = nums.stream().skip(2).collect(Collectors.toList());    // [3, 4, 5]
+```
+
+`limit(n)` 取前 n 个，是短路操作：凑够 n 个就不再向上游要元素，因此对无限流有效。`skip(n)` 跳过前 n 个，内部要计数，属于有状态操作。两者组合就是流式分页的写法：`skip((page - 1) * size).limit(size)`。注意这仍然是顺序扫描前 `page * size` 个元素，数据量大时并不比 SQL 分页划算。
+
+```java
+Stream.of(1, 2, 3)
+        .peek(n -> System.out.println("peek " + n));
+// 没有任何输出，因为没有终端操作
+```
+
+`peek` 的定位是调试：它在元素流经时插入一个观察点，不改变元素本身。上面的代码没有终端操作，所以什么都不会打印。即便补上终端操作，`peek` 的执行次数和时机也不保证——并行流里多个线程的执行顺序不确定，JDK9 之后 `count()` 这类能从源直接得出结果的终端操作还可能干脆跳过整条管道，`peek` 的输出随之消失。把业务逻辑写在 `peek` 里，属于用错了地方。
+
+### 数值特化：mapToInt 与 boxed
+
+```java
+List<String> nums = Arrays.asList("1", "2", "3");
+
+int sum = nums.stream()
+        .mapToInt(Integer::parseInt)  // 转成 IntStream，避免 Integer 装箱
+        .sum();                       // 6
+```
+
+`Stream<Integer>` 里的每个元素都是对象，`sum` 这种操作要先逐个拆箱再累加，中间还多了一层 `Integer` 的创建与回收。`mapToInt` 把流转成 `IntStream`，元素以 `int` 传递，`sum()`、`average()`、`max()` 这些方法直接可用。对应的还有 `mapToLong`、`mapToDouble`。
+
+反方向用 `boxed()`：
+
+```java
+IntStream intStream = IntStream.rangeClosed(1, 5);
+
+List<Integer> list = intStream
+        .boxed()                      // int -> Integer，转成 Stream<Integer>
+        .collect(Collectors.toList());
+// [1, 2, 3, 4, 5]
+```
+
+`count()`、`sum()` 返回的是基本类型或 `OptionalInt`，一旦需要收集成 `List<Integer>`，或者要用依赖对象流的方法，就必须先装箱。
+
+## 终端操作
+
+### collect 与 Collector
+
+`collect` 是最常用的终端操作，把流里的元素归并成集合、字符串或 Map。
+
+```java
+List<String> names = Arrays.asList("tom", "jack", "lucy");
+
+// 收集到 List
+List<String> list = names.stream()
+        .filter(s -> s.length() > 3)
+        .collect(Collectors.toList());     // [jack, lucy]
+
+// 收集到 Set
+Set<String> set = names.stream()
+        .collect(Collectors.toSet());      // 顺序不保证
+
+// 收集成字符串
+String joined = names.stream()
+        .collect(Collectors.joining(",")); // tom,jack,lucy
+
+// 分组
+Map<Integer, List<String>> group = names.stream()
+        .collect(Collectors.groupingBy(String::length));
+// {3=[tom], 4=[jack, lucy]}
+
+// 转 Map，注意键冲突
+Map<Integer, String> map = names.stream()
+        .collect(Collectors.toMap(String::length, s -> s, (a, b) -> a));
+// {3=tom, 4=jack}
+```
+
+`Collectors.toList()` 只承诺返回一个 `List`，不承诺具体实现类，也不承诺一定可变。要指定集合类型并保证可变，用 `toCollection`：
+
+```java
+List<String> list = stream.collect(Collectors.toCollection(ArrayList::new));
+```
+
+`groupingBy` 只有一个参数时，下游收集器默认是 `toList`，所以结果类型是 `Map<K, List<T>>`；需要分组后统计，就传第二个参数，比如 `groupingBy(String::length, Collectors.counting())` 得到每组个数。分组结果装进 `HashMap`，遍历顺序不保证。
+
+`toMap` 有三个参数：
+
+```java
+Map<Integer, String> map = names.stream()
+        .collect(Collectors.toMap(
+                String::length,   // keyMapper
+                s -> s,           // valueMapper
+                (a, b) -> a       // mergeFunction：键冲突时保留旧值
+        ));
+```
+
+只传前两个参数时，遇到重复 key 直接抛 `IllegalStateException`，而不是覆盖或丢弃。所以凡是 key 可能重复的场景，mergeFunction 必须显式给出来，`(a, b) -> a` 保留先出现的值，`(a, b) -> b` 保留后出现的值。
+
+这些收集器都实现了同一个接口，理解它就理解了 `collect` 的工作方式：
+
+```java
+public interface Collector<T, A, R> {
+    Supplier<A> supplier();                    // 创建结果容器
+    BiConsumer<A, T> accumulator();            // 把一个元素累加进容器
+    BinaryOperator<A> combiner();              // 并行时合并两个部分容器
+    Function<A, R> finisher();                 // 容器 A 转最终结果 R
+    Set<Characteristics> characteristics();    // 优化提示
+
+    enum Characteristics {
+        CONCURRENT,      // 可并发累加同一容器
+        UNORDERED,       // 不关心顺序
+        IDENTITY_FINISH  // finisher 是恒等，可跳过
+    }
+}
+```
+
+四个函数对应一次收集的四个阶段：`supplier` 造出中间容器，`accumulator` 把元素一个个塞进去，并行时每个线程各造一个容器、各自累加，再由 `combiner` 把它们合并成一个，`finisher` 把中间容器转换成结果类型。`toList()` 的容器和结果都是 `ArrayList`，`finisher` 实际什么都不做，所以它声明 `IDENTITY_FINISH`，让框架跳过那一步；`toMap()` 的容器是 `HashMap`，结果也是 `HashMap`，同样可以跳过。`joining` 的容器是 `StringJoiner`，结果却是 `String`，必须靠 `finisher` 做一次 `toString`，因此不能声明 `IDENTITY_FINISH`。
+
+`CONCURRENT` 表示累加器线程安全到可以共用同一个容器，并行时可以少一次合并；`UNORDERED` 表示结果与元素顺序无关，框架就不必为了保序而做额外协调。这两个特性都是“可以更快”的许可，写自定义收集器时声明错了，结果会静默出错。
+
+顺序执行时 `combiner` 不会被调用，这也是自定义收集器最容易漏测的部分：单线程测试通过，切到 `parallelStream` 才发现合并逻辑写错了。
+
+### reduce 与 Optional
+
+`reduce` 把整条流的元素归约成一个值，参数是一个二元运算：
+
+```java
+// 无初始值，返回 Optional
+Optional<Integer> sum1 = Stream.of(1, 2, 3, 4).reduce(Integer::sum);
+// Optional[10]
+
+// 有初始值
+int sum2 = Stream.of(1, 2, 3, 4).reduce(0, Integer::sum);
+// 10
+
+// 求最大值
+Optional<Integer> max = Stream.of(1, 5, 3).reduce(Integer::max);
+// Optional[5]
+
+// 字符串拼接
+Optional<String> str = Stream.of("a", "b", "c").reduce((a, b) -> a + b);
+// Optional[abc]
+```
+
+两个重载的差别只在空流。无初始值的版本把第一个元素当起点，然后把后面的元素逐个与它运算，空流没有第一个元素，也就没有结果，只能返回 `Optional`。带初始值的版本从初始值开始，空流直接返回初始值，所以返回类型是具体值。
+
+二元运算要求结合律成立，否则并行归约的结果依赖分组方式。字符串拼接 `a + b` 在并行下虽然结果一样，但每一步都在创建新字符串，复杂度是平方级的，元素一多就该换成 `StringBuilder` 或 `Collectors.joining`。
+
+`Optional` 是这一串操作共同的结果类型，它要解决的问题可以概括成三条。返回 null 的方法语义不明确，调用方分不清“没找到”“出错”“没数据”。判空容易被忘掉，NPE 是 Java 里最常见的运行期异常之一。层层嵌套的判空代码既难看又容易漏。
+
+把“可能存在也可能不存在”写进类型，调用方就必须显式处理缺失：要么给默认值，要么抛异常，要么继续用 `map`、`filter` 组合而不拆包。`reduce`、`findFirst`、`max` 都返回 `Optional`，正是这个设计的一部分。
+
+### 匹配与查找
+
+`anyMatch` 判断是否至少有一个元素满足条件，遇到第一个满足的就返回 true；`allMatch` 判断是否全部满足，遇到第一个不满足的就返回 false；`noneMatch` 判断是否没有任何元素满足，返回 true 的条件是一个都找不到。
+
+```java
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+
+boolean hasEven = nums.stream().anyMatch(n -> n % 2 == 0);   // true
+```
+
+三个方法都是短路操作，结果一旦确定就停止遍历，对无限流也能用。空流上的结果容易记反：`allMatch` 和 `noneMatch` 都返回 true，`anyMatch` 返回 false。全称命题在没有元素时天然成立，这是逻辑上的约定，不是实现缺陷。
+
+`findFirst` 返回第一个元素，并行流下依然保证是 encounter order 里的第一个，代价是它必须确认没有更早的元素还留在某个线程的分段里，协调成本比串行高。`findAny` 不保证顺序，哪个元素先完整经过所有中间操作就返回哪个，并行下通常更快，串行下与 `findFirst` 结果一致。不关心是哪一个的时候，`findAny` 是更合适的表达。
+
+两个方法都返回 `Optional`，空流时得到 `Optional.empty()`。
+
+### 其余终端操作
+
+`forEach` 遍历消费每个元素，不保证顺序，并行流下尤其明显；`forEachOrdered` 按 encounter order 处理，并行时会牺牲一部分并行度来维持顺序。需要顺序的副作用（写文件、按序输出）用后者，只是消费则用前者。
+
+`count()` 返回元素个数，类型是 `long`。`min` / `max` 接收 `Comparator`，返回 `Optional`，因为空流没有最值。`toArray()` 无参时返回 `Object[]`，要具体类型就传数组构造器：`toArray(String[]::new)`。
+
+## 特化流
+
+Java 提供三个基本类型特化流，避免 `Stream<Integer>` 这类装箱流的开销：
+
+| 特化流 | 元素类型 | 对应 Optional |
+|---|---|---|
+| `IntStream` | `int` | `OptionalInt` |
+| `LongStream` | `long` | `OptionalLong` |
+| `DoubleStream` | `double` | `OptionalDouble` |
+
+普通 `Stream<Integer>` 的元素是对象，`map`、`filter` 每一步都可能产生装箱和拆箱，元素量大时这部分开销并不可忽略。特化流用基本类型传递元素，还提供了 `sum()`、`average()`、`max()`、`min()` 这些数值专用方法——`average()` 返回 `OptionalDouble`，因为空流没有平均值。
+
+对应的 `OptionalInt` 等类型也避免了 `Optional<Integer>` 的二次装箱。`mapToInt`、`mapToLong`、`mapToDouble` 从对象流转过去，`boxed()` 再转回来，中间这类转换每多一次就多一层拆装，链式写法里应尽量把它们放在两端。
+
+## 惰性与短路的适用边界
+
+Stream 最擅长的场景是“先筛选、再取少量”：`filter` 配合 `findFirst`、`anyMatch`、`limit` 这类短路操作，元素不必全部处理，无限流也能用。反过来，一旦管道里出现 `sorted`、`distinct`，或者需要把结果整体收集起来，元素就必须全部过一遍并驻留内存，此时流只是一层更贵的循环。
+
+并行的收益也有前提。数据量小、元素处理本身很轻、或者管道里有大量有状态操作时，切分与合并的开销会盖过并行省下的时间，`parallelStream` 反而更慢。默认按串行写，确认是热点再考虑改并行，比反过来稳妥。
+
+有些场景普通循环更合适：需要按下标访问，需要在遍历中途 `break`、`continue`，或者每一步都要做副作用且顺序敏感。流把控制流藏进了管道，调试时栈信息指向 lambda 内部，排查成本比一个普通 for 循环高不少；`peek` 也不是可靠的观察手段，它在并行和优化下的行为都不保证。
+
+把 Stream 当成一种描述意图的写法，而不是一种更快的写法，用错的概率会低很多。
+24:[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Java Stream 流：惰性求值、短路操作与 Collector 收集器的执行机制\",\"item\":\"https://www.lxpavilion.top/article/246\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Java Stream 流：惰性求值、短路操作与 Collector 收集器的执行机制\",\"headline\":\"Java Stream 流：惰性求值、短路操作与 Collector 收集器的执行机制\",\"description\":\"从数据源、中间操作、终端操作的三段结构讲起，解释 Stream 为什么惰性求值、有状态操作如何拖慢并行、Collector 的四个函数各自分工，以及 distinct、sorted、toMap、findFirst 这些常用操作在什么条件下会失效或变慢。\",\"datePublished\":\"2026-11-13T10:25:08.160183\",\"dateCreated\":\"2026-11-13T10:25:08.160183\",\"dateModified\":\"2026-11-13T10:25:28.177944\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2296.png\"}"}}],["$","$L2c",null,{"params":"$@2d","articleTitle":"Java Stream 流：惰性求值、短路操作与 Collector 收集器的执行机制","initialContent":"$2e"}]]
+2d:{"id":"246"}
+29:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+2f:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+27:null
+2b:[["$","title","0",{"children":"Java Stream 流：惰性求值、短路操作与 Collector 收集器的执行机制 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"从数据源、中间操作、终端操作的三段结构讲起，解释 Stream 为什么惰性求值、有状态操作如何拖慢并行、Collector 的四个函数各自分工，以及 distinct、sorted、toMap、findFirst 这些常用操作在什么条件下会失效或变慢。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/246/"}],["$","meta","5",{"property":"og:title","content":"Java Stream 流：惰性求值、短路操作与 Collector 收集器的执行机制 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"从数据源、中间操作、终端操作的三段结构讲起，解释 Stream 为什么惰性求值、有状态操作如何拖慢并行、Collector 的四个函数各自分工，以及 distinct、sorted、toMap、findFirst 这些常用操作在什么条件下会失效或变慢。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2296.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L2f","15",{}]]

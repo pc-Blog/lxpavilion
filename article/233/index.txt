@@ -1,0 +1,411 @@
+1:"$Sreact.fragment"
+2:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+3:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+4:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+5:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+6:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+7:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+8:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+9:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+a:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+b:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+16:I[68027,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default",1]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+:HL["/_next/static/media/geist_latin-s.p.0wgildi0cnwt9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/geist_mono_latin-s.p.0w5z4e7s8jfe5.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/noto_serif_sc_latin-s.p.2xkduggpvd1-n.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+14:X
+0:{"P":null,"c":["","article","233",""],"q":"","i":false,"f":[[["",{"children":["(main)",{"children":["article",{"children":[["id","233","d",[]],{"children":["__PAGE__",{},"$undefined","$undefined",4608]},"$undefined","$undefined",4608]},"$undefined","$undefined",4612]},"$undefined","$undefined",4616]},"$undefined","$undefined",4632],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{}],["$","$L5",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L6",null,{}],["$","$L7",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L8",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L9",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],"$Lc"]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],"$Ld","$Le"]}],"$Lf"]}]}]]}]]}],{"children":["$L10",{"children":["$L11",{"children":["$L12",{"children":["$L13",{},null,false,null]},null,false,"$14"]},null,false,"$14"]},null,false,null]},null,false,null],"$L15",false]],"m":"$undefined","G":["$16",["$L17","$L18"]],"S":true,"h":null,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"C9c09TEEYu21IVru8MmZS"}
+19:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1a:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1b:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1c:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1d:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+1e:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+25:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+26:"$Sreact.suspense"
+28:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+2a:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+c:["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]
+d:["$","$L19",null,{}]
+e:["$","$L1a",null,{}]
+f:["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]
+10:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true,"nonce":"$undefined"}]],[["$","$L1b",null,{}],["$","$L1c",null,{"children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L1d",null,{"children":["$","$Lb",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$c:props:style","children":["$","h2",null,{"style":"$c:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+11:["$","$L1e",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L1f"]}],"$L20","$L21","$L22"]}]]}],[],null],"children":"$L23"}]
+12:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+13:["$","$1","c",{"children":["$L24",[["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true,"nonce":"$undefined"}]],["$","$L25",null,{"children":["$","$26",null,{"name":"Next.MetadataOutlet","children":"$@27"}]}]]}]
+15:["$","$1","h",{"children":[null,["$","$L28",null,{"children":"$L29"}],["$","div",null,{"hidden":true,"children":["$","$L2a",null,{"children":["$","$26",null,{"name":"Next.Metadata","children":"$L2b"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+17:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+18:["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+14:C
+1f:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+20:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+21:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+22:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+23:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+2c:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+2e:T5659,进程是操作系统分配资源的基本单位，线程是 CPU 调度的基本单位。一个进程可以包含多个线程，它们共享进程的堆和方法区，各自拥有独立的程序计数器、虚拟机栈和本地方法栈。共享的部分是并发问题的来源：多个线程同时读写同一个对象时，谁先谁后没有保证；私有的部分决定了线程之间没法直接传参，只能靠共享内存或者任务对象携带数据。
+
+## 创建线程的三种方式
+
+### 继承 Thread
+
+```java
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        System.out.println("run");
+    }
+}
+
+new MyThread().start();
+```
+
+`start()` 之后，JVM 在新线程里调用重写过的 `run()`。这种写法的问题是 Java 只支持单继承，`MyThread` 占掉了唯一的父类位置，之后想再继承别的类型就没有余地；任务逻辑和线程机制也捆在一起，同一个任务换个执行方式就得重新组织代码。
+
+### 实现 Runnable
+
+```java
+class MyTask implements Runnable {
+    @Override
+    public void run() {
+        System.out.println("任务执行，线程：" + Thread.currentThread().getName());
+    }
+}
+
+Runnable task = new MyTask();
+new Thread(task).start();
+```
+
+任务和线程分开了：`MyTask` 只描述做什么，交给哪个 `Thread` 由调用方决定，同一个任务既能给普通线程，也能交给线程池。Lambda 写起来更短，`new Thread(() -> System.out.println("run")).start();` 一行就够。这是实际开发里的首选写法。
+
+### 实现 Callable，配合 FutureTask
+
+```java
+FutureTask<Integer> task = new FutureTask<>(() -> 1 + 1);
+new Thread(task).start();
+Integer result = task.get();
+```
+
+`Callable` 有返回值，也可以抛受检异常。`FutureTask` 同时实现了 `Runnable` 和 `Future`，既能塞给 `Thread`，又能通过 `get()` 拿结果。
+
+`get()` 的行为按任务状态分几种。任务已完成时立即返回；没完成就阻塞等待；任务被取消时抛 `CancellationException`；任务执行中抛了异常，则包成 `ExecutionException`，真实异常要从 `getCause()` 取；等待期间当前线程被中断，抛 `InterruptedException`。带超时的 `get(timeout, unit)` 在超时后抛 `TimeoutException`。
+
+`cancel(boolean mayInterruptIfRunning)` 返回布尔值，`true` 表示取消成功，`false` 表示任务已经完成、已经取消或者无法取消。参数为 `true` 时，对正在执行的任务尝试中断执行线程；为 `false` 时只对尚未开始的任务生效，正在跑的任务会继续跑完。配套的 `isDone()` 判断任务是否结束，正常结束、异常结束、取消都算结束；`isCancelled()` 单独判断是否被取消。
+
+### Runnable 与 FutureTask 的差别
+
+| 对比 | Runnable | FutureTask |
+|---|---|---|
+| 本质 | 任务接口 | 同时实现 Runnable 和 Future |
+| 能否交给 Thread | 能 | 能，它也是 Runnable |
+| 获取执行结果 | 不能 | 能，用 `get()` |
+| 任务抛异常 | `run` 不能抛受检异常，异常也拿不到 | `Callable` 可抛，`get()` 时以 `ExecutionException` 抛出 |
+| 取消与状态 | 没有 | `cancel()`、`isDone()`、`isCancelled()` |
+| 适用场景 | 不关心结果 | 需要结果、异常或取消 |
+
+## 六种线程状态
+
+`Thread.getState()` 返回 `Thread.State` 枚举，一共六个值。`NEW` 是创建后还没 `start()`；`RUNNABLE` 是可运行，Java 把操作系统的就绪和运行合并成这一个状态，所以看到 RUNNABLE 不代表线程此刻真的在 CPU 上跑；`BLOCKED` 是等待进入 `synchronized` 代码块或方法，卡在监视器上；`WAITING` 是无限等待，典型来源是 `Object.wait()`、`Thread.join()`、`LockSupport.park()`；`TIMED_WAITING` 是限时等待，`sleep(ms)`、`wait(ms)`、`join(ms)` 都落在这里；`TERMINATED` 是终止，`run` 正常执行完或者异常退出。
+
+状态不能回退。`TERMINATED` 的线程再调 `start()` 会抛 `IllegalThreadStateException`，同一个 `Thread` 对象只允许启动一次。
+
+## Thread 的常用方法
+
+### start 与 run
+
+`start()` 做三件事：启动新线程、让线程进入 RUNNABLE、由 JVM 调用 `run()`。一个 `Thread` 对象只能 `start` 一次，第二次抛 `IllegalThreadStateException`。`run()` 本身是普通方法，直接调用不会创建新线程，就在当前线程里同步执行，调用方会等它跑完——这是新手最常见的“为什么没并发”的来源。
+
+### sleep、yield 与 join
+
+`sleep` 是静态方法，让当前线程休眠指定时间，期间状态是 `TIMED_WAITING`，**不释放锁**。被中断时抛 `InterruptedException` 并清除中断标志；时间到了回到 RUNNABLE，但不保证立刻执行。
+
+`yield` 也是静态方法，提示调度器当前线程愿意让出 CPU，状态仍是 RUNNABLE，不释放锁，也不进入阻塞。调度器可以完全忽略这个提示，所以它只适合调试或者低优先级让行，业务代码里很少用。
+
+| 对比 | sleep | yield |
+|---|---|---|
+| 状态 | TIMED_WAITING | 仍是 RUNNABLE |
+| 是否释放锁 | 不释放 | 不释放 |
+| 是否一定让出 | 一定暂停指定时间 | 不一定，调度器可忽略 |
+| 用途 | 暂停 | 提示让出 CPU |
+
+`join()` 让当前线程等待调用 join 的那个线程结束，状态是 `WAITING`；带超时的 `join(millis)` 是 `TIMED_WAITING`，被中断时抛 `InterruptedException`。它的实现本质是调用方在目标线程对象上 `wait()`，目标线程结束时 `notifyAll()`，这也解释了为什么 `join` 必须处理中断。
+
+### 中断
+
+`interrupt()` 设置线程的中断标志，是协作式中断，**不是强制停止线程**。线程如果正卡在 `sleep`、`wait`、`join` 上，会抛 `InterruptedException` 并清除标志；如果卡在 `LockSupport.park()` 上，`park` 会返回，但不抛异常、也不清除标志，循环里要自己用 `Thread.interrupted()` 检查并处理。
+
+`isInterrupted()` 是实例方法，只读不清；`Thread.interrupted()` 是静态方法，读取当前线程的标志并清除。两者差一个“清不清”，混用会让中断信号莫名其妙消失。
+
+### 状态、属性与当前线程
+
+`isAlive()` 在线程已启动且尚未终止时返回 true，`NEW` 和 `TERMINATED` 都返回 false。`getName()`、`setName()` 改线程名，新建线程默认叫 `Thread-N`，日志里带上线程名，排障时能直接看出是谁在跑。优先级范围 1 到 10，默认 5，`MIN_PRIORITY`、`NORM_PRIORITY`、`MAX_PRIORITY` 是三个常量；它只是给操作系统的提示，不保证生效，更不能拿来控制执行顺序。`getId()` 在线程生命周期内不变，`getThreadGroup()` 取线程组，现代开发里后者用得很少。`Thread.currentThread()` 返回当前正在执行的线程对象，是这些方法里出现频率最高的一个。
+
+### 守护线程
+
+`setDaemon(true)` 必须在 `start()` 之前调用，启动之后再改会抛 `IllegalThreadStateException`。守护线程不阻止 JVM 退出：所有非守护线程结束后，JVM 就退出，守护线程被强制结束，不会等它跑完。GC 线程就是典型的守护线程。`isDaemon()` 用来判断。
+
+## volatile：可见性与有序性
+
+### 可见性问题的由来
+
+```java
+public class VisibilityDemo {
+    static boolean running = true;  // 没有 volatile
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread worker = new Thread(() -> {
+            System.out.println("工作线程开始");
+            while (running) {
+                // 空循环，等待 running 变成 false
+            }
+            System.out.println("工作线程结束");
+        });
+        worker.start();
+
+        Thread.sleep(1000);
+        running = false;
+        System.out.println("主线程已把 running 设为 false");
+    }
+}
+```
+
+这段代码经常跑不出“工作线程结束”。工作线程把 `running` 读进了寄存器或 CPU 缓存，主线程改了值它也不知道，继续拿旧值 `true` 循环；JIT 还可能直接把 `while (running)` 提升成 `while (true)`，连读都省了。这不是概率问题，是 Java 内存模型允许的优化，换台机器、换个 JDK 版本，表现可能又不一样。
+
+`volatile` 解决的就是这一段：写 volatile 变量时立即刷新到主内存，读 volatile 变量时每次都从主内存重新读，不使用缓存副本。这就是可见性。它不保证原子性，`count++` 这种“读、加一、写回”的复合操作，加了 `volatile` 照样会丢更新，要原子性还得靠锁或者 `AtomicInteger`。
+
+### synchronized 的可见性
+
+`synchronized` 除了互斥，也带可见性。`monitorenter` 和 `monitorexit` 有隐含的内存语义：释放锁之前，把工作内存中的修改刷新到主内存；获取锁时清空工作内存，从主内存重新读。所以退出同步块的写，对下一个进入同一把锁的线程是可见的，不需要额外加 volatile。
+
+### 双重检查锁为什么要加 volatile
+
+```java
+public class Singleton {
+    private static Singleton instance;  // 没有 volatile
+
+    private int value = 0;
+
+    private Singleton() {
+        value = 100;  // 模拟初始化
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {                 // 第一次检查
+            synchronized (Singleton.class) {
+                if (instance == null) {         // 第二次检查
+                    instance = new Singleton(); // 问题在这
+                }
+            }
+        }
+        return instance;
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
+```
+
+`instance = new Singleton()` 不是原子操作，分三步：分配内存、调用构造器初始化对象、把 `instance` 指向内存地址。没有 `volatile` 时，JVM 可以把后两步重排成先赋值引用、再初始化：
+
+```
+1. 分配内存
+2. instance 指向内存（对象还没初始化，value 还是 0）
+3. 初始化对象（value = 100）
+```
+
+线程 A 执行到第 2 步时，线程 B 进入 `getInstance()`，第一次检查发现 `instance` 不为 null，直接返回这个引用。此时对象还没初始化完，`value` 是 0，B 拿到的是半成品。
+
+加上 `volatile` 之后，这种重排被禁止，`instance` 的赋值必须发生在构造器执行完成之后。线程 B 要么看到 null 去加锁，要么看到完全初始化好的对象，不会看到中间状态。这就是 volatile 的有序性。
+
+## ThreadLocal：线程私有变量
+
+`ThreadLocal` 给每个线程维护一份独立的变量副本，线程之间互不干扰，本质是用空间换隔离。
+
+```java
+ThreadLocal<String> tl = new ThreadLocal<>();
+
+tl.set("张三");          // 给当前线程设置值
+String name = tl.get();  // 获取当前线程的值
+tl.remove();             // 删除当前线程的值
+```
+
+需要初始值时有两种写法：重写 `initialValue()`，或者用 `ThreadLocal.withInitial(() -> 0)`。`get()` 在当前线程没有值时会调用 `initialValue()` 初始化并存入，第一次取值才触发，之后的 `get` 直接拿。
+
+```java
+ThreadLocal<Integer> tl1 = new ThreadLocal<Integer>() {
+    @Override
+    protected Integer initialValue() {
+        return 0;
+    }
+};
+
+ThreadLocal<Integer> tl2 = ThreadLocal.withInitial(() -> 0);
+
+System.out.println(tl2.get());  // 0，第一次 get 时触发初始化
+```
+
+`ThreadLocal` 的值不会传给子线程，子线程里 `get()` 拿到的是自己的值，没有初始化就是 null。需要继承时换成 `InheritableThreadLocal`，它在创建子线程时把父线程的值复制过去。
+
+```java
+InheritableThreadLocal<String> itl = new InheritableThreadLocal<>();
+itl.set("父线程的值");
+
+new Thread(() -> {
+    System.out.println(itl.get());  // 父线程的值
+}).start();
+```
+
+典型场景是 Web 请求的上下文传递：登录用户信息要在 Controller、Service、DAO 各层使用，又不想层层加参数，就放进 `ThreadLocal`，同一请求的处理链上随时可取。用完记得 `remove`，线程池里的线程会被复用，不清理的值会带进下一个请求。
+
+原理上每个线程持有一个 `ThreadLocalMap`，key 是 `ThreadLocal` 对象本身，value 是存进去的值。`set`、`get` 操作的都是当前线程自己的那张表，所以线程之间天然隔离。
+
+## 线程池
+
+### 为什么用线程池
+
+线程的创建和销毁有成本，任务来了再 new 一个线程，高峰期的开销会直接压在延迟上。线程池复用已经建好的线程，任务到达时通常有线程可用，响应更快；并发数、队列长度、拒绝策略、生命周期都能集中控制；还能统计任务数、活跃线程数、队列长度，出问题时知道瓶颈在哪。
+
+### 快速上手
+
+```java
+public class Demo1 {
+    public static void main(String[] args) {
+        // 固定 3 个线程
+        ExecutorService pool = Executors.newFixedThreadPool(3);
+        for (int i = 1; i <= 5; i++) {
+            int taskId = i;
+            pool.execute(() -> {
+                System.out.println(Thread.currentThread().getName()
+                        + " 执行任务 " + taskId);
+            });
+        }
+        pool.shutdown(); // 不再接收新任务，执行完队列任务后关闭
+    }
+}
+```
+
+五个任务交给三个线程，同一时刻最多三个在跑，谁先谁后由调度决定。`shutdown()` 只是不再接收新任务，队列里排队和正在执行的任务会继续跑完。
+
+### 七个参数
+
+```java
+public ThreadPoolExecutor(
+    int corePoolSize,                  // 1 核心线程数
+    int maximumPoolSize,               // 2 最大线程数
+    long keepAliveTime,                // 3 非核心线程空闲存活时间
+    TimeUnit unit,                     // 4 时间单位
+    BlockingQueue<Runnable> workQueue, // 5 任务阻塞队列
+    ThreadFactory threadFactory,       // 6 线程工厂
+    RejectedExecutionHandler handler   // 7 拒绝策略
+)
+```
+
+`corePoolSize` 是线程池长期保留的核心线程数。任务提交时，只要当前线程数小于它，就优先创建核心线程执行任务，而不是先排队。核心线程默认空闲也不回收，相当于常驻劳动力；调用 `allowCoreThreadTimeOut(true)` 之后，它们也会按空闲时间被回收。
+
+`maximumPoolSize` 是线程总数上限，包含核心线程。核心线程都在忙、任务队列也满了，才会创建非核心线程，一直扩到上限；达到上限且队列仍然满，才触发拒绝策略。
+
+`keepAliveTime` 和 `unit` 控制空闲存活时间，主要作用于非核心线程，空闲超过这个时长就被回收。核心线程默认不受它影响，除非开了上面那个开关。
+
+`workQueue` 是核心线程忙时新任务的去处，队列类型和容量直接决定线程池的堆积能力。
+
+`threadFactory` 负责创建线程，可以自定义线程名、优先级、守护属性、异常处理器和线程组。不设置就用 `Executors.defaultThreadFactory()`，线程名是 `pool-N-thread-M`，打日志时很难看出是哪个业务在用。
+
+`handler` 是兜底，线程数到顶且队列满时决定怎么处理新任务。
+
+有一处顺序容易记反：任务提交后先看核心线程够不够，够就直接执行；不够就进队列，队列满了才扩线程到上限，都撑不住才拒绝。不是先扩到最大线程数再排队。
+
+### 阻塞队列的选择
+
+| 队列 | 特性 | 典型场景 |
+|---|---|---|
+| `ArrayBlockingQueue` | 有界数组队列，容量必须指定 | 生产环境推荐，能拦住堆积 |
+| `LinkedBlockingQueue` | 链表队列，默认容量 `Integer.MAX_VALUE` | Fixed/Single 线程池使用，堆积风险大 |
+| `SynchronousQueue` | 不存储元素，任务必须直接交给线程 | CachedThreadPool |
+| `PriorityBlockingQueue` | 无界优先级队列 | 按优先级执行任务 |
+| `DelayQueue` | 延迟队列，元素到期才能取出 | 定时、延迟任务 |
+| `LinkedTransferQueue` | 支持 transfer 语义 | 特殊场景 |
+
+`BlockingQueue` 的两个阻塞语义是入队阻塞和出队阻塞：队列满时 `put(e)` 阻塞到有空位，队列空时 `take()` 阻塞到有元素。优先级和延迟都依赖元素自身的方法——放进 `PriorityBlockingQueue` 的元素要实现 `Comparable`，放进 `DelayQueue` 的元素要实现 `Delayed`。
+
+### 拒绝策略
+
+| 策略 | 行为 | 特点 |
+|---|---|---|
+| `AbortPolicy` | 抛 `RejectedExecutionException` | 默认，最常用，提交方能感知失败 |
+| `CallerRunsPolicy` | 提交任务的线程自己执行 | 形成背压，可能阻塞提交线程 |
+| `DiscardPolicy` | 静默丢弃 | 无感知，最危险 |
+| `DiscardOldestPolicy` | 丢掉队列中最老的任务再提交当前任务 | 可能丢的是重要任务 |
+
+默认是 `AbortPolicy`，失败立刻可见，适合绝大多数业务。`CallerRunsPolicy` 让提交方自己干活，天然限速，但提交线程可能是 Web 请求线程，卡住会影响响应。
+
+### Executors 的几种工厂
+
+| 方法 | 线程与队列 |
+|---|---|
+| `newFixedThreadPool(n)` | 固定 n 个线程，无界 `LinkedBlockingQueue` |
+| `newSingleThreadExecutor()` | 单线程，无界队列 |
+| `newCachedThreadPool()` | 线程数弹性，`SynchronousQueue` |
+| `newScheduledThreadPool(n)` | 定时、周期任务 |
+| `newSingleThreadScheduledExecutor()` | 单线程定时任务 |
+
+这几个工厂方法写起来省事，但固定线程池和单线程池用的是无界队列，任务堆积时内存会先撑不住；`newCachedThreadPool` 的线程数没有上限，突发流量会不断建线程。生产环境通常直接 new `ThreadPoolExecutor`，把七个参数和队列容量写清楚。
+
+### 提交任务：execute 与 submit
+
+```java
+pool.execute(() -> System.out.println("run"));                    // 不关心结果
+Future<Integer> f = pool.submit(() -> 1 + 1);                     // 有返回值
+Future<String> f2 = pool.submit(() -> doSomething(), "done");     // Runnable + 固定结果
+Future<?> f3 = pool.submit(() -> System.out.println("run"));      // get() 返回 null
+```
+
+| 对比 | execute | submit |
+|---|---|---|
+| 来源 | `Executor` | `ExecutorService` |
+| 参数 | `Runnable` | `Runnable` 或 `Callable` |
+| 返回值 | 无 | `Future` |
+| 异常去向 | 交给 `UncaughtExceptionHandler` | 包进 `Future`，`get()` 时抛 `ExecutionException` |
+| 是否吞异常 | 不吞 | 不 get 就可能看不到 |
+
+`submit` 有三个重载。传 `Callable` 有返回值；传 `Runnable` 和一个固定结果，`get()` 返回的就是那个结果，适合没有返回值但需要感知完成的任务；只传 `Runnable` 时 `get()` 返回 null，只用来等待完成。
+
+异步任务“悄悄失败”多半出在这里：`submit` 的异常进了 `Future`，不调用 `get()` 就永远没人知道。
+
+### 批量执行与关闭
+
+`invokeAll` 提交一批 `Callable`，阻塞到全部完成，返回与任务顺序一致的 `Future` 列表；带超时的版本在超时后取消尚未完成的任务。`invokeAny` 只要有一个任务成功返回，就拿到它的结果。
+
+```java
+List<Callable<Integer>> tasks = Arrays.asList(() -> 1, () -> 2, () -> 3);
+List<Future<Integer>> futures = pool.invokeAll(tasks);
+for (Future<Integer> f : futures) {
+    System.out.println(f.get());
+}
+```
+
+关闭线程池有三个方法。`shutdown()` 把状态转成 SHUTDOWN，不再接收新任务，已经提交和队列中的任务继续执行，不中断正在执行的任务，调用后立即返回。`shutdownNow()` 把状态转成 STOP，不处理队列中的任务，返回还没执行的任务列表，并尝试中断正在执行的任务——只是设置中断标志，任务响应不响应取决于它自己的代码。`awaitTermination(timeout, unit)` 阻塞等待线程池进入 TERMINATED，超时返回 false，通常跟在 `shutdown()` 后面做收尾。
+
+`Executors` 返回的对象可以强转成 `ThreadPoolExecutor`，后者提供了 `remove(Runnable)` 从队列移除任务、`purge()` 清除已取消的任务，以及一系列 get 方法查询线程数、活跃线程数、已完成任务数。
+
+### 任务提交后的流程
+
+`execute(Runnable)` 的主流程是五步：线程数小于核心数就先建核心线程执行；否则尝试把任务放进队列；入队成功后还要再检查一次，线程池已经关闭就移除任务并拒绝，工作线程数为 0 就补一个；入队失败说明队列满了，尝试创建非核心线程直到上限；线程数到顶且队列仍满，执行拒绝策略。
+
+### 线程池的状态
+
+RUNNING 接新任务，也处理队列里的任务；SHUTDOWN 不接新任务，但队列继续处理，由 `shutdown()` 触发；STOP 不接新任务也不处理队列，还会中断正在执行的线程，由 `shutdownNow()` 触发；TIDYING 是所有任务结束、工作线程归零、准备执行 `terminated` 钩子的中间态；TERMINATED 是 `terminated()` 执行完毕。`terminated()` 默认是空实现，重写它可以在线程池彻底关闭后做资源清理或状态记录。
+
+## 总结
+
+创建线程优先实现 `Runnable`，需要结果或异常再上 `Callable` 加 `Future`；六种状态只往前走，`sleep` 不释放锁、`yield` 只是提示、`join` 本质是 `wait`/`notify`；`volatile` 保证可见性和有序性但不保证原子性，双重检查锁必须靠它禁止重排；`ThreadLocal` 用线程私有的 `ThreadLocalMap` 做隔离；线程池按核心线程、队列、扩容上限的顺序接任务，队列和拒绝策略决定堆积与失败方式。
+
+并发问题很少来自 API 不会用，而是来自对共享状态的错误假设——以为写进去别处马上能看到，以为两个操作之间没人插进来。上面这些机制各自负责一段：`volatile` 管可见性和有序性，锁管原子性，`ThreadLocal` 管隔离，线程池管线程资源的复用与上限。按问题选工具，比背 API 更省事。写代码时先问一句“这个变量会被几个线程碰”，大多数坑在动手之前就能避开。
+24:[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Java 线程入门：创建方式、生命周期、volatile 与线程池\",\"item\":\"https://www.lxpavilion.top/article/233\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Java 线程入门：创建方式、生命周期、volatile 与线程池\",\"headline\":\"Java 线程入门：创建方式、生命周期、volatile 与线程池\",\"description\":\"线程是 CPU 调度的基本单位，共享堆却各有栈。文章从三种创建方式和六种状态讲起，梳理 start、sleep、join、interrupt 的行为边界，用双重检查锁说明 volatile 的可见性与有序性，再落到 ThreadLocal 的原理和线程池的七个参数、队列、拒绝策略与状态流转。\",\"datePublished\":\"2026-11-10T09:14:11.100905\",\"dateCreated\":\"2026-11-10T09:14:11.100905\",\"dateModified\":\"2026-11-10T09:17:04.413245\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2296.png\"}"}}],["$","$L2c",null,{"params":"$@2d","articleTitle":"Java 线程入门：创建方式、生命周期、volatile 与线程池","initialContent":"$2e"}]]
+2d:{"id":"233"}
+29:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+2f:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+27:null
+2b:[["$","title","0",{"children":"Java 线程入门：创建方式、生命周期、volatile 与线程池 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"线程是 CPU 调度的基本单位，共享堆却各有栈。文章从三种创建方式和六种状态讲起，梳理 start、sleep、join、interrupt 的行为边界，用双重检查锁说明 volatile 的可见性与有序性，再落到 ThreadLocal 的原理和线程池的七个参数、队列、拒绝策略与状态流转。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/233/"}],["$","meta","5",{"property":"og:title","content":"Java 线程入门：创建方式、生命周期、volatile 与线程池 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"线程是 CPU 调度的基本单位，共享堆却各有栈。文章从三种创建方式和六种状态讲起，梳理 start、sleep、join、interrupt 的行为边界，用双重检查锁说明 volatile 的可见性与有序性，再落到 ThreadLocal 的原理和线程池的七个参数、队列、拒绝策略与状态流转。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2296.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L2f","15",{}]]

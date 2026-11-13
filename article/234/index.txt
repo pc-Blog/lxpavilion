@@ -1,0 +1,434 @@
+1:"$Sreact.fragment"
+2:I[26908,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ThemeProvider"]
+3:I[54774,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+4:I[79617,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+5:I[61715,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+6:I[22464,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+7:I[3799,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+8:I[56499,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+9:I[61421,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+a:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+b:I[37457,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+16:I[68027,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default",1]
+:HL["/_next/static/chunks/2i-0qb2l2eupy.css","style"]
+:HL["/_next/static/chunks/3s42hg4dn1v5v.css","style"]
+:HL["/_next/static/media/geist_latin-s.p.0wgildi0cnwt9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/geist_mono_latin-s.p.0w5z4e7s8jfe5.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/noto_serif_sc_latin-s.p.2xkduggpvd1-n.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+14:X
+0:{"P":null,"c":["","article","234",""],"q":"","i":false,"f":[[["",{"children":["(main)",{"children":["article",{"children":[["id","234","d",[]],{"children":["__PAGE__",{},"$undefined","$undefined",4608]},"$undefined","$undefined",4608]},"$undefined","$undefined",4612]},"$undefined","$undefined",4616]},"$undefined","$undefined",4632],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1o4hq4ipn7i5h.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2ua00xpd3_r6c.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0mdspnb6jlo54.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/21to7rnorxyvn.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","className":"geistsans_a510a867-module__GV7SnW__variable geistmono_3a5088c3-module__hmvxwq__variable notoserif_f8cbb9e8-module__p3nKta__variable h-full antialiased","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","meta",null,{"charSet":"utf-8"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\n            "}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              try {\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\n                  document.documentElement.classList.add('splash-seen');\n                }\n              } catch (e) {}\n            "}}]]}],["$","body",null,{"className":"w-full overflow-y-scroll min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif","children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{}],["$","$L5",null,{}],["$","div",null,{"id":"app-mount-root","className":"flex-1 flex flex-col min-h-0 transition-opacity duration-1000","children":[["$","div",null,{"className":"fixed inset-0 z-[-1] pointer-events-none overflow-hidden","children":[["$","$L6",null,{}],["$","$L7",null,{}],["$","div",null,{"className":"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu","style":{"background":"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)","backgroundSize":"400% 400%","animation":"gradientMove 15s ease infinite"}}],["$","div",null,{"className":"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"}],["$","div",null,{"className":"hidden md:block absolute inset-0 w-full h-full","children":["$","$L8",null,{}]}]]}],["$","div",null,{"className":"hidden md:block","children":["$","$L9",null,{}]}],["$","div",null,{"className":"relative z-10 flex-1 flex flex-col min-h-0","children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],"$Lc"]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],"$Ld","$Le"]}],"$Lf"]}]}]]}]]}],{"children":["$L10",{"children":["$L11",{"children":["$L12",{"children":["$L13",{},null,false,null]},null,false,"$14"]},null,false,"$14"]},null,false,null]},null,false,null],"$L15",false]],"m":"$undefined","G":["$16",["$L17","$L18"]],"S":true,"h":null,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"C9c09TEEYu21IVru8MmZS"}
+19:I[6521,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1a:I[8123,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"default"]
+1b:I[18233,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1c:I[34858,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js"],"default"]
+1d:I[23191,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/0dphnk7qhjyjh.js"],"default"]
+1e:I[39756,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"LoadingBoundaryProvider"]
+25:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"OutletBoundary"]
+26:"$Sreact.suspense"
+28:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"ViewportBoundary"]
+2a:I[97367,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"MetadataBoundary"]
+c:["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]
+d:["$","$L19",null,{}]
+e:["$","$L1a",null,{}]
+f:["$","style",null,{"suppressHydrationWarning":true,"dangerouslySetInnerHTML":{"__html":"\n              @keyframes gradientMove {\n                0% { background-position: 0% 50%; }\n                50% { background-position: 100% 50%; }\n                100% { background-position: 0% 50%; }\n              }\n            "}}]
+10:["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/3_vw12rracchz.js","async":true,"nonce":"$undefined"}]],[["$","$L1b",null,{}],["$","$L1c",null,{"children":["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L1d",null,{"children":["$","$Lb",null,{}]}],"templateStyles":[],"templateScripts":[["$","script","script-0",{"src":"/_next/static/chunks/0dphnk7qhjyjh.js","async":true}]],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:0:props:children:1:props:children:1:props:children:props:children:3:props:children:2:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$c:props:style","children":["$","h2",null,{"style":"$c:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"mt-auto py-8 text-center","children":["$","p",null,{"className":"text-xs text-slate-400 dark:text-slate-500","children":["© ",2026," ","栏轩·阁",". Built with Next.js & Tailwind CSS."]}]}]]]}]
+11:["$","$L1e",null,{"loading":[["$","$1","l",{"children":[["$","div",null,{"className":"h-10 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg mb-2 animate-pulse"}],["$","div",null,{"className":"h-5 w-64 bg-slate-200 dark:bg-slate-700 rounded-md mb-6 animate-pulse"}],["$","div",null,{"className":"h-12 w-full bg-slate-200 dark:bg-slate-700 rounded-xl mb-4 animate-pulse"}],["$","div",null,{"className":"flex gap-2 mb-4","children":[["$","div","0",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","1",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","2",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","3",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}],["$","div","4",{"className":"h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"}]]}],["$","div",null,{"className":"flex gap-2 mb-8","children":[["$","div","0",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"0ms"}}],["$","div","1",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"100ms"}}],["$","div","2",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"200ms"}}],["$","div","3",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"300ms"}}],["$","div","4",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"400ms"}}],["$","div","5",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"500ms"}}],["$","div","6",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"600ms"}}],["$","div","7",{"className":"h-6 w-14 bg-slate-200 dark:bg-slate-700 rounded-md animate-pulse","style":{"animationDelay":"700ms"}}]]}],["$","div",null,{"className":"grid grid-cols-1 md:grid-cols-2 gap-6","children":[["$","div","0",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"0ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","1",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"100ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}],["$","div","2",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"200ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],"$L1f"]}],"$L20","$L21","$L22"]}]]}],[],null],"children":"$L23"}]
+12:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+13:["$","$1","c",{"children":["$L24",[["$","script","script-0",{"src":"/_next/static/chunks/3zr_r_a_0ub1w.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/2o9pibzsb4fy4.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/0hrcm_8gc9smz.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/0sfl9zkx-9mjn.js","async":true,"nonce":"$undefined"}]],["$","$L25",null,{"children":["$","$26",null,{"name":"Next.MetadataOutlet","children":"$@27"}]}]]}]
+15:["$","$1","h",{"children":[null,["$","$L28",null,{"children":"$L29"}],["$","div",null,{"hidden":true,"children":["$","$L2a",null,{"children":["$","$26",null,{"name":"Next.Metadata","children":"$L2b"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+17:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2i-0qb2l2eupy.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+18:["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/3s42hg4dn1v5v.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+14:C
+1f:["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]
+20:["$","div","3",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"300ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+21:["$","div","4",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"400ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+22:["$","div","5",{"className":"rounded-2xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 p-6 animate-pulse","style":{"animationDelay":"500ms"},"children":[["$","div",null,{"className":"h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded-md mb-3"}],["$","div",null,{"className":"h-4 w-full bg-slate-200 dark:bg-slate-700 rounded-md mb-2"}],["$","div",null,{"className":"h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-md mb-4"}],["$","div",null,{"className":"flex gap-2","children":[["$","div",null,{"className":"h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"}],["$","div",null,{"className":"h-5 w-12 bg-slate-200 dark:bg-slate-700 rounded-full"}]]}]]}]
+23:["$","$1","c",{"children":[null,["$","$La",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$Lb",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]
+2c:I[17467,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js","/_next/static/chunks/3_vw12rracchz.js","/_next/static/chunks/3zr_r_a_0ub1w.js","/_next/static/chunks/2o9pibzsb4fy4.js","/_next/static/chunks/0hrcm_8gc9smz.js","/_next/static/chunks/0sfl9zkx-9mjn.js"],"default"]
+2e:T557a,注解是 Java 5 引入的元数据机制，用来给类、方法、字段、参数这些程序元素打标记或附加配置。它本身不执行任何逻辑：方法标了 `@Test` 不会自己运行，标了 `@Transactional` 也不会自己开事务，语义全部来自读取它的那一方——编译器、注解处理器或者运行期框架。
+
+框架需要注解，是因为配置信息写在代码旁边比写在外部文件里更好维护。早年的 XML 配置把“这个类要注册成 Bean、这个方法要加事务、这个字段映射到哪一列”放在程序之外，读代码的人得在两个文件之间来回跳，改名、挪包、改参数类型都得手动同步。注解把这些信息放回声明处，类型安全、IDE 能补全，重构工具也能跟着改。Spring 的 `@Component`、MyBatis 的 `@Select`、JUnit 的 `@Test` 都是同一种思路：告诉框架这段代码该怎么被处理，处理逻辑留在框架里。
+
+## 注解在字节码里是什么
+
+源码里的注解用 `@interface` 声明，编译之后是一个接口，并且继承 `java.lang.annotation.Annotation`。注解中声明的每个属性，在字节码里对应接口的一个无参抽象方法，属性值以元素值对的形式写在注解使用处；有默认值的属性还会在注解类型上记录 `AnnotationDefault`。
+
+运行期调用 `getAnnotation` 时，JVM 返回的不是某个注解实现类的实例，而是一个动态代理对象——代理实现了注解接口，属性值存在它的调用处理器里，`value()`、`age()` 这些方法被调用时读取的就是这些值。所以 `anno.value()` 看起来像普通方法调用，背后走的是代理。这也解释了两个现象：注解实例不能 `new`，只能由 JVM 生成；同一个注解在不同元素上取到的实例，`equals` 比较的是属性值而不是对象身份。
+
+## 自定义一个注解
+
+声明注解用 `@interface`，属性写成“返回类型 + 方法名 + 可选默认值”的形式。下面这个例子把常见的属性类型都用了一遍。
+
+```java
+import java.lang.annotation.*;
+
+public class Main {
+    public enum Color {
+        RED, GREEN, BLUE
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.TYPE, ElementType.METHOD})
+    @Documented
+    @Inherited
+    public @interface MyAnno {
+        String value() default "";
+        int age() default 18;
+        Class<?> type() default Object.class;
+        String[] tags() default {};
+        Color color() default Color.RED;
+    }
+
+    @MyAnno(value = "abc", age = 20, tags = {"a", "b"})
+    public static void main(String[] args) {
+    }
+}
+```
+
+`MyAnno` 的五个属性分别对应 `String`、`int`、`Class<?>`、数组和枚举，`main` 方法上只写了其中三个，`type` 和 `color` 取默认值。注解里不能写构造器、方法体和 `throws`，属性方法也不能带参数——它描述的是数据，不是行为。
+
+## 属性类型与几条写法规则
+
+注解属性的类型只有六种形态：八种基本类型、`String`、`Class` 及其泛型形式、枚举、注解类型，以及这几种类型的数组。包装类型不在其中，`Integer`、`Long` 都不能作为属性类型；集合、`Map`、任意对象同样不行。限制来自字节码：注解属性最终以常量形式写进 class 文件，只有这些形态能直接表达。
+
+写法上有三条规则值得记住。属性名为 `value` 且注解只有这一个属性时，使用时可以省略 `value =`，直接写 `@Single("abc")`。数组属性只给一个元素时，大括号可以省掉，`@Tags("a")` 与 `@Tags({"a"})` 等价。没有 `default` 的属性在使用时必须赋值，漏写会直接编译失败，报错信息是 annotation missing element。
+
+```java
+public @interface Single {
+    String value();
+}
+
+@Single("abc") // 等价于 @Single(value = "abc")
+public class User {}
+```
+
+## 元注解
+
+元注解是修饰注解的注解，决定一个自定义注解能保留到哪个阶段、能贴在哪里、会不会传递给子类、同一位置能不能重复。JDK 自带的常用元注解有 `@Retention`、`@Target`、`@Inherited`、`@Repeatable`、`@Documented`，另外还有一个只用于特定字段的 `@Native`。
+
+### @Retention
+
+它指定注解保留到哪个阶段，取值只有三个。
+
+| 取值 | 保留位置 | 反射能否读到 | 典型用途 |
+|---|---|---|---|
+| `SOURCE` | 仅源码，编译后丢弃 | 否 | `@Override`、`@SuppressWarnings` |
+| `CLASS` | class 文件，运行期不可见（默认值） | 否 | 少数字节码工具会读 |
+| `RUNTIME` | class 文件且运行期可见 | 是 | 框架、运行期解析 |
+
+默认值是 `CLASS`，这一点最容易被忽略。自定义注解不写 `@Retention`，运行期 `getAnnotation` 一律返回 null，注解看起来“没生效”，实际是根本没进 JVM。要写框架类注解，基本都要显式声明 `RUNTIME`。
+
+### @Target
+
+`@Target` 指定注解能用在哪些程序元素上。常用的 `ElementType` 取值里，`TYPE` 覆盖类、接口、枚举和注解类型，`FIELD`、`METHOD`、`PARAMETER`、`CONSTRUCTOR`、`LOCAL_VARIABLE`、`ANNOTATION_TYPE`、`PACKAGE` 各自对应一种声明位置。JDK 8 加入了 `TYPE_PARAMETER` 和 `TYPE_USE`，JDK 9 加了 `MODULE`，JDK 16 加了 `RECORD_COMPONENT`。
+
+`TYPE_USE` 的作用点比较特殊，它把注解从声明位置扩展到类型的使用处，`List<@NonNull String>`、强制转换 `(@NonNull String) obj`、`implements @ReadOnly Map` 都能写。`TYPE_PARAMETER` 管的是 `<T>` 这种类型参数声明。不写 `@Target` 时，注解默认可以用在大多数声明位置，但类型使用处和类型参数仍然要显式声明对应的 `ElementType` 才能写。
+
+### @Inherited
+
+`@Inherited` 让类注解沿继承链传递：父类标了带 `@Inherited` 的注解，子类没有标注，在子类的 `Class` 对象上调用 `getAnnotation` 也能拿到；换成 `getDeclaredAnnotation` 就拿不到。
+
+它的边界比名字听起来窄。只对类注解有效，方法、字段、构造器上的注解不会被子类“继承”；只沿着 `extends` 往上找，接口上的注解不会传给实现类。`@Inherited` 也没有让注解类型可被继承——`@interface` 不能 `extends` 另一个 `@interface`，所谓注解继承，只是读取时的一条可见性规则。
+
+### @Repeatable
+
+JDK 8 引入，允许同一位置重复使用同一个注解。重复注解需要配一个容器注解，容器里用数组装被重复的注解。
+
+```java
+@Repeatable(Roles.class)
+@interface Role {
+    String value();
+}
+
+@interface Roles {
+    Role[] value();
+}
+
+@Role("admin")
+@Role("user")
+public class User {}
+```
+
+编译器会把两次 `@Role` 收进 `@Roles` 的 `value` 数组，所以反射里 `getAnnotation(Role.class)` 拿不到单个注解，要用 `getAnnotationsByType(Role.class)` 取展开后的 `Role[]`。容器注解的保留策略和 `@Target` 适用范围不能弱于被包含的注解，否则编译报错。
+
+### @Documented 与 @Native
+
+`@Documented` 让注解出现在 Javadoc 里，不影响编译，也不影响运行。`@Native` 贴在字段上，表示这个常量可能被 native 代码引用，`javac -h` 生成头文件时据此判断是否需要导出它；它只保留到 `SOURCE`。日常开发很少手写这两个，见到能认出来即可。
+
+## JDK 内置注解
+
+内置注解大致分两类：编译器直接检查的，和运行期可读、主要给工具使用的。前者保留到 `SOURCE` 就够，后者通常标 `RUNTIME`。
+
+### @Override
+
+```java
+static class Parent {
+    public void say() {}
+}
+
+static class Child extends Parent {
+    @Override
+    public void say() {}
+}
+```
+
+编译器核对被标注的方法确实重写了父类或接口中的方法。父类没有 `say` 时，这行注解直接编译报错，提示 method does not override or implement a method from a supertype。参数类型写错、方法名拼错都算“没重写”，注解会把错误提前暴露。实现接口方法、重写接口默认方法同样适用，它保留到 `SOURCE`，运行期没有任何痕迹。
+
+### @Deprecated
+
+标记废弃，可以贴在类、方法、字段、构造器、参数上。IDE 给它加删除线并在调用处报警告，`javac -Xlint:deprecation` 也会提示。它保留到 `RUNTIME`，运行期反射能读到，框架可以据此打日志或做兼容处理。
+
+JDK 9 起 `@Deprecated` 多了两个属性，`since` 说明从哪个版本开始弃用，`forRemoval` 表示是否计划在将来移除。工程里通常再配合同名的 `@deprecated` Javadoc 标签，写清替代方案，否则调用方只知道“别用”，不知道“用什么”。
+
+### @SuppressWarnings
+
+```java
+@SuppressWarnings({"unchecked", "rawtypes"})
+public void foo() {
+    List list = new ArrayList();
+    list.add("a");
+}
+```
+
+它抑制编译器警告，作用范围可以是类、方法、字段、局部变量，甚至单条局部变量声明。保留策略是 `SOURCE`，编译完就消失。常见取值有 `unchecked`、`rawtypes`、`deprecation`、`unused`。
+
+抑制警告等于把提示关掉，问题本身不会消失。上面这段代码的泛型安全问题依然存在，只是 javac 不再提醒；什么时候该抑制，判断标准是这个警告确实无法通过改代码消除，而不是看着碍眼。
+
+### @FunctionalInterface
+
+```java
+@FunctionalInterface
+public interface F {
+    void f01();
+}
+```
+
+编译器检查接口是否恰好只有一个抽象方法，多一个就编译报错。默认方法、静态方法、以及 `equals`、`hashCode` 这类 `Object` 的方法都不算抽象方法。它的保留策略是 `RUNTIME`，但作用发生在编译期——JVM 并不会因为这个注解决定能不能用 lambda，接口形态才是关键。
+
+### @SafeVarargs
+
+泛型可变参数会触发“堆污染”警告，`@SafeVarargs` 是开发者对编译器做的保证：方法内部不会往这个数组里写类型不安全的元素。它不改变运行期行为，只是让警告闭嘴。
+
+```java
+@SafeVarargs
+static void unsafeMethod(List<String>... stringLists) {
+    Object[] array = stringLists;
+    List<Integer> intList = Arrays.asList(42);
+    array[0] = intList;
+    String s = stringLists[0].get(0); // ClassCastException
+}
+```
+
+泛型擦除之后，可变参数数组的实际类型是 `Object[]`，把 `List<Integer>` 塞进去编译器拦不住；调用方按 `List<String>` 读取时，元素被强转成 `String`，运行期抛 `ClassCastException`。这段代码恰恰污染了数组，`@SafeVarargs` 在这里掩盖了真正的问题。注解本身有使用限制：只能标在 `static` 方法、`final` 实例方法、构造器上，Java 9 之后 `private` 实例方法也可以，原因是这些方法不会被重写，安全性可以静态判断。
+
+## 注解在哪里生效
+
+注解能否起作用，取决于有没有人读它、在什么时候读。按读取时机分三层：编译器内置检查、注解处理器、运行期反射。保留策略选错，注解就会“写了没用”。
+
+javac 对 `@Override`、`@FunctionalInterface`、`@SuppressWarnings` 有硬编码的识别逻辑，在语法和类型检查阶段直接处理，`SOURCE` 足够。注解处理器在编译期扫描注解、生成新源码或做检查，Lombok、MapStruct、AutoService、Dagger 都走这条路，生成的代码会和手写代码一起进入后续编译轮次，所以业务代码能直接引用。还有一类注解只给 IDE 和静态分析工具用，比如 `@Nullable`、`@NonNull`、`@Contract`，IDEA 据此做空指针分析和契约检查；也有一些注解纯粹供文档或外部工具读取，代码层面没有任何行为，保留到 `CLASS` 甚至 `SOURCE` 就行。
+
+运行期反射只认 `RUNTIME` 注解。Spring 启动时扫描 `@Component`、`@RequestMapping` 建立映射，MyBatis 解析 `@Select` 拼 SQL，JUnit 找 `@Test` 方法，都是启动后读注解再决定行为。框架的灵活性来自这一层，反射的开销也来自这一层。
+
+## APT：写一个编译期处理器
+
+APT 是 javac 编译器内置的一套编译期注解处理机制。写一个处理器类，告诉 javac“编译时遇到这些注解就调用它”，处理器就能读注解、生成新源码、或者直接让编译报错。
+
+### 它和反射的区别
+
+| 维度 | APT | 反射 |
+|---|---|---|
+| 发生时机 | 编译期 | 运行期 |
+| 注解保留策略 | `SOURCE` 就够 | 必须 `RUNTIME` |
+| 能做什么 | 读注解、生成代码、编译期检查 | 动态调用、读注解、操作对象 |
+| 典型代表 | Lombok、MapStruct、Dagger、AutoService | Spring、MyBatis 运行期解析 |
+| 运行时依赖 | 不需要 | 需要 |
+
+一句话概括：APT 在源码变成 class 之前介入，反射在 class 加载之后介入。Lombok 常被误认为用了反射，因为 `@Data` 让 getter、setter、构造器凭空出现；实际是它在编译期修改抽象语法树，把方法直接写进字节码。编译时需要 Lombok 依赖并在 IDE 里开启注解处理，运行期完全不需要它，生成出来的就是一个普通类。
+
+### 处理器怎么写
+
+自定义处理器继承 `AbstractProcessor`，位于 `javax.annotation.processing` 包。它实现了 `Processor` 接口的大部分通用逻辑，需要重写的核心方法只有一个。
+
+```java
+boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
+```
+
+`annotations` 是本轮要处理的注解类型集合，`roundEnv` 是本轮的处理环境，用 `getElementsAnnotatedWith` 能拿到被注解的元素。返回值 `true` 表示“这批注解已处理，后面的处理器不用再看”，`false` 表示“处理过，但后续处理器还可以继续”。一轮处理结束后，javac 会把新生成的源码再编译一轮并重新调用处理器，直到没有新文件产生，这也是生成类能被业务代码直接引用的原因。
+
+声明关心哪些注解，用 `@SupportedAnnotationTypes`。它的值必须是全限定名，`@SupportedAnnotationTypes("demo.Hello")` 能匹配到目标注解，`@SupportedAnnotationTypes("Hello")` 匹配不到，这是新手最常踩的坑。
+
+多个注解写成数组，通配用 `demo.*` 表示该包下所有注解，`*` 表示所有注解。这个注解等价于重写 `getSupportedAnnotationTypes()`：
+
+```java
+@Override
+public Set<String> getSupportedAnnotationTypes() {
+    return Set.of("demo.Hello");
+}
+```
+
+还要用 `@SupportedSourceVersion` 声明支持的源码版本，例如 `@SupportedSourceVersion(SourceVersion.RELEASE_17)`。不写这个注解，处理器默认只声明支持到 `RELEASE_6`，javac 会给出警告。
+
+### 完整示例：用 @Hello 生成一个新类
+
+先定义一个 `SOURCE` 保留的注解，它只需要在编译期被处理器看到。
+
+```java
+package demo;
+
+import java.lang.annotation.*;
+
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.TYPE)
+public @interface Hello {
+    String value() default "world";
+}
+```
+
+处理器遍历被 `@Hello` 标注的元素，用元素的简单名拼出新类名，再用 `Filer` 生成源码文件。
+
+```java
+package demo;
+
+import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.*;
+import javax.tools.JavaFileObject;
+import java.io.Writer;
+import java.util.Set;
+
+@SupportedAnnotationTypes("demo.Hello")
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
+public class HelloProcessor extends AbstractProcessor {
+
+    @Override
+    public boolean process(Set<? extends TypeElement> annos, RoundEnvironment env) {
+        for (Element e : env.getElementsAnnotatedWith(Hello.class)) {
+            String name = e.getSimpleName() + "Hello";
+            String value = e.getAnnotation(Hello.class).value();
+            try {
+                JavaFileObject f = processingEnv.getFiler().createSourceFile("demo." + name);
+                try (Writer w = f.openWriter()) {
+                    w.write("package demo;\n");
+                    w.write("public class " + name + " {\n");
+                    w.write("  public static void say() { System.out.println(\"Hello, " + value + "\"); }\n");
+                    w.write("}\n");
+                }
+            } catch (Exception ex) {
+                processingEnv.getMessager().printMessage(javax.tools.Diagnostic.Kind.ERROR, ex.toString());
+            }
+        }
+        return true;
+    }
+}
+```
+
+业务类只要标上 `@Hello`，就能直接使用生成的类：
+
+```java
+package demo;
+
+@Hello("APT")
+public class User {
+    public static void main(String[] args) {
+        UserHello.say();
+    }
+}
+```
+
+处理器要先编译出来，通过 SPI 注册之后，业务类编译时它才会被调用。下面这组命令在 bash 下可直接执行。
+
+```
+mkdir -p out
+javac -d out -proc:none src/demo/Hello.java src/demo/HelloProcessor.java
+mkdir -p out/META-INF/services
+echo "demo.HelloProcessor" > out/META-INF/services/javax.annotation.processing.Processor
+javac -d out -cp out -processorpath out src/demo/User.java
+java -cp out demo.User
+```
+
+运行输出 `Hello, APT`，`out/demo/` 下会多出 `UserHello.java` 和 `UserHello.class`。整个过程可以压成一句话：javac 读到 `@Hello`，通过 SPI 加载 `HelloProcessor`，处理器用 `Filer` 生成 `UserHello.java`，javac 继续编译新文件，`User` 里的 `UserHello.say()` 才解析得到。
+
+写处理器时有一处容易出问题：`Filer.createSourceFile` 对同一个文件名只允许创建一次，重复创建会抛 `FilerException`。元素可能被多轮处理，处理器需要用集合记住已经生成过的名字，否则第二轮就会失败。
+
+## 用反射读取注解
+
+运行期读取注解靠 `AnnotatedElement` 接口，`Class`、`Method`、`Field`、`Constructor`、`Parameter` 都实现了它。接口一共七个方法，除 `isAnnotationPresent` 外都是成对的。
+
+```java
+public interface AnnotatedElement {
+    default boolean isAnnotationPresent(Class<? extends Annotation> annotationClass);
+
+    <T extends Annotation> T getAnnotation(Class<T> annotationClass);
+    Annotation[] getAnnotations();
+
+    <T extends Annotation> T getDeclaredAnnotation(Class<T> annotationClass);
+    Annotation[] getDeclaredAnnotations();
+
+    <T extends Annotation> T[] getAnnotationsByType(Class<T> annotationClass);
+    <T extends Annotation> T[] getDeclaredAnnotationsByType(Class<T> annotationClass);
+}
+```
+
+带 `Declared` 的方法只看当前元素上直接写着的注解，不带 `Declared` 的会把继承来的算进来。继承只对类注解有意义：父类标了带 `@Inherited` 的注解，子类的 `getAnnotation` 能拿到，`getDeclaredAnnotation` 拿不到；方法、字段、构造器没有这层传递，两组方法结果一致。`getAnnotationsByType` 用于 `@Repeatable`，返回展开后的数组，而不是容器注解。
+
+方法、字段、参数上的用法是一致的：
+
+```java
+Method m = clazz.getMethod("foo");
+MyAnno anno = m.getAnnotation(MyAnno.class);
+
+Field f = clazz.getDeclaredField("name");
+MyAnno fa = f.getAnnotation(MyAnno.class);
+
+Parameter[] params = m.getParameters();
+MyAnno pa = params[0].getAnnotation(MyAnno.class);
+```
+
+参数注解按位置读取，不依赖参数名；如果需要 `getParameters()` 返回真实的参数名，编译时要加 `-parameters`，否则拿到的是 `arg0`、`arg1` 这类占位名。
+
+把类、方法、构造器、字段放在一起验证一下：
+
+```java
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class Main {
+    @Deprecated
+    public static class User {
+        @Deprecated
+        int t;
+
+        @Deprecated
+        public void say() {}
+    }
+
+    public static void main(String[] args) throws Exception {
+        Class<User> userClass = User.class;
+        System.out.println("length:" + userClass.getDeclaredAnnotations().length);
+
+        Method say = userClass.getDeclaredMethod("say");
+        System.out.println("length:" + say.getDeclaredAnnotations().length);
+
+        Constructor<User> declaredConstructor = userClass.getDeclaredConstructor();
+        System.out.println("length:" + declaredConstructor.getDeclaredAnnotations().length);
+
+        Field t = userClass.getDeclaredField("t");
+        System.out.println("length:" + t.getDeclaredAnnotations().length);
+    }
+}
+```
+
+输出是 `1`、`1`、`0`、`1`。类、方法、字段各带一个 `@Deprecated`，构造器没标注所以是 0。字段 `t` 是包级私有，这里用 `getDeclaredField` 而不是 `getField`，后者只返回 public 成员，用它找 `t` 会抛 `NoSuchFieldException`。读注解本身不需要 `setAccessible(true)`，即使字段是 private，`getAnnotation` 照样能读到，访问控制在注解读取这一步不生效。
+
+## 总结
+
+注解在字节码里是继承 `Annotation` 的接口，属性是接口的抽象方法，实例由 JVM 用动态代理生成。要不要保留到运行期看 `@Retention`，能贴在哪看 `@Target`，能不能被子类看到看 `@Inherited`，同一位置重复写要靠 `@Repeatable` 和容器注解。让注解真正生效的是三个消费方：编译器内置检查、编译期注解处理器和运行期反射，Lombok 属于第二种。
+
+注解的成本主要不在运行期：`SOURCE` 注解编译完就没有，`RUNTIME` 注解只是 class 文件里多一段元数据，真正决定行为的是读取它的代码。写自定义注解之前先想清楚三件事：谁来读、在什么时机读、需不需要传递或重复。只在编译期做检查就标 `SOURCE`，运行期框架要读就标 `RUNTIME`，并确认 `@Target` 覆盖实际使用的位置；指望“加了注解就生效”却没写 `@Retention`，是这类代码最常见的哑火方式。注解适合声明“这是什么”，把业务逻辑塞进属性里，读取方迟早会失控。
+24:[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"首页\",\"item\":\"https://www.lxpavilion.top/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"技术文章\",\"item\":\"https://www.lxpavilion.top/article\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Java 注解入门：元注解、内置注解与 APT 代码生成\",\"item\":\"https://www.lxpavilion.top/article/234\"}]}"}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"name\":\"Java 注解入门：元注解、内置注解与 APT 代码生成\",\"headline\":\"Java 注解入门：元注解、内置注解与 APT 代码生成\",\"description\":\"注解本身只是元数据，真正赋予语义的是编译器、APT 处理器或运行期反射。文章从自定义注解的写法讲起，说明 @Retention、@Target、@Inherited、@Repeatable 的边界与 @Override 到 @SafeVarargs 的行为，再拆开 APT 处理器的编写流程和反射读取接口的差异。\",\"datePublished\":\"2026-11-10T09:14:13.864172\",\"dateCreated\":\"2026-11-10T09:14:13.864172\",\"dateModified\":\"2026-11-10T09:17:16.15982\",\"author\":{\"@type\":\"Person\",\"name\":\"ppc\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"栏轩·阁\",\"url\":\"https://www.lxpavilion.top\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.lxpavilion.top/seo/logo.jpeg\"}},\"image\":\"https://www.lxpavilion.top/data/media/2296.png\"}"}}],["$","$L2c",null,{"params":"$@2d","articleTitle":"Java 注解入门：元注解、内置注解与 APT 代码生成","initialContent":"$2e"}]]
+2d:{"id":"234"}
+29:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+2f:I[27201,["/_next/static/chunks/1o4hq4ipn7i5h.js","/_next/static/chunks/2ua00xpd3_r6c.js","/_next/static/chunks/0mdspnb6jlo54.js","/_next/static/chunks/21to7rnorxyvn.js"],"IconMark"]
+27:null
+2b:[["$","title","0",{"children":"Java 注解入门：元注解、内置注解与 APT 代码生成 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","1",{"name":"description","content":"注解本身只是元数据，真正赋予语义的是编译器、APT 处理器或运行期反射。文章从自定义注解的写法讲起，说明 @Retention、@Target、@Inherited、@Repeatable 的边界与 @Override 到 @SafeVarargs 的行为，再拆开 APT 处理器的编写流程和反射读取接口的差异。"}],["$","meta","2",{"name":"keywords","content":"栏轩阁,lxpavilion,ppc,个人博客,技术博客,后端开发,Java,Spring Boot,Spring Cloud Alibaba,微服务架构,MyBatis-Plus,RabbitMQ,云原生,Docker,Kubernetes,KubeSphere,DevOps,CI/CD,AI 应用开发,RAG,Spring AI,向量检索,Claude Code,MySQL,Redis,Elasticsearch,OpenGauss,全栈开发,Vue 3,TypeScript,Next.js,Cloudflare,Cloudflare Workers,学习笔记,项目实践,Bing SEO,IndexNow,MailerLite"}],["$","meta","3",{"name":"robots","content":"index, follow"}],["$","link","4",{"rel":"canonical","href":"https://www.lxpavilion.top/article/234/"}],["$","meta","5",{"property":"og:title","content":"Java 注解入门：元注解、内置注解与 APT 代码生成 | 栏轩阁 - 个人技术博客与作品集"}],["$","meta","6",{"property":"og:description","content":"注解本身只是元数据，真正赋予语义的是编译器、APT 处理器或运行期反射。文章从自定义注解的写法讲起，说明 @Retention、@Target、@Inherited、@Repeatable 的边界与 @Override 到 @SafeVarargs 的行为，再拆开 APT 处理器的编写流程和反射读取接口的差异。"}],["$","meta","7",{"property":"og:image","content":"https://www.lxpavilion.top/data/media/2296.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"栏轩阁 - 个人技术博客与作品集"}],["$","meta","12",{"name":"twitter:description","content":"栏轩阁 - 个人技术博客，记录后端开发、云原生架构与全栈工程实践，分享从 Spring Boot 微服务到 Vue 3 前端的技术探索与项目心得。"}],["$","meta","13",{"name":"twitter:image","content":"https://www.lxpavilion.top/seo/logo.jpeg"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.2ccqz20796-4p.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L2f","15",{}]]

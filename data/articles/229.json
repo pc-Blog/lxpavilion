@@ -7,7 +7,10 @@
   "id": 229,
   "isPinned": 0,
   "isPublished": 1,
-  "next": null,
+  "next": {
+    "id": 230,
+    "title": "Java 反射入门：从 Class 对象到方法调用的完整示例"
+  },
   "prev": {
     "id": 228,
     "title": "Nacos 从安装到配置中心：注册发现、动态刷新与版本回滚实战"
