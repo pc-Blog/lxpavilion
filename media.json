@@ -1,6 +1,19 @@
 {
-  "total": 1901,
+  "total": 1902,
   "rows": [
+    {
+      "createTime": "2026-11-10T09:13:46.887218",
+      "deleted": 0,
+      "filePath": "202611/5cc1ab7130ee44b3bd4147a5ad6db194.png",
+      "fileSize": 63172,
+      "fileUrl": "/data/media/2296.png",
+      "filename": "5cc1ab7130ee44b3bd4147a5ad6db194.png",
+      "id": 2296,
+      "mimeType": "image/png",
+      "originalFilename": "OIP-C_processed.png",
+      "relationType": null,
+      "updateTime": "2026-11-10T09:13:46.888836"
+    },
     {
       "createTime": "2026-11-04T09:58:54.267378",
       "deleted": 0,

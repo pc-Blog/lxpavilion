@@ -1,5 +1,11 @@
 [
   {
+    "series": "Java学习笔记（八股文）",
+    "count": 12,
+    "coverImage": "/data/media/2296.png",
+    "summary": "以 JDK 8 为基准拆解 Java 内存结构：栈存局部变量与引用、堆放对象、方法区存类元数据，并讲清永久代改为元空间、字符串常量池迁入堆之后，s1 == s2 为 false 的原因和 intern() 的地址复用规则。"
+  },
+  {
     "series": "DeepSeek Harness 体验",
     "count": 10,
     "coverImage": "/data/media/779.png",

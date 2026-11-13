@@ -1,6 +1,238 @@
 {
-  "total": 123,
+  "total": 135,
   "rows": [
+    {
+      "categoryId": 44,
+      "categoryName": "学习笔记",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-13T13:42:11.028862",
+      "id": 249,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "以 JDK 8 为基准拆解 Java 内存结构：栈存局部变量与引用、堆放对象、方法区存类元数据，并讲清永久代改为元空间、字符串常量池迁入堆之后，s1 == s2 为 false 的原因和 intern() 的地址复用规则。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java 内存结构：栈、堆、方法区与字符串常量池",
+      "updateTime": "2026-11-13T13:42:20.679303"
+    },
+    {
+      "categoryId": 44,
+      "categoryName": "学习笔记",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-13T13:22:53.170029",
+      "id": 248,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "从 JDK 9 的 byte[] 加 coder 讲起，拆开 String 不可变的四个支点，算清 new String 到底创建几个对象，解释 intern 在 JDK 7 前后的差异与拼接指令的变化，并给出 StringBuilder 的扩容公式与 length、capacity 的区别。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java String 底层原理：不可变、常量池、intern 与 StringBuilder 扩容",
+      "updateTime": "2026-11-13T13:23:21.589054"
+    },
+    {
+      "categoryId": 44,
+      "categoryName": "学习笔记",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-13T10:58:29.505922",
+      "id": 247,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "用一次可运行的最小示例走完 Java 调 C 的全流程：native 的关键字规则、javac -h 生成头文件与命名规则、JNIEnv 与 jstring 的边界转换、Windows 下编译 DLL 的命令，以及 -Djava.library.path 覆盖默认路径后的影响。",
+      "tags": [
+        {
+          "id": 89,
+          "name": "Windows"
+        },
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java native 方法实战：javac -h 生成 JNI 头文件到调用 C 代码的全流程",
+      "updateTime": "2026-11-13T10:58:47.022744"
+    },
+    {
+      "categoryId": 44,
+      "categoryName": "学习笔记",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-13T10:25:08.160183",
+      "id": 246,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "从数据源、中间操作、终端操作的三段结构讲起，解释 Stream 为什么惰性求值、有状态操作如何拖慢并行、Collector 的四个函数各自分工，以及 distinct、sorted、toMap、findFirst 这些常用操作在什么条件下会失效或变慢。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java Stream 流：惰性求值、短路操作与 Collector 收集器的执行机制",
+      "updateTime": "2026-11-13T10:25:28.177944"
+    },
+    {
+      "categoryId": 44,
+      "categoryName": "学习笔记",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-13T08:26:50.688929",
+      "id": 244,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "从 Iterable、Collection 到 Map 梳理 Java 集合框架：for-each 的语法糖本质、Spliterator 的可分割设计、List/Set/Queue 的接口增量，以及 ArrayList 扩容、HashMap 树化与并发容器锁粒度演进背后的取舍。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java 集合框架：从 Iterable 到 HashMap 的接口契约、扩容策略与并发取舍",
+      "updateTime": "2026-11-13T08:27:24.5776"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-10T20:28:44.272804",
+      "id": 239,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "Lambda 不是匿名内部类的语法糖：编译期只留一条 invokedynamic，实现类由 LambdaMetafactory 在运行期生成。文章从同一个接口的三种实现讲起，说明函数式接口与 @FunctionalInterface 的检查、目标类型如何决定 lambda 的含义、四种方法引用的形状差异，以及变量捕获与 this 的规则。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java Lambda 入门：函数式接口、方法引用与变量捕获",
+      "updateTime": "2026-11-10T20:29:16.217395"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-10T12:06:30.904225",
+      "id": 238,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "泛型只在编译期存在，运行期类型参数已被擦除。文章从 List<String> 与裸 List 的差别讲起，说明泛型类、接口、方法的写法，拆开擦除带来的六条限制，理清 ? extends 与 ? super 的读写边界，再用 StringNode 的例子走一遍桥方法的调用与 checkcast 兜底。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java 泛型入门：类型擦除、通配符与桥方法",
+      "updateTime": "2026-11-10T12:07:11.044743"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-10T09:14:13.864172",
+      "id": 234,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "注解本身只是元数据，真正赋予语义的是编译器、APT 处理器或运行期反射。文章从自定义注解的写法讲起，说明 @Retention、@Target、@Inherited、@Repeatable 的边界与 @Override 到 @SafeVarargs 的行为，再拆开 APT 处理器的编写流程和反射读取接口的差异。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java 注解入门：元注解、内置注解与 APT 代码生成",
+      "updateTime": "2026-11-10T09:17:16.15982"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-10T09:14:11.100905",
+      "id": 233,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "线程是 CPU 调度的基本单位，共享堆却各有栈。文章从三种创建方式和六种状态讲起，梳理 start、sleep、join、interrupt 的行为边界，用双重检查锁说明 volatile 的可见性与有序性，再落到 ThreadLocal 的原理和线程池的七个参数、队列、拒绝策略与状态流转。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java 线程入门：创建方式、生命周期、volatile 与线程池",
+      "updateTime": "2026-11-10T09:17:04.413245"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-10T09:14:07.617877",
+      "id": 232,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "count++ 不是原子操作，锁把读改写三步捆成一个整体。文章用可运行的计数示例讲清 synchronized 锁 this、锁 Class、锁代码块三种形态与锁对象必须共享的原因，梳理 wait/notify 的握手顺序，再对照 ReentrantLock 的可重入、tryLock、中断与公平锁的排队机制。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java 锁入门：synchronized 与 ReentrantLock 的用法",
+      "updateTime": "2026-11-10T09:16:50.470823"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-10T09:14:00.178229",
+      "id": 231,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "JDK 动态代理把代理对象上的每一次方法调用都转进 InvocationHandler.invoke，日志、事务、权限这类横切逻辑得以集中在一处。文章用一段可运行的示例讲清 Proxy.newProxyInstance 的三个参数、invoke 的三个入参、方法执行效果，以及只能代理接口这条限制的由来。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java 动态代理入门：InvocationHandler 与 Proxy 的用法",
+      "updateTime": "2026-11-10T09:16:41.469471"
+    },
+    {
+      "categoryId": 41,
+      "categoryName": "技术教程",
+      "coverImage": "/data/media/2296.png",
+      "createdAt": "2026-11-10T09:13:52.472613",
+      "id": 230,
+      "isPinned": 0,
+      "isPublished": 1,
+      "series": "Java学习笔记（八股文）",
+      "summary": "Java 反射让程序在运行期拿到类的结构，按类名创建对象、按方法名调用、按字段名读写。文章从 Class 对象的四种获取方式讲起，说明 Constructor、Method、Field 的用法与易错点，并交代 setAccessible 真正做了什么、反射为什么比直接调用慢。",
+      "tags": [
+        {
+          "id": 98,
+          "name": "Java"
+        }
+      ],
+      "title": "Java 反射入门：从 Class 对象到方法调用的完整示例",
+      "updateTime": "2026-11-10T09:16:29.165763"
+    },
     {
       "categoryId": 45,
       "categoryName": "工具教程",

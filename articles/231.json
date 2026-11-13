@@ -1,0 +1,28 @@
+{
+  "categoryId": 41,
+  "categoryName": "技术教程",
+  "content": "注解和反射能解决“声明”和“按名字调用”的问题，但要自动给一批方法加上日志、事务、权限，光靠它们还得在每个调用点手写反射调用，或者把每个类都改一遍。动态代理把“调用”这一层整个接管：调用方拿到的是代理对象，接口上的每个方法一被调用，就先进入 `InvocationHandler.invoke`，由它决定执行什么增强、什么时候把调用转给真实对象、返回什么。\n\n调用方仍然按接口编程，感知不到手里是代理；增强逻辑收在一个类里，业务代码不用改。这也是它比手工反射更适合做通用扩展的原因——反射负责“能找到方法”，代理负责“每次调用都经过这里”。\n\n## 代理对象接管了什么\n\n代理对象和真实对象实现同一个接口。调用方声明的是接口类型，实际拿到的是运行期生成的代理类实例，类名以 `$Proxy` 开头，由 `Proxy.newProxyInstance` 动态创建。代理类实现了传入的所有接口，每个方法体都只做一件事：把调用转给 handler 的 `invoke`。代理代码不需要知道接口里有哪些方法，接口加方法也不用改它。\n\n## InvocationHandler：唯一的扩展点\n\n`InvocationHandler` 是 JDK 动态代理的调用处理器接口，代理对象上的所有方法调用都会被转发到它的 `invoke` 方法。整个接口只有一个方法要重写。\n\n```java\npublic interface InvocationHandler {\n    Object invoke(Object proxy, Method method, Object[] args) throws Throwable;\n}\n```\n\n三个参数各有分工。`proxy` 是代理对象本身，它在 `invoke` 里几乎用不到——对 `proxy` 调用任何方法都会再次进入 `invoke`，形成递归。`method` 是被调用的方法，`method.getName()` 能拿到方法名，`method.getParameterTypes()` 能拿到签名，据此做分支或拼日志。`args` 是实参数组，无参方法时为 `null`，基本类型实参在数组里是装箱后的包装类型。返回值会成为调用方最终拿到的结果，方法本身返回 `void` 时返回 `null` 即可。\n\n它位于代理对象和真实目标之间，是拦截层。常见的写法是先做增强，再 `method.invoke(target, args)` 把调用转发给真实对象，收尾逻辑放在转发之后；也可以根据条件不转发，直接返回默认值或者抛异常——权限校验失败时就是这样处理的。\n\n## Proxy.newProxyInstance 的三个参数\n\n创建代理的入口是 `Proxy` 类的静态方法：\n\n```java\nProxy.newProxyInstance(\n        User.class.getClassLoader(),\n        new Class<?>[]{User.class},\n        new LogHandler(target)\n);\n```\n\n第一个参数是类加载器，生成的代理类由它定义，通常传接口的类加载器。第二个是接口数组，代理类会实现其中全部接口。第三个是调用处理器，通常持有真实目标；每个代理对象可以有独立的 handler，也可以共用一个无状态的 handler。\n\n返回值类型是 `Object`，使用时要强转成接口类型。三个参数都不能为 `null`，接口数组里也必须全是接口——把 `UserImpl.class` 传进去会抛 `IllegalArgumentException`。原因在生成方式：代理类是通过 `implements` 这些接口来“变成”目标类型的，而它本身必须继承 `java.lang.reflect.Proxy`，Java 又只允许单继承，所以再继承一个业务类这条路走不通。想同时具备多个类型，只能靠接口。\n\n## 完整示例\n\n```java\nimport java.lang.reflect.*;\n\ninterface User {\n    void say();\n}\n\nclass UserImpl implements User {\n    @Override\n    public void say() {\n        System.out.println(\"say\");\n    }\n}\n\nclass LogHandler implements InvocationHandler {\n    private final Object target;\n\n    LogHandler(Object target) {\n        this.target = target;\n    }\n\n    @Override\n    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {\n        System.out.println(\"before \" + method.getName());\n        Object result = method.invoke(target, args);\n        System.out.println(\"after \" + method.getName());\n        return result;\n    }\n}\n\npublic class Demo {\n    // 静态工厂，外部直接 Demo.newUser()\n    public static User newUser() {\n        User target = new UserImpl();\n        return (User) Proxy.newProxyInstance(\n                User.class.getClassLoader(),\n                new Class<?>[]{User.class},   // 这里必须是接口\n                new LogHandler(target)\n        );\n    }\n\n    public static void main(String[] args) {\n        User user = newUser();\n        user.say();   // 走代理，打印 before/after\n    }\n}\n```\n\n接口 `User` 定义契约，`UserImpl` 是真实目标，`LogHandler` 持有 target 并在 `invoke` 里前后各打印一行，`newUser` 把“创建真实对象、生成代理、绑定处理器”三步封在工厂里。`main` 里的 `user` 声明类型是接口，实际是代理实例，`user.say()` 不会直接进 `UserImpl.say()`。\n\n## 运行效果\n\n```\nbefore say\nsay\nafter say\n```\n\n三行的顺序就是调用链：调用方 → 代理 → `invoke` 前半段 → 真实方法 → `invoke` 后半段。真实方法只执行一次，前后各一次增强。把 `invoke` 里那行 `method.invoke(target, args)` 去掉、直接 `return null`，`say` 就不再打印——代理完全可以决定要不要放行。\n\n还有一个能直接观察到的细节：`user.getClass().getName()` 打印出来不是 `UserImpl`，而是 `$Proxy0` 之类的名字。代理类和目标类没有继承关系，它们只是实现了同一个接口。\n\n## 几个容易踩的点\n\n`invoke` 的 `proxy` 参数容易误用。在 `invoke` 里调用 `proxy.toString()` 打日志，会再次进入 `invoke`，再打印、再进入，直到 `StackOverflowError`。日志里需要对象信息时用 `target` 或 `method.getDeclaringClass()`，不要碰 `proxy`。另外 `equals`、`hashCode`、`toString` 也会被拦截，因为代理类重写了它们并转给 `invoke`，写 handler 时如果按方法名做分支，要把这三个考虑进去。\n\n`method.invoke` 抛出的异常不会原样冒出来，而是被包成 `InvocationTargetException`，这也是 `invoke` 声明 `throws Throwable` 的原因。要按业务异常处理，得先 `getCause()` 拆包再判断；直接往外抛，调用方看到的是包装后的异常，栈里多一层反射帧，日志里的根因不好找。\n\n## 总结\n\nJDK 动态代理用 `Proxy.newProxyInstance` 在运行期生成实现指定接口的代理类，把接口上的所有方法调用统一转进 `InvocationHandler.invoke`，所以只能代理接口，类加载器、接口数组和处理器一个都不能少。`invoke` 里用 `method.invoke(target, args)` 转发，别碰 `proxy` 参数，目标方法抛出的异常会包成 `InvocationTargetException`。\n\n动态代理的价值不在“代理”这个词，而在调用入口被收拢成了一个方法。一个接口的几十个方法，增强逻辑只写一遍；换日志实现、加权限校验，改的是 handler，不是业务类。代价是只能围着接口做文章，以及每次调用多一层转发。只要调用方按接口编程，这层转发就是透明的——Spring 的事务代理、MyBatis 的 Mapper 接口，都是在这套机制上继续往上搭。\n",
+  "coverImage": "/data/media/2296.png",
+  "createdAt": "2026-11-10T09:14:00.178229",
+  "id": 231,
+  "isPinned": 0,
+  "isPublished": 1,
+  "next": {
+    "id": 232,
+    "title": "Java 锁入门：synchronized 与 ReentrantLock 的用法"
+  },
+  "prev": {
+    "id": 230,
+    "title": "Java 反射入门：从 Class 对象到方法调用的完整示例"
+  },
+  "series": "Java学习笔记（八股文）",
+  "summary": "JDK 动态代理把代理对象上的每一次方法调用都转进 InvocationHandler.invoke，日志、事务、权限这类横切逻辑得以集中在一处。文章用一段可运行的示例讲清 Proxy.newProxyInstance 的三个参数、invoke 的三个入参、方法执行效果，以及只能代理接口这条限制的由来。",
+  "tags": [
+    {
+      "id": 98,
+      "name": "Java"
+    }
+  ],
+  "title": "Java 动态代理入门：InvocationHandler 与 Proxy 的用法",
+  "updateTime": "2026-11-10T09:16:41.469471"
+}
